@@ -11,6 +11,7 @@ axios.interceptors.response.use(response => {
   //   encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
   // }
   Vue.prototype.$popupTop('出错了，请重试')
+  console.log(error)
   return Promise.reject(error)
 })
 

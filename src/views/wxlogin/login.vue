@@ -18,7 +18,7 @@ export default {
       // }
       // // 获取token
       // const res = await http.get('/Servant/Login', option)
-      const res = await http.get('/LoginTest/', {id: this.$route.query.id})
+      const res = await http.get('/LoginTest', {id: this.$route.query.id})
       if (res.data.Data) {
         localStorage.setItem('user_token', res.data.Data)
         this.$store.dispatch('getUserInfo')
