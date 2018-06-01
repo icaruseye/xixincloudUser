@@ -15,18 +15,20 @@
       <!-- 我的管家 -->
       <div class="tabbox" v-show="tabIndex === 0">
         <div class="tabbox-list vux-1px-b">
-          <div class="item vux-1px-b" @click="goServant(0)">
-            <div><img class="avatar" src="https://img3.doubanio.com/icon/u53078059-35.jpg" alt=""></div>
-            <div class="mid">
-              <div class="">1carus <span class="tag">健康管家</span></div>
+          <template v-for="(item, index) in servantList">
+            <div class="item vux-1px-b" @click="goServant(item.FriendViewID)" :key="index">
+              <div><img class="avatar" :src="item.FriendAvatar | transformImgUrl" alt=""></div>
+              <div class="mid">
+                <div class="">{{item.FriendName}}<span class="tag">健康管家</span></div>
+              </div>
             </div>
-          </div>
+          </template>
         </div>
       </div>
       <!-- 消息列表 -->
       <div class="tabbox" v-show="tabIndex === 1">
         <div class="tabbox-list vux-1px-b vux-1px-t">
-          <template v-for="(item, index) in list">
+          <template v-for="(item, index) in msgList">
             <div class="item vux-1px-b" @click="goChat(item.FriendViewID, index)" :key="index">
               <div><img class="avatar" :src="item.FriendAvatar" alt=""></div>
               <div class="mid">
@@ -57,7 +59,8 @@ export default {
   data () {
     return {
       tabIndex: 0,
-      list: []
+      servantList: [],
+      msgList: []
     }
   },
   created () {
@@ -75,8 +78,8 @@ export default {
       this.$router.push(`/servant/detail/${id}`)
     },
     async getData () {
-      const res = await http.get('/ContactList', { Page: 1, Size: 10 })
-      this.list = res.data.Data
+      const res = await http.get('/ContactFriends', { Page: 1, Size: 10 })
+      this.servantList = res.data.Data
     }
   }
 }
@@ -127,6 +130,7 @@ export default {
           color: #999;
         }
         .tag {
+          margin-left: 5px;
           font-size: 12px;
           color: @theme-color;
         }

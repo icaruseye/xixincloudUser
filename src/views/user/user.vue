@@ -8,7 +8,7 @@
           <div class="times">已被服务：1次</div>
           <span class="auth" v-if="userInfo.IDCardType"><i class="iconfont icon-shimingrenzheng"></i> 实名认证</span>
         </div>
-        <img class="qrcode" src="@/assets/images/code.png" alt="">
+        <img class="qrcode" src="@/assets/images/code.png" alt="" @click="toggleMask">
       </div>
       <div class="user-info_percent">
         你的资料完整度为 {{dataScore}}%，完善资料和验证手机后您才能为用户提供服务
@@ -56,6 +56,10 @@
       </div>
     </div>
     <user-tabbar></user-tabbar>
+    <div class="weui-mask" v-show="maskShow">
+      <div class="weui-mask-layer" @click="toggleMask(false)"></div>
+      <img src="https://qr.api.cli.im/qr?data=http%253A%252F%252F192.168.2.236%253A8080%252Fuser&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=7f1bcc8a077dbff814ca8383f7cc5cd9" alt="">
+    </div>
   </div>
 </template>
 
@@ -65,6 +69,11 @@ import {mapGetters} from 'vuex'
 export default {
   components: {
     userTabbar
+  },
+  data () {
+    return {
+      maskShow: false
+    }
   },
   computed: {
     ...mapGetters([
@@ -78,6 +87,11 @@ export default {
   },
   created () {
     this.$store.dispatch('getUserInfo')
+  },
+  methods: {
+    toggleMask (val) {
+      this.maskShow = val
+    }
   }
 }
 </script>

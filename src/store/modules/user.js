@@ -16,7 +16,7 @@ const mutations = {
 const actions = {
   // 获取用户信息
   getUserInfo: async ({commit}) => {
-    const res = await api.get('/UserDetail')
+    const res = await api.get('/UserAccount')
     commit(GET_USER_INFO, res.data.Data)
   }
 }

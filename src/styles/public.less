@@ -387,7 +387,7 @@ input {
   }
 }
 
-
+// 九宫格
 .vux-flexbox {
   width: 100%;
   text-align: left;
@@ -427,4 +427,27 @@ input {
 }
 .vux-flex-col > .vux-flexbox-item {
   width: 100%;
+}
+
+.weui-mask {
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .weui-mask-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .5)
+  }
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%)
+  }
 }

@@ -12,8 +12,21 @@
 </template>
 
 <script>
+import http from '@/api/index'
 export default {
+  data () {
+    return {
+      addressList: []
+    }
+  },
+  created () {
+    this.getAddressList()
+  },
   methods: {
+    async getAddressList () {
+      const res = await http.get('/UserAddressGetAll')
+      console.log(res)
+    },
     toEdit (id) {
       this.$router.push(`/user/address/edit/${id}`)
     }
