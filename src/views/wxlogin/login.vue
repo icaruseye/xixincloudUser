@@ -21,7 +21,7 @@ export default {
       const res = await http.get('/LoginTest', {id: this.$route.query.id})
       if (res.data.Data) {
         localStorage.setItem('user_token', res.data.Data)
-        this.$store.dispatch('getUserInfo')
+        this.$store.dispatch('getAccount')
         console.log(123)
         this.$router.replace('/')
       }

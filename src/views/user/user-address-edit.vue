@@ -2,33 +2,30 @@
   <div>
     <div class="form-panel">
       <div class="weui-form-cell">
-        <x-address title="省市区" v-model="citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center"></x-address>
-        <input v-model="citys" v-validate="'required'" name="citys" type="hidden">
-        <span v-show="errors.has('citys')" class="help is-danger">{{ errors.first('citys') }}</span>
+        <x-address title="省市区" :raw-value="true" v-model="UserAddress.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center"></x-address>
+        <input v-model="UserAddress.citys" name="citys" type="hidden">
       </div>
       <div class="weui-form-cell">
-        <p class="weui-cell-top" :class="{ 'control': true }">
+        <div class="weui-cell-top">
             <label class="label" for="">具体地址</label>
-            <input v-model="UserAddress.SpecificAddress" v-validate="'required'" name="address" type="text" placeholder="请输入具体地址">
-        </p>
-        <span v-show="errors.has('address')" class="help is-danger">{{ errors.first('address') }}</span>
+            <input v-model="UserAddress.SpecificAddress" name="address" type="text" placeholder="请输入具体地址">
+        </div>
       </div>
       <div class="weui-form-cell">
-        <p class="weui-cell-top" :class="{ 'control': true }">
+        <div class="weui-cell-top">
             <label class="label" for="" style="width:95px">标签</label>
-            <input v-model="UserAddress.Remark" v-validate="'required'" name="tag" type="text" placeholder="请输入标签" style="width:70px;">
+            <input v-model="UserAddress.Remark" name="tag" type="text" placeholder="请输入标签" style="width:70px;">
             <checker v-model="UserAddress.Remark" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
               <checker-item value="家">家</checker-item>
               <checker-item value="公司">公司</checker-item>
               <checker-item value="其他">其他</checker-item>
             </checker>
-        </p>
-        <span v-show="errors.has('tag')" class="help is-danger">{{ errors.first('tag') }}</span>
+        </div>
       </div>
       <div class="weui-form-cell">
         <p class="weui-cell-top">
-          <label class="label" for="" style="width:95px">是否默认</label>
-          <inline-x-switch v-model="isdefault"></inline-x-switch>
+          <label class="label" for="" style="width:95px" >是否默认</label>
+          <inline-x-switch v-model="UserAddress.IsDefault" :value-map="[0, 1]" :disabled="defaultOnly"></inline-x-switch>
         </p>
       </div>
     </div>
@@ -38,7 +35,10 @@
 
 <script>
 import http from '@/api/index'
-import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch } from 'vux'
+import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch, ToastPlugin } from 'vux'
+import util from '@/plugins/util'
+import Vue from 'vue'
+Vue.use(ToastPlugin)
 export default {
   components: {
     XAddress,
@@ -50,62 +50,59 @@ export default {
   data () {
     return {
       addressData: ChinaAddressV4Data,
-      citys: [],
       address: '',
-      isdefault: true,
-      userInfo: JSON.parse(sessionStorage.getItem('GET_USER_INFO')),
+      defaultOnly: false,
       UserAddress: {
-        ID: '',
-        State: '',
-        IsDefault: '',
-        UserID: '',
-        Province: '',
-        City: '',
-        Area: '',
+        IsDefault: 1,
+        citys: [],
         SpecificAddress: '',
-        Remark: '',
-        FinalOperateTime: ''
+        Remark: '家'
+      },
+      authText: {
+        IsDefault: {
+          required: false
+        },
+        citys: {
+          text: '省市区地址',
+          required: true
+        },
+        SpecificAddress: {
+          text: '详细地址',
+          required: true
+        },
+        Remark: {
+          text: '标签',
+          required: true
+        }
       }
     }
   },
   mounted () {
-    let id = this.$route.params.id
+    const id = this.$route.params.id
     if (id !== 'add') {
       this.getData(id)
+    }
+    if (this.$route.query.first === '1') {
+      this.defaultOnly = true
     }
   },
   methods: {
     getData (id) {
-      console.log(id)
+      console.log(this.$route)
     },
     async save () {
-      let res = await this.$validator.validateAll()
-      if (res) {
-        this.UserAddress.Province = this.citys[0]
-        this.UserAddress.City = this.citys[1]
-        this.UserAddress.Area = this.citys[2]
+      const isValidate = util.validateForm(this.UserAddress, this.authText)
+      if (isValidate) {
         const UserAddress = {
-          ID: this.userInfo.ID,
-          State: '',
-          IsDefault: '',
-          UserID: '',
-          Province: this.UserAddress.Province,
-          City: this.UserAddress.City,
-          Area: this.UserAddress.Area,
+          IsDefault: this.UserAddress.IsDefault,
+          Province: this.UserAddress.citys[0],
+          City: this.UserAddress.citys[1],
+          Area: this.UserAddress.citys[2],
           SpecificAddress: this.UserAddress.SpecificAddress,
-          Remark: this.UserAddress.Remark,
-          FinalOperateTime: ''
+          Remark: this.UserAddress.Remark
         }
         const res = await http.post('/UserAddress', UserAddress)
         console.log(res)
-      } else {
-        // 设置焦点到第一个未验证通过的表单元素
-        let field = this.$validator.errors.items[0].field
-        this.$validator.fields.items.map((i) => {
-          if (i.name === field) {
-            return i.el.focus()
-          }
-        })
       }
     }
   }

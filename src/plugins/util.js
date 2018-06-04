@@ -1,4 +1,8 @@
-module.exports = {
+import Vue from 'vue'
+import { ToastPlugin } from 'vux'
+Vue.use(ToastPlugin)
+
+export default {
   CheckIDCardNum: function (value) {
     // 验证身份证号方法 http://www.cnblogs.com/jiqing9006/p/3597549.html
     var area = { 11: '北京', 12: '天津', 13: '河北', 14: '山西', 15: '内蒙古', 21: '辽宁', 22: '吉林', 23: '黑龙江', 31: '上海', 32: '江苏', 33: '浙江', 34: '安徽', 35: '福建', 36: '江西', 37: '山东', 41: '河南', 42: '湖北', 43: '湖南', 44: '广东', 45: '广西', 46: '海南', 50: '重庆', 51: '四川', 52: '贵州', 53: '云南', 54: '西藏', 61: '陕西', 62: '甘肃', 63: '青海', 64: '宁夏', 65: 'xinjiang', 71: '台湾', 81: '香港', 82: '澳门', 91: '国外' }
@@ -45,5 +49,42 @@ module.exports = {
   },
   formatDate: function (date) {
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+  },
+  /**
+   * (description) 表单验证方法
+   * data: 需要验证的数据
+   * authText： 自定义验证规则和自定义报错文本
+   * authText：{
+   *  text： '',
+   *  required: true
+   * }
+   */
+  validateForm: function (data, authText) {
+    const keysArr = Object.keys(data)
+    let flag = true
+    for (let i = 0; i < keysArr.length; i++) {
+      if (!this.isFalse(data[keysArr[i]]) && authText[keysArr[i]].required) {
+        flag = false
+        Vue.$vux.toast.text(`${authText[keysArr[i]].text}不能为空`)
+        break
+      }
+      flag = true
+    }
+    return flag
+  },
+  isFalse (val) {
+    const type = toString.call(val)
+    if (type === '[object String]') {
+      return val
+    }
+    if (type === '[object Array]') {
+      return val.length
+    }
+    if (type === '[object Object]') {
+      return Object.keys(val).length
+    }
+    if (type === '[object Null]') {
+      return false
+    }
   }
 }
