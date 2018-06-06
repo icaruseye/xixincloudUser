@@ -9,7 +9,7 @@
         </div>
       </template>
     </div>
-    <button type="button" class="weui-btn weui-btn_primary" @click="toEdit('add')">新建地址</button>
+    <button type="button" class="weui-btn weui-btn_primary" @click="toEdit('add', 0)">新建地址</button>
   </div>
 </template>
 
@@ -41,12 +41,19 @@ export default {
     async getAddressList () {
       const res = await http.get('/UserAddress')
       this.addressList = res.data.Data
-      if (this.addressList.length <= 1) {
+    },
+    toEdit (id, index) {
+      if (this.addressList.length === 1) {
+        if (id === 'add') {
+          this.isEmptyList = 0
+        } else {
+          this.isEmptyList = 1
+        }
+      }
+      if (this.isEmptyList.length === 0) {
         this.isEmptyList = 1
       }
-    },
-    toEdit (id) {
-      this.$router.push(`/user/address/edit/${id}?first=${this.isEmptyList}`)
+      this.$router.push(`/user/address/edit/${id}?first=${this.isEmptyList}&index=${index}`)
     }
   }
 }

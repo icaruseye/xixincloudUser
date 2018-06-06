@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '@/store/index'
 
 import { ToastPlugin } from 'vux'
 Vue.use(ToastPlugin)
@@ -113,17 +112,16 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // 微信授权登录
-  const token = localStorage.getItem('user_token')
-  localStorage.setItem('to_path', from.path)
-  console.log(store.state)
-  if (!token && to.path !== '/User/Login') {
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
+  if (!userInfo.ID && to.path !== '/User/Login') {
     // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxef2a7d894732658e&redirect_uri=' +
     // encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     // window.location.href = '/Servant/Login'
-    next('/User/Login?id=3')
-  } else {
-    next()
+    sessionStorage.setItem('to_path', to.fullPath)
+    next('/User/Login?id=2')
+    return false
   }
+  next()
 })
 
 export default router

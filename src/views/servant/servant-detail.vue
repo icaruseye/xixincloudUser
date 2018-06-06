@@ -59,7 +59,7 @@
           <div class="content">暂无评价</div>
         </div>
       </div>
-      <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary">发消息</button>
+      <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">发消息</button>
     </div>
   </div>
 </template>
@@ -68,6 +68,11 @@
 export default {
   data () {
     return {
+    }
+  },
+  methods: {
+    gochat () {
+      this.$router.push(`/servant/chat/${this.$route.params.id}`)
     }
   }
 }

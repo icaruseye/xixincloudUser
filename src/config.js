@@ -4,8 +4,8 @@ module.exports = {
   // 开发环境的地址/可填ip
   'DEV_API_PORT': 8080,
   // 开启代理转发接口（填API地址）
-  'DEV_PROXY_API': 'http://api.xixincloud.com',
-  // 'DEV_PROXY_API': 'http://192.168.2.100',
+  // 'DEV_PROXY_API': 'http://api.xixincloud.com',
+  'DEV_PROXY_API': 'http://192.168.2.100',
   // 微信APPID
   '_WXAPPID_': '',
   // API请求延迟时间

@@ -29,7 +29,7 @@
         </p>
       </div>
     </div>
-    <button type="button" class="weui-btn weui-btn_primary" @click="save">保存</button>
+    <button type="button" class="weui-btn weui-btn_primary" @click="save" :disabled="submitBtn">保存</button>
   </div>
 </template>
 
@@ -49,6 +49,7 @@ export default {
   },
   data () {
     return {
+      submitBtn: false,
       addressData: ChinaAddressV4Data,
       address: '',
       defaultOnly: false,
@@ -85,14 +86,27 @@ export default {
     if (this.$route.query.first === '1') {
       this.defaultOnly = true
     }
+    if (this.$route.query.index !== '0') {
+      this.UserAddress.IsDefault = 0
+    }
   },
   methods: {
-    getData (id) {
-      console.log(this.$route)
+    async getData (id) {
+      const res = await http.get(`/UserAddress/${id}`)
+      const data = res.data.Data
+      const UserAddress = {
+        IsDefault: data.IsDefault,
+        citys: [data.Province, data.City, data.Area],
+        SpecificAddress: data.SpecificAddress,
+        Remark: data.Remark
+      }
+      this.UserAddress = UserAddress
     },
     async save () {
+      const that = this
       const isValidate = util.validateForm(this.UserAddress, this.authText)
       if (isValidate) {
+        this.submitBtn = true
         const UserAddress = {
           IsDefault: this.UserAddress.IsDefault,
           Province: this.UserAddress.citys[0],
@@ -101,8 +115,22 @@ export default {
           SpecificAddress: this.UserAddress.SpecificAddress,
           Remark: this.UserAddress.Remark
         }
-        const res = await http.post('/UserAddress', UserAddress)
-        console.log(res)
+        const method = this.$route.params.id === 'add' ? 'post' : 'put'
+        const url = this.$route.params.id === 'add' ? '/UserAddress' : `/UserAddress/${this.$route.params.id}`
+        const res = await http.send(url, method, UserAddress)
+        if (res.data.Code === 100000) {
+          this.$vux.toast.show({
+            text: '提交成功',
+            onHide () {
+              that.$router.back()
+            }
+          })
+        } else {
+          this.$vux.toast.show({
+            text: '出错了，请重试'
+          })
+          this.submitBtn = false
+        }
       }
     }
   }

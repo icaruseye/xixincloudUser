@@ -1,20 +1,24 @@
 <template>
   <div>
     <div class="user-info">
-      <img class="avatar" src="https://img3.doubanio.com/icon/u144889470-14.jpg" alt="">
-      <span class="name">青卿</span>
+      <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
+      <span class="name">{{ServAccount.NickName}}</span>
     </div>
     <div class="chat-list" id="chatList" :style="{paddingBottom : faceHeight + 'px'}">
       <template v-for="(item, index) in chatList">
         <div class="chat-item" :key="index">
-          <div class="chat-item-time" v-if="item.time"><span>{{item.time}}</span></div>
-          <div :class="[item.isMe ? 'chat-item-right' : 'chat-item-left']">
-            <div class="chat-item-avatar">
-              <img :src="item.userAvatar" alt="">
+          <div class="chat-item-time" v-if="item.SendTime"><span>{{item.SendTime | timeFormat}}</span></div>
+          <div :class="[item.IsServantReceive ? 'chat-item-right' : 'chat-item-left']">
+            <div class="chat-item-avatar" v-if="!item.IsServantReceive">
+              <img :src="ServAccount.Avatar | transformImgUrl">
+            </div>
+            <div class="chat-item-avatar" v-if="item.IsServantReceive">
+              <img :src="mineAccount.Avatar | transformImgUrl">
             </div>
             <div class="chat-item-content">
-              {{item.content}}
+              {{item.Content}}
             </div>
+            <inline-loading v-show="item.loading"></inline-loading>
           </div>
       </div>
       </template>
@@ -40,7 +44,15 @@
 </template>
 
 <script>
+import http from '@/api/index'
+import { InlineLoading } from 'vux'
 export default {
+  metaInfo: {
+    title: '聊天'
+  },
+  components: {
+    InlineLoading
+  },
   data () {
     return {
       isFaceShow: false,
@@ -49,78 +61,40 @@ export default {
       faceboxHeight: 0,
       faceList: ['😀', '😂', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '😗', '😙', '😚', '😇', '😐', '😑', '😶', '😏', '😣', '😥', '😮', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '😒', '😒', '😓', '😔', '😕', '😲', '😷', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😬', '😰', '😱', '😳', '😵', '😡', '😠', '💪', '👈', '👉', '✌', '👆', '👇', '✋', '👌', '👍', '👏', '👐', '🙏'],
       chatMsg: '',
-      chatList: [{
-        userid: 99,
-        userAvatar: 'https://img3.doubanio.com/icon/u144889470-14.jpg',
-        userName: '青卿',
-        isMe: false,
-        content: '一切有为法，如梦幻泡影；如露亦如电，应作如是观。',
-        time: '14:23'
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也一样',
-        time: ''
-      }, {
-        userid: 66,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: 'lisa',
-        isMe: true,
-        content: '俺也1一样',
-        time: ''
-      }]
+      chatList: [],
+      mineAccount: JSON.parse(sessionStorage.getItem('userAccount')),
+      ServAccount: ''
     }
+  },
+  filters: {
+    timeFormat (val) {
+      const time = val.split('T')
+      return `${time[0]} ${time[1]}`
+    }
+  },
+  // 初次拉取消息
+  async created () {
+    const that = this
+    const res = await http.get('/ChatRecord', { toServantViewID: this.$route.params.id, pageIndex: 1 })
+    this.ServAccount = res.data.Data.ServAccount
+    this.chatList = res.data.Data.ChatHisList
+    setTimeout(function () {
+      that.goDown()
+    }, 0)
+    window.userTimer = setInterval(function () {
+      that.chatRecordTimePoll()
+    }, 5000)
   },
   mounted () {
     this.goDown()
     this.faceboxHeight = document.getElementById('chatFaceBox').offsetHeight // 获取表情高度
     this.translateFace = this.faceboxHeight + 5 // 表情上弹高度
   },
+  destroyed () {
+    clearInterval(window.userTimer)
+  },
   methods: {
+    // 页面逻辑函数
     chooseFace (face) {
       this.chatMsg = this.chatMsg + face
     },
@@ -131,25 +105,34 @@ export default {
       this.faceHeight = this.faceboxHeight + 100 // padding-bottom高度加上表情高度
       setTimeout(function () {
         that.goDown()
-      }, 100)
+      }, 500)
     },
     hideFace () {
       this.isFaceShow = false
-      this.translateFace = this.faceboxHeight + 7
+      this.translateFace = this.faceboxHeight + 5
       this.faceHeight = 100 // 还原padding-bottom初始高度
     },
     inputFocus () {
       const that = this
       this.hideFace()
-      console.log('inputFocus')
       setTimeout(function () {
         that.goDown()
-      }, 100)
+      }, 500)
     },
     goDown () {
       document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight
     },
-    sendMsg () {
+    // 功能逻辑函数
+    // 轮询聊天消息
+    async chatRecordTimePoll () {
+      const res = await http.get('/ChatRecord', { toServantViewID: this.$route.params.id })
+      console.log(res)
+      if (res.data.Data.ChatHisList.length > 0) {
+        this.chatList.concat(res.data.Data.ChatHisList)
+      }
+    },
+    // 发送消息
+    async sendMsg () {
       const that = this
       if (!this.isFaceShow) {
         document.getElementById('chatInput').focus()
@@ -158,19 +141,24 @@ export default {
       }
       if (!this.chatMsg) return false
       let msg = {
-        userid: 99,
-        userAvatar: 'https://img3.doubanio.com/icon/u53078059-35.jpg',
-        userName: '123',
-        isMe: true,
-        content: this.chatMsg,
-        time: '14:23'
+        userAvatar: this.mineAccount.Avatar,
+        userName: this.mineAccount.NickName,
+        IsServantReceive: 1,
+        Content: this.chatMsg,
+        time: new Date()
       }
+      const res = await http.post('/ChatRecord', {
+        ServantViewID: this.ServAccount.ViewID,
+        MsgType: 1,
+        Content: this.chatMsg
+      })
+      console.log(res)
       let _msg = Object.assign({}, msg)
       this.chatList.push(_msg)
       this.chatMsg = ''
       setTimeout(function () {
         that.goDown()
-      }, 100)
+      }, 0)
     }
   }
 }
@@ -195,7 +183,7 @@ export default {
 }
 
 .chat-item-time {
-  padding: 5px 0;
+  padding: 5px 0 10px;
   text-align: center;
   span {
     padding: 2px 4px;
@@ -229,9 +217,10 @@ export default {
 
 .chat-item-right {
   display: flex;
+  align-items: center;
   flex-direction: row-reverse;
   .chat-item-content {
-    margin-right: 15px;
+    margin: 0 15px 0 10px;
     background: #90d936;
     border: 1px solid #87d02d;
     &::after {
@@ -254,7 +243,7 @@ export default {
   padding: 10px;
   max-width: 60%;
   color: #333;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 20px;
   border-radius: 4px;
   box-sizing: border-box;
@@ -275,8 +264,8 @@ export default {
   left: 0;
   right: 0;
   padding: 10px;
-  background: #fff;
   line-height: 1.6;
+  background: #fff;
   .top {
     display: flex;
     align-items: center;
