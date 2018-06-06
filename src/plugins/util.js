@@ -60,7 +60,7 @@ export default {
    * }
    */
   validateForm: function (data, authText) {
-    const keysArr = Object.keys(data)
+    const keysArr = Object.keys(authText)
     let flag = true
     for (let i = 0; i < keysArr.length; i++) {
       if (!this.isFalse(data[keysArr[i]]) && authText[keysArr[i]].required) {

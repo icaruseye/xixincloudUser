@@ -4,9 +4,9 @@
       <div class="user-info">
         <img class="avatar" :src="userAccount.Avatar | transformImgUrl" alt="">
         <div class="mid-info">
-          <div class="name">{{userAccount.RealName}}</div>
+          <div class="name">{{userInfo.RealName}}</div>
           <div class="times">已被服务：1次</div>
-          <span class="auth" v-if="userAccount.IDCardType"><i class="iconfont icon-shimingrenzheng"></i> 实名认证</span>
+          <span class="auth" v-if="userInfo.IDCard"><i class="iconfont icon-shimingrenzheng"></i> 实名认证</span>
         </div>
         <img class="qrcode" src="@/assets/images/code.png" alt="" @click="toggleMask">
       </div>

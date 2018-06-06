@@ -18,7 +18,7 @@ const mutations = {
 const actions = {
   // 获取用户基本信息及个人资料
   getAccount: async ({commit}) => {
-    const userAccount = await api.get('/UserAccount')
+    const userAccount = await api.get('/Account')
     const userInfo = await api.get('/UserInfo')
     const res = {
       userInfo: userInfo.data.Data,

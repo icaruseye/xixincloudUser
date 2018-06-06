@@ -1,0 +1,76 @@
+
+// 分隔线
+.panel-border {
+  &::before {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+    right: 5px;
+    height: 1px;
+    border-top: 1px solid #d9f7f5;
+    color: #e5e5e5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    z-index: 2;
+  }
+}
+
+// 标题及图标
+.servant-panel_title {
+  padding: 0 6px;
+  font-size: 15px;
+  color: #333;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  .icon {
+    margin-right: 5px;
+    display: block;
+    width: 15px;
+    height: 15px;
+    background-size: cover;
+  }
+  .icon-1 {
+    background-image: url(../../../assets/images/servant-de-1.png);
+  }
+  .icon-2 {
+    background-image: url(../../../assets/images/servant-de-2.png);
+  }
+  .icon-3 {
+    background-image: url(../../../assets/images/servant-de-3.png);
+  }
+}
+
+// 副标题
+.servant-pane_subtitle {
+  position: relative;
+  padding: 15px 0 5px 12px;
+  font-size: 15px;
+  color: #666;
+  &::before {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 1px;
+    border-top: 1px solid #d9f7f5;
+    color: #e5e5e5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    z-index: 2;
+  }
+}
+
+// 查看更多
+.servant-unfold_bar {
+  padding: 5px 0;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}

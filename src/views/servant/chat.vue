@@ -126,9 +126,14 @@ export default {
     // 轮询聊天消息
     async chatRecordTimePoll () {
       const res = await http.get('/ChatRecord', { toServantViewID: this.$route.params.id })
-      console.log(res)
+      const that = this
       if (res.data.Data.ChatHisList.length > 0) {
-        this.chatList.concat(res.data.Data.ChatHisList)
+        res.data.Data.ChatHisList.map((item) => {
+          this.chatList.push(item)
+          setTimeout(function () {
+            that.goDown()
+          }, 500)
+        })
       }
     },
     // 发送消息

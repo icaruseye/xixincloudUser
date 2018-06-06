@@ -6,7 +6,7 @@ Vue.use(ToastPlugin)
 
 // 用户端-管家
 const servant = () => import('@/views/servant/servant')
-const servantDetail = () => import('@/views/servant/servant-detail')
+const servantDetail = () => import('@/views/servant/servant-detail/index')
 const servantChat = () => import('@/views/servant/chat')
 const servantPackageDetail = () => import('@/views/servant/servant-package-detail')
 const servantPackageList = () => import('@/views/servant/servant-package-list')

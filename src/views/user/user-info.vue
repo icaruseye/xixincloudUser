@@ -7,25 +7,23 @@
             class="upload"
             :isAvatar="true"
             :maxSize="1024 * 1024 * 2"
-            :imgList="UserInfo.imgList1"
+            :imgList="imgList1"
             @onUpdate="onUpdate1"
           ></uploader>
           <i class="iconfont icon-jiantouyou"></i>
       </p>
     </div>
     <div class="weui-form-cell">
-      <p class="weui-cell-top" :class="{ 'control': true }">
+      <div class="weui-cell-top">
           <label class="label" for="">昵称</label>
-          <input v-model="UserInfo.nickname" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('nickname') }" name="nickname" type="text" placeholder="请输入昵称">
-      </p>
-      <span v-show="errors.has('nickname')" class="help is-danger">{{ errors.first('nickname') }}</span>
+          <input v-model="UserInfo.NickName" name="nickname" type="text" placeholder="请输入昵称">
+      </div>
     </div>
     <div class="weui-form-cell">
-      <p class="weui-cell-top" :class="{ 'control': true }">
+      <div class="weui-cell-top">
           <label class="label" for="">真实姓名</label>
-          <input v-model="UserInfo.RealName" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('RealName') }" name="RealName" type="text" placeholder="请输入真实姓名">
-      </p>
-      <span v-show="errors.has('RealName')" class="help is-danger">{{ errors.first('RealName') }}</span>
+          <input v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
+      </div>
     </div>
     <!-- <div class="weui-form-cell">
       <p class="weui-cell-top" :class="{ 'control': true }">
@@ -38,26 +36,25 @@
       <span v-show="errors.has('IDCardType')" class="help is-danger">{{ errors.first('IDCardType') }}</span>
     </div> -->
     <div class="weui-form-cell">
-      <p class="weui-cell-top" :class="{ 'control': true }">
+      <div class="weui-cell-top">
           <label class="label" for="">身份证号码</label>
-          <input v-model="UserInfo.IDCard" @blur="calculate" v-validate="'required|IDCard'" :class="{'input': true, 'is-danger': errors.has('IDCard') }" name="IDCard" type="text" placeholder="请输入身份证号码">
-      </p>
-      <span v-show="errors.has('IDCard')" class="help is-danger">{{ errors.first('IDCard') }}</span>
+          <input v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
+      </div>
     </div>
     <div class="weui-form-cell">
-      <p class="weui-cell-top" :class="{ 'control': true }">
+      <div class="weui-cell-top">
           <label class="label" for="">出生日期</label>
           <input v-model="birthday" name="birthday" type="text" readonly placeholder="根据填入身份证号码计算">
-      </p>
+      </div>
     </div>
     <div class="weui-form-cell">
-      <p class="weui-cell-top" :class="{ 'control': true }">
+      <div class="weui-cell-top">
           <label class="label" for="">年龄</label>
           <input v-model="age" name="age" type="text" readonly placeholder="根据填入身份证号码计算">
-      </p>
+      </div>
     </div>
     <div class="weui-form-cell">
-      <a class="weui-btn weui-btn_primary" @click="validateBeforeSubmit">保存</a>
+      <button class="weui-btn weui-btn_primary" @click="validateBeforeSubmit" :disabled="submitBtn">保存</button>
     </div>
   </div>
 </template>
@@ -65,40 +62,67 @@
 <script>
 import uploader from '@/components/common/uploader'
 import util from '@/plugins/util'
+import http from '@/api'
 import { mapGetters } from 'vuex'
+import Vue from 'vue'
+import { ToastPlugin } from 'vux'
+Vue.use(ToastPlugin)
+
 export default {
   components: {
     uploader
   },
   data () {
     return {
+      submitBtn: false,
       birthday: '',
       age: '',
       UserInfo: {
-        nickname: '',
+        NickName: '',
         RealName: '',
-        IDCardType: 0,
         IDCard: '',
-        imgList1: [{url: ''}]
-      }
+        Avatar: ''
+      },
+      authText: {
+        NickName: {
+          required: true,
+          text: '昵称'
+        },
+        RealName: {
+          required: true,
+          text: '真实姓名'
+        },
+        IDCard: {
+          required: true,
+          text: '身份证号码'
+        }
+      },
+      imgList1: [{url: ''}]
     }
   },
   computed: {
     ...mapGetters([
-      'userAccount'
+      'userAccount',
+      'userInfo'
     ])
   },
   created () {
-    this.UserInfo.imgList1[0].url = this.userAccount.Avatar
+    this.imgList1[0].url = this.userAccount.Avatar
+    this.UserInfo.NickName = this.userAccount.NickName
+    this.UserInfo.RealName = this.userInfo.RealName
+    this.UserInfo.IDCard = this.userInfo.IDCard
+    this.calculate()
   },
   methods: {
     onUpdate1 (id) {
       console.log(id)
+      this.UserInfo.Avatar = id
     },
     calculate () {
       if (!util.CheckIDCardNum(this.UserInfo.IDCard)) {
         this.age = ''
         this.birthday = ''
+        this.$vux.toast.text('身份证格式不正确')
         return false
       }
       const id = this.UserInfo.IDCard
@@ -108,17 +132,28 @@ export default {
       this.age = new Date().getFullYear() - id.substr(6, 4)
     },
     async validateBeforeSubmit () {
-      let res = await this.$validator.validateAll()
-      if (res) {
-        console.log('验证通过')
-      } else {
-        // 设置焦点到第一个未验证通过的表单元素
-        let field = this.$validator.errors.items[0].field
-        this.$validator.fields.items.map((i) => {
-          if (i.name === field) {
-            return i.el.focus()
-          }
-        })
+      const that = this
+      const isValidate = util.validateForm(this.UserInfo, this.authText)
+      if (isValidate) {
+        if (!util.CheckIDCardNum(this.UserInfo.IDCard)) {
+          this.$vux.toast.text('身份证格式不正确')
+          return false
+        }
+        this.submitBtn = true
+        const res = await http.send('/UserInfo', 'put', this.UserInfo)
+        console.log(res)
+        if (res.data.Code === 100000) {
+          this.$vux.toast.show({
+            text: '提交成功',
+            onHide () {
+              that.$store.dispatch('getAccount').then(() => {
+                that.$router.back()
+              })
+            }
+          })
+        } else {
+          this.submitBtn = false
+        }
       }
     }
   }
