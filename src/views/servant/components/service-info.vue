@@ -36,8 +36,6 @@
 </template>
 
 <style lang="less" scoped>
-@import url(./index.less);
-
 .servant-unfold_bar {
   padding: 5px 0;
   font-size: 12px;

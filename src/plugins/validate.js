@@ -7,7 +7,8 @@ import zh from 'vee-validate/dist/locale/zh_CN'
 Validator.addLocale(zh)
 
 const config = {
-  locale: 'zh_CN'
+  locale: 'zh_CN',
+  errorBagName: 'errorBags'
 }
 
 Vue.use(VeeValidate, config)

@@ -75,7 +75,7 @@ export default {
       this.$router.push(`/servant/chat/${id}`)
     },
     goServant (id) {
-      this.$router.push(`/servant/detail/${id}`)
+      this.$router.push(`/servant/detail/service/${id}`)
     },
     async getData () {
       const res = await http.get('/ContactFriends', { Page: 1, Size: 10 })

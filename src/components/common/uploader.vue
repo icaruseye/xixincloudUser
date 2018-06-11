@@ -257,7 +257,7 @@ export default {
   border-radius: 0;
   width: 77px;
   height: 77px;
-  border: 1px solid #d9d9d9;
+  border: 1px dashed #D0D0D0;
 }
 .weui-uploader__input-box:before,
 .weui-uploader__input-box:after {
@@ -271,10 +271,10 @@ export default {
 }
 .weui-uploader__input-box:before {
   width: 2px;
-  height: 39.5px;
+  height: 24px;
 }
 .weui-uploader__input-box:after {
-  width: 39.5px;
+  width: 24px;
   height: 2px;
 }
 .weui-uploader__input-box:active {
@@ -301,7 +301,7 @@ export default {
     margin-bottom: 9px;
     width: 77px;
     height: 77px;
-    border: 1px solid #D9D9D9;
+    border: 1px dashed #D9D9D9;
 }
 .progress-bar {
   position: absolute;

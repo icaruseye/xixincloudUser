@@ -6,16 +6,18 @@ Vue.use(ToastPlugin)
 
 // 用户端-管家
 const servant = () => import('@/views/servant/servant')
-const servantDetail = () => import('@/views/servant/servant-detail/index')
+const servantDetail = () => import('@/views/servant/detail/index')
+const servantService = () => import('@/views/servant/detail/service')
+const servantItem = () => import('@/views/servant/detail/item')
+const servantPackage = () => import('@/views/servant/detail/package')
 const servantChat = () => import('@/views/servant/chat')
-const servantPackageDetail = () => import('@/views/servant/servant-package-detail')
-const servantPackageList = () => import('@/views/servant/servant-package-list')
 
 // 用户端-服务
 const service = () => import('@/views/service/service')
 const serviceList = () => import('@/views/service/service-list')
 const serviceReserve = () => import('@/views/service/service-reserve')
 const serviceDetail = () => import('@/views/service/service-detail.vue')
+const serviceIn = () => import('@/views/service/service-in.vue')
 
 // 用户端-健康
 const health = () => import('@/views/health/health')
@@ -34,6 +36,11 @@ Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
+  scrollBehavior (to, from, savedPosition) {
+    if (!/^\/servant\/chat\//.test(to.path)) {
+      return { x: 0, y: 0 }
+    }
+  },
   routes: [
     {
       path: '/User/Login',
@@ -48,16 +55,18 @@ const router = new Router({
       component: servant
     },
     {
-      path: '/servant/detail/:id',
-      component: servantDetail
-    },
-    {
-      path: '/servant/packageList/:id',
-      component: servantPackageList
-    },
-    {
-      path: '/servant/packageDetail/:id',
-      component: servantPackageDetail
+      path: '/servant/detail',
+      component: servantDetail,
+      children: [{
+        path: 'service/:id',
+        component: servantService
+      }, {
+        path: 'item/:id',
+        component: servantItem
+      }, {
+        path: 'package/:id',
+        component: servantPackage
+      }]
     },
     {
       path: '/servant/chat/:id',
@@ -66,6 +75,10 @@ const router = new Router({
     {
       path: '/service',
       component: service
+    },
+    {
+      path: '/service/in/:id',
+      component: serviceIn
     },
     {
       path: '/service/reserve/:id',

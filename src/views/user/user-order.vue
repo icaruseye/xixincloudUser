@@ -5,10 +5,10 @@
         ref="sticky"
         :offset="0"
         :check-sticky-support="false">
-        <tab :line-width="2">
-          <tab-item selected @on-item-click="onItemClick">代付款</tab-item>
+        <tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
+          <tab-item selected @on-item-click="onItemClick">全部</tab-item>
+          <tab-item @on-item-click="onItemClick">待付款</tab-item>
           <tab-item @on-item-click="onItemClick">已付款</tab-item>
-          <tab-item @on-item-click="onItemClick">已取消</tab-item>
         </tab>
       </sticky>
       <!-- 代付款 -->
@@ -17,59 +17,25 @@
           <div class="weui-cell">
             <div class="left">
               <img src="https://avatars1.githubusercontent.com/u/30564946?v=4" alt="">
-              <span>伊卡洛斯</span>
             </div>
             <div class="mid">
-              <div class="title">测试服务包</div>
-              <ul>
-                <!-- <li>订单编号：<br>01804271821318114692</li> -->
-                <li>实际付款：<span class="color-ye">¥0.00 </span></li>
-                <li>下单时间：2018-04-27</li>
-            </ul>
-            </div>
-            <div class="right">
-              <a href="javascript:;">去付款</a>
-            </div>
-          </div>
-          <div class="weui-cell">
-            <div class="left">
-              <img src="https://avatars1.githubusercontent.com/u/30564946?v=4" alt="">
-              <span>代达罗斯</span>
-            </div>
-            <div class="mid">
-              <div class="title">迷楼服务包2</div>
-              <ul>
-                <!-- <li>订单编号：<br>01804271821318114692</li> -->
-                <li>实际付款：<span class="color-ye">¥10.00 </span></li>
-                <li>下单时间：2018-04-27</li>
-            </ul>
-            </div>
-            <div class="right">
-              <a href="javascript:;">去付款</a>
+              <div class="title">
+                <span class="left">PICC换药</span>
+                <span class="mid">医生：贾秉仁</span>
+                <button class="btn">去付款</button>
+                <!-- <span class="right">已付款</span> -->
+              </div>
+              <div class="content">内容：阿莫西林3颗含服</div>
+              <div class="time">
+                <span>2018/01/01 13:30</span>
+                <span>订单编号:201806031508</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <!-- 已付款 -->
       <div v-show="tabIndex === 1">
-        <div class="item-list">
-          <div class="weui-cell">
-            <div class="left">
-              <img src="https://avatars1.githubusercontent.com/u/30564946?v=4" alt="">
-              <span>伊卡洛斯</span>
-            </div>
-            <div class="mid">
-              <div class="title">测试服务包</div>
-              <ul>
-                <!-- <li>订单编号：<br>01804271821318114692</li> -->
-                <li>实际付款：<span class="color-ye">¥0.00 </span></li>
-                <li>下单时间：2018-04-27</li>
-            </ul>
-            </div>
-            <div class="right">
-              <a href="javascript:;" @click="goServiceList(1)">立即预约</a>
-            </div>
-          </div></div>
       </div>
       <!-- 已取消 -->
       <div v-show="tabIndex === 2">
@@ -83,7 +49,8 @@
 </template>
 
 <script>
-import { Tab, TabItem, Sticky } from 'vux'
+import { Tab, TabItem } from '@/components/common/tab'
+import { Sticky } from 'vux'
 export default {
   components: {
     Sticky,
@@ -120,6 +87,7 @@ export default {
       font-size: 12px;
       color: @theme-color;
       img {
+        border-radius: 50%;
         margin: 0 auto 5px;
         display: block;
         width: 40px;
@@ -131,19 +99,50 @@ export default {
       font-size: 12px;
       color: #666;
       .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        .left {
+          font-size: 18px;
+          color: #333;
+        }
+        .mid {
+          margin-right: 30px;
+          font-size: 13px;
+          color: #3ecccc;
+          text-align: right;
+        }
+        .right {
+          font-size: 14px;
+          color: #999;
+        }
+        .btn {
+          display: block;
+          width: 60px;
+          height: 23px;
+          line-height: 23px;
+          box-sizing: border-box;
+          border: 1px solid #F8A519;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #F8A519;
+          text-align: center;
+          background: transparent;
+        }
+      }
+      .content {
         font-size: 14px;
-        color: #333;
+        color: #666;
+      }
+      .time {
+        font-size: 12px;
+        color: #999;
+        span:first-child {
+          margin-right: 30px;
+        }
       }
     }
     .right {
-      a {
-        display: block;
-        padding: 5px 10px;
-        font-size: 14px;
-        color: #fff;
-        background: @theme-color;
-        border-radius: 2px;
-      }
     }
   }
 }

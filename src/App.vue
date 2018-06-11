@@ -13,7 +13,7 @@ export default {
 <style lang="less">
 @import '~vux/src/styles/1px.less';
 @import '~vux/src/styles/reset.less';
-@import '/styles/cover.less';
+@import '/styles/common.less';
 @import '/styles/public.less';
 body {
   background-color: #f6f6f6;

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import servantInfo from './servant-info'
-import servantItemist from './servant-item-list'
-import servantComments from './servant-comments'
+import servantInfo from '../components/service-info'
+import servantItemist from '../components/package-list'
+import servantComments from '../components/comments'
 export default {
   components: {
     servantInfo,
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url(./index.less);
+@import url(../components/index.less);
 .vux-1px-t::before {
   border-top: 1px solid #d9f7f5;
 }
@@ -78,5 +78,4 @@ export default {
 .servant-panel_comments {
   padding-top: 15px;
 }
-
 </style>

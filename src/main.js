@@ -6,8 +6,11 @@ import App from './App'
 import router from './router'
 import store from './store/index'
 import './plugins/validate.js'
-import registryPopup from './components/common/popup-top/index'
+import registryPopup from './components/common/popupTop/index'
+import { DatetimePlugin, ToastPlugin } from 'vux'
 
+Vue.use(DatetimePlugin)
+Vue.use(ToastPlugin)
 Vue.use(registryPopup)
 FastClick.attach(document.body)
 
