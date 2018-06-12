@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <xx-user-tabbar></xx-user-tabbar>
+    <xx-tabbar></xx-tabbar>
   </div>
 </template>
 

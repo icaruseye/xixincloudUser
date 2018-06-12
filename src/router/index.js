@@ -18,6 +18,7 @@ const serviceList = () => import('@/views/service/service-list')
 const serviceReserve = () => import('@/views/service/service-reserve')
 const serviceDetail = () => import('@/views/service/service-detail.vue')
 const serviceIn = () => import('@/views/service/service-in.vue')
+const serviceComplaint = () => import('@/views/service/service-complaint.vue')
 
 // 用户端-健康
 const health = () => import('@/views/health/health')
@@ -29,6 +30,8 @@ const userPhone = () => import('@/views/user/user-phone')
 const userAddress = () => import('@/views/user/user-address')
 const userAddressEdit = () => import('@/views/user/user-address-edit')
 const userOrder = () => import('@/views/user/user-order')
+const userComplaint = () => import('@/views/user/user-complaint')
+const userComplaintDetail = () => import('@/views/user/user-complaint-detail')
 
 const wxLogin = () => import('@/views/wxlogin/login')
 
@@ -81,6 +84,10 @@ const router = new Router({
       component: serviceIn
     },
     {
+      path: '/service/complaint/:id',
+      component: serviceComplaint
+    },
+    {
       path: '/service/reserve/:id',
       component: serviceReserve
     },
@@ -117,8 +124,16 @@ const router = new Router({
       component: userAddressEdit
     },
     {
-      path: '/user/order/',
+      path: '/user/order',
       component: userOrder
+    },
+    {
+      path: '/user/complaint',
+      component: userComplaint
+    },
+    {
+      path: '/user/complaint/:id',
+      component: userComplaintDetail
     }
   ]
 })

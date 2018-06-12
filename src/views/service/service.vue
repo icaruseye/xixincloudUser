@@ -26,7 +26,7 @@
             <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
             <div class="mid">
               <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                <div class="title">院内陪诊院内陪诊…</div>
+                <div class="title" style="font-size:18px;">院内陪诊院内陪诊…</div>
                 <div class="balance">剩余：2次</div>
               </div>
               <div class="describe">到期时间：2018/06/08</div>
@@ -68,11 +68,62 @@
     <div class="tabbox" v-show="tabIndex === 1">
       <div class="checker-bar">
         <span class="">筛选条件：</span>
+        <ul>
+          <li :class="checkerIndex === 0 ? 'active' : ''" @click="changeChecker(0)">全部</li>
+          <li :class="checkerIndex === 1 ? 'active' : ''" @click="changeChecker(1)">待确认</li>
+          <li :class="checkerIndex === 2 ? 'active' : ''" @click="changeChecker(2)">待服务</li>
+          <li :class="checkerIndex === 3 ? 'active' : ''" @click="changeChecker(3)">待评价</li>
+        </ul>
+      </div>
+      <div class="weui-panel" style="margin-top:0">
+        <div class="weui-list_container">
+          <div class="weui-list_item">
+            <div class="avatar"><img src="https://tva1.sinaimg.cn/crop.0.0.180.180.50/5e9d399fjw1e8qgp5bmzyj2050050aa8.jpg" alt=""></div>
+            <div class="mid">
+              <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                <div class="title" style="font-weight:normal">PICC换药</div>
+                <div class="servant">护士：肖丽涵</div>
+              </div>
+              <div style="font-size:14px;color:#666;">内容：阿莫西林3颗含服</div>
+              <div class="describe">到期时间：2018/06/08</div>
+            </div>
+            <img style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
+          </div>
+          <div class="weui-list_item">
+            <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
+            <div class="mid">
+              <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                <div class="title" style="font-weight:normal">PICC换药</div>
+                <div class="servant">护士：肖丽涵</div>
+              </div>
+              <div style="font-size:14px;color:#666;">内容：阿莫西林3颗含服</div>
+              <div class="describe">到期时间：2018/06/08</div>
+            </div>
+            <img style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
+          </div>
+        </div>
       </div>
     </div>
     <!-- 已完成 -->
-    <div class="tabbox" v-show="tabIndex === 2">2</div>
-    <xx-user-tabbar></xx-user-tabbar>
+    <div class="tabbox" v-show="tabIndex === 2">
+      <div class="weui-panel">
+        <div class="weui-list_container">
+          <div class="weui-list_item" @click="toDetail(1)">
+            <div class="avatar"><img src="https://tva1.sinaimg.cn/crop.0.0.180.180.50/5e9d399fjw1e8qgp5bmzyj2050050aa8.jpg" alt=""></div>
+            <div class="mid">
+              <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                <div class="title" style="font-weight:normal">PICC换药</div>
+                <div class="servant">护士：肖丽涵</div>
+              </div>
+              <div style="font-size:14px;color:#666;">内容：阿莫西林3颗含服</div>
+              <div class="describe">到期时间：2018/06/08</div>
+            </div>
+            <img style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+    <xx-tabbar></xx-tabbar>
   </div>
 </template>
 
@@ -87,7 +138,8 @@ export default {
   },
   data () {
     return {
-      tabIndex: this.$store.getters.serviceTabIndex
+      tabIndex: this.$store.getters.serviceTabIndex,
+      checkerIndex: 0
     }
   },
   watch: {
@@ -96,11 +148,14 @@ export default {
     }
   },
   methods: {
+    changeChecker (index) {
+      this.checkerIndex = index
+    },
     onItemClick (id) {
       this.$store.commit('setServiceTabIndex', id)
     },
     toDetail (id) {
-      this.$router.push(`/service/detail/${id}`)
+      this.$router.push(`/service/in/${id}`)
     }
   }
 }
@@ -159,16 +214,41 @@ export default {
 }
 
 .weui-list_item {
+  position: relative;
   padding: 13px 5px;
   display: flex;
   align-items: center;
+  &::after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #d9f7f5;
+    color: #d9f7f5;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
+  &:last-child::after {
+    border: 0;
+  }
   .icon {
     width: 29px;
     height: 29px;
   }
+  .avatar {
+    border-radius: 50%;
+    width: 37px;
+    height: 37px;
+    overflow: hidden;
+  }
   .mid {
     flex: 1;
     margin: 0 19px;
+    color: #999;
     .title {
       font-size: 15px;
       color: #666;
@@ -176,11 +256,13 @@ export default {
     }
     .balance {
       font-size: 12px;
-      color: #999;
+    }
+    .servant {
+      font-size: 13px;
+      color: #3ecccc;
     }
     .describe {
       font-size: 12px;
-      color: #999;
     }
   }
   .btn {
@@ -218,6 +300,35 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
     z-index: 2;
+  }
+}
+.checker-bar {
+  padding: 10px 12px;
+  display: flex;
+  font-size: 15px;
+  color: #999;
+  ul {
+    display: flex;
+    li {
+      position: relative;
+      padding: 0 10px;
+      &::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        background: #999;
+        height: 25px;
+        border-right: 1px solid #D8D8D8;
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
+      }
+      &:last-child::after {
+        border: 0;
+      }
+    }
+    li.active {
+      color: #3ecccc;
+    }
   }
 }
 </style>

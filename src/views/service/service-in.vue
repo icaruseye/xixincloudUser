@@ -1,17 +1,17 @@
 <template>
   <div class="wrap has-tabbar">
     <xx-step-bar step="2">
-      <step-items slot="items">
+      <xx-step-items slot="items">
         预约
-      </step-items>
+      </xx-step-items>
       <xx-step-items slot="items">
         服务中
       </xx-step-items>
-      <step-items slot="items">
+      <xx-step-items slot="items">
         已完成
-      </step-items>
+      </xx-step-items>
     </xx-step-bar>
-    <xx-timeLine-box step="0" class="mgt10">
+    <xx-timeLine step="0" class="mgt10">
       <xx-timeLine-items
         slot="items"
         title="待确认">
@@ -56,9 +56,10 @@
           </div>
         </div>
       </xx-timeLine-items>
-    </xx-timeLine-box>
+    </xx-timeLine>
     <div class="btn-bar">
-      <button type="button" class="weui-btn weui-btn_primary">发消息</button>
+      <!-- <button type="button" class="weui-btn weui-btn_primary">发消息</button> -->
+      <a href="/service/complaint/1" class="weui-btn weui-btn_primary">投诉</a>
       <button type="button" class="weui-btn weui-btn_primary">取消预约</button>
     </div>
   </div>

@@ -55,7 +55,7 @@
         </router-link>
       </div>
     </div>
-    <xx-user-tabbar></xx-user-tabbar>
+    <xx-tabbar></xx-tabbar>
     <div class="weui-mask" v-show="maskShow">
       <div class="weui-mask-layer" @click="toggleMask(false)"></div>
       <img :src="userAccount.QRCodeStr" alt="">
