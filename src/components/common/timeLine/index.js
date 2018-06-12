@@ -1,7 +1,7 @@
-import timeLineBox from './box'
-import timeLineItems from './items'
+import xxTimeLine from './box'
+import xxTimeLineItems from './items'
 
 export {
-  timeLineBox,
-  timeLineItems
+  xxTimeLine,
+  xxTimeLineItems
 }

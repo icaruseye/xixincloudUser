@@ -4,11 +4,11 @@
       ref="sticky"
       :offset="0"
       :check-sticky-support="false">
-      <tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
-        <tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">已购买</tab-item>
-        <tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">服务中</tab-item>
-        <tab-item :selected="tabIndex === 2" @on-item-click="onItemClick">已完成</tab-item>
-      </tab>
+      <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
+        <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">已购买</xx-tab-item>
+        <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">服务中</xx-tab-item>
+        <xx-tab-item :selected="tabIndex === 2" @on-item-click="onItemClick">已完成</xx-tab-item>
+      </xx-tab>
     </sticky>
     <!-- 已购买 -->
     <div class="tabbox" v-show="tabIndex === 0" style="padding-bottom:50px">
@@ -66,31 +66,24 @@
     </div>
     <!-- 服务中 -->
     <div class="tabbox" v-show="tabIndex === 1">
-      <div class="weui-cell" @click="toDetail(1)">
-        <div class="title">哦-上门输液</div>
-        <div class="name">王二狗</div>
-        <div class="time color-theme">预约服务时间:2018-04-24 04:20</div>
+      <div class="checker-bar">
+        <span class="">筛选条件：</span>
       </div>
     </div>
     <!-- 已完成 -->
     <div class="tabbox" v-show="tabIndex === 2">2</div>
-    <user-tabbar></user-tabbar>
+    <xx-user-tabbar></xx-user-tabbar>
   </div>
 </template>
 
 <script>
-import { Tab, TabItem } from '@/components/common/tab'
 import { Sticky } from 'vux'
-import userTabbar from '@/components/common/userTabbar'
 export default {
   metaInfo: {
     title: '服务'
   },
   components: {
-    Tab,
-    TabItem,
-    Sticky,
-    userTabbar
+    Sticky
   },
   data () {
     return {

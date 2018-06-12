@@ -1,17 +1,17 @@
 <template>
   <div class="wrap has-tabbar">
-    <step-bar step="1">
-      <step-items slot="items">
+    <xx-step-bar step="1">
+      <xx-step-items slot="items">
         预约
-      </step-items>
-      <step-items slot="items">
+      </xx-step-items>
+      <xx-step-items slot="items">
         服务中
-      </step-items>
-      <step-items slot="items">
+      </xx-step-items>
+      <xx-step-items slot="items">
         已完成
-      </step-items>
-    </step-bar>
-    <xx-cell-container class="mgt10">
+      </xx-step-items>
+    </xx-step-bar>
+    <xx-cell class="mgt10">
       <xx-cell-items label="服务地址" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display:flex;align-items:center;justify-content:flex-end;width:220px;text-align:right;">
           <img style="width:10px;height:auto" src="@/assets/images/ic_address.png" />
@@ -25,19 +25,19 @@
       <xx-cell-items label="服务人员" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="padding-right:15px">医师啊</div>
       </xx-cell-items>
-    </xx-cell-container>
+    </xx-cell>
     <h2 class="cells_title">
       能接受服务时间段
     </h2>
-    <xx-cell-container>
+    <xx-cell>
       <xx-cell-items label="开始时间" @click.native="selectStartTime" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="padding-right:15px">{{startTime}}</div>
       </xx-cell-items>
       <xx-cell-items label="结束时间" @click.native="selectEndTime" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="padding-right:15px">{{endTime}}</div>
       </xx-cell-items>
-    </xx-cell-container>
-    <xx-cell-container class="mgt10">
+    </xx-cell>
+    <xx-cell class="mgt10">
       <xx-cell-items label="病情症状或备注" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div class="service_remark_textarea_container">
           <textarea v-model="remark" class="service_remark_textarea" placeholder="请输入备注"></textarea>
@@ -45,12 +45,12 @@
         </div>
       </xx-cell-items>
       <xx-cell-items label="相关医嘱病历图片上传" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
-        <uploader
+        <xx-uploader
           class="upload"
           :maxSize="1024 * 1024 * 2"
           :imgList="imgList1"
           @onUpdate="onUpdate1"
-        ></uploader>
+        ></xx-uploader>
       </xx-cell-items>
       <xx-cell-items label="需要服务人员准备必要工具" @click.native="changeRadio1" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display: flex;justify-content: flex-end;">
@@ -62,27 +62,15 @@
           <xx-radio v-model="radioValue2" typeName="checkbox" name="xxx" style="display:block;"></xx-radio>
         </div>
       </xx-cell-items>
-    </xx-cell-container>
+    </xx-cell>
     <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0">确定</button>
   </div>
 </template>
 
 <script>
 import { dateFormat } from 'vux'
-import { stepBar, stepItems } from '@/components/common/stepBar'
-import { xxCellItems, xxCellContainer } from '@/components/common/xxCells'
-import xxRadio from '@/components/common/xxRadio'
-import uploader from '@/components/common/uploader'
 const dataFormatRule = 'YYYY/MM/DD HH:mm'
 export default {
-  components: {
-    stepBar,
-    stepItems,
-    xxCellItems,
-    xxCellContainer,
-    uploader,
-    xxRadio
-  },
   data () {
     const that = this
     return {

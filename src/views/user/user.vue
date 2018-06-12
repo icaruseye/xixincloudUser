@@ -55,7 +55,7 @@
         </router-link>
       </div>
     </div>
-    <user-tabbar></user-tabbar>
+    <xx-user-tabbar></xx-user-tabbar>
     <div class="weui-mask" v-show="maskShow">
       <div class="weui-mask-layer" @click="toggleMask(false)"></div>
       <img :src="userAccount.QRCodeStr" alt="">
@@ -64,12 +64,8 @@
 </template>
 
 <script>
-import userTabbar from '@/components/common/userTabbar'
 import { mapGetters } from 'vuex'
 export default {
-  components: {
-    userTabbar
-  },
   data () {
     return {
       maskShow: false

@@ -8,7 +8,9 @@ import store from './store/index'
 import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
 import { DatetimePlugin, ToastPlugin } from 'vux'
+import xxComponents from './components/common'
 
+Vue.use(xxComponents)
 Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
 Vue.use(registryPopup)

@@ -3,13 +3,13 @@
     <div class="weui-form-cell">
       <p class="weui-cell-top">
           <label class="label" for="">头像</label>
-          <uploader
+          <xx-uploader
             class="upload"
             :isAvatar="true"
             :maxSize="1024 * 1024 * 2"
             :imgList="imgList1"
             @onUpdate="onUpdate1"
-          ></uploader>
+          ></xx-uploader>
           <i class="iconfont icon-jiantouyou"></i>
       </p>
     </div>
@@ -60,18 +60,11 @@
 </template>
 
 <script>
-import uploader from '@/components/common/uploader'
 import util from '@/plugins/util'
 import http from '@/api'
 import { mapGetters } from 'vuex'
-import Vue from 'vue'
-import { ToastPlugin } from 'vux'
-Vue.use(ToastPlugin)
 
 export default {
-  components: {
-    uploader
-  },
   data () {
     return {
       submitBtn: false,

@@ -20,16 +20,12 @@
         </div>
       </div>
     </div>
-    <user-tabbar></user-tabbar>
+    <xx-user-tabbar></xx-user-tabbar>
   </div>
 </template>
 
 <script>
-import userTabbar from '@/components/common/userTabbar'
 export default {
-  components: {
-    userTabbar
-  },
   data () {
     return {
     }

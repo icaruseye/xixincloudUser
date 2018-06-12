@@ -5,11 +5,11 @@
         ref="sticky"
         :offset="0"
         :check-sticky-support="false">
-        <tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
-          <tab-item selected @on-item-click="onItemClick">全部</tab-item>
-          <tab-item @on-item-click="onItemClick">待付款</tab-item>
-          <tab-item @on-item-click="onItemClick">已付款</tab-item>
-        </tab>
+        <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
+          <xx-tab-item selected @on-item-click="onItemClick">全部</xx-tab-item>
+          <xx-tab-item @on-item-click="onItemClick">待付款</xx-tab-item>
+          <xx-tab-item @on-item-click="onItemClick">已付款</xx-tab-item>
+        </xx-tab>
       </sticky>
       <!-- 代付款 -->
       <div v-show="tabIndex === 0">
@@ -49,13 +49,10 @@
 </template>
 
 <script>
-import { Tab, TabItem } from '@/components/common/tab'
 import { Sticky } from 'vux'
 export default {
   components: {
-    Sticky,
-    Tab,
-    TabItem
+    Sticky
   },
   data () {
     return {

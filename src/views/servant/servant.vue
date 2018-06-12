@@ -41,20 +41,18 @@
         </div>
       </div>
     </div>
-    <user-tabbar></user-tabbar>
+    <xx-user-tabbar></xx-user-tabbar>
   </div>
 </template>
 
 <script>
 import { Tab, TabItem, Sticky } from 'vux'
 import http from '@/api/index'
-import userTabbar from '@/components/common/userTabbar'
 export default {
   components: {
-    Tab,
-    TabItem,
     Sticky,
-    userTabbar
+    Tab,
+    TabItem
   },
   data () {
     return {
