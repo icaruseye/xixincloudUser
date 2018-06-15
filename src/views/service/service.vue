@@ -14,54 +14,73 @@
     <div class="tabbox" v-show="tabIndex === 0" style="padding-bottom:50px">
       <div class="weui-panel">
         <div class="weui-panel_subtitle">单项服务</div>
-        <div class="weui-panel_subinfo">
-          <div class="icon"><img src="https://img3.doubanio.com/icon/u53078059-35.jpg" alt=""></div>
-          <div class="mid">
-            <div class="name">陈医师</div>
-            <div class="role">萌宠砖家</div>
-          </div>
-        </div>
-        <div class="weui-list_container">
-          <div class="weui-list_item">
-            <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
-            <div class="mid">
-              <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                <div class="title" style="font-size:18px;">院内陪诊院内陪诊…</div>
-                <div class="balance">剩余：2次</div>
+        <template v-for="(pItem, pIndex) in UserOrderDetailsList.ItemsByDoc">
+          <div :key="pIndex">
+            <div class="weui-panel_subinfo">
+              <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG" alt=""></div>
+              <div class="mid">
+                <div class="name">{{pItem.ContentOfItems[0].DoctorName}}</div>
+                <div class="role">萌宠砖家</div>
               </div>
-              <div class="describe">到期时间：2018/06/08</div>
             </div>
-            <div class="btn">
-              <button>预约</button>
-            </div>
+            <template v-for="(cItem, cIndex) in pItem.ContentOfItems">
+              <div class="weui-list_container" :key="cIndex">
+                <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
+                  <div class="weui-list_item" :key="mIndex">
+                    <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
+                    <div class="mid">
+                      <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                        <div class="title">{{mItem.SingleItem.Name}}</div>
+                        <div class="balance">剩余：{{mItem.LeftNumber}}次</div>
+                      </div>
+                      <div class="describe">到期时间：2018/06/08</div>
+                    </div>
+                    <div class="btn">
+                      <button>预约</button>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </template>
           </div>
-        </div>
+        </template>
       </div>
       <div class="weui-panel">
         <div class="weui-panel_subtitle">套餐服务</div>
-        <div class="weui-panel_subinfo">
-          <div class="icon"><img src="https://img3.doubanio.com/icon/u53078059-35.jpg" alt=""></div>
-          <div class="mid">
-            <div class="name">陈医师</div>
-            <div class="role">萌宠砖家</div>
-          </div>
-        </div>
-        <div class="weui-panel_category">医护上门套餐包</div>
-        <div class="weui-list_container">
-          <div class="weui-list_item">
-            <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
-            <div class="mid">
-              <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                <div class="title">院内陪诊院内陪诊…</div>
-                <div class="balance">剩余：2次</div>
+        
+        <template v-for="(pItem, pIndex) in UserOrderDetailsList.PackByDoc">
+          <div :key="pIndex">
+            <div class="weui-panel_subinfo">
+              <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG" alt=""></div>
+              <div class="mid">
+                <div class="name">{{pItem.ContentOfItems[0].DoctorName}}</div>
+                <div class="role">萌宠砖家</div>
               </div>
-              <div class="describe">到期时间：2018/06/08</div>
             </div>
-            <div class="btn">
-              <button>预约</button>
-            </div>
+            <template v-for="(cItem, cIndex) in pItem.ContentOfItems">
+              <div :key="cIndex">
+                <div class="weui-panel_category">{{cItem.Package.Name}}</div>
+                <div class="weui-list_container">
+                  <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
+                    <div class="weui-list_item" :key="mIndex">
+                      <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
+                      <div class="mid">
+                        <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                          <div class="title">{{mItem.SingleItem.Name}}</div>
+                          <div class="balance">剩余：{{mItem.LeftNumber}}次</div>
+                        </div>
+                        <div class="describe">到期时间：2018/06/08</div>
+                      </div>
+                      <div class="btn">
+                        <button>预约</button>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
           </div>
-        </div>
+        </template>
       </div>
     </div>
     <!-- 服务中 -->
@@ -128,6 +147,7 @@
 </template>
 
 <script>
+import http from '@/api'
 import { Sticky } from 'vux'
 export default {
   metaInfo: {
@@ -139,13 +159,17 @@ export default {
   data () {
     return {
       tabIndex: this.$store.getters.serviceTabIndex,
-      checkerIndex: 0
+      checkerIndex: 0,
+      UserOrderDetailsList: []
     }
   },
   watch: {
     serviceTabIndex (val) {
       this.tabIndex = val
     }
+  },
+  created () {
+    this.getUserOrderDetailsList()
   },
   methods: {
     changeChecker (index) {
@@ -156,6 +180,11 @@ export default {
     },
     toDetail (id) {
       this.$router.push(`/service/in/${id}`)
+    },
+    async getUserOrderDetailsList () {
+      const res = await http.get('/ServicePackDetail')
+      console.log(res)
+      this.UserOrderDetailsList = res.data.Data
     }
   }
 }
@@ -275,7 +304,7 @@ export default {
       text-align: center;
       font-size: 15px;
       border: 0;
-      border-radius: 4px;
+      border-radius: 2px;
     }
   }
 }
