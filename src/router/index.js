@@ -12,6 +12,9 @@ const servantItem = () => import('@/views/servant/detail/item')
 const servantPackage = () => import('@/views/servant/detail/package')
 const servantChat = () => import('@/views/servant/chat')
 
+// 支付
+const pay = () => import('@/views/servant/pay.vue')
+
 // 用户端-服务
 const service = () => import('@/views/service/service')
 const serviceList = () => import('@/views/service/service-list')
@@ -33,6 +36,7 @@ const userOrder = () => import('@/views/user/user-order')
 const userComplaint = () => import('@/views/user/user-complaint')
 const userComplaintDetail = () => import('@/views/user/user-complaint-detail')
 
+// 微信登录
 const wxLogin = () => import('@/views/wxlogin/login')
 
 Vue.use(Router)
@@ -48,6 +52,10 @@ const router = new Router({
     {
       path: '/User/Login',
       component: wxLogin
+    },
+    {
+      path: '/servant/pay/:id',
+      component: pay
     },
     {
       path: '/',

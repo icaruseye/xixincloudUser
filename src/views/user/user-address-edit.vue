@@ -35,10 +35,8 @@
 
 <script>
 import http from '@/api/index'
-import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch, ToastPlugin } from 'vux'
+import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch } from 'vux'
 import util from '@/plugins/util'
-import Vue from 'vue'
-Vue.use(ToastPlugin)
 export default {
   components: {
     XAddress,

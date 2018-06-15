@@ -11,7 +11,8 @@ module.exports = {
   // API请求延迟时间
   '_TIMEOUT_': 15000,
   // 发布后可以为空
-  '_PATH_': process.env.NODE_ENV === 'development' ? '/api/User' : '',
+  // '_PATH_': 'http://api.xixincloud.com/api/User',
+  '_PATH_': '/api/User',
   // 发布路径
   'BUILD_PATH': '',
   // 图片CDN地址

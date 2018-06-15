@@ -11,7 +11,6 @@ axios.interceptors.response.use(response => {
     if (error.response.data.Code === 100010) {
       sessionStorage.removeItem('userInfo')
       router.push('/User/Login?id=2')
-      Vue.prototype.$popupTop('登录失效，重新登录')
     }
     // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxef2a7d894732658e&redirect_uri=' +
     // encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
@@ -25,7 +24,6 @@ export default {
   post (url, data, header) {
     var token = localStorage.getItem('user_token')
     var headers = {
-      'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json; charset=UTF-8'
     }
     if (header) {
@@ -46,9 +44,7 @@ export default {
   get (url, params) {
     var token = localStorage.getItem('user_token')
     var headers = {
-      'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/json; charset=UTF-8',
-      'deviceType': 'WAP'
+      'Content-Type': 'application/json; charset=UTF-8'
     }
     if (token) {
       headers.token = token
@@ -65,7 +61,6 @@ export default {
   send (url, method, data, header) {
     var token = localStorage.getItem('user_token')
     var headers = {
-      'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json; charset=UTF-8'
     }
     if (header) {

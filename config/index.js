@@ -4,6 +4,7 @@
 
 const path = require('path')
 const config = require('../src/config')
+const address = require('address')
 
 module.exports = {
   dev: {
@@ -19,7 +20,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: '192.168.2.236', // can be overwritten by process.env.HOST
+    host: address.ip(), // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

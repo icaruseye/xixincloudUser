@@ -59,9 +59,7 @@
 
 <script>
 import http from '@/api/index'
-import { AlertModule, ToastPlugin, XDialog, TransferDomDirective as TransferDom } from 'vux'
-import Vue from 'vue'
-Vue.use(ToastPlugin)
+import { AlertModule, XDialog, TransferDomDirective as TransferDom } from 'vux'
 export default {
   directives: {
     TransferDom

@@ -22,7 +22,7 @@
       <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满10岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
     </div>
     
-    <button data-v-018b696c="" type="button" class="weui-btn weui-btn-bottom weui-btn_primary">立即购买 ￥10.00</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(1)">立即购买 ￥10.00</button>
   </div>
 </template>
 
@@ -37,6 +37,9 @@ export default {
     }
   },
   methods: {
+    toPay (id) {
+      this.$router.push(`/servant/pay/${id}`)
+    }
   }
 }
 </script>

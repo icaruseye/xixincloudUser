@@ -54,12 +54,12 @@
       </xx-cell-items>
       <xx-cell-items label="需要服务人员准备必要工具" @click.native="changeRadio1" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display: flex;justify-content: flex-end;">
-          <xx-radio v-model="radioValue1" typeName="checkbox" name="xxx" style="display:block;"></xx-radio>
+          <xx-checker v-model="radioValue1" typeName="checkbox" name="xxx" style="display:block;"></xx-checker>
         </div>
       </xx-cell-items>
       <xx-cell-items label="需要服务人员准备必要药品" @click.native="changeRadio2" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display: flex;justify-content: flex-end;">
-          <xx-radio v-model="radioValue2" typeName="checkbox" name="xxx" style="display:block;"></xx-radio>
+          <xx-checker v-model="radioValue2" typeName="checkbox" name="xxx" style="display:block;"></xx-checker>
         </div>
       </xx-cell-items>
     </xx-cell>
