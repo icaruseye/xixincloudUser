@@ -12,7 +12,10 @@
     </sticky>
     <!-- 已购买 -->
     <div class="tabbox" v-show="tabIndex === 0" style="padding-bottom:50px">
-      <div class="weui-panel">
+      <!-- 空状态 -->
+      <div v-if="UserOrderDetailsList.ItemsByDoc.length === 0 && UserOrderDetailsList.ItemsByDoc.length === 0">暂无可预约的服务</div>
+      <!-- 单项服务 -->
+      <div class="weui-panel" v-if="UserOrderDetailsList.ItemsByDoc.length !== 0">
         <div class="weui-panel_subtitle">单项服务</div>
         <template v-for="(pItem, pIndex) in UserOrderDetailsList.ItemsByDoc">
           <div :key="pIndex">
@@ -31,12 +34,12 @@
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
                         <div class="title">{{mItem.SingleItem.Name}}</div>
-                        <div class="balance">剩余：{{mItem.LeftNumber}}次</div>
+                        <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
                       <div class="describe">到期时间：2018/06/08</div>
                     </div>
                     <div class="btn">
-                      <button>预约</button>
+                      <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
                     </div>
                   </div>
                 </template>
@@ -45,9 +48,9 @@
           </div>
         </template>
       </div>
-      <div class="weui-panel">
+      <!-- 套餐服务 -->
+      <div class="weui-panel" v-if="UserOrderDetailsList.ItemsByDoc.length !== 0">
         <div class="weui-panel_subtitle">套餐服务</div>
-        
         <template v-for="(pItem, pIndex) in UserOrderDetailsList.PackByDoc">
           <div :key="pIndex">
             <div class="weui-panel_subinfo">
@@ -67,12 +70,12 @@
                       <div class="mid">
                         <div style="display: flex;justify-content: space-between;align-items: baseline;">
                           <div class="title">{{mItem.SingleItem.Name}}</div>
-                          <div class="balance">剩余：{{mItem.LeftNumber}}次</div>
+                          <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                         </div>
                         <div class="describe">到期时间：2018/06/08</div>
                       </div>
                       <div class="btn">
-                        <button>预约</button>
+                      <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
                       </div>
                     </div>
                   </template>
@@ -160,7 +163,10 @@ export default {
     return {
       tabIndex: this.$store.getters.serviceTabIndex,
       checkerIndex: 0,
-      UserOrderDetailsList: []
+      UserOrderDetailsList: {
+        ItemsByDoc: [],
+        PackByDoc: []
+      }
     }
   },
   watch: {
@@ -181,8 +187,11 @@ export default {
     toDetail (id) {
       this.$router.push(`/service/in/${id}`)
     },
+    toReserve (id, servant, name) {
+      this.$router.push(`/service/reserve/${id}?servant=${servant}&name=${name}`)
+    },
     async getUserOrderDetailsList () {
-      const res = await http.get('/ServicePackDetail')
+      const res = await http.get('/UserOrderDetailsList')
       console.log(res)
       this.UserOrderDetailsList = res.data.Data
     }

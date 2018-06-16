@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { ToastPlugin } from 'vux'
+import { ToastPlugin, ChinaAddressV4Data } from 'vux'
 Vue.use(ToastPlugin)
 
 export default {
@@ -86,5 +86,16 @@ export default {
     if (type === '[object Null]') {
       return false
     }
+  },
+  // 从地址库通过id换取名字
+  transformAddress (val) {
+    if (!/^\d+$/.test(val)) return val
+    let name = ''
+    ChinaAddressV4Data.map((item) => {
+      if (item.value === val) {
+        name = item.name
+      }
+    })
+    return name
   }
 }
