@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="position:fixed;left:0;top:0;right:0;">
     <div class="form-panel">
       <div class="weui-form-cell">
-        <x-address title="省市区" :raw-value="true" v-model="UserAddress.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center"></x-address>
+        <x-address title="省市区" :raw-value="true" v-model="UserAddress.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center" :popup-style="{'z-index': 503}"></x-address>
         <input v-model="UserAddress.citys" name="citys" type="hidden">
       </div>
       <div class="weui-form-cell">
@@ -29,7 +29,10 @@
         </p>
       </div>
     </div>
-    <button type="button" class="weui-btn weui-btn_primary" @click="save" :disabled="submitBtn">保存</button>
+    <div style="position: fixed;bottom: 0;width:100%;display:flex">
+      <button type="button" class="weui-btn weui-btn_cancel" @click="cancel">取消</button>
+      <button type="button" class="weui-btn weui-btn_primary" @click="save" :disabled="submitBtn">保存</button>
+    </div>
   </div>
 </template>
 
@@ -45,12 +48,35 @@ export default {
     CheckerItem,
     InlineXSwitch
   },
+  props: {
+    id: {
+      type: Number,
+      default: -1
+    },
+    defaultOnly: {
+      type: Boolean,
+      default: false
+    }
+  },
+  watch: {
+    id (val) {
+      if (this.id !== -1) {
+        this.getData(this.id)
+      } else {
+        this.UserAddress = {
+          IsDefault: 1,
+          citys: [],
+          SpecificAddress: '',
+          Remark: '家'
+        }
+      }
+    }
+  },
   data () {
     return {
       submitBtn: false,
       addressData: ChinaAddressV4Data,
       address: '',
-      defaultOnly: false,
       UserAddress: {
         IsDefault: 1,
         citys: [],
@@ -76,19 +102,10 @@ export default {
       }
     }
   },
-  mounted () {
-    const id = this.$route.params.id
-    if (id !== 'add') {
-      this.getData(id)
-    }
-    if (this.$route.query.first === '1') {
-      this.defaultOnly = true
-    }
-    if (this.$route.query.index !== '0') {
-      this.UserAddress.IsDefault = 0
-    }
-  },
   methods: {
+    cancel () {
+      this.$emit('cancel')
+    },
     async getData (id) {
       const res = await http.get(`/UserAddress/${id}`)
       const data = res.data.Data
@@ -113,14 +130,15 @@ export default {
           SpecificAddress: this.UserAddress.SpecificAddress,
           Remark: this.UserAddress.Remark
         }
-        const method = this.$route.params.id === 'add' ? 'post' : 'put'
-        const url = this.$route.params.id === 'add' ? '/UserAddress' : `/UserAddress/${this.$route.params.id}`
+        const method = this.id === -1 ? 'post' : 'put'
+        const url = this.id === -1 ? '/UserAddress' : `/UserAddress/${this.id}`
         const res = await http.send(url, method, UserAddress)
         if (res.data.Code === 100000) {
           this.$vux.toast.show({
             text: '提交成功',
             onHide () {
-              that.$router.back()
+              this.submitBtn = false
+              that.$emit('success')
             }
           })
         } else {
@@ -136,9 +154,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.weui-btn {
-  position: fixed;
-  bottom: 0;
+.weui-btn_primary {
+  flex: 1;
+}
+
+.weui-btn_cancel {
+  background: #F8A519;
+  width: 150px;
 }
 
 .form-panel {

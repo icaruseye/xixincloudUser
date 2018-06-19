@@ -10,7 +10,7 @@ axios.interceptors.response.use(response => {
     // token无效，重新登录
     if (error.response.data.Code === 100010) {
       sessionStorage.removeItem('userInfo')
-      router.push('/User/Login?id=2')
+      router.push('/User/Login?id=4')
     }
     // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxef2a7d894732658e&redirect_uri=' +
     // encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'

@@ -1,6 +1,6 @@
 <template>
   <div class="wrap has-tabbar">
-    <xx-step-bar step="2">
+    <xx-step-bar :step="steps">
       <xx-step-items slot="items">
         预约
       </xx-step-items>
@@ -11,70 +11,228 @@
         已完成
       </xx-step-items>
     </xx-step-bar>
-    <xx-timeLine step="0" class="mgt10">
+    <xx-timeLine :step="timeLines" class="mgt10">
       <xx-timeLine-items
         slot="items"
-        title="待确认">
-        <div class="content">
+        :title="title1"
+        :subhead="subhead1">
+        <div class="content" v-if="serviceItemInfo.Type === 0">
           服务者还未确认服务时间
         </div>
-      </xx-timeLine-items>
-      <xx-timeLine-items
-        slot="items"
-        title="服务中"
-        subhead="确认时间：2018/06/08 15:30">
-        <div class="content">
-          服务项：PICC换药
+        <div class="content" v-if="serviceItemInfo.Type === 1">
+          服务项：{{serviceItemInfo.ItemName}}
         </div>
       </xx-timeLine-items>
       <xx-timeLine-items
         slot="items"
-        title="待评价">
+        :title="title2"
+        :subhead="subhead2">
+        <div class="content">
+          服务项：{{serviceItemInfo.ItemName}}
+        </div>
+        <div class="content">
+        </div>
+      </xx-timeLine-items>
+      <xx-timeLine-items
+        slot="items"
+        :title="title3"
+        :subhead="subhead3">
         <div class="content nobor">
           <!-- 未完成 -->
-          <!-- <div>服务还未完成，不能进行评价</div> -->
+          <div v-if="[4,5,6].indexOf(serviceItemInfo.State) === -1">服务还未完成，不能进行评价</div>
           <!-- 待评价 -->
-          <div>
+          <div v-if="serviceItemInfo.Type === 1 && serviceItemInfo.State === 4">
             <div class="comments">
               <div class="label">服务评价</div>
               <div class="right">
-                <rater v-model="rate" active-color="#F8A519" :font-size="14"></rater>
+                <rater v-model="ReviewInfoParameter.Score" active-color="#F8A519" :font-size="14"></rater>
               </div>
             </div>
             <div>
-              <textarea class="comments-textarea" name="" id="" cols="30" rows="10"></textarea>
+              <textarea class="comments-textarea" v-model="ReviewInfoParameter.Remark" name="" id="" placeholder="请输入评价内容..."></textarea>
               <span style="font-size:11px">超过72小时自动默认好评</span>
             </div>
           </div>
           <!-- 已评价 -->
-          <div class="comments-done">
+          <div v-if="serviceItemInfo.Type === 1 && serviceItemInfo.State === 5" class="comments-done">
             <div class="title">服务评价</div>
-            <div class="comment">感谢医生，服务特别好，感觉很专业！</div>
+            <div class="comment">{{ServantReview.Remark}}</div>
             <div class="rates" style="text-align: right;">
-              <rater v-model="rate" disabled="disabled" active-color="#F8A519" :font-size="14"></rater>
+              <rater v-model="ServantReview.Score" disabled="disabled" active-color="#F8A519" :font-size="14"></rater>
             </div>
           </div>
         </div>
       </xx-timeLine-items>
     </xx-timeLine>
-    <div class="btn-bar">
-      <!-- <button type="button" class="weui-btn weui-btn_primary">发消息</button> -->
-      <a href="/service/complaint/1" class="weui-btn weui-btn_primary">投诉</a>
-      <button type="button" class="weui-btn weui-btn_primary">取消预约</button>
+    <div class="btn-bar" v-if="serviceItemInfo.State === 0">
+      <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;">发消息</button>
+      <button type="button" class="weui-btn weui-btn_primary" @click="showCancelConfirm">取消预约</button>
+    </div>
+    <div class="btn-bar" v-if="serviceItemInfo.State === 3">
+      <button type="button" style="flex:1" class="weui-btn weui-btn_primary">发消息</button>
+    </div>
+    <div class="btn-bar" v-if="serviceItemInfo.State === 4">
+      <a href="/service/complaint/1" class="weui-btn weui-btn_primary" style="background: #ffc349;">投诉</a>
+      <button type="button" class="weui-btn weui-btn_primary" @click="submitComments" :disabled="disabled">确定</button>
+    </div>
+    <!-- 取消预约 -->
+    <div v-transfer-dom>
+      <confirm v-model="showCancel"
+        class="cancel-wrap"
+        title="取消预约"
+        @on-confirm="cancelReserve">
+        <div>
+          <select v-model="CancelType">
+            <option :value="1">时间冲突</option>
+            <option :value="2">地点冲突</option>
+            <option :value="3">其他</option>
+          </select>
+          <input type="text" v-model="CancleDescription" placeholder="取消描述(可选)">
+        </div>
+      </confirm>
     </div>
   </div>
 </template>
 
 <script>
-import { Rater } from 'vux'
+import http from '@/api'
+import { TransferDom, Rater, dateFormat, Confirm } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
+  filters: {
+    timeFormat (value) {
+      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
+    }
+  },
   components: {
-    Rater
+    Rater,
+    Confirm
   },
   data () {
     return {
+      disabled: false,
+      showCancel: false,
+      steps: '1',
+      timeLines: '0',
       rate: 5,
-      comments: ''
+      comments: '',
+      state: null,
+      type: null,
+      title1: '待确认',
+      title2: '待服务',
+      title3: '待评价',
+      subhead1: '',
+      subhead2: '',
+      subhead3: '',
+      serviceItemInfo: {},
+      CancelType: 1,
+      CancleDescription: '',
+      ReviewInfoParameter: {
+        Score: 5,
+        Remark: '',
+        MissionID: ''
+      },
+      ServantReview: {}
+    }
+  },
+  created () {
+    this.state = +this.$route.query.state
+    this.type = +this.$route.query.type
+    this.initData()
+  },
+  methods: {
+    async initData () {
+      const res = await http.get(`/Mission?missionID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        this.serviceItemInfo = res.data.Data
+        this.setState()
+        if (res.data.Data.State === 5) {
+          this.getComments()
+        }
+      }
+    },
+    // 提交评价
+    async submitComments () {
+      const that = this
+      this.disabled = true
+      this.ReviewInfoParameter.MissionID = this.serviceItemInfo.ID
+      const res = await http.post(`/ServantReview`, this.ReviewInfoParameter)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: res.data.Msg,
+          onHide () {
+            that.initData()
+          }
+        })
+      } else {
+        this.$vux.toast.show({
+          type: 'text',
+          text: res.data.Msg,
+          onHide () {
+            that.disabled = false
+          }
+        })
+      }
+    },
+    // 获取评价
+    async getComments () {
+      const res = await http.get(`/ServantReview?missionID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        this.ServantReview = res.data.Data
+      } else {
+        this.$vux.toast.show({
+          type: 'text',
+          text: res.data.Msg
+        })
+      }
+    },
+    // 取消预约
+    async cancelReserve () {
+      const that = this
+      const res = await http.send(`/ReserveService/Cancel?ID=${this.serviceItemInfo.ID}`, 'put', {
+        CancelType: this.CancelType,
+        CancleDescription: ''
+      })
+      if (res.data.Code === 100000) {
+        console.log(res)
+        this.$vux.toast.show({
+          text: res.data.Msg,
+          onHide () {
+            that.$router.back()
+          }
+        })
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    showCancelConfirm () {
+      this.showCancel = true
+    },
+    setState () {
+      // 已确认
+      if (this.serviceItemInfo.Type === 1) {
+        this.title1 = '已确认'
+        this.steps = '2'
+        this.subhead1 = `确认时间：${dateFormat(new Date(this.serviceItemInfo.CreateTime), 'YYYY-MM-DD HH:mm')}`
+        this.timeLines = '1'
+      }
+      // 待服务
+      if (this.serviceItemInfo.Type === 1 && [0, 1, 2, 3].indexOf(this.serviceItemInfo.State) !== -1) {
+      }
+      // 已服务
+      if (this.serviceItemInfo.Type === 1 && [4, 5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
+        this.title2 = '已服务'
+        this.timeLines = '2'
+        this.subhead2 = `服务时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
+      }
+      // 待评价
+      // 已评价
+      if (this.type === 1 && [5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
+        this.subhead3 = `评价时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
+        this.timeLines = '3'
+      }
     }
   }
 }
@@ -112,7 +270,6 @@ export default {
   display: flex;
   .weui-btn:nth-child(1) {
     width: 300px;
-    background: #ffc349
   }
 }
 
@@ -129,17 +286,19 @@ export default {
 
 .comments-textarea {
   resize: none;
-  background: transparent;
-  border: 1px solid RGBA(151, 151, 151, .3);
+  padding: 5px;
   font-size: 13px;
+  border: 0;
   color: #666;
   width: 100%;
-  border-radius: 2px;
+  border-radius: 3px;
+  box-sizing: border-box;
+  height: 120px;
 }
 
 .comments-done {
   position: relative;
-  margin-top: 10px;
+  margin-top: 15px;
   padding: 12px 12px 9px 12px;
   background: #F2F2F2;
   border-radius: 4px;
@@ -147,11 +306,25 @@ export default {
     content: "";
     position: absolute;
     top: -20px;
-    left: 20px;;
+    left: 10px;;
     width:0;
     height:0;
     border:10px solid #f00283;
     border-color: transparent transparent #F2F2F2 transparent;
+  }
+}
+
+.cancel-wrap {
+  select {
+    width: 100%;
+    border: 0;
+    height: 30px;
+    line-height: 30px;
+  }
+  input {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
   }
 }
 </style>

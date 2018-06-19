@@ -31,7 +31,6 @@ const user = () => import('@/views/user/user')
 const userInfo = () => import('@/views/user/user-info')
 const userPhone = () => import('@/views/user/user-phone')
 const userAddress = () => import('@/views/user/user-address')
-const userAddressEdit = () => import('@/views/user/user-address-edit')
 const userOrder = () => import('@/views/user/user-order')
 const userComplaint = () => import('@/views/user/user-complaint')
 const userComplaintDetail = () => import('@/views/user/user-complaint-detail')
@@ -128,10 +127,6 @@ const router = new Router({
       component: userAddress
     },
     {
-      path: '/user/address/edit/:id',
-      component: userAddressEdit
-    },
-    {
       path: '/user/order',
       component: userOrder
     },
@@ -154,7 +149,7 @@ router.beforeEach((to, from, next) => {
     // encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     // window.location.href = '/Servant/Login'
     sessionStorage.setItem('to_path', to.fullPath)
-    next('/User/Login?id=2')
+    next('/User/Login?id=4')
     return false
   }
   next()

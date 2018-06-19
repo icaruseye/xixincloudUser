@@ -9,22 +9,45 @@
         </div>
       </template>
     </div>
-    <button type="button" class="weui-btn weui-btn_primary" @click="toEdit('add', 0)">新建地址</button>
+      <button type="button" class="weui-btn weui-btn_primary" @click="toEdit(-1, 0)">新建地址</button>
+    <div v-transfer-dom>
+      <popup v-model="showAddress" height="100%">
+        <userAddressEdit :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+      </popup>
+    </div>
   </div>
 </template>
 
 <script>
 import http from '@/api/index'
-import { ChinaAddressV4Data } from 'vux'
+import userAddressEdit from './user-address-edit'
+import { ChinaAddressV4Data, Popup, TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
+  components: {
+    userAddressEdit,
+    Popup
+  },
   data () {
     return {
+      showAddress: false,
       addressList: [],
-      isEmptyList: 0
+      isEmptyList: false,
+      index: '',
+      addressID: null
     }
   },
   created () {
+    const that = this
     this.getAddressList()
+    window.addEventListener('popstate', function (e) {
+      if (e.state) {
+        that.showAddress = false
+        history.pushState(null, null, document.URL)
+      }
+    }, false)
   },
   filters: {
     transformAddress (val) {
@@ -38,22 +61,31 @@ export default {
     }
   },
   methods: {
+    cancelAddress () {
+      this.showAddress = false
+    },
+    successAddress () {
+      this.showAddress = false
+      this.getAddressList()
+    },
     async getAddressList () {
       const res = await http.get('/UserAddress')
       this.addressList = res.data.Data
     },
     toEdit (id, index) {
       if (this.addressList.length === 1) {
-        if (id === 'add') {
-          this.isEmptyList = 0
+        if (id === -1) {
+          this.isEmptyList = false
         } else {
-          this.isEmptyList = 1
+          this.isEmptyList = true
         }
       }
       if (this.isEmptyList.length === 0) {
-        this.isEmptyList = 1
+        this.isEmptyList = true
       }
-      this.$router.push(`/user/address/edit/${id}?first=${this.isEmptyList}&index=${index}`)
+      this.showAddress = true
+      this.addressID = id
+      // this.$router.push(`/user/address/edit/${id}?first=${this.isEmptyList}&index=${index}`)
     }
   }
 }

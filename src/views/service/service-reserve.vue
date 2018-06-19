@@ -80,7 +80,7 @@
               <i v-if="addressIndex === index" class="iconfont icon-xuanzhong"></i>
             </div>
           </template>
-          <div class="address-list_item_add">+新增地址</div>
+          <div class="address-list_item_add" @click="addAddress">+新增地址</div>
         </div>
       </popup>
     </div>
@@ -92,6 +92,11 @@
       @on-confirm="onConfirm">
       </confirm>
     </div>
+    <div v-transfer-dom>
+      <popup v-model="showAddressEdit" height="100%" style="z-index:502">
+        <userAddressEdit :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+      </popup>
+    </div>
   </div>
 </template>
 
@@ -99,6 +104,7 @@
 import http from '@/api'
 import util from '@/plugins/util'
 import { TransferDom, dateFormat, Popup, Confirm } from 'vux'
+import userAddressEdit from '../user/user-address-edit'
 const dataFormatRule = 'YYYY/MM/DD HH:mm'
 export default {
   directives: {
@@ -106,7 +112,8 @@ export default {
   },
   components: {
     Popup,
-    Confirm
+    Confirm,
+    userAddressEdit
   },
   filters: {
     _transformAddress (val) {
@@ -116,6 +123,8 @@ export default {
   data () {
     const that = this
     return {
+      showAddressEdit: false,
+      isEmptyList: false,
       submitDisable: false,
       isConfirm: false,
       isShowAddress: false,
@@ -149,6 +158,16 @@ export default {
     console.log(this.$route)
   },
   methods: {
+    cancelAddress () {
+      this.showAddressEdit = false
+    },
+    successAddress () {
+      this.showAddressEdit = false
+      this.getAddressList()
+    },
+    addAddress () {
+      this.showAddressEdit = true
+    },
     transformAddress (val) {
       return util.transformAddress(val)
     },
@@ -239,6 +258,7 @@ export default {
           this.reqParams.Address = this.transformAddress(data[0].Province) + this.transformAddress(data[0].City) + this.transformAddress(data[0].Area) + data[0].SpecificAddress
         } else {
           this.address = '请选择地址'
+          this.isEmptyList = true
         }
       }
     },
