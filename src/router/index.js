@@ -38,6 +38,9 @@ const userComplaintDetail = () => import('@/views/user/user-complaint-detail')
 // 微信登录
 const wxLogin = () => import('@/views/wxlogin/login')
 
+// 结果页
+const resultsComplaint = () => import('@/views/resultsPage/complaint')
+
 Vue.use(Router)
 
 const router = new Router({
@@ -137,6 +140,10 @@ const router = new Router({
     {
       path: '/user/complaint/:id',
       component: userComplaintDetail
+    },
+    {
+      path: '/result/complaint',
+      component: resultsComplaint
     }
   ]
 })

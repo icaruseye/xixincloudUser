@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import http from '@/api/index'
 import { AlertModule, XDialog, TransferDomDirective as TransferDom } from 'vux'
 export default {
   directives: {
@@ -109,7 +108,7 @@ export default {
       if (!(mobile.length === 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(mobile))) {
         return this.$vux.toast.text('请填写正确的手机号')
       }
-      const res = await http.post('/SendingVCode?MobilePhone=' + this.mobile)
+      const res = await this.$http.post('/SendingVCode?MobilePhone=' + this.mobile)
       if (res.data.Code === 100000) {
         this.$vux.toast.text('已发送，请注意查收')
         this.setTimer()
@@ -143,7 +142,7 @@ export default {
       if (!this.userAgreement) {
         return this.$vux.toast.text('请填勾选同意用户协议')
       }
-      const res = await http.post(`/ValidateMobile?MobilePhone=${this.mobile}&VCode=${this.code}`)
+      const res = await this.$http.post(`/ValidateMobile?MobilePhone=${this.mobile}&VCode=${this.code}`)
       console.log(res)
       if (res.data.Data.Code === 10000) {
         this.$vux.toast.text('验证成功')

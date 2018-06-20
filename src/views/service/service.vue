@@ -49,7 +49,7 @@
         </template>
       </div>
       <!-- 套餐服务 -->
-      <div class="weui-panel" v-if="UserOrderDetailsList.ItemsByDoc.length !== 0">
+      <div class="weui-panel" v-if="UserOrderDetailsList.PackByDoc.length !== 0">
         <div class="weui-panel_subtitle">套餐服务</div>
         <template v-for="(pItem, pIndex) in UserOrderDetailsList.PackByDoc">
           <div :key="pIndex">
@@ -100,7 +100,7 @@
       <div class="weui-panel" style="margin-top:0">
         <div class="weui-list_container" v-if="dataList.length >0">
           <template v-for="(item, index) in dataList">
-            <div class="weui-list_item" :key="index" @click="missionDetail(item.State, item.Type, item.ID, index)">
+            <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type)">
               <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
@@ -122,18 +122,22 @@
     <div class="tabbox" v-show="tabIndex === 2">
       <div class="weui-panel">
         <div class="weui-list_container">
-          <div class="weui-list_item" @click="toDetail(1)">
-            <div class="avatar"><img src="https://tva1.sinaimg.cn/crop.0.0.180.180.50/5e9d399fjw1e8qgp5bmzyj2050050aa8.jpg" alt=""></div>
-            <div class="mid">
-              <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                <div class="title" style="font-weight:normal">PICC换药</div>
-                <div class="servant">护士：肖丽涵</div>
+          <template v-for="(item, index) in dataListDone">
+            <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type)">
+              <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
+              <div class="mid">
+                <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                  <div class="title" style="font-weight:normal">{{item.ItemName}}</div>
+                  <div class="servant">护士：{{item.ServantName}}</div>
+                </div>
+                <div style="font-size:14px;color:#666;">内容：</div>
+                <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div>
               </div>
-              <div style="font-size:14px;color:#666;">内容：阿莫西林3颗含服</div>
-              <div class="describe">到期时间：2018/06/08</div>
+              <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
+              <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
+              <img v-if="item.State === 4" style="width:50px;height:50px;" src="@/assets/images/ic_dpj.png" alt="">
             </div>
-            <img style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="">
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -142,7 +146,6 @@
 </template>
 
 <script>
-import http from '@/api'
 import { Sticky, dateFormat } from 'vux'
 export default {
   metaInfo: {
@@ -159,6 +162,7 @@ export default {
   data () {
     return {
       dataList: [],
+      dataListDone: [],
       tabIndex: this.$store.getters.serviceTabIndex,
       checkerIndex: 0, // 0、全部；1、待确认；2、待服务；3、待评价
       UserOrderDetailsList: {
@@ -176,9 +180,12 @@ export default {
     }
   },
   created () {
+    // 预约列表
     this.getUserOrderDetailsList()
-    // 初始服务中数据
+    // 服务中列表
     this.initData()
+    // 已完成列表
+    this.getDone()
   },
   methods: {
     /** 初始化 */
@@ -221,29 +228,35 @@ export default {
     },
     /** 待确认 */
     async getUserReserveServiceList () {
-      const res = await http.get('/UserReserveServiceList')
+      const res = await this.$http.get('/UserReserveServiceList')
       return res.data.Data
     },
     /** 待服务 */
     async getInServiceList () {
-      const res = await http.get('/MissionList/InService')
+      const res = await this.$http.get('/MissionList/InService')
       return res.data.Data
     },
     /** 待评价 */
     async getWaitForReview () {
-      const res = await http.get('/MissionList/WaitForReview')
+      const res = await this.$http.get('/MissionList/WaitForReview')
       return res.data.Data
     },
     /** 预约列表 */
     async getUserOrderDetailsList () {
-      const res = await http.get('/UserOrderDetailsList')
+      const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
         this.UserOrderDetailsList = res.data.Data
       }
     },
-    missionDetail (state, type, id, index) {
-      sessionStorage.setItem('serviceItemInfo', JSON.stringify(this.dataList[index]))
-      this.$router.push(`/service/in/${id}?state=${state}&type=${type}`)
+    // 已完成
+    async getDone () {
+      const res = await this.$http.get('/MissionList/Complate')
+      if (res.data.Code === 100000) {
+        this.dataListDone = res.data.Data
+      }
+    },
+    missionDetail (id, type) {
+      this.$router.push(`/service/in/${id}?type=${type}`)
     },
     changeChecker (index) {
       this.checkerIndex = index

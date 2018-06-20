@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import http from '@/api/index'
 import userAddressEdit from './user-address-edit'
 import { ChinaAddressV4Data, Popup, TransferDom } from 'vux'
 export default {
@@ -69,7 +68,7 @@ export default {
       this.getAddressList()
     },
     async getAddressList () {
-      const res = await http.get('/UserAddress')
+      const res = await this.$http.get('/UserAddress')
       this.addressList = res.data.Data
     },
     toEdit (id, index) {

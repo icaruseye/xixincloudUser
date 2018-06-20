@@ -101,7 +101,6 @@
 </template>
 
 <script>
-import http from '@/api'
 import util from '@/plugins/util'
 import { TransferDom, dateFormat, Popup, Confirm } from 'vux'
 import userAddressEdit from '../user/user-address-edit'
@@ -236,12 +235,12 @@ export default {
     async onConfirm () {
       const that = this
       this.submitDisable = true
-      const res = await http.post(`/ReserveService/${this.$route.params.id}/Create`, this.reqParams)
+      const res = await this.$http.post(`/ReserveService/${this.$route.params.id}/Create`, this.reqParams)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: '预约成功',
           onHide () {
-            that.$router.replace(`/service/in/${that.$route.params.id}`)
+            that.$router.replace(`/service/in/${res.data.Data}?type=0`)
           }
         })
       } else {
@@ -250,7 +249,7 @@ export default {
       }
     },
     async getAddressList () {
-      const res = await http.get('/UserAddress')
+      const res = await this.$http.get('/UserAddress')
       if (res.data.Code === 100000) {
         const data = res.data.Data
         this.addressList = data

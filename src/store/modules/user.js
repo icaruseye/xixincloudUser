@@ -1,4 +1,4 @@
-import api from '@/api/index'
+import api from '@/api'
 const GET_USER_ACC = 'GET_USER_ACC'
 
 const state = {

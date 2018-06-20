@@ -2,7 +2,7 @@
   <div>
     <div class="has-tabbar">
       <div class="servant-panel">
-        <servantInfo></servantInfo>
+        <servantInfo :data="servantInfos"></servantInfo>
       </div>
       <!-- 医生服务 -->
       <div class="servant-panel servant-panel_service">
@@ -10,7 +10,7 @@
         <div class="servant-pane_subtitle">单项服务</div>
         <servantItemist></servantItemist>
         <div class="servant-unfold_bar">
-          <div>^</div>
+          <div><i class="iconfont icon-jiantoushang"></i></div>
           <div>展开</div>
         </div>
       </div>
@@ -19,19 +19,19 @@
         <div class="servant-pane_subtitle">套餐服务</div>
         <servantItemist></servantItemist>
         <div class="servant-unfold_bar">
-          <div>^</div>
+          <div><i class="iconfont icon-jiantoushang"></i></div>
           <div>展开</div>
         </div>
       </div>
       <!-- 患者评价 -->
-      <div class="servant-panel servant-panel_comments">
+      <!-- <div class="servant-panel servant-panel_comments">
         <div class="servant-panel_title"><i class="icon icon-3"></i>患者评价</div>
-        <servantComments></servantComments>
+        <servantComments :list="comments"></servantComments>
         <div class="servant-unfold_bar">
-          <div>^</div>
+          <div><i class="iconfont icon-jiantoushang"></i></div>
           <div>更多666条评价</div>
         </div>
-      </div>
+      </div> -->
       <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">发消息</button>
     </div>
   </div>
@@ -49,9 +49,45 @@ export default {
   },
   data () {
     return {
+      servantInfos: {},
+      itemList: []
+      // comments: []
     }
   },
+  created () {
+    this.getServantInfo()
+    this.getItemList()
+    // this.getComments()
+  },
   methods: {
+    // 获取服务人员信息
+    async getServantInfo () {
+      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.id}`)
+      if (res.data.Code === 100000) {
+        this.servantInfos = res.data.Data
+      }
+    },
+    // 单项服务
+    async getItemList () {
+      const res = await this.$http.get(`/PackageList?servantID=${this.$route.query.id}`)
+      if (res.data.Code === 100000) {
+        this.itemList = res.data.Data
+      }
+    },
+    // 套餐服务
+    async getPackageList () {
+      const res = await this.$http.get()
+      if (res.data.Code === 100000) {
+        this.itemList = res.data.Data
+      }
+    },
+    // 评价
+    // async getComments () {
+    //   const res = await this.$http.get(`/ServantReview/${this.$route.query.id}/top5`)
+    //   if (res.data.Code === 100000) {
+    //     this.comments = res.data.Data
+    //   }
+    // },
     gochat () {
       this.$router.push(`/servant/chat/${this.$route.params.id}`)
     }
@@ -77,5 +113,8 @@ export default {
 
 .servant-panel_comments {
   padding-top: 15px;
+}
+.icon-jiantoushang {
+  font-size: 12px;
 }
 </style>

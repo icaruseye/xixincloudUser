@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import http from '@/api'
 // import Vconsole from 'vconsole'
 export default {
   mounted () {
@@ -14,14 +13,14 @@ export default {
   },
   methods: {
     async getUserPreOrder () {
-      const res = await http.post(`/UserPreOrder?packageID=${this.$route.params.id}`)
+      const res = await this.$http.post(`/UserPreOrder?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           const userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
           const orderID = res.data.Data.OrderID
           const openID = userAccount.OpenID
           const shopID = userAccount.ShopID
-          const payres = await http.post(`/UserOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
+          const payres = await this.$http.post(`/UserOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
           this.onBridgeReady(payres.data.Data)
         }
       }
@@ -41,7 +40,7 @@ export default {
       //   async function (res) {
       //     console.log(res)
       //     if (res.err_msg === 'get_brand_wcpay_request:ok') {
-      //       const res = await http.post(`/PagePaySuccess?orderID=${data.orderID}`)
+      //       const res = await this.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
       //       if (res.data.Code === 100000) {
       //         console.log('支付成功')
       //       }

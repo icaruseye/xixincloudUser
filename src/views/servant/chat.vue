@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import http from '@/api/index'
 import { InlineLoading } from 'vux'
 export default {
   metaInfo: {
@@ -75,7 +74,7 @@ export default {
   // 初次拉取消息
   async created () {
     const that = this
-    const res = await http.get('/ChatRecord', { toServantViewID: this.$route.params.id, pageIndex: 1 })
+    const res = await this.$http.get('/ChatRecord', { toServantViewID: this.$route.params.id, pageIndex: 1 })
     this.ServAccount = res.data.Data.ServAccount
     this.chatList = res.data.Data.ChatHisList
     setTimeout(function () {
@@ -125,7 +124,7 @@ export default {
     // 功能逻辑函数
     // 轮询聊天消息
     async chatRecordTimePoll () {
-      const res = await http.get('/ChatRecord', { toServantViewID: this.$route.params.id })
+      const res = await this.$http.get('/ChatRecord', { toServantViewID: this.$route.params.id })
       const that = this
       if (res.data.Data.ChatHisList.length > 0) {
         res.data.Data.ChatHisList.map((item) => {
@@ -152,7 +151,7 @@ export default {
         Content: this.chatMsg,
         time: new Date()
       }
-      const res = await http.post('/ChatRecord', {
+      const res = await this.$http.post('/ChatRecord', {
         ServantViewID: this.ServAccount.ViewID,
         MsgType: 1,
         Content: this.chatMsg

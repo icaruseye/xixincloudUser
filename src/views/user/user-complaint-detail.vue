@@ -1,6 +1,6 @@
 <template>
-  <div class="has-tabbar">
-    <xx-step-bar step="2">
+  <div class="has-tabbar" v-if="data !== null">
+    <xx-step-bar :step="steps">
       <xx-step-items slot="items">
         用户资料
       </xx-step-items>
@@ -14,78 +14,129 @@
         结果
       </xx-step-items>
     </xx-step-bar>
-    <h2 class="cells_title">订单编号   201806031203</h2>
+    <h2 class="cells_title">订单编号   </h2>
     <div class="cells">
       <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
       <div class="mid">
         <div style="display:flex;justify-content: space-between;">
-          <div class="title">院内陪诊</div>
+          <div class="title">{{data.MissionName}}</div>
           <div class="orderid">服务单号：201806031203</div>
         </div>
-        <div class="describe">工作于急诊，擅长消化道危急重症…</div>
+        <div class="describe"></div>
       </div>
     </div>
-    <h2 class="cells_title">客服仲裁结果</h2>
-    <div class="cells cells_result">
+    <h2 class="cells_title" v-if="data.State === -1">客服仲裁结果</h2>
+    <div class="cells cells_result" v-if="data.State === 0">
       <div class="title">服务者还未提交相关资料</div>
       <div><span>3天1个小时59分23秒</span>内还未提交， 该投诉服务单系统将自动判定投诉成功。</div>
+      <div><span>（备注：自动判定时间为用户提交时间的72小时之后）</span></div>
     </div>
-    <h2 class="cells_title">用户投诉内容 <span>用户提交时间 2018/06/03 15:30</span></h2>
+    <div class="cells cells_result" v-if="data.State === 1">
+      <div class="title">客服还未提交仲裁结果</div>
+      <div><span>请耐心等待，谢谢！</span></div>
+    </div>
+    <div class="cells cells_result" v-if="data.State === 2">
+      <div class="title">您好，根据您和服务者所提交的资料中和判定 结果为：<span>投诉成功</span></div>
+    </div>
+    <div class="cells cells_result" v-if="data.State === 3">
+      <div class="title">您好，根据您和服务者所提交的资料中和判定 结果为：<span>投诉未通过</span></div>
+    </div>
+    <h2 class="cells_title">用户投诉内容 <span>用户提交时间：{{data.CreateTime | timeFormat}}</span></h2>
     <div class="complaint_content">
       <div class="cell">
         <div class="label">投诉原因</div>
-        <div class="right">医生专业操作不熟练</div>
+        <div class="right">{{data.UserComplaintTitle}}</div>
       </div>
       <div class="cell">
         <div class="label">其他备注</div>
-        <div class="right">医生专业操作不熟练，服务态度及其差，没有 在确认时间内到达地点就点击了确定到达。</div>
+        <div class="right">{{data.UserComplaintContent}}</div>
       </div>
       <div class="cell">
         <div class="label">相关图片</div>
         <div class="right">
-          <img class="preview_img" v-for="(item, index) in relatedPicturesList" :src="item.src" :key="index" @click="relatedPicturesPreviewImage(index)" alt="">
-        </div>
-        <div v-transfer-dom>
-          <previewer ref="relatedPicturesListPreviewer" :list="relatedPicturesList" :options="options"></previewer>
+          <image-preview-item v-if="data.UserComplaintImgs.length > 0" :list="data.UserComplaintImgs"></image-preview-item>
+          <span v-else>无相关图片</span>
         </div>
       </div>
-      <div class="cell">
+      <div class="cell" v-if="data.State === 0 || data.State === 1">
         <div class="label"></div>
         <div class="right">
-          <button class="cancel">取消投诉</button>
+          <button class="cancel" @click="showCancelConfirm" :disabled="disabled">取消投诉</button>
         </div>
       </div>
+    </div>
+    <div v-transfer-dom>
+      <confirm v-model="showCancel"
+        title="取消投诉"
+        @on-confirm="cancel(data.ID)">
+        <p style="text-align:center;">确认取消投诉吗？</p>
+      </confirm>
     </div>
   </div>
 </template>
 
 <script>
-import { Previewer, TransferDom } from 'vux'
+import { dateFormat, Confirm, TransferDom } from 'vux'
+import ImagePreviewItem from '@/components/ImagePreViewItem'
 export default {
   directives: {
     TransferDom
   },
+  filters: {
+    timeFormat (value) {
+      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
+    }
+  },
   components: {
-    Previewer
+    ImagePreviewItem,
+    Confirm
   },
   data () {
     return {
-      relatedPicturesList: [
-        {
-          src: 'https://img3.doubanio.com/icon/u53078059-35.jpg'
-        },
-        {
-          src: 'https://img3.doubanio.com/icon/u53078059-35.jpg'
-        },
-        {
-          src: 'https://img3.doubanio.com/icon/u53078059-35.jpg'
-        }
-      ]
+      steps: '2',
+      data: null,
+      showCancel: false,
+      disabled: false
     }
   },
+  created () {
+    this.initData()
+  },
   methods: {
-    relatedPicturesPreviewImage (index) {
-      this.$refs.relatedPicturesListPreviewer.show(index)
+    async initData () {
+      const res = await this.$http.get(`/Complaint?complaintID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        this.data = res.data.Data
+        if (this.data.State === 0 || this.data.State === 1) {
+          this.steps = '2'
+        }
+        if (this.data.State === 1) {
+          this.steps = '3'
+        }
+        if (this.data.State === 2 || this.data.State === 3 || this.data.State === -1) {
+          this.steps = '4'
+        }
+      }
+    },
+    async cancel (id) {
+      const that = this
+      this.disabled = true
+      const res = await this.$http.put(`/Complaint/${id}/Cancel`)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '成功',
+          onHide () {
+            that.$router.back()
+            this.disabled = false
+          }
+        })
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+        this.disabled = false
+      }
+    },
+    showCancelConfirm () {
+      this.showCancel = true
     }
   }
 }

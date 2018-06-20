@@ -1,23 +1,23 @@
 <template>
-  <div>
+  <div v-if="data !== null">
     <!-- 基本信息 -->
     <div class="servant-panel_info">
-      <img class="avatar" src="https://img3.doubanio.com/icon/u144889470-14.jpg">
-      <span class="name">哈哈哈</span>
+      <img class="avatar" :src="data.ServAccount.Avatar">
+      <span class="name">{{data.ServAccount.NickName}}</span>
       <img class="qrcode" src="@/assets/images/code.png">
     </div>
     <!-- 服务评分 -->
     <div class="servant-panel_data panel-border">
-      <div class="item">
+      <!-- <div class="item">
         <div><span class="color-ye">24</span>年</div>
         <div>从业年限</div>
-      </div>
+      </div> -->
       <div class="item">
-        <div><span class="color-ye">1</span>次</div>
+        <div><span class="color-ye">{{data.ServiceRcords.ReviewAmount}}</span>次</div>
         <div>服务次数</div>
       </div>
       <div class="item">
-        <div><span class="color-ye">5.0</span>分</div>
+        <div><span class="color-ye">{{data.ServiceRcords.TotalScore}}</span>分</div>
         <div>服务评分</div>
       </div>
     </div>
@@ -25,15 +25,27 @@
     <div class="servant-panel_intro panel-border">
       <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
       <div class="content">
-        工作于急诊，擅长消化道危急重症，比如消化道出血，溃疡， 黄疸，胰腺炎，胆囊炎，腹泻腹痛，发热等。其他像呼吸道， 心血管急症。
+        暂无介绍
       </div>
     </div>
     <div class="servant-unfold_bar">
-      <div>^</div>
+      <div><i class="iconfont icon-jiantoushang"></i></div>
       <div>展开</div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    data: {
+      type: Object,
+      default: null
+    }
+  }
+}
+</script>
+
 
 <style lang="less" scoped>
 .servant-unfold_bar {
@@ -97,5 +109,8 @@
     color: #666;
     padding: 10px 12px 12px 12px;
   }
+}
+.icon-jiantoushang {
+  font-size: 12px;
 }
 </style>

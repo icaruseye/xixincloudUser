@@ -17,12 +17,12 @@
     <div class="weui-panel">
       <div class="weui-panel_title">投诉原因</div>
       <div>
-        <input v-model="reason" type="text" placeholder="请输入投诉原因">
+        <input v-model="AddComplaintParam.ComplaintReason" type="text" placeholder="请输入投诉原因">
       </div>
       <div class="weui-panel_title">其他备注</div>
       <div style="position:relative">
-        <textarea v-model="content" name="" placeholder="请输入其他备注"></textarea>
-        <span class="remark_textarea_nums_count">{{content.length}} / 200</span>
+        <textarea v-model="AddComplaintParam.Remark" name="" placeholder="请输入其他备注"></textarea>
+        <span class="remark_textarea_nums_count">{{AddComplaintParam.Remark.length}} / 200</span>
       </div>
       <div class="weui-panel_title">相关图片上传</div>
         <xx-uploader
@@ -32,7 +32,7 @@
           @onUpdate="onUpdate1"
         ></xx-uploader>
     </div>
-    <button style="position:fixed;bottom:0" class="weui-btn weui-btn-bottom weui-btn_primary">提交</button>
+    <button style="position:fixed;bottom:0" class="weui-btn weui-btn-bottom weui-btn_primary" @click="submitComplaint">提交</button>
   </div>
 </template>
 
@@ -45,12 +45,34 @@ export default {
     return {
       reason: '',
       content: '',
-      imgList1: []
+      imgList1: [],
+      AddComplaintParam: {
+        ComplaintReason: '',
+        Remark: '',
+        Imgs: '',
+        MissionID: ''
+      }
     }
   },
   methods: {
+    async submitComplaint () {
+      const that = this
+      this.AddComplaintParam.MissionID = this.$route.params.id
+      const res = await this.$http.post('/Complaint', this.AddComplaintParam)
+      if (res.data.Code === 100000) {
+        console.log(res)
+        this.$vux.toast.show({
+          text: '提交成功',
+          onHide () {
+            that.$router.push(`/result/complaint`)
+          }
+        })
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
     onUpdate1 (id) {
-      console.log(id)
+      this.AddComplaintParam.Imgs = id.join(',')
     }
   }
 }

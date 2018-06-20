@@ -9,12 +9,14 @@ import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
 import { DatetimePlugin, ToastPlugin } from 'vux'
 import xxComponents from './components/common'
+import http from '@/api'
 
 Vue.use(xxComponents)
 Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
 Vue.use(registryPopup)
 FastClick.attach(document.body)
+Vue.prototype.$http = http
 
 Vue.filter('transformImgUrl', function (val) {
   if (!val) return

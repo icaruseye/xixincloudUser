@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import http from '@/api/index'
 import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch } from 'vux'
 import util from '@/plugins/util'
 export default {
@@ -107,7 +106,7 @@ export default {
       this.$emit('cancel')
     },
     async getData (id) {
-      const res = await http.get(`/UserAddress/${id}`)
+      const res = await this.$http.get(`/UserAddress/${id}`)
       const data = res.data.Data
       const UserAddress = {
         IsDefault: data.IsDefault,
@@ -132,7 +131,7 @@ export default {
         }
         const method = this.id === -1 ? 'post' : 'put'
         const url = this.id === -1 ? '/UserAddress' : `/UserAddress/${this.id}`
-        const res = await http.send(url, method, UserAddress)
+        const res = await this.$http.send(url, method, UserAddress)
         if (res.data.Code === 100000) {
           this.$vux.toast.show({
             text: '提交成功',

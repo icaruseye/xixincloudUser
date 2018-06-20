@@ -41,6 +41,26 @@ export default {
     }
     return axios(options)
   },
+  put (url, data, header) {
+    var token = localStorage.getItem('user_token')
+    var headers = {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+    if (header) {
+      var _headers = Object.assign(headers, header)
+    }
+    if (token) {
+      headers.token = token
+    }
+    var options = {
+      method: 'put',
+      url: config._PATH_ + url,
+      data: data,
+      timeout: config._TIMEOUT_,
+      headers: _headers || headers
+    }
+    return axios(options)
+  },
   get (url, params) {
     var token = localStorage.getItem('user_token')
     var headers = {

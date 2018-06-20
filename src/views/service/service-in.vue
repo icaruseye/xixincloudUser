@@ -30,8 +30,6 @@
         <div class="content">
           服务项：{{serviceItemInfo.ItemName}}
         </div>
-        <div class="content">
-        </div>
       </xx-timeLine-items>
       <xx-timeLine-items
         slot="items"
@@ -72,7 +70,7 @@
       <button type="button" style="flex:1" class="weui-btn weui-btn_primary">发消息</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 4">
-      <a href="/service/complaint/1" class="weui-btn weui-btn_primary" style="background: #ffc349;">投诉</a>
+      <button class="weui-btn weui-btn_primary" style="background: #ffc349;" @click="toComplaint">投诉</button>
       <button type="button" class="weui-btn weui-btn_primary" @click="submitComments" :disabled="disabled">确定</button>
     </div>
     <!-- 取消预约 -->
@@ -95,7 +93,6 @@
 </template>
 
 <script>
-import http from '@/api'
 import { TransferDom, Rater, dateFormat, Confirm } from 'vux'
 export default {
   directives: {
@@ -140,7 +137,8 @@ export default {
   },
   methods: {
     async initData () {
-      const res = await http.get(`/Mission?missionID=${this.$route.params.id}`)
+      let url = this.$route.query.type === '0' ? `/UserReserveService/${this.$route.params.id}` : `/Mission?missionID=${this.$route.params.id}`
+      const res = await this.$http.get(url)
       if (res.data.Code === 100000) {
         this.serviceItemInfo = res.data.Data
         this.setState()
@@ -154,7 +152,7 @@ export default {
       const that = this
       this.disabled = true
       this.ReviewInfoParameter.MissionID = this.serviceItemInfo.ID
-      const res = await http.post(`/ServantReview`, this.ReviewInfoParameter)
+      const res = await this.$http.post(`/ServantReview`, this.ReviewInfoParameter)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: res.data.Msg,
@@ -174,7 +172,7 @@ export default {
     },
     // 获取评价
     async getComments () {
-      const res = await http.get(`/ServantReview?missionID=${this.$route.params.id}`)
+      const res = await this.$http.get(`/ServantReview?missionID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.ServantReview = res.data.Data
       } else {
@@ -187,7 +185,7 @@ export default {
     // 取消预约
     async cancelReserve () {
       const that = this
-      const res = await http.send(`/ReserveService/Cancel?ID=${this.serviceItemInfo.ID}`, 'put', {
+      const res = await this.$http.send(`/ReserveService/Cancel?ID=${this.serviceItemInfo.ID}`, 'put', {
         CancelType: this.CancelType,
         CancleDescription: ''
       })
@@ -203,16 +201,19 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
+    toComplaint (id) {
+      this.$router.push(`/service/complaint/${this.$route.params.id}`)
+    },
     showCancelConfirm () {
       this.showCancel = true
     },
     setState () {
       // 已确认
       if (this.serviceItemInfo.Type === 1) {
-        this.title1 = '已确认'
         this.steps = '2'
-        this.subhead1 = `确认时间：${dateFormat(new Date(this.serviceItemInfo.CreateTime), 'YYYY-MM-DD HH:mm')}`
         this.timeLines = '1'
+        this.title1 = '已确认'
+        this.subhead1 = `确认时间：${dateFormat(new Date(this.serviceItemInfo.CreateTime), 'YYYY-MM-DD HH:mm')}`
       }
       // 待服务
       if (this.serviceItemInfo.Type === 1 && [0, 1, 2, 3].indexOf(this.serviceItemInfo.State) !== -1) {
@@ -220,15 +221,17 @@ export default {
       }
       // 已服务
       if (this.serviceItemInfo.Type === 1 && [4, 5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
-        this.title2 = '已服务'
+        this.steps = '2'
         this.timeLines = '2'
+        this.title2 = '已服务'
         this.subhead2 = `服务时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
       }
-      // 待评价
       // 已评价
-      if (this.type === 1 && [5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
-        this.subhead3 = `评价时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
+      if (this.serviceItemInfo.Type === 1 && [5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
+        this.steps = '3'
         this.timeLines = '3'
+        this.title3 = '已评价'
+        this.subhead3 = `评价时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
       }
     }
   }

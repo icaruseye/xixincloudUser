@@ -9,41 +9,87 @@
         <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">已完成</xx-tab-item>
       </xx-tab>
     </sticky>
-    <div class="weui-panel">
+    <div class="weui-panel" v-show="tabIndex === 0">
       <div class="weui-list_container">
-        <div class="weui-list_item" @click="toDetail(1)">
-          <div class="avatar">
-            <img src="https://tva1.sinaimg.cn/crop.0.0.180.180.50/5e9d399fjw1e8qgp5bmzyj2050050aa8.jpg" alt="">
-          </div>
-          <div class="mid">
-            <div style="display: flex;justify-content: space-between;align-items: baseline;">
-              <div class="title" style="font-size:18px;">院内陪诊院内陪诊…</div>
-              <div class="servant">医生：黄微微</div>
+        <template v-for="(item, index) in Complainting">
+          <div class="weui-list_item" :key="index" @click="toDetail(item.ID)">
+            <div class="avatar">
+              <img src="@/assets/images/icon_picc.png" alt="">
             </div>
-            <div style="color:#666;font-size:14px;">投诉原因：阿莫西林3颗含服</div>
-            <div class="describe">到期时间：2018/06/08</div>
+            <div class="mid">
+              <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                <div class="title text-overflow-1" style="font-size:18px;">{{item.MissionName}}</div>
+                <div class="servant">医生：{{item.ServantName}}</div>
+              </div>
+              <div style="color:#666;font-size:14px" class="text-overflow-1">投诉原因：{{item.UserComplaintContent}}</div>
+              <div class="describe">投诉时间：{{item.CreateTime | timeFormat}}</div>
+            </div>
           </div>
-        </div>
+        </template>
+      </div>
+    </div>
+    <div class="weui-panel" v-show="tabIndex === 1">
+      <div class="weui-list_container">
+        <template v-for="(item, index) in Complate">
+          <div class="weui-list_item" :key="index" @click="toDetail(item.ID)">
+            <div class="avatar">
+              <img src="@/assets/images/icon_picc.png" alt="">
+            </div>
+            <div class="mid">
+              <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                <div class="title text-overflow-1" style="font-size:18px;">{{item.MissionName}}</div>
+                <div class="servant">医生：{{item.ServantName}}</div>
+              </div>
+              <div style="color:#666;font-size:14px" class="text-overflow-1">投诉原因：{{item.UserComplaintContent}}</div>
+              <div class="describe">投诉时间：{{item.CreateTime | timeFormat}}</div>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Sticky } from 'vux'
+import { Sticky, dateFormat } from 'vux'
 export default {
   metaInfo: {
     title: '我的投诉'
+  },
+  filters: {
+    timeFormat (value) {
+      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
+    }
   },
   components: {
     Sticky
   },
   data () {
     return {
-      tabIndex: 0
+      tabIndex: 0,
+      Complainting: [],
+      Complate: []
     }
   },
+  created () {
+    this.getComplainting()
+    this.getComplate()
+  },
   methods: {
+    async getComplainting () {
+      const res = await this.$http.get('/ComplaintList/Complainting')
+      console.log(res)
+      if (res.data.Code === 100000) {
+        this.Complainting = res.data.Data
+      }
+    },
+    async getComplate () {
+      const res = await this.$http.get('/ComplaintList/Complate')
+      console.log(res)
+      if (res.data.Code === 100000) {
+        this.Complate = res.data.Data
+      }
+    },
     onItemClick (index) {
       this.tabIndex = index
     },
@@ -57,7 +103,7 @@ export default {
 <style scoped lang="less">
 .weui-list_item {
   position: relative;
-  padding: 13px 5px;
+  padding: 18px 5px;
   display: flex;
   align-items: center;
   &::after {
@@ -87,6 +133,7 @@ export default {
     flex: 1;
     margin: 0 19px;
     .title {
+      width: 160px;
       font-size: 15px;
       color: #333;
     }

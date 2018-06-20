@@ -16,7 +16,7 @@
       <div class="tabbox" v-show="tabIndex === 0">
         <div class="tabbox-list vux-1px-b">
           <template v-for="(item, index) in servantList">
-            <div class="item vux-1px-b" @click="goServant(item.FriendViewID)" :key="index">
+            <div class="item vux-1px-b" @click="goServant(item.FriendViewID, item.FriendID)" :key="index">
               <div><img class="avatar" :src="item.FriendAvatar | transformImgUrl" alt=""></div>
               <div class="mid">
                 <div class="">{{item.FriendName}}<span class="tag">健康管家</span></div>
@@ -47,7 +47,6 @@
 
 <script>
 import { Tab, TabItem, Sticky } from 'vux'
-import http from '@/api/index'
 export default {
   components: {
     Sticky,
@@ -72,11 +71,11 @@ export default {
     goChat (id) {
       this.$router.push(`/servant/chat/${id}`)
     },
-    goServant (id) {
-      this.$router.push(`/servant/detail/service/${id}`)
+    goServant (viewID, ID) {
+      this.$router.push(`/servant/detail/service/${viewID}?id=${ID}`)
     },
     async getData () {
-      const res = await http.get('/ContactFriends', { Page: 1, Size: 10 })
+      const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
       this.servantList = res.data.Data
     }
   }

@@ -61,7 +61,6 @@
 
 <script>
 import util from '@/plugins/util'
-import http from '@/api'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -133,7 +132,7 @@ export default {
           return false
         }
         this.submitBtn = true
-        const res = await http.send('/UserInfo', 'put', this.UserInfo)
+        const res = await this.$http.send('/UserInfo', 'put', this.UserInfo)
         console.log(res)
         if (res.data.Code === 100000) {
           this.$vux.toast.show({
