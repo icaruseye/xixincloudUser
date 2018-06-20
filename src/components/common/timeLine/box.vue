@@ -11,10 +11,20 @@ export default {
       default: '0'
     }
   },
+  watch: {
+    step () {
+      this.init()
+    }
+  },
+  computed: {
+    items () {
+      return this.$slots.items
+    }
+  },
   methods: {
     init () {
       const that = this
-      that.$slots.items.map((item, index) => {
+      that.items.map((item, index) => {
         let _index = index + 1
         item.componentInstance.index = _index
         if (_index <= parseInt(that.step)) {

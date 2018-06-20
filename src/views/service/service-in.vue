@@ -118,8 +118,6 @@ export default {
       timeLines: '0',
       rate: 5,
       comments: '',
-      state: null,
-      type: null,
       title1: '待确认',
       title2: '待服务',
       title3: '待评价',
@@ -138,8 +136,6 @@ export default {
     }
   },
   created () {
-    this.state = +this.$route.query.state
-    this.type = +this.$route.query.type
     this.initData()
   },
   methods: {
@@ -220,6 +216,7 @@ export default {
       }
       // 待服务
       if (this.serviceItemInfo.Type === 1 && [0, 1, 2, 3].indexOf(this.serviceItemInfo.State) !== -1) {
+        this.steps = '2'
       }
       // 已服务
       if (this.serviceItemInfo.Type === 1 && [4, 5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
