@@ -8,7 +8,7 @@
       <div class="servant-panel servant-panel_service">
         <div class="servant-panel_title"><i class="icon icon-2"></i>医生服务</div>
         <div class="servant-pane_subtitle">单项服务</div>
-        <servantItemist></servantItemist>
+        <servantItemist :list="itemList" :isItem="true"></servantItemist>
         <div class="servant-unfold_bar">
           <div><i class="iconfont icon-jiantoushang"></i></div>
           <div>展开</div>
@@ -17,7 +17,7 @@
       <!-- 套餐服务 -->
       <div class="servant-panel">
         <div class="servant-pane_subtitle">套餐服务</div>
-        <servantItemist></servantItemist>
+        <servantItemist :list="packageList" :isItem="false"></servantItemist>
         <div class="servant-unfold_bar">
           <div><i class="iconfont icon-jiantoushang"></i></div>
           <div>展开</div>
@@ -50,11 +50,12 @@ export default {
   data () {
     return {
       servantInfos: {},
-      itemList: []
+      itemList: [],
+      packageList: []
       // comments: []
     }
   },
-  created () {
+  mounted () {
     this.getServantInfo()
     this.getItemList()
     // this.getComments()
@@ -71,15 +72,17 @@ export default {
     async getItemList () {
       const res = await this.$http.get(`/PackageList?servantID=${this.$route.query.id}`)
       if (res.data.Code === 100000) {
-        this.itemList = res.data.Data
+        this.splitList(res.data.Data)
       }
     },
-    // 套餐服务
-    async getPackageList () {
-      const res = await this.$http.get()
-      if (res.data.Code === 100000) {
-        this.itemList = res.data.Data
-      }
+    splitList (list) {
+      list.map((item) => {
+        if (item.IsContentSingleItem) {
+          this.packageList.push(item)
+        } else {
+          this.itemList.push(item)
+        }
+      })
     },
     // 评价
     // async getComments () {

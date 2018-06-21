@@ -1,48 +1,42 @@
 <template>
   <div class="weui-list_container">
-    <div class="weui-list_item" @click="toItem(1)">
-      <div class="icon">
-        <img src="@/assets/images/icon_picc.png" alt="">
-      </div>
-      <div class="mid">
-        <div class="title">院内陪诊</div>
-        <div class="describe text-overflow-1">针对老人、儿童、孕妇、异地就医患者…针对老人、儿童、孕妇、异地就医患者…</div>
-        <div class="sales">
-          <div class="price"><span>￥</span>199元</div>
-          <div class="volume">已售：1234份</div>
+    <template v-for="(item, index) in list">
+      <div class="weui-list_item" :key="index">
+        <div class="icon">
+          <img src="@/assets/images/icon_picc.png" alt="">
+        </div>
+        <div class="mid">
+          <div class="title" @click="toItem(item.ID)">{{item.Name}}</div>
+          <div class="describe text-overflow-1">{{item.Description}}</div>
+          <div class="sales">
+            <div class="price"><span>￥</span>{{(item.ViewPrice/100).toFixed(2)}}元</div>
+            <div class="volume">已售：{{item.SoldAmount}}份</div>
+          </div>
+        </div>
+        <div class="btn">
+          <button @click="topay(item.ID)">购买</button>
         </div>
       </div>
-      <div class="btn">
-        <button>购买</button>
-      </div>
-    </div>
-    <div class="weui-list_item" @click="toPackage(1)">
-      <div class="icon">
-        <img src="@/assets/images/icon_picc.png" alt="">
-      </div>
-      <div class="mid">
-        <div class="title">图文问诊</div>
-        <div class="describe text-overflow-1">通过图文为用户进行健康咨询…</div>
-        <div class="sales">
-          <div class="price"><span>￥</span>100元</div>
-          <div class="volume">已售：1234份</div>
-        </div>
-      </div>
-      <div class="btn">
-        <button>购买</button>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
 export default {
-  methods: {
-    toPackage (id) {
-      this.$router.push(`/servant/detail/package/${id}`)
+  props: {
+    isItem: {
+      type: Boolean,
+      default: false
     },
+    list: Array
+  },
+  methods: {
     toItem (id) {
-      this.$router.push(`/servant/detail/item/${id}`)
+      const url = this.isItem === true ? `/servant/detail/item/${id}` : `/servant/detail/package/${id}`
+      this.$router.push(url)
+    },
+    topay (id) {
+      console.log(id)
     }
   }
 }

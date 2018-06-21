@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      list: null,
+      list: [],
       flag: false,
       tabIndex: 0,
       Complainting: [],

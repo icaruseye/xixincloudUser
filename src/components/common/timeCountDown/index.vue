@@ -22,6 +22,9 @@ export default {
       }, 1000)
     }
   },
+  destroyed () {
+    clearInterval(window.timeCountDown)
+  },
   methods: {
     getCountDown (startTime) {
       let t = 1000 * 60 * 60 * 24 * 3 + startTime - Date.parse(new Date())

@@ -9,7 +9,7 @@
         :check-sticky-support="false">
         <tab :line-width="2">
           <tab-item selected @on-item-click="onItemClick">我的管家</tab-item>
-          <tab-item @on-item-click="onItemClick">消息列表</tab-item>
+          <tab-item @on-item-click="onItemClick" :badge-label="UnreadSiteNotice">消息列表</tab-item>
         </tab>
       </sticky>
       <!-- 我的管家 -->
@@ -30,12 +30,9 @@
         <div class="tabbox-list vux-1px-b vux-1px-t">
           <template v-for="(item, index) in msgList">
             <div class="item vux-1px-b" @click="goChat(item.FriendViewID, index)" :key="index">
-              <div><img class="avatar" :src="item.FriendAvatar" alt=""></div>
               <div class="mid">
-                <div class="name">{{item.FriendName}}</div>
-                <p class="text fof">{{item.AddMessage}}</p>
+                <div>{{item.Message}}</div>
               </div>
-              <i class="iconfont icon-jiantouyou"></i>
             </div>
           </template>
         </div>
@@ -57,11 +54,14 @@ export default {
     return {
       tabIndex: 0,
       servantList: [],
-      msgList: []
+      msgList: [],
+      UnreadSiteNotice: ''
     }
   },
   created () {
     this.getData()
+    this.getMsg()
+    this.getUnreadSiteNotice()
   },
   methods: {
     onItemClick (index) {
@@ -77,6 +77,14 @@ export default {
     async getData () {
       const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
       this.servantList = res.data.Data
+    },
+    async getMsg () {
+      const res = await this.$http.get('/SiteNotice')
+      this.msgList = res.data.Data
+    },
+    async getUnreadSiteNotice () {
+      const res = await this.$http.get('/UnreadSiteNotice')
+      this.UnreadSiteNotice = res.data.Data
     }
   }
 }

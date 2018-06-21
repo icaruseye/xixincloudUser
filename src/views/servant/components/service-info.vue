@@ -1,9 +1,9 @@
 <template>
-  <div v-if="data !== null">
+  <div v-if="list !== null">
     <!-- 基本信息 -->
     <div class="servant-panel_info">
-      <img class="avatar" :src="data.ServAccount.Avatar">
-      <span class="name">{{data.ServAccount.NickName}}</span>
+      <img class="avatar" :src="list.ServAccount.Avatar">
+      <span class="name">{{list.ServAccount.NickName}}</span>
       <img class="qrcode" src="@/assets/images/code.png">
     </div>
     <!-- 服务评分 -->
@@ -13,11 +13,11 @@
         <div>从业年限</div>
       </div> -->
       <div class="item">
-        <div><span class="color-ye">{{data.ServiceRcords.ReviewAmount}}</span>次</div>
+        <div><span class="color-ye">{{list.ServiceRcords.ReviewAmount}}</span>次</div>
         <div>服务次数</div>
       </div>
       <div class="item">
-        <div><span class="color-ye">{{data.ServiceRcords.TotalScore}}</span>分</div>
+        <div><span class="color-ye">{{list.ServiceRcords.TotalScore}}</span>分</div>
         <div>服务评分</div>
       </div>
     </div>
@@ -41,6 +41,19 @@ export default {
     data: {
       type: Object,
       default: null
+    }
+  },
+  data () {
+    return {
+      list: {
+        ServAccount: {},
+        ServiceRcords: {}
+      }
+    }
+  },
+  watch: {
+    data (val) {
+      this.list = val
     }
   }
 }
