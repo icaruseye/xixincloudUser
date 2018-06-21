@@ -10,6 +10,8 @@ import xxChecker from './checker'
 import xxUploader from './uploader'
 import xxTabbar from './tabbar'
 import xxOccupiedBox from './occupiedBox'
+import xxResultView from './resultView'
+import xxTimeCountDown from './timeCountDown'
 
 const components = {
   install: function (Vue) {
@@ -25,6 +27,8 @@ const components = {
     Vue.component('xxUploader', xxUploader)
     Vue.component('xxTabbar', xxTabbar)
     Vue.component('xxOccupiedBox', xxOccupiedBox)
+    Vue.component('xxResultView', xxResultView)
+    Vue.component('xxTimeCountDown', xxTimeCountDown)
   }
 }
 

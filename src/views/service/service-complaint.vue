@@ -32,31 +32,44 @@
           @onUpdate="onUpdate1"
         ></xx-uploader>
     </div>
-    <button style="position:fixed;bottom:0" class="weui-btn weui-btn-bottom weui-btn_primary" @click="submitComplaint">提交</button>
+    <button style="position:fixed;bottom:0" class="weui-btn weui-btn-bottom weui-btn_primary" @click="submitComplaint" :disabled="disabled">提交</button>
   </div>
 </template>
 
 <script>
+import util from '@/plugins/util'
 export default {
   metaInfo: {
     title: '投诉'
   },
   data () {
     return {
-      reason: '',
-      content: '',
+      disabled: false,
       imgList1: [],
       AddComplaintParam: {
         ComplaintReason: '',
         Remark: '',
         Imgs: '',
         MissionID: ''
+      },
+      authText: {
+        ComplaintReason: {
+          text: '投诉原因',
+          required: true
+        },
+        Remark: {
+          text: '投诉备注',
+          required: true
+        }
       }
     }
   },
   methods: {
     async submitComplaint () {
       const that = this
+      const validate = util.validateForm(this.AddComplaintParam, this.authText)
+      if (!validate) return false
+      this.disabled = true
       this.AddComplaintParam.MissionID = this.$route.params.id
       const res = await this.$http.post('/Complaint', this.AddComplaintParam)
       if (res.data.Code === 100000) {
@@ -69,6 +82,7 @@ export default {
         })
       } else {
         this.$vux.toast.text(res.data.Msg)
+        this.disabled = false
       }
     },
     onUpdate1 (id) {

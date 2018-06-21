@@ -25,10 +25,10 @@
         <div class="describe"></div>
       </div>
     </div>
-    <h2 class="cells_title" v-if="data.State === -1">客服仲裁结果</h2>
+    <h2 class="cells_title" v-if="data.State !== -1">客服仲裁结果</h2>
     <div class="cells cells_result" v-if="data.State === 0">
       <div class="title">服务者还未提交相关资料</div>
-      <div><span>3天1个小时59分23秒</span>内还未提交， 该投诉服务单系统将自动判定投诉成功。</div>
+      <div><span><xxTimeCountDown :startTime="startTime"></xxTimeCountDown></span>内还未提交， 该投诉服务单系统将自动判定投诉成功。</div>
       <div><span>（备注：自动判定时间为用户提交时间的72小时之后）</span></div>
     </div>
     <div class="cells cells_result" v-if="data.State === 1">
@@ -96,7 +96,8 @@ export default {
       steps: '2',
       data: null,
       showCancel: false,
-      disabled: false
+      disabled: false,
+      startTime: null
     }
   },
   created () {
@@ -107,6 +108,7 @@ export default {
       const res = await this.$http.get(`/Complaint?complaintID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.data = res.data.Data
+        this.startTime = new Date(res.data.Data.CreateTime).getTime()
         if (this.data.State === 0 || this.data.State === 1) {
           this.steps = '2'
         }

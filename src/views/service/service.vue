@@ -264,7 +264,7 @@ export default {
       const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
         this.UserOrderDetailsList = res.data.Data
-        if (this.UserOrderDetailsList.ItemsByDoc.length !== 0 && this.UserOrderDetailsList.ItemsByDoc.length !== 0) {
+        if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.ItemsByDoc.length === 0) {
           this.flag1 = true
         }
       }

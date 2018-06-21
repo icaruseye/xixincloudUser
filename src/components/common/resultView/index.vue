@@ -1,17 +1,19 @@
 <template>
   <div class="wrap">
-    <xxResultView title="投诉成功">
-      <button class="btn" @click="to('/')">返回首页</button>
-      <button class="btn" @click="to('/user/complaint')">投诉列表</button>
-    </xxResultView>
+    <img class="icon" src="@/assets/images/result_success.png" alt="">
+    <div class="text">{{title}}</div>
+    <div style="display:flex;justify-content: center">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  methods: {
-    to (path) {
-      this.$router.replace(path)
+  props: {
+    title: {
+      type: String,
+      default: ''
     }
   }
 }
