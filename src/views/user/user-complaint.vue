@@ -9,9 +9,9 @@
         <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">已完成</xx-tab-item>
       </xx-tab>
     </sticky>
-    <div class="weui-panel" v-show="tabIndex === 0">
+    <div class="weui-panel" v-if="list.length > 0">
       <div class="weui-list_container">
-        <template v-for="(item, index) in Complainting">
+        <template v-for="(item, index) in list">
           <div class="weui-list_item" :key="index" @click="toDetail(item.ID)">
             <div class="avatar">
               <img src="@/assets/images/icon_picc.png" alt="">
@@ -28,25 +28,9 @@
         </template>
       </div>
     </div>
-    <div class="weui-panel" v-show="tabIndex === 1">
-      <div class="weui-list_container">
-        <template v-for="(item, index) in Complate">
-          <div class="weui-list_item" :key="index" @click="toDetail(item.ID)">
-            <div class="avatar">
-              <img src="@/assets/images/icon_picc.png" alt="">
-            </div>
-            <div class="mid">
-              <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                <div class="title text-overflow-1" style="font-size:18px;">{{item.MissionName}}</div>
-                <div class="servant">医生：{{item.ServantName}}</div>
-              </div>
-              <div style="color:#666;font-size:14px" class="text-overflow-1">投诉原因：{{item.UserComplaintContent}}</div>
-              <div class="describe">投诉时间：{{item.CreateTime | timeFormat}}</div>
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
+    <xxOccupiedBox v-show="flag">
+      <p>暂无投诉订单</p>
+    </xxOccupiedBox>
   </div>
 </template>
 
@@ -66,6 +50,8 @@ export default {
   },
   data () {
     return {
+      list: null,
+      flag: false,
       tabIndex: 0,
       Complainting: [],
       Complate: []
@@ -81,6 +67,8 @@ export default {
       console.log(res)
       if (res.data.Code === 100000) {
         this.Complainting = res.data.Data
+        this.list = res.data.Data
+        this.flag = res.data.Data.length === 0
       }
     },
     async getComplate () {
@@ -92,6 +80,13 @@ export default {
     },
     onItemClick (index) {
       this.tabIndex = index
+      if (index === 0) {
+        this.list = this.Complainting
+        this.flag = this.Complainting.length === 0
+      } else {
+        this.list = this.Complate
+        this.flag = this.Complate.length === 0
+      }
     },
     toDetail (id) {
       this.$router.push(`/user/complaint/${id}`)

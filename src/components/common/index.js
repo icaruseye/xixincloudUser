@@ -9,6 +9,7 @@ import xxTabItem from './tabs/tab-item'
 import xxChecker from './checker'
 import xxUploader from './uploader'
 import xxTabbar from './tabbar'
+import xxOccupiedBox from './occupiedBox'
 
 const components = {
   install: function (Vue) {
@@ -23,6 +24,7 @@ const components = {
     Vue.component('xxChecker', xxChecker)
     Vue.component('xxUploader', xxUploader)
     Vue.component('xxTabbar', xxTabbar)
+    Vue.component('xxOccupiedBox', xxOccupiedBox)
   }
 }
 

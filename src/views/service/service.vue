@@ -12,8 +12,6 @@
     </sticky>
     <!-- 已购买 -->
     <div class="tabbox" v-show="tabIndex === 0" style="padding-bottom:50px">
-      <!-- 空状态 -->
-      <div v-if="UserOrderDetailsList.ItemsByDoc.length === 0 && UserOrderDetailsList.ItemsByDoc.length === 0">暂无可预约的服务</div>
       <!-- 单项服务 -->
       <div class="weui-panel" v-if="UserOrderDetailsList.ItemsByDoc.length !== 0">
         <div class="weui-panel_subtitle">单项服务</div>
@@ -85,6 +83,10 @@
           </div>
         </template>
       </div>
+      <!-- 空状态 -->
+      <xxOccupiedBox v-if="flag1">
+        <p>暂无可预约服务</p>
+      </xxOccupiedBox>
     </div>
     <!-- 服务中 -->
     <div class="tabbox" v-show="tabIndex === 1">
@@ -117,6 +119,10 @@
           </template>
         </div>
       </div>
+      <!-- 空状态 -->
+      <xxOccupiedBox v-if="flag2">
+        <p>暂无当前所选状态的服务</p>
+      </xxOccupiedBox>
     </div>
     <!-- 已完成 -->
     <div class="tabbox" v-show="tabIndex === 2">
@@ -140,6 +146,10 @@
           </template>
         </div>
       </div>
+      <!-- 空状态 -->
+      <xxOccupiedBox v-if="flag3">
+        <p>暂无已完成服务</p>
+      </xxOccupiedBox>
     </div>
     <xx-tabbar></xx-tabbar>
   </div>
@@ -168,7 +178,11 @@ export default {
       UserOrderDetailsList: {
         ItemsByDoc: [],
         PackByDoc: []
-      }
+      },
+      flag1: false,
+      flag2: false,
+      flag3: false,
+      flagText: ''
     }
   },
   watch: {
@@ -199,16 +213,19 @@ export default {
         case 1:
           that.getUserReserveServiceList().then(value => {
             that.dataList = value
+            this.flag2 = that.dataList.length === 0
           })
           break
         case 2:
           that.getInServiceList().then(value => {
             that.dataList = value
+            this.flag2 = that.dataList.length === 0
           })
           break
         case 3:
           that.getWaitForReview().then(value => {
             that.dataList = value
+            this.flag2 = that.dataList.length === 0
           })
           break
       }
@@ -225,6 +242,7 @@ export default {
       await that.getWaitForReview().then(value => {
         that.dataList = that.dataList.concat(value)
       })
+      this.flag2 = that.dataList.length === 0
     },
     /** 待确认 */
     async getUserReserveServiceList () {
@@ -246,6 +264,9 @@ export default {
       const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
         this.UserOrderDetailsList = res.data.Data
+        if (this.UserOrderDetailsList.ItemsByDoc.length !== 0 && this.UserOrderDetailsList.ItemsByDoc.length !== 0) {
+          this.flag1 = true
+        }
       }
     },
     // 已完成
@@ -253,6 +274,9 @@ export default {
       const res = await this.$http.get('/MissionList/Complate')
       if (res.data.Code === 100000) {
         this.dataListDone = res.data.Data
+        if (this.dataListDone.length === 0) {
+          this.flag3 = true
+        }
       }
     },
     missionDetail (id, type) {
