@@ -4,10 +4,10 @@
     <div class="package-header-info">
       <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
       <div class="mid">
-        <div class="name">院内陪诊院内陪诊…</div>
+        <div class="name">{{data.Name}}</div>
         <div class="sales">
-          <div class="price">199<span>元</span></div>
-          <div class="volume">已售：1110份</div>
+          <div class="price">{{(data.ViewPrice/100).toFixed(2)}}<span>元</span></div>
+          <div class="volume" v-if="data.SoldAmount">已售：{{data.SoldAmount}}份</div>
         </div>
       </div>
       <div class="qrcode">
@@ -16,18 +16,20 @@
     </div>
     <!-- 服务人员信息 -->
     <div class="package-servant-info mgt10">
-      <div class="avatar"><img src="https://img1.doubanio.com/icon/u2160581-37.jpg" alt=""></div>
-      <div class="name">李时珍的皮</div>
-      <div class="title">儿科 主治医师</div>
+      <div class="avatar"><img :src="data.Avatar" alt=""></div>
+      <div class="name">{{data.NickName}}</div>
+      <!-- <div class="title">儿科 主治医师</div> -->
     </div>
     <!-- 服务包介绍 -->
     <div class="package-info mgt10">
       <div class="title">
         <span class="left">服务套餐介绍</span>
-        <span class="right">该套餐有效期：365天</span>
+        <span class="right" v-if="data.EffectiveDay !== 0">该套餐有效期：{{data.EffectiveDay}}天</span>
+        <span class="right" v-if="data.EffectiveMonth !== 0">该套餐有效期：{{data.EffectiveMonth}}月</span>
+        <span class="right" v-if="data.EffectiveYear !== 0">该套餐有效期：{{data.EffectiveYear}}年</span>
       </div>
       <div class="content">
-        工作于急诊，擅长消化道危急重症，比如消化道出血，溃疡，黄疸，胰腺炎，胆囊炎，腹泻腹痛，发热等。其他像呼吸道，心血管急症。
+        {{data.Description}}
       </div>
     </div>
   </div>
@@ -35,6 +37,9 @@
 
 <script>
 export default {
+  props: {
+    data: Object
+  }
 }
 </script>
 

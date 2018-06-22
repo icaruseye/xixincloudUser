@@ -2,11 +2,11 @@
   <div class="weui-list_container">
     <template v-for="(item, index) in list">
       <div class="weui-list_item" :key="index">
-        <div class="icon">
+        <div class="icon" @click="toItem(item.ID)">
           <img src="@/assets/images/icon_picc.png" alt="">
         </div>
-        <div class="mid">
-          <div class="title" @click="toItem(item.ID)">{{item.Name}}</div>
+        <div class="mid" @click="toItem(item.ID)">
+          <div class="title">{{item.Name}}</div>
           <div class="describe text-overflow-1">{{item.Description}}</div>
           <div class="sales">
             <div class="price"><span>￥</span>{{(item.ViewPrice/100).toFixed(2)}}元</div>
@@ -44,6 +44,7 @@ export default {
 
 
 <style lang="less" scoped>
+@import url(../components/index.less);
 .weui-list_container {
   padding: 0 10px;
 }

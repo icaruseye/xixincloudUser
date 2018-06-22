@@ -5,7 +5,7 @@
         <servantInfo :data="servantInfos"></servantInfo>
       </div>
       <!-- 医生服务 -->
-      <div class="servant-panel servant-panel_service">
+      <div class="servant-panel servant-panel_service" v-if="itemList.length > 0">
         <div class="servant-panel_title"><i class="icon icon-2"></i>医生服务</div>
         <div class="servant-pane_subtitle">单项服务</div>
         <servantItemist :list="itemList" :isItem="true"></servantItemist>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <!-- 套餐服务 -->
-      <div class="servant-panel">
+      <div class="servant-panel" v-if="packageList.length > 0">
         <div class="servant-pane_subtitle">套餐服务</div>
         <servantItemist :list="packageList" :isItem="false"></servantItemist>
         <div class="servant-unfold_bar">
@@ -65,7 +65,8 @@ export default {
     async getServantInfo () {
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.id}`)
       if (res.data.Code === 100000) {
-        this.servantInfos = res.data.Data
+        this.servantInfos = Object.assign(res.data.Data.ServAccount, res.data.Data.ServiceRcords)
+        sessionStorage.setItem('myServantInfo', JSON.stringify(this.servantInfos))
       }
     },
     // 单项服务

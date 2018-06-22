@@ -31,6 +31,7 @@
           <template v-for="(item, index) in msgList">
             <div class="item vux-1px-b" @click="goChat(item.FriendViewID, index)" :key="index">
               <div class="mid">
+                <div style="font-size:15px;color#333;">123</div>
                 <div>{{item.Message}}</div>
               </div>
             </div>
@@ -60,7 +61,7 @@ export default {
   },
   created () {
     this.getData()
-    this.getMsg()
+    this.getSiteNoticeList()
     this.getUnreadSiteNotice()
   },
   methods: {
@@ -72,18 +73,18 @@ export default {
       this.$router.push(`/servant/chat/${id}`)
     },
     goServant (viewID, ID) {
-      this.$router.push(`/servant/detail/service/${viewID}?id=${ID}`)
+      this.$router.push(`/servant/service/${viewID}?id=${ID}`)
     },
     async getData () {
       const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
       this.servantList = res.data.Data
     },
-    async getMsg () {
-      const res = await this.$http.get('/SiteNotice')
+    async getSiteNoticeList () {
+      const res = await this.$http.get('/SiteNoticeList')
       this.msgList = res.data.Data
     },
     async getUnreadSiteNotice () {
-      const res = await this.$http.get('/UnreadSiteNotice')
+      const res = await this.$http.get('/SiteNotice/Count/Unread')
       this.UnreadSiteNotice = res.data.Data
     }
   }

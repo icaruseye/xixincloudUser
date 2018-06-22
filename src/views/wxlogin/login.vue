@@ -11,14 +11,14 @@ export default {
   },
   methods: {
     async login () {
-      // const option = {
-      //   code: this.$route.query.code,
-      //   shopID: this.$route.query.shopID
-      // }
-      // // 获取token
-      // const res = await this.$http.get('/Servant/Login', option)
-      const res = await this.$http.get('/LoginTest', {id: this.$route.query.id})
-      if (res.data.Data) {
+      const option = {
+        code: this.$route.query.code,
+        shopID: this.$route.query.shopID
+      }
+      // 获取token
+      const res = await this.$http.get('/Login', option)
+      // const res = await this.$http.get('/LoginTest', {id: this.$route.query.id})
+      if (res.data.Code === 100000) {
         localStorage.setItem('user_token', res.data.Data)
         this.$store.dispatch('getAccount').then(() => {
           const path = sessionStorage.getItem('to_path') || '/'

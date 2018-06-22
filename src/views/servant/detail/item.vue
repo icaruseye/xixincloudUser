@@ -1,19 +1,11 @@
 <template>
   <div class="has-tabbar">
-    <!-- 服务套餐头部信息 -->
-    <packageInfo>
-    </packageInfo>
     <div class="item-info-time"><span class="left">服务时长</span> <span class="right"><span class="number">90</span>分钟/次</span></div>
     <div class="item-info flex mgt10">
       <div class="left">操作动作</div>
       <div class="right">
         <ul>
-          <li>1：伤口评估</li>
-          <li>2：清洗伤口</li>
-          <li>3：测量伤口长度</li>
-          <li>4：拍照记录</li>
-          <li>5：消毒</li>
-          <li>6：做好处理记录</li>
+          <li v-for="item in ItemActionDetails" :key="item.ID">{{item.Name}}</li>
         </ul>
       </div>
     </div>
@@ -21,8 +13,7 @@
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满10岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
     </div>
-    
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(1)">立即购买 ￥10.00</button>
+    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(1)">立即购买 ￥{{(Item.ViewPrice/100).toFixed(2)}}</button>
   </div>
 </template>
 
@@ -34,9 +25,32 @@ export default {
   },
   data () {
     return {
+      showPay: true,
+      Item: {},
+      ItemActionDetails: []
     }
   },
+  created () {
+    if (this.$route.query.type === '0') {
+      this.showPay = false
+    }
+    this.initData()
+    this.getPackageDetail()
+  },
   methods: {
+    async initData () {
+      const res = await this.$http.post(`/Item?itemID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        console.log(res)
+        this.ItemActionDetails = res.data.Data.ItemActionDetails
+      }
+    },
+    async getPackageDetail () {
+      const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        this.Item = res.data.Data.Package
+      }
+    },
     toPay (id) {
       this.$router.push(`/servant/pay/${id}`)
     }
@@ -84,6 +98,10 @@ export default {
     .right {
       font-size: 14px;
       color: #999;
+      li {
+        height: 25px;
+        line-height: 25px;
+      }
     }
   }
   .title {

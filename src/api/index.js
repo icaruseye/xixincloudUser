@@ -1,7 +1,7 @@
 import axios from 'axios'
 import config from '@/config'
 import Vue from 'vue'
-import router from '@/router'
+// import router from '@/router'
 
 axios.interceptors.response.use(response => {
   return response
@@ -10,10 +10,9 @@ axios.interceptors.response.use(response => {
     // token无效，重新登录
     if (error.response.data.Code === 100010) {
       sessionStorage.removeItem('userInfo')
-      router.push('/User/Login?id=4')
+      // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx08851399f06a2888&redirect_uri=' +
+      // encodeURIComponent('http://user.xixincloud.com/User/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     }
-    // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxef2a7d894732658e&redirect_uri=' +
-    // encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
   } else {
     Vue.prototype.$popupTop('出错了，请重试')
   }
@@ -72,7 +71,6 @@ export default {
     return axios({
       method: 'get',
       url: config._PATH_ + url,
-      withCredentials: true,
       params,
       timeout: 15000,
       headers: headers

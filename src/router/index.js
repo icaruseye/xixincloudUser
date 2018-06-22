@@ -71,15 +71,16 @@ const router = new Router({
       path: '/servant/detail',
       component: servantDetail,
       children: [{
-        path: 'service/:id',
-        component: servantService
-      }, {
         path: 'item/:id',
         component: servantItem
       }, {
         path: 'package/:id',
         component: servantPackage
       }]
+    },
+    {
+      path: '/servant/service/:id',
+      component: servantService
     },
     {
       path: '/servant/chat/:id',
@@ -150,15 +151,24 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // 微信授权登录
-  const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
-  if (!userInfo.ID && to.path !== '/User/Login') {
-    // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxef2a7d894732658e&redirect_uri=' +
-    // encodeURIComponent('http://xxx.xixincloud.com/Servant/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
-    // window.location.href = '/Servant/Login'
+  const userAccount = JSON.parse(sessionStorage.getItem('userAccount')) || {}
+  console.log(to.path)
+  if (!userAccount.ID && window.location.pathname !== '/User/Login') {
+    window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx08851399f06a2888&redirect_uri=' +
+    encodeURIComponent('http://user.xixincloud.com/User/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     sessionStorage.setItem('to_path', to.fullPath)
-    next('/User/Login?id=4')
+    // window.location.href = 'http://192.168.2.236:8080/User/Login'
+    // next('/User/Login?id=4')
     return false
   }
+  // if (!userInfo.IsMobileChecked) {
+  //   next('/user/phone' && to.path !== '/user/phone')
+  //   return false
+  // }
+  // if (!userInfo.IDCard) {
+  //   next('/user/phone' && to.path !== '/user/phone')
+  //   return false
+  // }
   next()
 })
 

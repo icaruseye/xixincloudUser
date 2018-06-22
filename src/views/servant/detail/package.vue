@@ -1,31 +1,23 @@
 <template>
   <div class="has-tabbar">
-    <!-- 服务套餐头部信息 -->
-    <packageInfo></packageInfo>
     <!-- 服务列表 -->
     <div class="weui-list-panel mgt10">
       <div class="weui-pane_subtitle">服务列表</div>
       <div class="weui-list_container">
-        <div class="weui-list_item">
-          <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
-          <div class="mid">
-            <div class="title">院内陪诊</div>
-            <div class="describe">针对老人、儿童、孕妇、异地就医患者…</div>
+        <template v-for="(item, index) in PackageItemDetailsList">
+          <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
+            <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
+            <div class="mid">
+              <div class="title">{{item.ItemName}}</div>
+              <div class="describe">{{item.ItemContent}}</div>
+            </div>
+            <div class="count">{{item.ItemNumber}}次</div>
           </div>
-          <div class="count">5次</div>
-        </div>
-        <div class="weui-list_item">
-          <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
-          <div class="mid">
-            <div class="title">院内陪诊</div>
-            <div class="describe">针对老人、儿童、孕妇、异地就医患者…</div>
-          </div>
-          <div class="count">5次</div>
-        </div>
+        </template>
       </div>
     </div>
     
-    <button data-v-018b696c="" type="button" class="weui-btn weui-btn-bottom weui-btn_primary">立即购买 ￥10.00</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary">立即购买 ￥{{(Package.ViewPrice/100).toFixed(2)}} 元</button>
   </div>
 </template>
 
@@ -37,9 +29,24 @@ export default {
   },
   data () {
     return {
+      Package: {},
+      PackageItemDetailsList: []
     }
   },
+  created () {
+    this.initData()
+  },
   methods: {
+    async initData () {
+      const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        this.Package = res.data.Data.Package
+        this.PackageItemDetailsList = res.data.Data.PackageItemDetailsList
+      }
+    },
+    toItem (id) {
+      this.$router.push(`/servant/detail/item/${id}?type=0`)
+    }
   }
 }
 </script>
