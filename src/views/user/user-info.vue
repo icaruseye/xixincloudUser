@@ -22,7 +22,7 @@
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">真实姓名</label>
-          <input :disabled="UserInfo.RealName" v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
+          <input v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
       </div>
     </div>
     <!-- <div class="weui-form-cell">
@@ -38,7 +38,7 @@
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">身份证号码</label>
-          <input :disabled="UserInfo.IDCard" v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
+          <input v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
       </div>
     </div>
     <div class="weui-form-cell">

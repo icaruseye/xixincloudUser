@@ -144,7 +144,7 @@ export default {
       }
       const that = this
       const res = await this.$http.post(`/ValidateMobile?MobilePhone=${this.mobile}&VCode=${this.code}`)
-      if (res.data.Data.Code === 100000) {
+      if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: '验证成功',
           onHide () {
