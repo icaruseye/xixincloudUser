@@ -1,7 +1,8 @@
 import axios from 'axios'
-import config from '@/config'
 import Vue from 'vue'
 // import router from '@/router'
+
+const _TIMEOUT_ = 15000
 
 axios.interceptors.response.use(response => {
   return response
@@ -9,9 +10,9 @@ axios.interceptors.response.use(response => {
   if (error.response.status === 401) {
     // token无效，重新登录
     if (error.response.data.Code === 100010) {
-      sessionStorage.removeItem('userInfo')
-      // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx08851399f06a2888&redirect_uri=' +
-      // encodeURIComponent('http://user.xixincloud.com/User/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+      sessionStorage.removeItem('userAccount')
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.wechatOption.appId}&redirect_uri=` +
+        encodeURIComponent(process.env.wechatOption.redirectUrl) + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     }
   } else {
     Vue.prototype.$popupTop('出错了，请重试')
@@ -33,9 +34,9 @@ export default {
     }
     var options = {
       method: 'post',
-      url: config._PATH_ + url,
+      url: process.env.API_PATH + url,
       data: data,
-      timeout: config._TIMEOUT_,
+      timeout: _TIMEOUT_,
       headers: _headers || headers
     }
     return axios(options)
@@ -53,9 +54,9 @@ export default {
     }
     var options = {
       method: 'put',
-      url: config._PATH_ + url,
+      url: process.env.API_PATH + url,
       data: data,
-      timeout: config._TIMEOUT_,
+      timeout: _TIMEOUT_,
       headers: _headers || headers
     }
     return axios(options)
@@ -70,7 +71,7 @@ export default {
     }
     return axios({
       method: 'get',
-      url: config._PATH_ + url,
+      url: process.env.API_PATH + url,
       params,
       timeout: 15000,
       headers: headers
@@ -89,9 +90,9 @@ export default {
     }
     var options = {
       method: method,
-      url: config._PATH_ + url,
+      url: process.env.API_PATH + url,
       data: data,
-      timeout: config._TIMEOUT_,
+      timeout: _TIMEOUT_,
       headers: _headers || headers
     }
     return axios(options)

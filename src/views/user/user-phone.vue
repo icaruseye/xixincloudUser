@@ -142,10 +142,17 @@ export default {
       if (!this.userAgreement) {
         return this.$vux.toast.text('请填勾选同意用户协议')
       }
+      const that = this
       const res = await this.$http.post(`/ValidateMobile?MobilePhone=${this.mobile}&VCode=${this.code}`)
-      console.log(res)
-      if (res.data.Data.Code === 10000) {
-        this.$vux.toast.text('验证成功')
+      if (res.data.Data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '验证成功',
+          onHide () {
+            that.$store.dispatch('getAccount').then(() => {
+              this.$router.push('/user')
+            })
+          }
+        })
       } else {
         this.$vux.toast.text(res.data.Msg)
       }

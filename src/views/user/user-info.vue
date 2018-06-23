@@ -22,7 +22,7 @@
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">真实姓名</label>
-          <input v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
+          <input :disabled="UserInfo.RealName" v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
       </div>
     </div>
     <!-- <div class="weui-form-cell">
@@ -38,7 +38,7 @@
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">身份证号码</label>
-          <input v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
+          <input :disabled="UserInfo.IDCard" v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
       </div>
     </div>
     <div class="weui-form-cell">
@@ -103,26 +103,9 @@ export default {
     this.UserInfo.NickName = this.userAccount.NickName
     this.UserInfo.RealName = this.userInfo.RealName
     this.UserInfo.IDCard = this.userInfo.IDCard
-    this.calculate()
+    this.getAge()
   },
   methods: {
-    onUpdate1 (id) {
-      console.log(id)
-      this.UserInfo.Avatar = id
-    },
-    calculate () {
-      if (!util.CheckIDCardNum(this.UserInfo.IDCard)) {
-        this.age = ''
-        this.birthday = ''
-        this.$vux.toast.text('身份证格式不正确')
-        return false
-      }
-      const id = this.UserInfo.IDCard
-      if (!id) return false
-      this.birthday = id.substr(6, 4) + '-' + id.substr(10, 2) + '-' + id.substr(12, 2)
-      console.log(this.birthday)
-      this.age = new Date().getFullYear() - id.substr(6, 4)
-    },
     async validateBeforeSubmit () {
       const that = this
       const isValidate = util.validateForm(this.UserInfo, this.authText)
@@ -139,7 +122,7 @@ export default {
             text: '提交成功',
             onHide () {
               that.$store.dispatch('getAccount').then(() => {
-                that.$router.back()
+                that.$router.push('/user')
               })
             }
           })
@@ -147,6 +130,27 @@ export default {
           this.submitBtn = false
         }
       }
+    },
+    onUpdate1 (id) {
+      console.log(id)
+      this.UserInfo.Avatar = id
+    },
+    calculate () {
+      if (this.UserInfo.IDCard === '') return false
+      if (!util.CheckIDCardNum(this.UserInfo.IDCard)) {
+        this.age = ''
+        this.birthday = ''
+        this.$vux.toast.text('身份证格式不正确')
+        return false
+      }
+      this.getAge()
+    },
+    getAge () {
+      const id = this.UserInfo.IDCard
+      if (!id) return false
+      this.birthday = id.substr(6, 4) + '-' + id.substr(10, 2) + '-' + id.substr(12, 2)
+      console.log(this.birthday)
+      this.age = new Date().getFullYear() - id.substr(6, 4)
     }
   }
 }

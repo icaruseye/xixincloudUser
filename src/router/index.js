@@ -150,25 +150,25 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // 微信授权登录
   const userAccount = JSON.parse(sessionStorage.getItem('userAccount')) || {}
-  console.log(to.path)
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
+  // 微信授权登录
   if (!userAccount.ID && window.location.pathname !== '/User/Login') {
-    window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx08851399f06a2888&redirect_uri=' +
-    encodeURIComponent('http://user.xixincloud.com/User/Login?shopID=666') + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.wechatOption.appId}&redirect_uri=` +
+    encodeURIComponent(process.env.wechatOption.redirectUrl) + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     sessionStorage.setItem('to_path', to.fullPath)
-    // window.location.href = 'http://192.168.2.236:8080/User/Login'
-    // next('/User/Login?id=4')
     return false
   }
-  // if (!userInfo.IsMobileChecked) {
-  //   next('/user/phone' && to.path !== '/user/phone')
-  //   return false
-  // }
-  // if (!userInfo.IDCard) {
-  //   next('/user/phone' && to.path !== '/user/phone')
-  //   return false
-  // }
+  // 手机认证
+  if (userAccount.ID && !userInfo.Mobile && to.path !== '/user/phone') {
+    router.replace('/user/phone')
+    return false
+  }
+  // 实名认证
+  if (userAccount.ID && userInfo.Mobile && !userInfo.IDCard && to.path !== '/user/info') {
+    router.replace('/user/info')
+    return false
+  }
   next()
 })
 

@@ -4,11 +4,11 @@
       <div class="user-info">
         <img class="avatar" :src="userAccount.Avatar | transformImgUrl" alt="">
         <div class="mid-info">
-          <div class="name">{{userInfo.RealName}}</div>
-          <div class="times">已被服务：1次</div>
+          <div class="name">{{userAccount.NickName}}</div>
+          <!-- <div class="times">已被服务：1次</div> -->
           <span class="auth" v-if="userInfo.IDCard"><i class="iconfont icon-shimingrenzheng"></i> 实名认证</span>
         </div>
-        <img class="qrcode" src="@/assets/images/code.png" alt="" @click="toggleMask">
+        <!-- <img class="qrcode" src="@/assets/images/code.png" alt="" @click="toggleMask"> -->
       </div>
       <div class="user-info_percent">
         你的资料完整度为 {{dataScore}}%，完善资料和验证手机后您才能为用户提供服务

@@ -85,7 +85,9 @@ export default {
     },
     async getUnreadSiteNotice () {
       const res = await this.$http.get('/SiteNotice/Count/Unread')
-      this.UnreadSiteNotice = res.data.Data
+      if (res.data.Code === 100000) {
+        this.UnreadSiteNotice = res.data.Data === 0 ? '' : res.data.Data
+      }
     }
   }
 }
