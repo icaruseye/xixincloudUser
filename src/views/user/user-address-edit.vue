@@ -55,6 +55,10 @@ export default {
     defaultOnly: {
       type: Boolean,
       default: false
+    },
+    UserAddress: {
+      type: Object,
+      default: {}
     }
   },
   watch: {

@@ -16,7 +16,7 @@
     </div>
     <!-- 服务人员信息 -->
     <div class="package-servant-info mgt10">
-      <div class="avatar"><img :src="data.Avatar" alt=""></div>
+      <div class="avatar"><img :src="data.Avatar | transformImgUrl" alt=""></div>
       <div class="name">{{data.NickName}}</div>
       <!-- <div class="title">儿科 主治医师</div> -->
     </div>

@@ -78,7 +78,12 @@ export default {
     ]),
     dataScore () {
       const userInfo = this.userInfo
-      let res = userInfo.IDCardType + userInfo.IsFillingInfo + userInfo.IsMobileChecked
+      let res = 0
+      if (userInfo.IDCard !== '') {
+        res = 1 + userInfo.IsFillingInfo + userInfo.IsMobileChecked
+      } else {
+        res = 0 + userInfo.IsFillingInfo + userInfo.IsMobileChecked
+      }
       return res === 3 ? '100' : res * 33
     }
   },

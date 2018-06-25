@@ -38,8 +38,11 @@ const userComplaintDetail = () => import('@/views/user/user-complaint-detail')
 // 微信登录
 const wxLogin = () => import('@/views/wxlogin/login')
 
+const addFriends = () => import('@/views/wxlogin/addFriends')
+
 // 结果页
 const resultsComplaint = () => import('@/views/resultsPage/complaint')
+const paySuccess = () => import('@/views/resultsPage/paySuccess')
 
 Vue.use(Router)
 
@@ -54,6 +57,10 @@ const router = new Router({
     {
       path: '/User/Login',
       component: wxLogin
+    },
+    {
+      path: '/addFriends',
+      component: addFriends
     },
     {
       path: '/servant/pay/:id',
@@ -145,6 +152,10 @@ const router = new Router({
     {
       path: '/result/complaint',
       component: resultsComplaint
+    },
+    {
+      path: '/result/paySuccess',
+      component: paySuccess
     }
   ]
 })
@@ -159,6 +170,13 @@ router.beforeEach((to, from, next) => {
     sessionStorage.setItem('to_path', to.fullPath)
     return false
   }
+
+  // 加好友
+  if (to.path === '/addFriends') {
+    next()
+    return false
+  }
+
   // 手机认证
   if (userAccount.ID && !userInfo.Mobile && to.path !== '/user/phone') {
     router.replace('/user/phone')

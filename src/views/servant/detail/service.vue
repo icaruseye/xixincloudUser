@@ -63,15 +63,15 @@ export default {
   methods: {
     // 获取服务人员信息
     async getServantInfo () {
-      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.id}`)
+      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        this.servantInfos = Object.assign(res.data.Data.ServAccount, res.data.Data.ServiceRcords)
+        this.servantInfos = Object.assign(res.data.Data.ServAccount, {AverageScore: res.data.Data.AverageScore, ServiceTimes: res.data.Data.ServiceTimes})
         sessionStorage.setItem('myServantInfo', JSON.stringify(this.servantInfos))
       }
     },
-    // 单项服务
+    // 服务列表
     async getItemList () {
-      const res = await this.$http.get(`/PackageList?servantID=${this.$route.query.id}`)
+      const res = await this.$http.get(`/PackageList/${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.splitList(res.data.Data)
       }

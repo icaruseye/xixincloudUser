@@ -1,10 +1,9 @@
 <template>
-  <div v-if="info !== null">
-    <!-- 基本信息 -->
+  <div style="padding: 5px" v-if="isShow">
     <div class="servant-panel_info">
-      <img class="avatar" :src="info.Avatar | transformImgUrl">
-      <span class="name">{{info.NickName}}</span>
-      <img class="qrcode" src="@/assets/images/code.png" @click="showQrcode">
+      <img class="avatar" :src="info.ServAccount.Avatar | transformImgUrl">
+      <span class="name">{{info.ServAccount.NickName}}</span>
+      <!-- <img class="qrcode" src="@/assets/images/code.png"> -->
     </div>
     <!-- 服务评分 -->
     <div class="servant-panel_data panel-border">
@@ -21,72 +20,59 @@
         <div>服务评分</div>
       </div>
     </div>
-    <!-- 个人简介 -->
-    <div class="servant-panel_intro panel-border">
-      <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
-      <div class="content">
-        暂无介绍
-      </div>
-    </div>
-    <!-- <div class="servant-unfold_bar">
-      <div><i class="iconfont icon-jiantoushang"></i></div>
-      <div>展开</div>
-    </div> -->
-    <div v-transfer-dom>
-      <x-dialog v-model="isShow" :hide-on-blur="true">
-        <ShowQrCode :info="info"></ShowQrCode>
-      </x-dialog>
+    <div v-if="userAccount.IsSubscribe">
+      <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + shopID" alt=""></div>
+      <div style="text-align: center;font-size: 14px;color: #333;">长按二维码 关注微信公众号</div>
     </div>
   </div>
 </template>
 
 <script>
-import ShowQrCode from '@/components/ShowQrCode'
-import { XDialog, TransferDom } from 'vux'
 export default {
-  directives: {
-    TransferDom
-  },
-  props: {
-    data: {
-      type: Object,
-      default: null
-    }
-  },
-  components: {
-    ShowQrCode,
-    XDialog
-  },
   data () {
     return {
-      info: {},
-      isShow: false
+      isShow: false,
+      addSuccess: false,
+      isFollow: false,
+      shopID: JSON.parse(sessionStorage.getItem('userAccount')).ShopID,
+      info: {
+        ServAccount: {}
+      },
+      qrcode: '',
+      userAccount: JSON.parse(sessionStorage.getItem('userAccount'))
     }
   },
-  watch: {
-    data (val) {
-      this.info = val
+  created () {
+    this.addFirends()
+  },
+  computed: {
+    API_PATH () {
+      return process.env.API_PATH
     }
   },
   methods: {
-    showQrcode () {
-      this.isShow = true
+    async getServantInfo () {
+      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.id}`)
+      if (res.data.Code === 100000) {
+        this.info = res.data.Data
+      }
+    },
+    async addFirends () {
+      const res = await this.$http.get(`/AddFriend/${this.$route.query.id}`)
+      if (res.data.Code === 100000) {
+        if (this.userAccount.IsSubscribe) {
+          this.$router.push(`/servant/service/${this.$route.query.id}`)
+        } else {
+          this.isShow = true
+        }
+        this.getServantInfo()
+      }
     }
   }
 }
 </script>
 
-
-<style lang="less" scoped>
-.servant-panel_title {
-  padding: 0 10px;
-}
-.servant-unfold_bar {
-  padding: 5px 0;
-  font-size: 12px;
-  color: #999;
-  text-align: center;
-}
+<style scoped lang="less">
 .servant-panel_info {
   padding: 12px 8px 12px 12px;
   border-radius: 6px 6px 0 0;
@@ -133,17 +119,5 @@ export default {
       margin-right: 10px;
     }
   }
-}
-.servant-panel_intro {
-  position: relative;
-  padding-top: 12px;
-  .content {
-    font-size: 12px;
-    color: #666;
-    padding: 10px 12px 12px 12px;
-  }
-}
-.icon-jiantoushang {
-  font-size: 12px;
 }
 </style>

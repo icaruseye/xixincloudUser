@@ -17,7 +17,7 @@
       </div>
     </div>
     
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary">立即购买 ￥{{(Package.ViewPrice/100).toFixed(2)}} 元</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(Package.ID)">立即购买 ￥{{(Package.ViewPrice/100).toFixed(2)}} 元</button>
   </div>
 </template>
 
@@ -46,6 +46,9 @@ export default {
     },
     toItem (id) {
       this.$router.push(`/servant/detail/item/${id}?type=0`)
+    },
+    toPay (id) {
+      this.$router.push(`/servant/pay/${id}`)
     }
   }
 }

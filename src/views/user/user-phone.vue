@@ -149,7 +149,7 @@ export default {
           text: '验证成功',
           onHide () {
             that.$store.dispatch('getAccount').then(() => {
-              this.$router.push('/user')
+              that.$router.push('/user')
             })
           }
         })

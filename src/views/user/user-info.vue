@@ -22,7 +22,8 @@
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">真实姓名</label>
-          <input v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
+          <input v-if="!disabled" v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
+          <div v-if="disabled">{{UserInfo.RealName}}</div>
       </div>
     </div>
     <!-- <div class="weui-form-cell">
@@ -38,19 +39,22 @@
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">身份证号码</label>
-          <input v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
+          <input v-if="!disabled" v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
+          <div v-if="disabled">{{UserInfo.IDCard}}</div>
       </div>
     </div>
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">出生日期</label>
-          <input v-model="birthday" name="birthday" type="text" readonly placeholder="根据填入身份证号码计算">
+          <input v-if="!disabled" v-model="birthday" name="birthday" type="text" readonly placeholder="根据填入身份证号码计算">
+          <div v-if="disabled">{{birthday}}</div>
       </div>
     </div>
     <div class="weui-form-cell">
       <div class="weui-cell-top">
           <label class="label" for="">年龄</label>
-          <input v-model="age" name="age" type="text" readonly placeholder="根据填入身份证号码计算">
+          <input v-if="!disabled" v-model="age" name="age" type="text" readonly placeholder="根据填入身份证号码计算">
+          <div v-if="disabled">{{age}}</div>
       </div>
     </div>
     <div class="weui-form-cell">
@@ -66,6 +70,7 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
+      disabled: false,
       submitBtn: false,
       birthday: '',
       age: '',
@@ -104,6 +109,9 @@ export default {
     this.UserInfo.RealName = this.userInfo.RealName
     this.UserInfo.IDCard = this.userInfo.IDCard
     this.getAge()
+    if (this.userAccount.State === 1) {
+      this.disabled = true
+    }
   },
   methods: {
     async validateBeforeSubmit () {

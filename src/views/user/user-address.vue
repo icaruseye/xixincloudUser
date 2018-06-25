@@ -8,11 +8,15 @@
           <i class="iconfont icon-jiantouyou"></i>
         </div>
       </template>
+      <!-- 空状态 -->
+      <xxOccupiedBox v-if="flag">
+        <p>你还没有添加过地址哦</p>
+      </xxOccupiedBox>
     </div>
       <button type="button" class="weui-btn weui-btn_primary" @click="toEdit(-1, 0)">新建地址</button>
     <div v-transfer-dom>
       <popup v-model="showAddress" height="100%">
-        <userAddressEdit :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+        <userAddressEdit :UserAddress="UserAddress" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
       </popup>
     </div>
   </div>
@@ -31,11 +35,13 @@ export default {
   },
   data () {
     return {
+      flag: false,
       showAddress: false,
       addressList: [],
       isEmptyList: false,
       index: '',
-      addressID: null
+      addressID: null,
+      UserAddress: {}
     }
   },
   created () {
@@ -69,9 +75,13 @@ export default {
     },
     async getAddressList () {
       const res = await this.$http.get('/UserAddress')
-      this.addressList = res.data.Data
+      if (res.data.Code === 100000) {
+        this.addressList = res.data.Data
+        this.flag = this.addressList.length === 0
+      }
     },
     toEdit (id, index) {
+      // 只有一项地址
       if (this.addressList.length === 1) {
         if (id === -1) {
           this.isEmptyList = false
@@ -79,12 +89,19 @@ export default {
           this.isEmptyList = true
         }
       }
-      if (this.isEmptyList.length === 0) {
+      // 尚未添加地址
+      if (this.addressList.length === 0) {
         this.isEmptyList = true
+      }
+      // id：-1 新增地址
+      if (id !== -1) {
+        this.UserAddress = this.addressList[index]
+        this.UserAddress.citys = [this.addressList[index].Province, this.addressList[index].City, this.addressList[index].Area]
+      } else {
+        this.UserAddress = {}
       }
       this.showAddress = true
       this.addressID = id
-      // this.$router.push(`/user/address/edit/${id}?first=${this.isEmptyList}&index=${index}`)
     }
   }
 }

@@ -1,11 +1,11 @@
 <template>
   <div class="weui-list_container">
     <template v-for="(item, index) in list">
-      <div class="weui-list_item" :key="index">
-        <div class="icon" @click="toItem(item.ID)">
+      <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
+        <div class="icon">
           <img src="@/assets/images/icon_picc.png" alt="">
         </div>
-        <div class="mid" @click="toItem(item.ID)">
+        <div class="mid">
           <div class="title">{{item.Name}}</div>
           <div class="describe text-overflow-1">{{item.Description}}</div>
           <div class="sales">

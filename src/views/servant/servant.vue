@@ -23,19 +23,20 @@
               </div>
             </div>
           </template>
+          <xxOccupiedBox v-if="servantList.length === 0">
+            <p>还未添加管家</p>
+          </xxOccupiedBox>
         </div>
       </div>
       <!-- 消息列表 -->
       <div class="tabbox" v-show="tabIndex === 1">
         <div class="tabbox-list vux-1px-b vux-1px-t">
           <template v-for="(item, index) in msgList">
-            <div class="item vux-1px-b" @click="goChat(item.FriendViewID, index)" :key="index">
-              <div class="mid">
-                <div style="font-size:15px;color#333;">123</div>
-                <div>{{item.Message}}</div>
-              </div>
-            </div>
+            <mail-list-item :count="1" :key="index" @click="goChat(item.FriendViewID, index)">{{item.Message}}</mail-list-item>
           </template>
+          <xxOccupiedBox v-if="msgList.length === 0">
+            <p>没有消息</p>
+          </xxOccupiedBox>
         </div>
       </div>
     </div>
@@ -45,11 +46,13 @@
 
 <script>
 import { Tab, TabItem, Sticky } from 'vux'
+import MailListItem from './components/MailListItem'
 export default {
   components: {
     Sticky,
     Tab,
-    TabItem
+    TabItem,
+    MailListItem
   },
   data () {
     return {
@@ -112,7 +115,9 @@ export default {
 
 .tabbox {
   .tabbox-list {
+    position: relative;
     padding: 15px;
+    min-height: 200px;
     background: #fff;
     border-color: #E5E5E5;
     margin-bottom: 15px;
