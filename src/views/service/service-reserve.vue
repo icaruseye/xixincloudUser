@@ -94,7 +94,7 @@
     </div>
     <div v-transfer-dom>
       <popup v-model="showAddressEdit" height="100%" style="z-index:502">
-        <userAddressEdit :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+        <userAddressEdit :defaultOnly="isEmptyList" :UserAddress="{}" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
       </popup>
     </div>
   </div>

@@ -20,7 +20,13 @@ export default {
           const openID = userAccount.OpenID
           const shopID = userAccount.ShopID
           const payres = await this.$http.post(`/UserOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
-          this.onBridgeReady(payres.data.Data)
+          if (payres.data.Code === 100000) {
+            if (payres.data.Data.Price === 0) {
+              this.$router.replace('/result/paySuccess')
+            } else {
+              this.onBridgeReady(payres.data.Data)
+            }
+          }
         }
       }
     },
@@ -37,7 +43,6 @@ export default {
           'paySign': data.paySign // 微信签名
         },
         async function (res) {
-          console.log(res)
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
             const res = await this.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
             if (res.data.Code === 100000) {

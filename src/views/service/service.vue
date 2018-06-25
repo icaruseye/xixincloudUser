@@ -18,10 +18,10 @@
         <template v-for="(pItem, pIndex) in UserOrderDetailsList.ItemsByDoc">
           <div :key="pIndex">
             <div class="weui-panel_subinfo">
-              <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG" alt=""></div>
+              <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG | transformImgUrl" alt=""></div>
               <div class="mid">
                 <div class="name">{{pItem.ContentOfItems[0].DoctorName}}</div>
-                <div class="role">萌宠砖家</div>
+                <!-- <div class="role">萌宠砖家</div> -->
               </div>
             </div>
             <template v-for="(cItem, cIndex) in pItem.ContentOfItems">
@@ -52,7 +52,7 @@
         <template v-for="(pItem, pIndex) in UserOrderDetailsList.PackByDoc">
           <div :key="pIndex">
             <div class="weui-panel_subinfo">
-              <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG" alt=""></div>
+              <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG | transformImgUrl" alt=""></div>
               <div class="mid">
                 <div class="name">{{pItem.ContentOfItems[0].DoctorName}}</div>
                 <div class="role">萌宠砖家</div>

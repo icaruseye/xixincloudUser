@@ -128,7 +128,7 @@ export default {
         this.$vux.toast.show({
           text: '成功',
           onHide () {
-            that.$router.back()
+            that.$router.push('/result/payCancel')
             this.disabled = false
           }
         })

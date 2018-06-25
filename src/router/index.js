@@ -43,6 +43,7 @@ const addFriends = () => import('@/views/wxlogin/addFriends')
 // 结果页
 const resultsComplaint = () => import('@/views/resultsPage/complaint')
 const paySuccess = () => import('@/views/resultsPage/paySuccess')
+const payCancel = () => import('@/views/resultsPage/cancel')
 
 Vue.use(Router)
 
@@ -156,6 +157,10 @@ const router = new Router({
     {
       path: '/result/paySuccess',
       component: paySuccess
+    },
+    {
+      path: '/result/payCancel',
+      component: payCancel
     }
   ]
 })

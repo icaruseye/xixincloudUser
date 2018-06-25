@@ -58,7 +58,7 @@ export default {
     },
     UserAddress: {
       type: Object,
-      default: {}
+      default: () => {}
     }
   },
   watch: {
@@ -80,12 +80,6 @@ export default {
       submitBtn: false,
       addressData: ChinaAddressV4Data,
       address: '',
-      UserAddress: {
-        IsDefault: 1,
-        citys: [],
-        SpecificAddress: '',
-        Remark: '家'
-      },
       authText: {
         IsDefault: {
           required: false

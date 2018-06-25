@@ -67,7 +67,7 @@
       <button type="button" class="weui-btn weui-btn_primary" @click="showCancelConfirm">取消预约</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 3">
-      <button type="button" style="flex:1" class="weui-btn weui-btn_primary">发消息</button>
+      <button type="button" style="flex:1" class="weui-btn weui-btn_primary" @click="toChat(serviceItemInfo.ViewID)">发消息</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 4">
       <button class="weui-btn weui-btn_primary" style="background: #ffc349;" @click="toComplaint">投诉</button>
@@ -194,7 +194,7 @@ export default {
         this.$vux.toast.show({
           text: res.data.Msg,
           onHide () {
-            that.$router.back()
+            that.$router.push('/result/payCancel')
           }
         })
       } else {
@@ -233,6 +233,10 @@ export default {
         this.title3 = '已评价'
         this.subhead3 = `评价时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
       }
+    },
+    // 跳转聊天
+    toChat (ViewID) {
+      this.$router.push(`/servant/chat/${ViewID}`)
     }
   }
 }
