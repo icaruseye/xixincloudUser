@@ -6,7 +6,7 @@
           <xx-uploader
             class="upload"
             :isAvatar="true"
-            :maxSize="1024 * 1024 * 2"
+            :maxSize="1024 * 1024 * 5"
             :imgList="imgList1"
             @onUpdate="onUpdate1"
           ></xx-uploader>
@@ -140,8 +140,7 @@ export default {
       }
     },
     onUpdate1 (id) {
-      console.log(id)
-      this.UserInfo.Avatar = id
+      this.UserInfo.Avatar = id.join(',')
     },
     calculate () {
       if (this.UserInfo.IDCard === '') return false

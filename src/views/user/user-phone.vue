@@ -19,7 +19,7 @@
       <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《悉心健康用户协议》</a></label>
     </div>
   </div>
-  <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit">提交</button>
+  <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>
   <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '50%', 'background-color': 'transparent'}">
     <div class="dialog-content">
       <div class="title">用户协议</div>
@@ -68,6 +68,7 @@ export default {
   },
   data () {
     return {
+      disabledSubmit: false,
       showHideOnBlur: false,
       isShow: true,
       mobile: '',
@@ -143,6 +144,7 @@ export default {
         return this.$vux.toast.text('请填勾选同意用户协议')
       }
       const that = this
+      this.disabledSubmit = true
       const res = await this.$http.post(`/ValidateMobile?MobilePhone=${this.mobile}&VCode=${this.code}`)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
@@ -150,11 +152,13 @@ export default {
           onHide () {
             that.$store.dispatch('getAccount').then(() => {
               that.$router.push('/user')
+              this.disabledSubmit = false
             })
           }
         })
       } else {
         this.$vux.toast.text(res.data.Msg)
+        this.disabledSubmit = false
       }
     }
   }

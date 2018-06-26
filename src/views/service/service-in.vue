@@ -194,7 +194,7 @@ export default {
         this.$vux.toast.show({
           text: res.data.Msg,
           onHide () {
-            that.$router.push('/result/payCancel')
+            that.$router.back()
           }
         })
       } else {

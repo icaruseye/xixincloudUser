@@ -98,7 +98,12 @@ export default {
         this.UserAddress = this.addressList[index]
         this.UserAddress.citys = [this.addressList[index].Province, this.addressList[index].City, this.addressList[index].Area]
       } else {
-        this.UserAddress = {}
+        this.UserAddress = {
+          IsDefault: 1,
+          citys: [],
+          SpecificAddress: '',
+          Remark: '家'
+        }
       }
       this.showAddress = true
       this.addressID = id

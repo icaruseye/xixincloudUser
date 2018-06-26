@@ -87,6 +87,9 @@ export default {
       return res === 3 ? '100' : res * 33
     }
   },
+  created () {
+    this.$store.dispatch('getAccount')
+  },
   methods: {
     toggleMask (val) {
       this.maskShow = val

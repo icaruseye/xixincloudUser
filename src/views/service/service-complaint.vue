@@ -27,7 +27,7 @@
       <div class="weui-panel_title">相关图片上传</div>
         <xx-uploader
           class="upload"
-          :maxSize="1024 * 1024 * 2"
+          :maxSize="1024 * 1024 * 5"
           :imgList="imgList1"
           @onUpdate="onUpdate1"
         ></xx-uploader>

@@ -47,7 +47,7 @@
       <xx-cell-items label="相关医嘱病历图片上传" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <xx-uploader
           class="upload"
-          :maxSize="1024 * 1024 * 2"
+          :maxSize="1024 * 1024 * 5"
           :imgList="imgList1"
           :limit="3"
           @onUpdate="onUpdate1"

@@ -61,20 +61,6 @@ export default {
       default: () => {}
     }
   },
-  watch: {
-    id (val) {
-      if (this.id !== -1) {
-        this.getData(this.id)
-      } else {
-        this.UserAddress = {
-          IsDefault: 1,
-          citys: [],
-          SpecificAddress: '',
-          Remark: '家'
-        }
-      }
-    }
-  },
   data () {
     return {
       submitBtn: false,
@@ -103,17 +89,17 @@ export default {
     cancel () {
       this.$emit('cancel')
     },
-    async getData (id) {
-      const res = await this.$http.get(`/UserAddress/${id}`)
-      const data = res.data.Data
-      const UserAddress = {
-        IsDefault: data.IsDefault,
-        citys: [data.Province, data.City, data.Area],
-        SpecificAddress: data.SpecificAddress,
-        Remark: data.Remark
-      }
-      this.UserAddress = UserAddress
-    },
+    // async getData (id) {
+    //   const res = await this.$http.get(`/UserAddress/${id}`)
+    //   const data = res.data.Data
+    //   const UserAddress = {
+    //     IsDefault: data.IsDefault,
+    //     citys: [data.Province, data.City, data.Area],
+    //     SpecificAddress: data.SpecificAddress,
+    //     Remark: data.Remark
+    //   }
+    //   this.UserAddress = UserAddress
+    // },
     async save () {
       const that = this
       const isValidate = util.validateForm(this.UserAddress, this.authText)

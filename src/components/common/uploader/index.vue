@@ -40,6 +40,7 @@
 <script>
 import axios from 'axios'
 import { AlertModule } from 'vux'
+import util from '@/plugins/util'
 export default {
   props: {
     title: String,
@@ -67,6 +68,9 @@ export default {
   created () {
     if (this.imgList) {
       this.list = this.imgList
+      this.list.map((item) => {
+        item.url = util.transformImgUrl(item.url)
+      })
     }
   },
   methods: {

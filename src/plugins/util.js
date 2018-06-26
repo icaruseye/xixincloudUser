@@ -97,5 +97,20 @@ export default {
       }
     })
     return name
+  },
+  // 转换图片地址
+  transformImgUrl (val) {
+    if (!val) return
+    if (val.indexOf('http') === -1) {
+      if (val.indexOf('Upload') === -1) {
+        // 值为id
+        return 'http://xixincloud.com:6883/File/GetImage/' + val
+      } else {
+        // 第三种情况
+        return val
+      }
+    }
+    // 值为完整url
+    return val
   }
 }
