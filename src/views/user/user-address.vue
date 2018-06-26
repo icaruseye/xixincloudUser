@@ -45,14 +45,7 @@ export default {
     }
   },
   created () {
-    const that = this
     this.getAddressList()
-    window.addEventListener('popstate', function (e) {
-      if (e.state) {
-        that.showAddress = false
-        history.pushState(null, null, document.URL)
-      }
-    }, false)
   },
   filters: {
     transformAddress (val) {

@@ -1,19 +1,19 @@
 <template>
   <div class="has-tabbar">
-    <div class="item-info-time"><span class="left">服务时长</span> <span class="right"><span class="number">90</span>分钟/次</span></div>
-    <div class="item-info flex mgt10">
+    <!-- <div class="item-info-time"><span class="left">服务时长</span> <span class="right"><span class="number">90</span>分钟/次</span></div> -->
+    <!-- <div class="item-info flex mgt10">
       <div class="left">操作动作</div>
       <div class="right">
         <ul>
           <li v-for="item in ItemActionDetails" :key="item.ID">{{item.Name}}</li>
         </ul>
       </div>
-    </div>
+    </div> -->
     <div class="item-info mgt10">
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满10岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
     </div>
-    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(1)">立即购买 ￥{{(Item.ViewPrice/100).toFixed(2)}}</button>
+    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(Item.ID)">立即购买 ￥{{Item.ViewPrice ? (Item.ViewPrice/100).toFixed(2) : '0.00'}}</button>
   </div>
 </template>
 
@@ -34,14 +34,13 @@ export default {
     if (this.$route.query.type === '0') {
       this.showPay = false
     }
-    this.initData()
+    // this.initData()
     this.getPackageDetail()
   },
   methods: {
     async initData () {
-      const res = await this.$http.post(`/Item?itemID=${this.$route.params.id}`)
+      const res = await this.$http.post(`/Item?itemID=${this.$route.query.itemID}`)
       if (res.data.Code === 100000) {
-        console.log(res)
         this.ItemActionDetails = res.data.Data.ItemActionDetails
       }
     },

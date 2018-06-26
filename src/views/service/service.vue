@@ -137,7 +137,7 @@
                   <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
                 <div style="font-size:14px;color:#666;">内容：</div>
-                <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div>
+                <div class="describe">完成时间：{{item.EndTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -264,7 +264,7 @@ export default {
       const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
         this.UserOrderDetailsList = res.data.Data
-        if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.ItemsByDoc.length === 0) {
+        if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0) {
           this.flag1 = true
         }
       }
@@ -442,7 +442,7 @@ export default {
 .checker-bar {
   padding: 10px 12px;
   display: flex;
-  font-size: 15px;
+  font-size: 13px;
   color: #999;
   ul {
     display: flex;
@@ -453,6 +453,7 @@ export default {
         content: "";
         position: absolute;
         right: 0;
+        top:-3px;
         background: #999;
         height: 25px;
         border-right: 1px solid #D8D8D8;

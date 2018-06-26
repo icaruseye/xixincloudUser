@@ -25,7 +25,7 @@
     <div class="servant-panel_intro panel-border">
       <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
       <div class="content">
-        暂无介绍
+        {{info.Description ? info.Description : '暂无简介'}}
       </div>
     </div>
     <!-- <div class="servant-unfold_bar">

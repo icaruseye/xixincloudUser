@@ -45,9 +45,8 @@ export default {
   margin-top: 30px;
   img
   {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
+    position: relative;
+    z-index: 2;
   }
 }
 
@@ -63,6 +62,7 @@ export default {
   transform: scale(0.5, 0.5);
   box-sizing: border-box;
   border-radius: 10px;
+  z-index: 1;
 }
 .userInfo_container
 {

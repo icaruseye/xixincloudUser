@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 
 import { ToastPlugin } from 'vux'
 Vue.use(ToastPlugin)
@@ -166,6 +167,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  router.app.$store.commit('SET_ROUTER_LOADING', true)
   const userAccount = JSON.parse(sessionStorage.getItem('userAccount')) || {}
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
   // 微信授权登录
@@ -193,6 +195,9 @@ router.beforeEach((to, from, next) => {
     return false
   }
   next()
+})
+router.afterEach(() => {
+  store.commit('SET_ROUTER_LOADING', false)
 })
 
 export default router

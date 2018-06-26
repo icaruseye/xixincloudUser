@@ -8,20 +8,12 @@
       <div class="servant-panel servant-panel_service" v-if="itemList.length > 0">
         <div class="servant-panel_title"><i class="icon icon-2"></i>医生服务</div>
         <div class="servant-pane_subtitle">单项服务</div>
-        <servantItemist :list="itemList" :isItem="true"></servantItemist>
-        <div class="servant-unfold_bar">
-          <div><i class="iconfont icon-jiantoushang"></i></div>
-          <div>展开</div>
-        </div>
+        <servantItemist :list="itemList" :isItem="true" :limit="10"></servantItemist>
       </div>
       <!-- 套餐服务 -->
       <div class="servant-panel" v-if="packageList.length > 0">
         <div class="servant-pane_subtitle">套餐服务</div>
-        <servantItemist :list="packageList" :isItem="false"></servantItemist>
-        <div class="servant-unfold_bar">
-          <div><i class="iconfont icon-jiantoushang"></i></div>
-          <div>展开</div>
-        </div>
+        <servantItemist :list="packageList" :isItem="false" :limit="10"></servantItemist>
       </div>
       <!-- 患者评价 -->
       <!-- <div class="servant-panel servant-panel_comments">

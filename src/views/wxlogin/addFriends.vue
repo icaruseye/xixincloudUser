@@ -20,7 +20,7 @@
         <div>服务评分</div>
       </div>
     </div>
-    <div v-if="userAccount.IsSubscribe">
+    <div v-if="!userAccount.IsSubscribe">
       <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + shopID" alt=""></div>
       <div style="text-align: center;font-size: 14px;color: #333;">长按二维码 关注微信公众号</div>
     </div>

@@ -1,12 +1,25 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <InlineLoading class="vertical" v-if="routerLoading"></InlineLoading>
+    <template v-else>
+      <router-view></router-view>
+    </template>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { InlineLoading } from 'vux'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    InlineLoading
+  },
+  computed: {
+    ...mapGetters([
+      'routerLoading'
+    ])
+  }
 }
 </script>
 
@@ -36,5 +49,11 @@ body {
     color: @yellow;
     font-size: 14px;
   }
+}
+.vertical {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

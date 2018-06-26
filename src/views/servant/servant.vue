@@ -14,7 +14,7 @@
       </sticky>
       <!-- 我的管家 -->
       <div class="tabbox" v-show="tabIndex === 0">
-        <div class="tabbox-list vux-1px-b">
+        <div class="tabbox-list vux-1px-b" :class="{emptyList: flag1}">
           <template v-for="(item, index) in servantList">
             <div class="item vux-1px-b" @click="goServant(item.FriendViewID, item.FriendID)" :key="index">
               <div><img class="avatar" :src="item.FriendAvatar | transformImgUrl" alt=""></div>
@@ -23,18 +23,18 @@
               </div>
             </div>
           </template>
-          <xxOccupiedBox v-if="servantList.length === 0">
+          <xxOccupiedBox v-if="flag1">
             <p>还未添加管家</p>
           </xxOccupiedBox>
         </div>
       </div>
       <!-- 消息列表 -->
       <div class="tabbox" v-show="tabIndex === 1">
-        <div class="tabbox-list vux-1px-b vux-1px-t">
+        <div class="tabbox-list vux-1px-b vux-1px-t" :class="{emptyList: flag2}">
           <template v-for="(item, index) in msgList">
             <mail-list-item :count="1" :key="index" @click="goChat(item.FriendViewID, index)">{{item.Message}}</mail-list-item>
           </template>
-          <xxOccupiedBox v-if="msgList.length === 0">
+          <xxOccupiedBox v-if="flag2">
             <p>没有消息</p>
           </xxOccupiedBox>
         </div>
@@ -56,6 +56,8 @@ export default {
   },
   data () {
     return {
+      flag1: false,
+      flag2: false,
       tabIndex: 0,
       servantList: [],
       msgList: [],
@@ -76,15 +78,21 @@ export default {
       this.$router.push(`/servant/chat/${id}`)
     },
     goServant (viewID, ID) {
-      this.$router.push(`/servant/service/${viewID}?id=${ID}`)
+      this.$router.push(`/servant/service/${viewID}`)
     },
     async getData () {
       const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
-      this.servantList = res.data.Data
+      if (res.data.Code === 100000) {
+        this.servantList = res.data.Data
+        this.flag1 = this.servantList.length === 0
+      }
     },
     async getSiteNoticeList () {
       const res = await this.$http.get('/SiteNoticeList')
-      this.msgList = res.data.Data
+      if (res.data.Code === 100000) {
+        this.msgList = res.data.Data
+        this.flag2 = this.msgList.length === 0
+      }
     },
     async getUnreadSiteNotice () {
       const res = await this.$http.get('/SiteNotice/Count/Unread')
@@ -117,10 +125,12 @@ export default {
   .tabbox-list {
     position: relative;
     padding: 15px;
-    min-height: 200px;
     background: #fff;
     border-color: #E5E5E5;
     margin-bottom: 15px;
+    &.emptyList {
+      min-height: 200px;
+    }
     .item {
       display: flex;
       padding: 15px 10px;

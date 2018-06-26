@@ -13,12 +13,12 @@
       <div class="user-info_percent">
         你的资料完整度为 {{dataScore}}%，完善资料和验证手机后您才能为用户提供服务
       </div>
-      <div class="user-panel">
-        <router-link to="/" class="user-panel_item">
+      <!-- <div class="user-panel">
+        <router-link to="/servant" class="user-panel_item">
             <img src="@/assets/images/icon-my-manager.png" alt="">
             <span>管家</span>
         </router-link>
-        <router-link to="/" class="user-panel_item">
+        <router-link to="/service" class="user-panel_item">
             <img src="@/assets/images/icon-my-service.png" alt="">
             <span>服务</span>
         </router-link>
@@ -26,7 +26,7 @@
             <img src="@/assets/images/icon-my-calendar.png" alt="">
             <span>日程</span>
         </router-link>
-      </div>
+      </div> -->
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/info" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-set.png" alt="">
@@ -38,16 +38,16 @@
           <span class="title">常用地址</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
-        <router-link to="/user/phone" class="setting-panel_item item vux-1px-b">
+        <!-- <router-link to="/user/phone" class="setting-panel_item item vux-1px-b">
           <img src="@/assets/images/icon-my-phone.png" alt="">
           <span class="title">手机认证</span>
           <i class="iconfont icon-jiantouyou"></i>
-        </router-link>
-        <router-link to="/user/order" class="setting-panel_item vux-1px-b">
+        </router-link> -->
+        <!-- <router-link to="/user/order" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">我的订单</span>
           <i class="iconfont icon-jiantouyou"></i>
-        </router-link>
+        </router-link> -->
         <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">我的投诉</span>

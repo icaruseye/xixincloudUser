@@ -12,14 +12,16 @@ export default {
   },
   methods: {
     async getUserPreOrder () {
-      const res = await this.$http.post(`/UserPreOrder?packageID=${this.$route.params.id}`)
+      // 生成预支付订单
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           const userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
           const orderID = res.data.Data.OrderID
           const openID = userAccount.OpenID
           const shopID = userAccount.ShopID
-          const payres = await this.$http.post(`/UserOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
+          // 创建订单
+          const payres = await this.$http.post(`/UserOrder/CreateOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
           if (payres.data.Code === 100000) {
             if (payres.data.Data.Price === 0) {
               this.$router.replace('/result/paySuccess')
@@ -27,9 +29,12 @@ export default {
               this.onBridgeReady(payres.data.Data)
             }
           }
+        } else {
+          window.location.href = res.data.Data.RedirectUrl
         }
       }
     },
+    // 跳转微信支付
     onBridgeReady (data) {
       console.log(data)
       WeixinJSBridge.invoke(

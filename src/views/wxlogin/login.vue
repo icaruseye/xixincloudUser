@@ -24,6 +24,12 @@ export default {
           const path = sessionStorage.getItem('to_path') || '/'
           this.$router.replace(path)
         })
+      } else if (res.data.Code === 300010) {
+        // 显示
+        this.$vux.alert.show({
+          title: '提示',
+          content: '该账户已被锁定，请联系客服处理'
+        })
       }
     }
   },

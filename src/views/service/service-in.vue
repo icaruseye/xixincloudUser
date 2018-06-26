@@ -63,11 +63,11 @@
       </xx-timeLine-items>
     </xx-timeLine>
     <div class="btn-bar" v-if="serviceItemInfo.State === 0">
-      <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;">发消息</button>
+      <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
       <button type="button" class="weui-btn weui-btn_primary" @click="showCancelConfirm">取消预约</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 3">
-      <button type="button" style="flex:1" class="weui-btn weui-btn_primary" @click="toChat(serviceItemInfo.ViewID)">发消息</button>
+      <button type="button" style="flex:1" class="weui-btn weui-btn_primary" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 4">
       <button class="weui-btn weui-btn_primary" style="background: #ffc349;" @click="toComplaint">投诉</button>

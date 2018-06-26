@@ -5,7 +5,7 @@
       <div class="weui-pane_subtitle">服务列表</div>
       <div class="weui-list_container">
         <template v-for="(item, index) in PackageItemDetailsList">
-          <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
+          <div class="weui-list_item" :key="index" @click="toItem(Package.ID, item.ID)">
             <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
             <div class="mid">
               <div class="title">{{item.ItemName}}</div>
@@ -17,7 +17,7 @@
       </div>
     </div>
     
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(Package.ID)">立即购买 ￥{{(Package.ViewPrice/100).toFixed(2)}} 元</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(Package.ID)">立即购买 ￥{{(Package.ViewPrice/100).toFixed(2) || '0.00'}} 元</button>
   </div>
 </template>
 
@@ -44,8 +44,8 @@ export default {
         this.PackageItemDetailsList = res.data.Data.PackageItemDetailsList
       }
     },
-    toItem (id) {
-      this.$router.push(`/servant/detail/item/${id}?type=0`)
+    toItem (id, itemID) {
+      this.$router.push(`/servant/detail/item/${id}?type=0&itemID=${itemID}`)
     },
     toPay (id) {
       this.$router.push(`/servant/pay/${id}`)

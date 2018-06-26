@@ -6,12 +6,12 @@
       <div class="mid">
         <div class="name">{{data.Name}}</div>
         <div class="sales">
-          <div class="price">{{(data.ViewPrice/100).toFixed(2)}}<span>元</span></div>
+          <div class="price">{{data.ViewPrice ? (data.ViewPrice/100).toFixed(2) : '0.00'}}<span>元</span></div>
           <div class="volume" v-if="data.SoldAmount">已售：{{data.SoldAmount}}份</div>
         </div>
       </div>
       <div class="qrcode">
-        <img src="@/assets/images/code.png" alt="">
+        <img src="@/assets/images/code.png" alt="" @click="showQrcode">
       </div>
     </div>
     <!-- 服务人员信息 -->
@@ -24,21 +24,45 @@
     <div class="package-info mgt10">
       <div class="title">
         <span class="left">服务套餐介绍</span>
-        <span class="right" v-if="data.EffectiveDay !== 0">该套餐有效期：{{data.EffectiveDay}}天</span>
-        <span class="right" v-if="data.EffectiveMonth !== 0">该套餐有效期：{{data.EffectiveMonth}}月</span>
-        <span class="right" v-if="data.EffectiveYear !== 0">该套餐有效期：{{data.EffectiveYear}}年</span>
+        <span class="right" v-if="data.EffectiveDay">该套餐有效期：{{data.EffectiveDay}}天</span>
+        <span class="right" v-if="data.EffectiveMonth">该套餐有效期：{{data.EffectiveMonth}}月</span>
+        <span class="right" v-if="data.EffectiveYear">该套餐有效期：{{data.EffectiveYear}}年</span>
       </div>
       <div class="content">
         {{data.Description}}
       </div>
     </div>
+    <div v-transfer-dom>
+      <x-dialog v-model="isShow" :hide-on-blur="true">
+        <ShowQrCode :info="data"></ShowQrCode>
+      </x-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import ShowQrCode from '@/components/ShowQrCode'
+import { XDialog, TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
+  components: {
+    ShowQrCode,
+    XDialog
+  },
   props: {
     data: Object
+  },
+  data () {
+    return {
+      isShow: false
+    }
+  },
+  methods: {
+    showQrcode () {
+      this.isShow = true
+    }
   }
 }
 </script>

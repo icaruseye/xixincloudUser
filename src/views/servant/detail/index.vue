@@ -28,6 +28,7 @@ export default {
         console.log(res)
         const info = JSON.parse(sessionStorage.getItem('myServantInfo'))
         this.Package = res.data.Data.Package
+        this.Package.ViewID = res.data.Data.Package.ServantViewID
         this.Package.Avatar = info.Avatar
         this.Package.NickName = info.NickName
       }
