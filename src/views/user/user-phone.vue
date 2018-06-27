@@ -149,6 +149,7 @@ export default {
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: '验证成功',
+          time: 500,
           onHide () {
             that.$store.dispatch('getAccount').then(() => {
               that.$router.push('/user')

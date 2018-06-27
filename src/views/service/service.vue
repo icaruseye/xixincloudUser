@@ -31,10 +31,10 @@
                     <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                        <div class="title">{{mItem.SingleItem.Name}}</div>
+                        <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
                         <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
-                      <div class="describe">到期时间：2018/06/08</div>
+                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
                     </div>
                     <div class="btn">
                       <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
@@ -48,7 +48,7 @@
       </div>
       <!-- 套餐服务 -->
       <div class="weui-panel" v-if="UserOrderDetailsList.PackByDoc.length !== 0">
-        <div class="weui-panel_subtitle">套餐服务</div>
+        <div class="weui-panel_subtitle text-overflow-1">套餐服务</div>
         <template v-for="(pItem, pIndex) in UserOrderDetailsList.PackByDoc">
           <div :key="pIndex">
             <div class="weui-panel_subinfo">
@@ -67,7 +67,7 @@
                       <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
                       <div class="mid">
                         <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                          <div class="title">{{mItem.SingleItem.Name}}</div>
+                          <div class="title text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                         </div>
                         <div class="describe">到期时间：2018/06/08</div>
@@ -106,10 +106,10 @@
               <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                  <div class="title" style="font-weight:normal">{{item.ItemName}}</div>
+                  <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                   <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
-                <div style="font-size:14px;color:#666;">内容：</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
@@ -133,10 +133,10 @@
               <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
-                  <div class="title" style="font-weight:normal">{{item.ItemName}}</div>
+                  <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                   <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
-                <div style="font-size:14px;color:#666;">内容：</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Discription ? item.Discription : '没有备注消息'}}</div>
                 <div class="describe">完成时间：{{item.EndTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
@@ -162,8 +162,8 @@ export default {
     title: '服务'
   },
   filters: {
-    timeFormat (value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
+    timeFormat (value, format = 'YYYY-MM-DD HH:mm:ss') {
+      return dateFormat(new Date(value), format)
     }
   },
   components: {

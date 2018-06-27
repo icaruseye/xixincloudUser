@@ -119,6 +119,7 @@ export default {
         if (res.data.Code === 100000) {
           this.$vux.toast.show({
             text: '提交成功',
+            time: 500,
             onHide () {
               this.submitBtn = false
               that.$emit('success')

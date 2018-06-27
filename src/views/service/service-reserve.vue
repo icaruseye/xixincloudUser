@@ -30,18 +30,18 @@
       能接受服务时间段
     </h2>
     <xx-cell>
-      <xx-cell-items label="开始时间" @click.native="selectStartTime" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
-        <div style="padding-right:15px">{{reqParams.StartTime}}</div>
-      </xx-cell-items>
-      <xx-cell-items label="结束时间" @click.native="selectEndTime" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
-        <div style="padding-right:15px">{{reqParams.EndTime}}</div>
-      </xx-cell-items>
+      <div style="display: flex;align-items:center;padding: 15px 10px;color:#999;font-size:13px;">
+       <span style="color:#333;margin: 0 5px;font-size:15px;">从</span>
+        <div @click="selectStartTime">{{reqParams.StartTime}}</div>
+       <span style="color:#333;margin: 0 5px;font-size:15px">至</span>
+        <div @click="selectEndTime">{{reqParams.EndTime}}</div>
+      </div>
     </xx-cell>
     <xx-cell class="mgt10">
       <xx-cell-items label="病情症状或备注" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div class="service_remark_textarea_container">
-          <textarea v-model="reqParams.Discription" class="service_remark_textarea" placeholder="请输入备注"></textarea>
-          <span class="service_remark_textarea_nums_count">{{reqParams.Discription.length}} / 200</span>
+          <textarea v-model="reqParams.Discription" class="service_remark_textarea" placeholder="请输入备注" @keyup="limitCount(200)"></textarea>
+          <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.Discription.length}} / 200</span>
         </div>
       </xx-cell-items>
       <xx-cell-items label="相关医嘱病历图片上传" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
@@ -122,6 +122,7 @@ export default {
   data () {
     const that = this
     return {
+      exceedText: false,
       showAddressEdit: false,
       isEmptyList: false,
       submitDisable: false,
@@ -132,15 +133,7 @@ export default {
       addressIndex: 0,
       servant: this.$route.query.servant,
       name: this.$route.query.name,
-      startTime: dateFormat(new Date(), dataFormatRule),
-      endTime: dateFormat(that.addOneDay(new Date()), dataFormatRule),
-      mark: '',
-      value1: false,
-      value2: false,
       imgList1: [],
-      remark: '',
-      radioValue1: false,
-      radioValue2: false,
       reqParams: {
         StartTime: dateFormat(new Date(), dataFormatRule),
         EndTime: dateFormat(that.addOneDay(new Date()), dataFormatRule),
@@ -149,6 +142,12 @@ export default {
         NeedPill: false,
         NeedTools: false,
         Imgs: ''
+      },
+      authText: {
+        Address: {
+          required: true,
+          text: '上门地址'
+        }
       }
     }
   },
@@ -157,6 +156,9 @@ export default {
     console.log(this.$route)
   },
   methods: {
+    limitCount (max) {
+      this.exceedText = this.reqParams.Discription.length > max
+    },
     cancelAddress () {
       this.showAddressEdit = false
     },
@@ -164,6 +166,7 @@ export default {
       this.showAddressEdit = false
       this.getAddressList()
     },
+    // 新增地址
     addAddress () {
       this.showAddressEdit = true
     },
@@ -173,22 +176,26 @@ export default {
     addOneDay (date) {
       return new Date(date.getTime() + 24 * 60 * 60 * 1000)
     },
+    // 显示选择地址弹出层
     showAddress () {
       this.isShowAddress = true
     },
+    // 选择地址
     chooseAdress (index) {
       this.addressIndex = index
       this.isShowAddress = false
       this.reqParams.Address = this.concatAdress(this.addressList[index])
     },
+    // 转换地址
     concatAdress (address) {
       return util.transformAddress(address.Province) + util.transformAddress(address.City) + util.transformAddress(address.Area) + address.SpecificAddress
     },
+    // 选择时间
     selectStartTime () {
       const that = this
       this.$vux.datetime.show({
         format: dataFormatRule,
-        value: that.startTime,
+        value: that.reqParams.StartTime,
         title: '选择开始时间',
         confirmText: '确定',
         cancelText: '取消',
@@ -197,17 +204,20 @@ export default {
         dayRow: `{value}日`,
         hourRow: `{value}时`,
         minuteRow: `{value}分`,
+        maxHour: 20,
+        minHour: 6,
         onConfirm (val) {
-          that.startTime = val
-          that.endTime = dateFormat(that.addOneDay(new Date(val)), dataFormatRule)
+          that.reqParams.StartTime = val
+          that.reqParams.EndTime = dateFormat(that.addOneDay(new Date(val)), dataFormatRule)
         }
       })
     },
+    // 选择时间
     selectEndTime () {
       const that = this
       this.$vux.datetime.show({
         format: dataFormatRule,
-        value: that.endTime,
+        value: that.reqParams.EndTime,
         title: '选择结束时间',
         confirmText: '确定',
         cancelText: '取消',
@@ -216,8 +226,15 @@ export default {
         dayRow: `{value}日`,
         hourRow: `{value}时`,
         minuteRow: `{value}分`,
+        startDate: that.reqParams.StartTime,
+        maxHour: 20,
+        minHour: 6,
         onConfirm (val) {
-          that.endTime = val
+          if (new Date(val).getTime() < new Date(that.reqParams.StartTime).getTime()) {
+            that.$vux.toast.text('时段截止时间不能先于起始时间')
+          } else {
+            that.reqParams.EndTime = val
+          }
         }
       })
     },
@@ -229,9 +246,11 @@ export default {
     changeRadio2 () {
       this.reqParams.NeedPill = !this.reqParams.NeedPill
     },
+    // 上传图片
     onUpdate1 (id) {
       this.reqParams.Imgs = id.join(',')
     },
+    // 提交预约
     async onConfirm () {
       const that = this
       this.submitDisable = true
@@ -239,6 +258,7 @@ export default {
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: '预约成功',
+          time: 500,
           onHide () {
             that.$router.replace(`/service/in/${res.data.Data}?type=0`)
           }
@@ -248,6 +268,7 @@ export default {
         this.submitDisable = false
       }
     },
+    // 获取用户地址列表
     async getAddressList () {
       const res = await this.$http.get('/UserAddress')
       if (res.data.Code === 100000) {
@@ -257,11 +278,18 @@ export default {
           this.reqParams.Address = this.transformAddress(data[0].Province) + this.transformAddress(data[0].City) + this.transformAddress(data[0].Area) + data[0].SpecificAddress
         } else {
           this.address = '请选择地址'
-          this.isEmptyList = true
+          this.isEmptyList = false
         }
       }
     },
+    // 提交前弹窗确认
     submit () {
+      const validate = util.validateForm(this.reqParams, this.authText)
+      if (!validate) return false
+      if (this.exceedText) {
+        this.$vux.toast.text('备注字数超出限制')
+        return false
+      }
       this.isConfirm = true
     }
   }
@@ -292,13 +320,15 @@ export default {
   margin-top: 12px;
   position: relative;
   height: 115px;
+  background: #f2f2f2;
+  border-radius: 3px;
 }
 .service_remark_textarea {
   box-sizing: border-box;
   outline: none;
   padding: 12px;
   width: 100%;
-  height: 100%;
+  height: 90px;
   resize: none;
   border: none;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -311,6 +341,9 @@ export default {
   line-height: 18px;
   color: #999999;
   font-size: 13px;
+  &.warn {
+    color: #f44336
+  }
 }
 .address-list_title {
   text-align: center;

@@ -28,7 +28,8 @@
         :title="title2"
         :subhead="subhead2">
         <div class="content">
-          服务项：{{serviceItemInfo.ItemName}}
+          <div>服务项：{{serviceItemInfo.ItemName}}</div>
+          <div v-if="serviceItemInfo.Result">服务内容：{{serviceItemInfo.Result}}</div>
         </div>
       </xx-timeLine-items>
       <xx-timeLine-items
@@ -156,6 +157,7 @@ export default {
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: res.data.Msg,
+          time: 500,
           onHide () {
             that.initData()
           }
@@ -164,6 +166,7 @@ export default {
         this.$vux.toast.show({
           type: 'text',
           text: res.data.Msg,
+          time: 500,
           onHide () {
             that.disabled = false
           }
@@ -193,6 +196,7 @@ export default {
         console.log(res)
         this.$vux.toast.show({
           text: res.data.Msg,
+          time: 500,
           onHide () {
             that.$router.back()
           }

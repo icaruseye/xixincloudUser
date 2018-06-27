@@ -127,6 +127,7 @@ export default {
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: '成功',
+          time: 500,
           onHide () {
             that.$router.push('/result/payCancel')
             this.disabled = false
@@ -221,6 +222,7 @@ export default {
       font-size: 13px;
       color: #999;
       display: flex;
+      word-break:break-all;
       .preview_img {
         margin-right: 10px;
         width: 65px;

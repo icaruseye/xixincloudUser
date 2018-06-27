@@ -21,12 +21,13 @@
       </div>
       <div class="weui-panel_title">其他备注</div>
       <div style="position:relative">
-        <textarea v-model="AddComplaintParam.Remark" name="" placeholder="请输入其他备注"></textarea>
-        <span class="remark_textarea_nums_count">{{AddComplaintParam.Remark.length}} / 200</span>
+        <textarea v-model="AddComplaintParam.Remark" name="" placeholder="请输入其他备注" @keyup="limitCount(200)"></textarea>
+        <span class="remark_textarea_nums_count" :class="{warn: exceedText}">{{AddComplaintParam.Remark.length}} / 200</span>
       </div>
       <div class="weui-panel_title">相关图片上传</div>
         <xx-uploader
           class="upload"
+          :limit="9"
           :maxSize="1024 * 1024 * 5"
           :imgList="imgList1"
           @onUpdate="onUpdate1"
@@ -44,6 +45,7 @@ export default {
   },
   data () {
     return {
+      exceedText: false,
       disabled: false,
       imgList1: [],
       AddComplaintParam: {
@@ -65,10 +67,17 @@ export default {
     }
   },
   methods: {
+    limitCount (max) {
+      this.exceedText = this.AddComplaintParam.Remark.length > max
+    },
     async submitComplaint () {
       const that = this
       const validate = util.validateForm(this.AddComplaintParam, this.authText)
       if (!validate) return false
+      if (this.exceedText) {
+        this.$vux.toast.text('备注字数超出限制')
+        return false
+      }
       this.disabled = true
       this.AddComplaintParam.MissionID = this.$route.params.id
       const res = await this.$http.post('/Complaint', this.AddComplaintParam)
@@ -76,6 +85,7 @@ export default {
         console.log(res)
         this.$vux.toast.show({
           text: '提交成功',
+          time: 500,
           onHide () {
             that.$router.push(`/result/complaint`)
           }
@@ -136,5 +146,8 @@ textarea {
   line-height: 18px;
   color: #999999;
   font-size: 13px;
+  &.warn {
+    color: #f44336
+  }
 }
 </style>

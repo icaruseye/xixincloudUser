@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { InlineLoading } from 'vux'
+import { InlineLoading, dateFormat } from 'vux'
 export default {
   metaInfo: {
     title: '聊天'
@@ -67,8 +67,7 @@ export default {
   },
   filters: {
     timeFormat (val) {
-      const time = val.split('T')
-      return `${time[0]} ${time[1]}`
+      return dateFormat(new Date(val), 'YYYY-MM-DD HH:mm:ss')
     }
   },
   // 初次拉取消息
@@ -156,7 +155,9 @@ export default {
         MsgType: 1,
         Content: this.chatMsg
       })
-      console.log(res)
+      if (res.data.Code !== 100000) {
+        return false
+      }
       let _msg = Object.assign({}, msg)
       this.chatList.push(_msg)
       this.chatMsg = ''

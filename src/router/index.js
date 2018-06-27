@@ -12,6 +12,7 @@ const servantService = () => import('@/views/servant/detail/service')
 const servantItem = () => import('@/views/servant/detail/item')
 const servantPackage = () => import('@/views/servant/detail/package')
 const servantChat = () => import('@/views/servant/chat')
+const servantMailList = () => import('@/views/servant/MailList')
 
 // 支付
 const pay = () => import('@/views/servant/pay.vue')
@@ -75,6 +76,10 @@ const router = new Router({
     {
       path: '/servant',
       component: servant
+    },
+    {
+      path: '/systemMail',
+      component: servantMailList
     },
     {
       path: '/servant/detail',

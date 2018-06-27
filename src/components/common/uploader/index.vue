@@ -80,7 +80,7 @@ export default {
       let reader = new FileReader()
       if (!this.checkSize(file, e)) return false
       if (!this.checkCount(e)) return false
-      if (!this.checkName(file.name, e)) return false
+      // if (!this.checkName(file.name, e)) return false
 
       let img = {
         url: '',
@@ -170,21 +170,21 @@ export default {
         return false
       }
       return true
-    },
-    checkName (name, e) {
-      let flag = true
-      this.list.map((i) => {
-        if (name === i.name) {
-          flag = false
-          e.target.value = ''
-          AlertModule.show({
-            title: '提示',
-            content: '请勿重复选取图片'
-          })
-        }
-      })
-      return flag
     }
+    // checkName (name, e) {
+    //   let flag = true
+    //   this.list.map((i) => {
+    //     if (name === i.name) {
+    //       flag = false
+    //       e.target.value = ''
+    //       AlertModule.show({
+    //         title: '提示',
+    //         content: '请勿重复选取图片'
+    //       })
+    //     }
+    //   })
+    //   return flag
+    // }
   }
 }
 </script>
