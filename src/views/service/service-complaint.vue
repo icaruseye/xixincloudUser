@@ -82,7 +82,6 @@ export default {
       this.AddComplaintParam.MissionID = this.$route.params.id
       const res = await this.$http.post('/Complaint', this.AddComplaintParam)
       if (res.data.Code === 100000) {
-        console.log(res)
         this.$vux.toast.show({
           text: '提交成功',
           time: 500,

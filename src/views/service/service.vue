@@ -32,11 +32,11 @@
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
-                        <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
-                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
+                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormatElse('YYYY-MM-DD')}}</div>
                     </div>
                     <div class="btn">
+                      <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
                     </div>
                   </div>
@@ -55,7 +55,7 @@
               <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG | transformImgUrl" alt=""></div>
               <div class="mid">
                 <div class="name">{{pItem.ContentOfItems[0].DoctorName}}</div>
-                <div class="role">萌宠砖家</div>
+                <!-- <div class="role">萌宠砖家</div> -->
               </div>
             </div>
             <template v-for="(cItem, cIndex) in pItem.ContentOfItems">
@@ -70,7 +70,7 @@
                           <div class="title text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                         </div>
-                        <div class="describe">到期时间：2018/06/08</div>
+                        <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormatElse('YYYY-MM-DD')}}</div>
                       </div>
                       <div class="btn">
                       <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
@@ -162,7 +162,7 @@ export default {
     title: '服务'
   },
   filters: {
-    timeFormat (value, format = 'YYYY-MM-DD HH:mm:ss') {
+    timeFormatElse (value, format = 'YYYY-MM-DD HH:mm:ss') {
       return dateFormat(new Date(value), format)
     }
   },
@@ -384,7 +384,7 @@ export default {
   }
   .mid {
     flex: 1;
-    margin: 0 19px;
+    margin: 0 10px;
     color: #999;
     .title {
       font-size: 15px;
@@ -403,6 +403,8 @@ export default {
     }
   }
   .btn {
+    display: flex;
+    align-items: center;
     button {
       width: 50px;
       height: 22px;

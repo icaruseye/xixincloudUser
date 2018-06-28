@@ -20,15 +20,10 @@
 </template>
 
 <script>
-import { Rater, dateFormat } from 'vux'
+import { Rater } from 'vux'
 export default {
   components: {
     Rater
-  },
-  filters: {
-    timeFormat (value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
-    }
   },
   props: {
     list: Array

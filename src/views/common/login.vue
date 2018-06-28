@@ -1,6 +1,8 @@
 <template>
   <div>
-    登录中...
+    <xxOccupiedBox>
+      <p>登录中...</p>
+    </xxOccupiedBox>
   </div>
 </template>
 
@@ -17,7 +19,6 @@ export default {
       }
       // 获取token
       const res = await this.$http.get('/Login', option)
-      // const res = await this.$http.get('/LoginTest', {id: this.$route.query.id})
       if (res.data.Code === 100000) {
         localStorage.setItem('user_token', res.data.Data)
         this.$store.dispatch('getAccount').then(() => {

@@ -99,11 +99,6 @@ export default {
   directives: {
     TransferDom
   },
-  filters: {
-    timeFormat (value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
-    }
-  },
   components: {
     Rater,
     Confirm
@@ -193,7 +188,6 @@ export default {
         CancleDescription: ''
       })
       if (res.data.Code === 100000) {
-        console.log(res)
         this.$vux.toast.show({
           text: res.data.Msg,
           time: 500,

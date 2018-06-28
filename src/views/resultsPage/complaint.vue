@@ -23,6 +23,7 @@ export default {
   padding: 20px 0 50px;
   background: #fff;
   text-align: center;
+  min-height: 100vh;
   .icon {
     width: 70px;
     height: auto;

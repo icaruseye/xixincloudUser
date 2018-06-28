@@ -29,23 +29,38 @@
         </p>
       </div>
     </div>
+    <div class="form-panel" style="margin-top:10px;">
+      <div style="padding: 13px 0;font-size:13px;" v-if="id !== -1">
+        <p class="weui-cell-top" style="color:#f43530" @click="showRemove" :disbaled="removeBtn">删除此地址</p>
+      </div>
+    </div>
     <div style="position: fixed;bottom: 0;width:100%;display:flex">
       <button type="button" class="weui-btn weui-btn_cancel" @click="cancel">取消</button>
       <button type="button" class="weui-btn weui-btn_primary" @click="save" :disabled="submitBtn">保存</button>
+    </div>
+    <div v-transfer-dom>
+      <confirm v-model="isShowRemove"
+      @on-confirm="removeAddress">
+      <p>确定要删除该地址吗？</p>
+      </confirm>
     </div>
   </div>
 </template>
 
 <script>
-import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch } from 'vux'
+import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch, Confirm, TransferDom } from 'vux'
 import util from '@/plugins/util'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     XAddress,
     Group,
     Checker,
     CheckerItem,
-    InlineXSwitch
+    InlineXSwitch,
+    Confirm
   },
   props: {
     id: {
@@ -61,9 +76,18 @@ export default {
       default: () => {}
     }
   },
+  mounted () {
+    if (this.UserAddress.Province) {
+      this.UserAddress.citys = [this.UserAddress.Province, this.UserAddress.City, this.UserAddress.Area]
+    } else {
+      this.UserAddress.citys = []
+    }
+  },
   data () {
     return {
+      isShowRemove: false,
       submitBtn: false,
+      removeBtn: false,
       addressData: ChinaAddressV4Data,
       address: '',
       authText: {
@@ -89,6 +113,9 @@ export default {
     cancel () {
       this.$emit('cancel')
     },
+    showRemove () {
+      this.isShowRemove = true
+    },
     // async getData (id) {
     //   const res = await this.$http.get(`/UserAddress/${id}`)
     //   const data = res.data.Data
@@ -100,6 +127,26 @@ export default {
     //   }
     //   this.UserAddress = UserAddress
     // },
+    async removeAddress () {
+      const that = this
+      this.removeBtn = true
+      const res = await this.$http.delete(`/UserAddress/${this.id}`)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '删除成功',
+          time: 500,
+          onHide () {
+            that.removeBtn = false
+            that.$emit('success')
+          }
+        })
+      } else {
+        this.$vux.toast.show({
+          text: '出错了，请重试'
+        })
+        this.submitBtn = false
+      }
+    },
     async save () {
       const that = this
       const isValidate = util.validateForm(this.UserAddress, this.authText)
@@ -121,15 +168,17 @@ export default {
             text: '提交成功',
             time: 500,
             onHide () {
-              this.submitBtn = false
+              that.submitBtn = false
               that.$emit('success')
             }
           })
+          this.UserAddress.citys = []
         } else {
           this.$vux.toast.show({
             text: '出错了，请重试'
           })
           this.submitBtn = false
+          this.UserAddress.citys = []
         }
       }
     }

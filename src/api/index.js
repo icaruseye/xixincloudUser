@@ -61,6 +61,22 @@ export default {
     }
     return axios(options)
   },
+  delete (url, params) {
+    var token = localStorage.getItem('user_token')
+    var headers = {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+    if (token) {
+      headers.token = token
+    }
+    return axios({
+      method: 'delete',
+      url: process.env.API_PATH + url,
+      params,
+      timeout: 15000,
+      headers: headers
+    })
+  },
   get (url, params) {
     var token = localStorage.getItem('user_token')
     var headers = {

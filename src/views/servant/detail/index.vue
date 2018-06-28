@@ -25,7 +25,6 @@ export default {
     async initData () {
       const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        console.log(res)
         const info = JSON.parse(sessionStorage.getItem('myServantInfo'))
         this.Package = res.data.Data.Package
         this.Package.ViewID = res.data.Data.Package.ServantViewID

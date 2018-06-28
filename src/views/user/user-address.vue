@@ -16,7 +16,9 @@
       <button type="button" class="weui-btn weui-btn_primary" @click="toEdit(-1, 0)">新建地址</button>
     <div v-transfer-dom>
       <popup v-model="showAddress" height="100%">
-        <userAddressEdit :UserAddress="UserAddress" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+        <div v-if="showAddress">
+          <userAddressEdit :UserAddress="UserAddress" :id="addressID" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+        </div>
       </popup>
     </div>
   </div>
@@ -89,13 +91,10 @@ export default {
       // id：-1 新增地址
       if (id !== -1) {
         this.UserAddress = this.addressList[index]
-        this.UserAddress.citys = [this.addressList[index].Province, this.addressList[index].City, this.addressList[index].Area]
+        // this.UserAddress.citys = [this.addressList[index].Province, this.addressList[index].City, this.addressList[index].Area]
       } else {
         this.UserAddress = {
-          IsDefault: 1,
-          citys: [],
-          SpecificAddress: '',
-          Remark: '家'
+          IsDefault: 1
         }
       }
       this.showAddress = true

@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     onItemClick (index) {
-      console.log(index)
       this.tabIndex = index
     },
     goChat (id) {

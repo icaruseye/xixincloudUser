@@ -37,15 +37,15 @@ const userOrder = () => import('@/views/user/user-order')
 const userComplaint = () => import('@/views/user/user-complaint')
 const userComplaintDetail = () => import('@/views/user/user-complaint-detail')
 
-// 微信登录
-const wxLogin = () => import('@/views/wxlogin/login')
-
-const addFriends = () => import('@/views/wxlogin/addFriends')
-
 // 结果页
 const resultsComplaint = () => import('@/views/resultsPage/complaint')
 const paySuccess = () => import('@/views/resultsPage/paySuccess')
 const payCancel = () => import('@/views/resultsPage/cancel')
+
+// { 404, 微信登录, 添加好友 }
+const pageNotFound = () => import('@/views/common/pageNotFound')
+const wxLogin = () => import('@/views/common/login')
+const addFriends = () => import('@/views/common/addFriends')
 
 Vue.use(Router)
 
@@ -57,6 +57,10 @@ const router = new Router({
     }
   },
   routes: [
+    {
+      path: '*',
+      component: pageNotFound
+    },
     {
       path: '/User/Login',
       component: wxLogin

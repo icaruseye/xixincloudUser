@@ -13,6 +13,7 @@ export default {
   methods: {
     async getUserPreOrder () {
       // 生成预支付订单
+      const that = this
       const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
@@ -26,17 +27,33 @@ export default {
             if (payres.data.Data.Price === 0) {
               this.$router.replace('/result/paySuccess')
             } else {
-              this.onBridgeReady(payres.data.Data)
+              // if (typeof WeixinJSBridge == "undefined") {
+              //   if (document.addEventListener) {
+              //     document.addEventListener('WeixinJSBridgeReady', getOpenID, false);
+              //   } else if (document.attachEvent) {
+              //     document.attachEvent('WeixinJSBridgeReady', getOpenID);
+              //     document.attachEvent('onWeixinJSBridgeReady', getOpenID);
+              //   }
+              // }
+              this.onBridgeReady(payres.data.Data, this)
             }
           }
         } else {
           window.location.href = res.data.Data.RedirectUrl
         }
+      } else {
+        this.$vux.toast.show({
+          type: 'cancel',
+          text: res.data.Msg,
+          time: 800,
+          onHide () {
+            that.$router.back()
+          }
+        })
       }
     },
     // 跳转微信支付
-    onBridgeReady (data) {
-      console.log(data)
+    onBridgeReady (data, that) {
       WeixinJSBridge.invoke(
         'getBrandWCPayRequest',
         {
@@ -49,10 +66,9 @@ export default {
         },
         async function (res) {
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
-            const res = await this.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
+            const res = await that.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
             if (res.data.Code === 100000) {
-              console.log('支付成功')
-              this.$router.replace('/result/paySuccess')
+              that.$router.replace('/result/paySuccess')
             }
           }
         }

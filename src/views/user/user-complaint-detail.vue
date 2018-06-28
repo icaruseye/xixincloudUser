@@ -76,16 +76,11 @@
 </template>
 
 <script>
-import { dateFormat, Confirm, TransferDom } from 'vux'
+import { Confirm, TransferDom } from 'vux'
 import ImagePreviewItem from '@/components/ImagePreViewItem'
 export default {
   directives: {
     TransferDom
-  },
-  filters: {
-    timeFormat (value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
-    }
   },
   components: {
     ImagePreviewItem,

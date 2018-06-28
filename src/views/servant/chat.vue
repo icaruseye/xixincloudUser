@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { InlineLoading, dateFormat } from 'vux'
+import { InlineLoading } from 'vux'
 export default {
   metaInfo: {
     title: '聊天'
@@ -63,11 +63,6 @@ export default {
       chatList: [],
       mineAccount: JSON.parse(sessionStorage.getItem('userAccount')),
       ServAccount: ''
-    }
-  },
-  filters: {
-    timeFormat (val) {
-      return dateFormat(new Date(val), 'YYYY-MM-DD HH:mm:ss')
     }
   },
   // 初次拉取消息

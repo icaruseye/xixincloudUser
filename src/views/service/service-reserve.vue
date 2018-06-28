@@ -20,10 +20,10 @@
         </div>
       </xx-cell-items>
       <xx-cell-items label="服务项" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
-        <div style="padding-right:15px">{{servant}}</div>
+        <div style="padding-right:15px">{{name}}</div>
       </xx-cell-items>
       <xx-cell-items label="服务人员" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
-        <div style="padding-right:15px">{{name}}</div>
+        <div style="padding-right:15px">{{servant}}</div>
       </xx-cell-items>
     </xx-cell>
     <h2 class="cells_title">
@@ -153,7 +153,6 @@ export default {
   },
   created () {
     this.getAddressList()
-    console.log(this.$route)
   },
   methods: {
     limitCount (max) {

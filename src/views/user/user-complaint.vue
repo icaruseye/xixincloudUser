@@ -9,7 +9,7 @@
         <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">已完成</xx-tab-item>
       </xx-tab>
     </sticky>
-    <div class="weui-panel" v-if="list.length > 0">
+    <div style="margin-top:10px;background: #fff;padding: 0 13px" v-if="list.length > 0">
       <div class="weui-list_container">
         <template v-for="(item, index) in list">
           <div class="weui-list_item" :key="index" @click="toDetail(item.ID)">
@@ -35,15 +35,10 @@
 </template>
 
 <script>
-import { Sticky, dateFormat } from 'vux'
+import { Sticky } from 'vux'
 export default {
   metaInfo: {
     title: '我的投诉'
-  },
-  filters: {
-    timeFormat (value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
-    }
   },
   components: {
     Sticky
@@ -64,7 +59,6 @@ export default {
   methods: {
     async getComplainting () {
       const res = await this.$http.get('/ComplaintList/Complainting')
-      console.log(res)
       if (res.data.Code === 100000) {
         this.Complainting = res.data.Data
         this.list = res.data.Data
@@ -73,7 +67,6 @@ export default {
     },
     async getComplate () {
       const res = await this.$http.get('/ComplaintList/Complate')
-      console.log(res)
       if (res.data.Code === 100000) {
         this.Complate = res.data.Data
       }
@@ -98,7 +91,7 @@ export default {
 <style scoped lang="less">
 .weui-list_item {
   position: relative;
-  padding: 18px 5px;
+  padding: 18px 0;
   display: flex;
   align-items: center;
   &::after {

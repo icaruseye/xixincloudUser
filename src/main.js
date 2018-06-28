@@ -33,6 +33,16 @@ Vue.filter('transformImgUrl', function (val) {
   return val
 })
 
+Vue.filter('timeFormat', function (value = '') {
+  let lastIndexOf = value.lastIndexOf('.')
+  if (lastIndexOf > 0) {
+    value = value.replace('T', ' ').substring(0, lastIndexOf)
+  } else {
+    value = value.replace('T', ' ')
+  }
+  return value
+})
+
 /* eslint-disable no-new */
 new Vue({
   router,

@@ -124,7 +124,6 @@ export default {
         }
         this.submitBtn = true
         const res = await this.$http.send('/UserInfo', 'put', this.UserInfo)
-        console.log(res)
         if (res.data.Code === 100000) {
           this.$vux.toast.show({
             text: '提交成功',
@@ -157,7 +156,6 @@ export default {
       const id = this.UserInfo.IDCard
       if (!id) return false
       this.birthday = id.substr(6, 4) + '-' + id.substr(10, 2) + '-' + id.substr(12, 2)
-      console.log(this.birthday)
       this.age = new Date().getFullYear() - id.substr(6, 4)
     }
   }

@@ -114,7 +114,6 @@ export default {
         this.$vux.toast.text('已发送，请注意查收')
         this.setTimer()
       }
-      console.log(res)
     },
     setTimer: function () {
       if (!this.timer) {
