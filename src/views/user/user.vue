@@ -6,36 +6,45 @@
         <div class="mid-info">
           <div class="name">{{userAccount.NickName}}</div>
           <!-- <div class="times">已被服务：1次</div> -->
-          <span class="auth" v-if="userInfo.IDCard"><i class="iconfont icon-shimingrenzheng"></i> 实名认证</span>
+          <span class="auth" v-if="userInfo.IDCard">实名认证</span>
         </div>
         <!-- <img class="qrcode" src="@/assets/images/code.png" alt="" @click="toggleMask"> -->
-      </div>
-      <div class="user-info_percent">
-        你的资料完整度为 {{dataScore}}%，完善资料和验证手机后您才能为用户提供服务
       </div>
       <!-- <div class="user-panel">
         <router-link to="/servant" class="user-panel_item">
             <img src="@/assets/images/icon-my-manager.png" alt="">
-            <span>管家</span>
+            <div class="text">管家</div>
         </router-link>
         <router-link to="/service" class="user-panel_item">
             <img src="@/assets/images/icon-my-service.png" alt="">
-            <span>服务</span>
+            <div class="text">服务</div>
         </router-link>
-        <router-link to="/" class="user-panel_item">
+        <router-link to="/user/order" class="user-panel_item">
             <img src="@/assets/images/icon-my-calendar.png" alt="">
-            <span>日程</span>
+            <div class="text">订单</div>
         </router-link>
       </div> -->
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/info" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-set.png" alt="">
+          <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">个人资料</span>
+          <i class="iconfont icon-jiantouyou"></i>
+        </router-link>
+      </div>
+      <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
+        <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
+          <img src="@/assets/images/icon-my-comp.png" alt="">
+          <span class="title">我的投诉</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
         <router-link to="/user/address" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-address.png" alt="">
           <span class="title">常用地址</span>
+          <i class="iconfont icon-jiantouyou"></i>
+        </router-link>
+        <router-link to="/user" class="setting-panel_item vux-1px-b">
+          <img src="@/assets/images/icon-my-help.png" alt="">
+          <span class="title">帮助</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
         <!-- <router-link to="/user/phone" class="setting-panel_item item vux-1px-b">
@@ -48,18 +57,20 @@
           <span class="title">我的订单</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link> -->
-        <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-info.png" alt="">
-          <span class="title">我的投诉</span>
+      </div>
+      <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
+        <router-link to="/user" class="setting-panel_item vux-1px-b">
+          <img src="@/assets/images/icon-my-set.png" alt="">
+          <span class="title">设置</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
       </div>
     </div>
     <xx-tabbar></xx-tabbar>
-    <div class="weui-mask" v-show="maskShow">
+    <!-- <div class="weui-mask" v-show="maskShow">
       <div class="weui-mask-layer" @click="toggleMask(false)"></div>
       <img :src="userAccount.QRCodeStr" alt="">
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -75,25 +86,10 @@ export default {
     ...mapGetters([
       'userAccount',
       'userInfo'
-    ]),
-    dataScore () {
-      const userInfo = this.userInfo
-      let res = 0
-      if (userInfo.IDCard !== '') {
-        res = 1 + userInfo.IsFillingInfo + userInfo.IsMobileChecked
-      } else {
-        res = 0 + userInfo.IsFillingInfo + userInfo.IsMobileChecked
-      }
-      return res === 3 ? '100' : res * 33
-    }
+    ])
   },
   created () {
     this.$store.dispatch('getAccount')
-  },
-  methods: {
-    toggleMask (val) {
-      this.maskShow = val
-    }
   }
 }
 </script>
@@ -110,16 +106,15 @@ export default {
     font-size: 12px;
   }
   .auth {
-    font-size: 12px;
-    background: #fff;
-    color: @theme-color;
+    display: block;
+    font-size: 10px;
+    color: #fff;
     border-radius: 10px;
-    padding: 2px 5px;
-    .iconfont {
-      font-size: 16px;
-      position: relative;
-      top: 1px;
-    }
+    width: 50px;
+    height: 14px;
+    line-height: 16px;
+    text-align: center;
+    border: 1px solid #fff;
   }
 }
 .user-info_percent {
@@ -135,18 +130,19 @@ export default {
   border-bottom: #9fe6e6 1px solid;
   font-size: 12px;
   .user-panel_item {
-    display: flex;
+    text-align: center;
     flex: 1;
-    align-items: center;
-    justify-content: center;
     border-right: #d9f7f5  1px solid;
     color: #666;
     &:last-child {
       border: 0;
     }
     img {
-      width: 31px;
-      margin-right: 10px;
+      width: 20px;
+    }
+    .text {
+      font-size: 14px;
+      color: #666;
     }
   }
 }
@@ -168,20 +164,21 @@ export default {
     display: flex;
     align-items: center;
     color: #666;
-    font-size: 12px;
+    font-size: 15px;
     &.vux-1px-b:after {
       border-color: #daf6f5;
     }
     img {
-      width: 24px;
-      height: 24px;
+      width: 15px;
+      height: auto;
       padding-right: 10px;
     }
     .title {
       flex: 1;
     }
     .iconfont {
-      color: #f8a519
+      color: #ccc;
+      font-size: 15px;
     }
   }
 }

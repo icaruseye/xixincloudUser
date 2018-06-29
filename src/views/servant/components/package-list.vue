@@ -9,7 +9,7 @@
           <div class="title">{{item.Name}}</div>
           <div class="describe text-overflow-1">{{item.Description}}</div>
           <div class="sales">
-            <div class="price"><span>￥</span>{{item.ViewPrice ? (item.ViewPrice/100).toFixed(2) : '0.00'}}元</div>
+            <div class="price"><span>￥</span>{{item.Price ? (item.Price/100).toFixed(2) : '0.00'}}元</div>
             <div class="volume">已售：{{item.SoldAmount}}份</div>
           </div>
         </div>

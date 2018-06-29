@@ -30,10 +30,10 @@
       能接受服务时间段
     </h2>
     <xx-cell>
-      <div style="display: flex;align-items:center;padding: 15px 10px;color:#999;font-size:13px;">
-       <span style="color:#333;margin: 0 5px;font-size:15px;">从</span>
+      <div style="display: flex;align-items:center;padding: 15px 10px;color:#f8a519;font-size:15px;">
+       <span style="color:#999;margin: 0 5px;font-size:15px;">从</span>
         <div @click="selectStartTime">{{reqParams.StartTime}}</div>
-       <span style="color:#333;margin: 0 5px;font-size:15px">至</span>
+       <span style="color:#999;margin: 0 5px;font-size:15px">至</span>
         <div @click="selectEndTime">{{reqParams.EndTime}}</div>
       </div>
     </xx-cell>

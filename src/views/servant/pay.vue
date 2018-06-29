@@ -1,55 +1,61 @@
 <template>
-  <div>
+  <div class="wrap">
+    <img class="icon" src="@/assets/images/ic_paying.png" alt="">
+    <div class="text">支付中...</div>
+    <div class="weui-cell">
+      <div class="left" style="font-size:14px;">xxxxy医院</div>
+      <div class="right" style="font-size:10px;color:#999">服务者: {{servantName}}</div>
+    </div>
+    <div class="weui-cell" style="padding: 20px 15px">
+      <div class="left" style="font-size:0;"><img class="package_icon" src="@/assets/images/icon_picc.png" alt=""></div>
+      <div class="mid">
+        {{packageInfo.Name}}
+      </div>
+      <div class="right">
+        <span style="color:#999;font-size:13px">价格：</span><span style="color:#FF5F5F;font-size:18px;">{{packageInfo.Price ? (packageInfo.Price/100).toFixed(2) : '0.00'}}</span><span style="color:#FF5F5F;font-size:12px;">元</span>
+      </div>
+    </div>
+    <div style="width:100%;position:fixed;bottom:30px;font-size:10px;color:#C0C0C0;text-align: center;">支付服务由“悉心健康”平台提供技术支持</div>
   </div>
 </template>
 
 <script>
-// import Vconsole from 'vconsole'
 export default {
+  data () {
+    return {
+      packageInfo: {},
+      servantName: JSON.parse(sessionStorage.getItem('myServantInfo')).NickName
+    }
+  },
   mounted () {
-    // new Vconsole()
-    this.getUserPreOrder()
+    this.getPackageInfo()
   },
   methods: {
-    async getUserPreOrder () {
-      // 生成预支付订单
-      const that = this
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}`)
+    async getPackageInfo () {
+      const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        if (res.data.Data.RedirectState === 0) {
-          const userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
-          const orderID = res.data.Data.OrderID
-          const openID = userAccount.OpenID
-          const shopID = userAccount.ShopID
-          // 创建订单
-          const payres = await this.$http.post(`/UserOrder/CreateOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
-          if (payres.data.Code === 100000) {
-            if (payres.data.Data.Price === 0) {
-              this.$router.replace('/result/paySuccess')
-            } else {
-              // if (typeof WeixinJSBridge == "undefined") {
-              //   if (document.addEventListener) {
-              //     document.addEventListener('WeixinJSBridgeReady', getOpenID, false);
-              //   } else if (document.attachEvent) {
-              //     document.attachEvent('WeixinJSBridgeReady', getOpenID);
-              //     document.attachEvent('onWeixinJSBridgeReady', getOpenID);
-              //   }
-              // }
-              this.onBridgeReady(payres.data.Data, this)
-            }
-          }
+        this.packageInfo = res.data.Data.Package
+        this.getCreateOrder()
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 创建订单
+    async getCreateOrder () {
+      const userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
+      const orderID = this.$route.query.OrderID
+      const openID = userAccount.OpenID
+      const shopID = userAccount.ShopID
+      const payres = await this.$http.post(`/UserOrder/CreateOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
+      if (payres.data.Code === 100000) {
+        if (payres.data.Data.Price === 0) {
+          this.$router.replace('/result/paySuccess')
         } else {
-          window.location.href = res.data.Data.RedirectUrl
+          this.onBridgeReady(payres.data.Data, this)
         }
       } else {
-        this.$vux.toast.show({
-          type: 'cancel',
-          text: res.data.Msg,
-          time: 800,
-          onHide () {
-            that.$router.back()
-          }
-        })
+        // 生成订单失败
+        this.$vux.toast.text(payres.data.Msg)
       }
     },
     // 跳转微信支付
@@ -78,6 +84,40 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.wrap {
+  overflow: hidden;
+  background: #fff;
+  margin-top: 10px;
+  .icon {
+    display: block;
+    width: 60px;
+    height: auto;
+    margin: 17px auto 20px;
+  }
+  .text {
+    font-size: 18px;
+    text-align: center;
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+}
 
+.weui-cell {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #666;
+  justify-content: space-between;
+  .package_icon {
+    margin-right: 12px;
+    width: 29px;
+    height: 29px;
+  }
+  .mid {
+    flex: 1;
+    font-size: 18px;
+  }
+}
 </style>

@@ -49,7 +49,7 @@
             </div>
             <div>
               <textarea class="comments-textarea" v-model="ReviewInfoParameter.Remark" name="" id="" placeholder="请输入评价内容..."></textarea>
-              <span style="font-size:11px">超过72小时自动默认好评</span>
+              <span style="font-size:11px;display:flex;align-items: center;"><img class="ic_gth" src="@/assets/images/ic_gth.png" alt=""> 超过72小时自动默认好评</span>
             </div>
           </div>
           <!-- 已评价 -->
@@ -328,5 +328,15 @@ export default {
     height: 30px;
     line-height: 30px;
   }
+}
+
+.ic_gth {
+  position: relative;
+  top: -1px;
+  margin-right: 5px;
+  width: 12px;
+  height: 12px;
+  background: #F6E5C8;
+  border-radius: 50%;
 }
 </style>

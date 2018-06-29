@@ -6,7 +6,7 @@
       <div class="mid">
         <div class="name">{{data.Name}}</div>
         <div class="sales">
-          <div class="price">{{data.ViewPrice ? (data.ViewPrice/100).toFixed(2) : '0.00'}}<span>元</span></div>
+          <div class="price">{{data.Price ? (data.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
           <div class="volume" v-if="data.SoldAmount">已售：{{data.SoldAmount}}份</div>
         </div>
       </div>

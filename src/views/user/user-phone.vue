@@ -113,6 +113,9 @@ export default {
       if (res.data.Code === 100000) {
         this.$vux.toast.text('已发送，请注意查收')
         this.setTimer()
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+        clearInterval(this.timer)
       }
     },
     setTimer: function () {

@@ -11,9 +11,9 @@
     </div> -->
     <div class="item-info mgt10">
       <div class="item-info-title">注意事项</div>
-      <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满10岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
+      <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满18岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
     </div>
-    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(Item.ID)">立即购买 ￥{{Item.ViewPrice ? (Item.ViewPrice/100).toFixed(2) : '0.00'}}</button>
+    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">立即购买 ￥{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}</button>
   </div>
 </template>
 
@@ -50,8 +50,26 @@ export default {
         this.Item = res.data.Data.Package
       }
     },
-    toPay (id) {
-      this.$router.push(`/servant/pay/${id}`)
+    async getUserPreOrder (id) {
+      // 生成预支付订单
+      const that = this
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.RedirectState === 0) {
+          this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)
+        } else {
+          window.location.href = res.data.Data.RedirectUrl
+        }
+      } else {
+        this.$vux.toast.show({
+          type: 'cancel',
+          text: res.data.Msg,
+          time: 800,
+          onHide () {
+            that.$router.back()
+          }
+        })
+      }
     }
   }
 }

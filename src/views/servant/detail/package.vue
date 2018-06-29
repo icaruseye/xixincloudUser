@@ -17,7 +17,7 @@
       </div>
     </div>
     
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="toPay(Package.ID)">立即购买 ￥{{(Package.ViewPrice/100).toFixed(2) || '0.00'}} 元</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
   </div>
 </template>
 
@@ -47,8 +47,27 @@ export default {
     toItem (id, itemID) {
       this.$router.push(`/servant/detail/item/${id}?type=0&itemID=${itemID}`)
     },
-    toPay (id) {
-      this.$router.push(`/servant/pay/${id}`)
+    async getUserPreOrder (id) {
+      // 生成预支付订单
+      const that = this
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.RedirectState === 0) {
+          const userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
+          this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)
+        } else {
+          window.location.href = res.data.Data.RedirectUrl
+        }
+      } else {
+        this.$vux.toast.show({
+          type: 'cancel',
+          text: res.data.Msg,
+          time: 800,
+          onHide () {
+            that.$router.back()
+          }
+        })
+      }
     }
   }
 }

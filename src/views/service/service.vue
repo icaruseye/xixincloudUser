@@ -32,11 +32,11 @@
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
+                          <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
                       <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormatElse('YYYY-MM-DD')}}</div>
                     </div>
                     <div class="btn">
-                      <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
                     </div>
                   </div>
@@ -100,7 +100,7 @@
         </ul>
       </div>
       <div class="weui-panel" style="margin-top:0">
-        <div class="weui-list_container" v-if="dataList.length >0">
+        <div class="weui-list_container">
           <template v-for="(item, index) in dataList">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type)">
               <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
@@ -109,7 +109,7 @@
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                   <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
-                <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
                 <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
@@ -217,10 +217,7 @@ export default {
           })
           break
         case 2:
-          that.getInServiceList().then(value => {
-            that.dataList = value
-            this.flag2 = that.dataList.length === 0
-          })
+          that.getAllWaitForService()
           break
         case 3:
           that.getWaitForReview().then(value => {
@@ -236,10 +233,24 @@ export default {
       await that.getUserReserveServiceList().then(value => {
         that.dataList = that.dataList.concat(value)
       })
+      await that.getWaitForServiceList().then(value => {
+        that.dataList = that.dataList.concat(value)
+      })
       await that.getInServiceList().then(value => {
         that.dataList = that.dataList.concat(value)
       })
       await that.getWaitForReview().then(value => {
+        that.dataList = that.dataList.concat(value)
+      })
+      this.flag2 = that.dataList.length === 0
+    },
+    // 待服务、服务中
+    async getAllWaitForService () {
+      const that = this
+      await that.getInServiceList().then(value => {
+        that.dataList = that.dataList.concat(value)
+      })
+      await that.getWaitForServiceList().then(value => {
         that.dataList = that.dataList.concat(value)
       })
       this.flag2 = that.dataList.length === 0
@@ -250,6 +261,11 @@ export default {
       return res.data.Data
     },
     /** 待服务 */
+    async getWaitForServiceList () {
+      const res = await this.$http.get('/MissionList/WaitForService')
+      return res.data.Data
+    },
+    /** 服务中 */
     async getInServiceList () {
       const res = await this.$http.get('/MissionList/InService')
       return res.data.Data

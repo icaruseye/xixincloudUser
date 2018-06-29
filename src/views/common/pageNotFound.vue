@@ -2,7 +2,7 @@
   <div class="warp">
     <div class="bg-image">
       <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-Group"></use>
+          <use xlink:href="#icon-icon-test1"></use>
       </svg>
       <div class="text">你访问的页面被外星人抓走了啦~</div>
       <a href="/" class="button">首页</a>
@@ -10,12 +10,6 @@
 
   </div>
 </template>
-
-<script>
-export default {
-  
-}
-</script>
 
 <style scoped lang="less">
 .warp {
@@ -44,7 +38,7 @@ export default {
     line-height: 30px;
     text-align: center;
     border-radius: 15px;
-    background: rgb(160, 199, 253);
+    background: #3ecccc;
     color: #fff;
     font-size: 14px;
   }
