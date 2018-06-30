@@ -42,6 +42,8 @@ export default {
       if (res.data.Code === 100000) {
         this.Package = res.data.Data.Package
         this.PackageItemDetailsList = res.data.Data.PackageItemDetailsList
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     toItem (id, itemID) {

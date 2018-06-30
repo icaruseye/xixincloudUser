@@ -293,6 +293,8 @@ export default {
         if (this.dataListDone.length === 0) {
           this.flag3 = true
         }
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     missionDetail (id, type) {

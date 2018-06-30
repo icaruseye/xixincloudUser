@@ -30,6 +30,8 @@ export default {
         this.Package.ViewID = res.data.Data.Package.ServantViewID
         this.Package.Avatar = info.Avatar
         this.Package.NickName = info.NickName
+      } else {
+        this.$vux.toast.text('出错了')
       }
     }
   }

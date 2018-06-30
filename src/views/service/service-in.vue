@@ -141,6 +141,8 @@ export default {
         if (res.data.Data.State === 5) {
           this.getComments()
         }
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     // 提交评价

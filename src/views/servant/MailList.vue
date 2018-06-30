@@ -46,6 +46,8 @@ export default {
       const res = await this.$http.get('/SiteNoticeList')
       if (res.data.Code === 100000) {
         return res.data
+      } else {
+        this.$vux.toast.text('出错了')
       }
     }
   }

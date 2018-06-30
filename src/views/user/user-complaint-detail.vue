@@ -113,6 +113,8 @@ export default {
         if (this.data.State === 2 || this.data.State === 3 || this.data.State === -1) {
           this.steps = '4'
         }
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     async cancel (id) {

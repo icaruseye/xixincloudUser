@@ -120,13 +120,17 @@ export default {
     async chatRecordTimePoll () {
       const res = await this.$http.get('/ChatRecord', { toServantViewID: this.$route.params.id })
       const that = this
-      if (res.data.Data.ChatHisList.length > 0) {
-        res.data.Data.ChatHisList.map((item) => {
-          this.chatList.push(item)
-          setTimeout(function () {
-            that.goDown()
-          }, 500)
-        })
+      if (res.data.Code === 100000) {
+        if (res.data.Data.ChatHisList.length > 0) {
+          res.data.Data.ChatHisList.map((item) => {
+            this.chatList.push(item)
+            setTimeout(function () {
+              that.goDown()
+            }, 500)
+          })
+        }
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     // 发送消息
@@ -151,6 +155,7 @@ export default {
         Content: this.chatMsg
       })
       if (res.data.Code !== 100000) {
+        this.$vux.toast.text('出错了')
         return false
       }
       let _msg = Object.assign({}, msg)

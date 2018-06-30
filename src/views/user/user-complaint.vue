@@ -63,12 +63,16 @@ export default {
         this.Complainting = res.data.Data
         this.list = res.data.Data
         this.flag = res.data.Data.length === 0
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     async getComplate () {
       const res = await this.$http.get('/ComplaintList/Complate')
       if (res.data.Code === 100000) {
         this.Complate = res.data.Data
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     onItemClick (index) {

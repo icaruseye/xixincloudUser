@@ -42,12 +42,16 @@ export default {
       const res = await this.$http.post(`/Item?itemID=${this.$route.query.itemID}`)
       if (res.data.Code === 100000) {
         this.ItemActionDetails = res.data.Data.ItemActionDetails
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     async getPackageDetail () {
       const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.Item = res.data.Data.Package
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     async getUserPreOrder (id) {

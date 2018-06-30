@@ -73,6 +73,8 @@ export default {
       if (res.data.Code === 100000) {
         this.addressList = res.data.Data
         this.flag = this.addressList.length === 0
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     toEdit (id, index) {

@@ -55,6 +55,8 @@ export default {
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.id}`)
       if (res.data.Code === 100000) {
         this.info = res.data.Data
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     async addFirends () {
@@ -66,6 +68,8 @@ export default {
           this.isShow = true
         }
         this.getServantInfo()
+      } else {
+        this.$vux.toast.text('出错了')
       }
     }
   }

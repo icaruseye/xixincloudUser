@@ -279,6 +279,8 @@ export default {
           this.address = '请选择地址'
           this.isEmptyList = false
         }
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     // 提交前弹窗确认

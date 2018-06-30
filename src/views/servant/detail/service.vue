@@ -59,6 +59,8 @@ export default {
       if (res.data.Code === 100000) {
         this.servantInfos = Object.assign(res.data.Data.ServAccount, {AverageScore: res.data.Data.AverageScore, ServiceTimes: res.data.Data.ServiceTimes})
         sessionStorage.setItem('myServantInfo', JSON.stringify(this.servantInfos))
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     // 服务列表
@@ -66,6 +68,8 @@ export default {
       const res = await this.$http.get(`/PackageList/${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.splitList(res.data.Data)
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     splitList (list) {

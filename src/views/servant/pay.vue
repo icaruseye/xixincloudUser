@@ -75,6 +75,8 @@ export default {
             const res = await that.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
             if (res.data.Code === 100000) {
               that.$router.replace('/result/paySuccess')
+            } else {
+              this.$vux.toast.text('出错了')
             }
           }
         }

@@ -135,6 +135,7 @@ export default {
             }
           })
         } else {
+          this.$vux.toast.text('出错了')
           this.submitBtn = false
         }
       }

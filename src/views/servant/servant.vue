@@ -90,12 +90,16 @@ export default {
       if (res.data.Code === 100000) {
         this.servantList = res.data.Data
         this.flag1 = this.servantList.length === 0
+      } else {
+        this.$vux.toast.text('出错了')
       }
     },
     async getUnreadSiteNotice () {
       const res = await this.$http.get('/SiteNotice/Count/Unread')
       if (res.data.Code === 100000) {
         this.UnreadSiteNotice = res.data.Data === 0 ? '' : res.data.Data
+      } else {
+        this.$vux.toast.text('出错了')
       }
     }
   }
