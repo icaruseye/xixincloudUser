@@ -13,18 +13,31 @@
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满18岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
     </div>
+    <div class="item-info mgt10 tips">
+      购买前请仔细阅读<span @click="showTips">《购买须知》</span> ，当中包含购买规则及退款规则（包括找客服退款）
+    </div>
     <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">立即购买 ￥{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}</button>
+    <div v-transfer-dom>
+      <x-dialog v-model="isShowTips" :hide-on-blur="true">
+        《购买须知》
+      </x-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import packageInfo from '../components/package-info'
+import { TransferDomDirective as TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     packageInfo
   },
   data () {
     return {
+      isShowTips: false,
       showPay: true,
       Item: {},
       ItemActionDetails: []
@@ -38,6 +51,9 @@ export default {
     this.getPackageDetail()
   },
   methods: {
+    showTips () {
+      this.isShowTips = true
+    },
     async initData () {
       const res = await this.$http.post(`/Item?itemID=${this.$route.query.itemID}`)
       if (res.data.Code === 100000) {
@@ -163,6 +179,14 @@ export default {
     .number {
       font-size: 18px;
     }
+  }
+}
+
+.tips {
+  font-size: 12px;
+  color: #999;
+  span {
+    color: #f8a519;
   }
 }
 </style>

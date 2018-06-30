@@ -10,7 +10,7 @@
         </div>
         <!-- <img class="qrcode" src="@/assets/images/code.png" alt="" @click="toggleMask"> -->
       </div>
-      <!-- <div class="user-panel">
+      <div class="user-panel">
         <router-link to="/servant" class="user-panel_item">
             <img src="@/assets/images/icon-my-manager.png" alt="">
             <div class="text">管家</div>
@@ -23,7 +23,7 @@
             <img src="@/assets/images/icon-my-calendar.png" alt="">
             <div class="text">订单</div>
         </router-link>
-      </div> -->
+      </div>
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/info" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">

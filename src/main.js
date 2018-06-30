@@ -7,14 +7,18 @@ import router from './router'
 import store from './store/index'
 import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
-import { DatetimePlugin, ToastPlugin } from 'vux'
+import { DatetimePlugin, ToastPlugin, XDialog } from 'vux'
 import xxComponents from './components/common'
 import http from '@/api'
 
+// 自定义组件
 Vue.use(xxComponents)
+// Vux组件
 Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
 Vue.use(registryPopup)
+Vue.component('x-dialog', XDialog)
+
 FastClick.attach(document.body)
 Vue.prototype.$http = http
 

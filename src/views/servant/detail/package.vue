@@ -16,19 +16,31 @@
         </template>
       </div>
     </div>
-    
+    <div class="item-info mgt10 tips">
+      购买前请仔细阅读<span @click="showTips">《购买须知》</span> ，当中包含购买规则及退款规则（包括找客服退款）
+    </div>
+    <div v-transfer-dom>
+      <x-dialog v-model="isShowTips" :hide-on-blur="true">
+        《购买须知》
+      </x-dialog>
+    </div>
     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
   </div>
 </template>
 
 <script>
 import packageInfo from '../components/package-info'
+import { TransferDomDirective as TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     packageInfo
   },
   data () {
     return {
+      isShowTips: false,
       Package: {},
       PackageItemDetailsList: []
     }
@@ -37,6 +49,9 @@ export default {
     this.initData()
   },
   methods: {
+    showTips () {
+      this.isShowTips = true
+    },
     async initData () {
       const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
@@ -55,7 +70,6 @@ export default {
       const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
-          const userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
           this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)
         } else {
           window.location.href = res.data.Data.RedirectUrl
@@ -98,6 +112,15 @@ export default {
       transform: scaleY(0.5);
       z-index: 2;
     }
+  }
+}
+
+.tips {
+  padding: 10px;
+  font-size: 12px;
+  color: #999;
+  span {
+    color: #f8a519;
   }
 }
 </style>

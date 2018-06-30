@@ -53,7 +53,7 @@
           @onUpdate="onUpdate1"
         ></xx-uploader>
       </xx-cell-items>
-      <div class="tips">* 提示文案提示文案提示文案提示文案</div>
+      <div class="tips warn">* 需要服务者提供医疗/护理服务，请提供正规医院的处方、医嘱，请保障处方、医嘱的真实有效，服务者审核处方、医嘱不符合规范，或者医疗风险性较高，有权不接受您的预约。</div>
       <xx-cell-items label="需要服务人员准备必要工具" @click.native="changeRadio1" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display: flex;justify-content: flex-end;">
           <xx-checker v-model="reqParams.NeedTools" typeName="checkbox" name="NeedTools" style="display:block;"></xx-checker>
@@ -64,6 +64,12 @@
           <xx-checker v-model="reqParams.NeedPill" typeName="checkbox" name="NeedPill" style="display:block;"></xx-checker>
         </div>
       </xx-cell-items>
+      <div class="tips normal">
+        为保障服务者的利益，以上两项如有一项勾选则该服务单不可取消，请谨慎选择。勾选任一项需在服务进行完后向服务者支付相关费用。若误选可取消该单，重新下单
+      </div>
+      <div class="tips text">
+        预约前请仔细阅读<span @click="showTips">《预约须知》</span> ，当中包含预约规则及取消预约规则
+      </div>
     </xx-cell>
     <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">确定</button>
     <!-- 地址列表 -->
@@ -88,7 +94,7 @@
     <div v-transfer-dom>
       <confirm v-model="isConfirm"
       title="确认提交"
-      content="提交文案提交文案提交文案"
+      content="请确保所有信息填写正确"
       @on-confirm="onConfirm">
       </confirm>
     </div>
@@ -96,6 +102,11 @@
       <popup v-model="showAddressEdit" height="100%" style="z-index:502">
         <userAddressEdit :defaultOnly="isEmptyList" :UserAddress="{}" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
       </popup>
+    </div>
+    <div v-transfer-dom>
+      <x-dialog v-model="isShowTips" :hide-on-blur="true">
+        《预约须知》
+      </x-dialog>
     </div>
   </div>
 </template>
@@ -122,6 +133,7 @@ export default {
   data () {
     const that = this
     return {
+      isShowTips: false,
       exceedText: false,
       showAddressEdit: false,
       isEmptyList: false,
@@ -155,6 +167,9 @@ export default {
     this.getAddressList()
   },
   methods: {
+    showTips () {
+      this.isShowTips = true
+    },
     limitCount (max) {
       this.exceedText = this.reqParams.Discription.length > max
     },
@@ -415,9 +430,27 @@ export default {
     padding-right: 10px;
   }
 }
-.tips {
+.tips.normal {
+  margin: 10px;
+  padding: 10px;
+  font-size: 12px;
+  color: #a5a5a5;
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.tips.warn {
   padding: 11px 11px 0 11px;
   font-size: 12px;
   color: #f44336;
 }
+
+.tips.text {
+  padding: 10px;
+  color: #666;
+  font-size: 12px;
+  span {
+    color: #f8a519;
+  }
+}
+
 </style>

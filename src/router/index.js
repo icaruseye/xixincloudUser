@@ -179,6 +179,7 @@ router.beforeEach((to, from, next) => {
   router.app.$store.commit('SET_ROUTER_LOADING', true)
   const userAccount = JSON.parse(sessionStorage.getItem('userAccount')) || {}
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
+  const isAddFriends = JSON.parse(sessionStorage.getItem('isAddFriends'))
   // 微信授权登录
   if (!userAccount.ID && window.location.pathname !== '/User/Login') {
     window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.wechatOption.appId}&redirect_uri=` +
@@ -201,6 +202,11 @@ router.beforeEach((to, from, next) => {
   // 实名认证
   if (userAccount.ID && userInfo.Mobile && !userInfo.IDCard && to.path !== '/user/info') {
     router.replace('/user/info')
+    return false
+  }
+
+  if (isAddFriends && to.path !== '/servant/service') {
+    router.replace(`/servant/service/${isAddFriends}`)
     return false
   }
   next()
