@@ -19,7 +19,12 @@
     <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">立即购买 ￥{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}</button>
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
-        《购买须知》
+        <div class="tips-content">
+          <div class="title">购买须知</div>
+          <p>① 服务包购买下单需在15min中完成支付，24h未支付后台将关闭订单。</p>
+          <p>②用户购买后若需要退款需在购买7天内发起退款申请。7天内未预约服务（或预约服务后医护并未实际服务），经后台审核后方可退款，审核周期为1~2个工作日。其余情况平台不予退款。</p>
+          <p>Notice：需要服务者提供医疗/护理服务，请保证预约时能提供正规医院的处方、医嘱，且保障处方、医嘱的真实有效，服务者审核处方、医嘱不符合规范，或者医疗风险性较高，有权不接受您的预约。所以，请尽量避免因处方问题导致购买后退费，以免影响您的使用体验。</p>
+        </div>
       </x-dialog>
     </div>
   </div>
@@ -187,6 +192,23 @@ export default {
   color: #999;
   span {
     color: #f8a519;
+  }
+}
+
+.tips-content {
+  padding: 10px;
+  text-align: left;
+    color: #666;
+  .title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  p {
+    line-height: 1.8;
+    margin-bottom: 10px;
+    font-size: 13px;
   }
 }
 </style>
