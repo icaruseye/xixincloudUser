@@ -94,7 +94,8 @@
 </template>
 
 <script>
-import { TransferDom, Rater, dateFormat, Confirm } from 'vux'
+import { TransferDom, Rater, Confirm } from 'vux'
+import util from '@/plugins/util'
 export default {
   directives: {
     TransferDom
@@ -213,7 +214,7 @@ export default {
         this.steps = '2'
         this.timeLines = '1'
         this.title1 = '已确认'
-        this.subhead1 = `确认时间：${dateFormat(new Date(this.serviceItemInfo.CreateTime), 'YYYY-MM-DD HH:mm')}`
+        this.subhead1 = `确认时间：${util.timeFormat(this.serviceItemInfo.CreateTime)}`
       }
       // 待服务
       if (this.serviceItemInfo.Type === 1 && [0, 1, 2, 3].indexOf(this.serviceItemInfo.State) !== -1) {
@@ -224,14 +225,14 @@ export default {
         this.steps = '2'
         this.timeLines = '2'
         this.title2 = '已服务'
-        this.subhead2 = `服务时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
+        this.subhead2 = `服务时间：${util.timeFormat(this.serviceItemInfo.EndTime)}`
       }
       // 已评价
       if (this.serviceItemInfo.Type === 1 && [5, 6].indexOf(this.serviceItemInfo.State) !== -1) {
         this.steps = '3'
         this.timeLines = '3'
         this.title3 = '已评价'
-        this.subhead3 = `评价时间：${dateFormat(new Date(this.serviceItemInfo.EndTime), 'YYYY-MM-DD HH:mm')}`
+        this.subhead3 = `评价时间：${util.timeFormat(this.serviceItemInfo.EndTime)}`
       }
     },
     // 跳转聊天

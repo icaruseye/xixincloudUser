@@ -65,7 +65,7 @@
         </div>
       </xx-cell-items>
       <div class="tips normal">
-        为保障服务者的利益，以上两项如有一项勾选则该服务单不可取消，请谨慎选择。勾选任一项需在服务进行完后向服务者支付相关费用。若误选可取消该单，重新下单
+        *为保障服务者的利益，以上两项如有一项勾选则该服务单不可取消，请谨慎选择。勾选任一项需在服务进行完后向服务者支付相关费用。若误选可取消该单，重新下单
       </div>
       <div class="tips text">
         预约前请仔细阅读<span @click="showTips">《预约须知》</span> ，当中包含预约规则及取消预约规则
@@ -432,10 +432,9 @@ export default {
 }
 .tips.normal {
   margin: 10px;
-  padding: 10px;
+  padding: 10px 0;
   font-size: 12px;
-  color: #a5a5a5;
-  background: #f1f1f1;
+  color: #f44336;
   border-radius: 4px;
 }
 .tips.warn {

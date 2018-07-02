@@ -13,7 +13,7 @@
       <div class="user-panel">
         <router-link to="/servant" class="user-panel_item">
             <img src="@/assets/images/icon-my-manager.png" alt="">
-            <div class="text">管家</div>
+            <div class="text">服务者</div>
         </router-link>
         <router-link to="/service" class="user-panel_item">
             <img src="@/assets/images/icon-my-service.png" alt="">

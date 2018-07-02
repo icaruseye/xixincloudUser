@@ -112,5 +112,14 @@ export default {
     }
     // 值为完整url
     return val
+  },
+  timeFormat (value = '') {
+    let lastIndexOf = value.lastIndexOf('.')
+    if (lastIndexOf > 0) {
+      value = value.replace('T', ' ').substring(0, lastIndexOf)
+    } else {
+      value = value.replace('T', ' ')
+    }
+    return value
   }
 }
