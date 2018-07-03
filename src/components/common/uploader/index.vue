@@ -78,6 +78,7 @@ export default {
       const that = this
       let file = e.target.files[0]
       let reader = new FileReader()
+      this.count++
       if (!this.checkSize(file, e)) return false
       if (!this.checkCount(e)) return false
       // if (!this.checkName(file.name, e)) return false
@@ -124,14 +125,17 @@ export default {
       try {
         let res = await axios(options)
         _img.status = 1
-        this.count++
         if (this.isAvatar) {
           this.guid = [res.data.data.objectId]
         } else {
           this.guid.push(res.data.data.objectId)
         }
         this.$emit('onUpdate', this.guid)
+        if (!res.data.Code === 100000) {
+          this.count--
+        }
       } catch (error) {
+        this.count--
         AlertModule.show({
           title: '提示',
           content: '网络错误，上传失败'
