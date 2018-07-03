@@ -5,7 +5,7 @@ import store from '../store'
 import { ToastPlugin } from 'vux'
 Vue.use(ToastPlugin)
 
-// 用户端-管家
+// 用户端-服务者
 const servant = () => import('@/views/servant/servant')
 const servantDetail = () => import('@/views/servant/detail/index')
 const servantService = () => import('@/views/servant/detail/service')

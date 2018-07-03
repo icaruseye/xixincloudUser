@@ -26,7 +26,7 @@
         </template>
       </div>
       <xx-occupied-box v-if="flag1">
-        <p>还没有添加管家</p>
+        <p>还没有添加服务者</p>
       </xx-occupied-box>
       <!-- 消息列表 -->
       <!-- <div class="tabbox" v-show="tabIndex === 1">

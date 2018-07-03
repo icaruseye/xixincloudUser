@@ -33,6 +33,7 @@
               </div>
             </div>
             <div class="row-3">
+              <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">代付款</button></div>
               <!-- <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">去付款</button></div> -->
               <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice}}元</div>
             </div>
@@ -64,6 +65,7 @@
               </div>
             </div>
             <div class="row-3">
+              <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">代付款</button></div>
               <!-- <div class="text" v-if="item.UserOrder.State === 0"><button class="btn" @canplay="toPay">去付款</button></div> -->
               <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice}}元</div>
             </div>

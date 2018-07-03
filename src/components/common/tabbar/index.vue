@@ -6,7 +6,7 @@
         :selected="'servant' == this.$route.path.split('/')[1]"
         class="weui-tabbar__icon_1">
         <div slot="icon"></div>
-        <span slot="label">管家</span>
+        <span slot="label">服务者</span>
       </tabbar-item>
       <tabbar-item
         link="/service"
