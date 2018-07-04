@@ -42,13 +42,14 @@ export default {
       userAccount: JSON.parse(sessionStorage.getItem('userAccount'))
     }
   },
-  created () {
-    this.addFirends()
-  },
   computed: {
     API_PATH () {
       return process.env.API_PATH
     }
+  },
+  mounted () {
+    this.addFirends()
+    sessionStorage.setItem('isAddFriends', this.$route.query.id)
   },
   methods: {
     async getServantInfo () {

@@ -15,7 +15,7 @@
           </div>
         </router-link>
       </sticky>
-      <div v-if="servantList.length > 0" class="tabbox-list vux-1px-b vux-1px-t mt10px">
+      <div v-if="servantList.length > 0" class="tabbox-list vux-1px-b vux-1px-t mt10px" style="margin-top:10px;">
         <template v-for="(item, index) in servantList">
           <div class="item vux-1px-b" @click="goServant(item.FriendViewID, item.FriendID)" :key="index">
             <div><img class="avatar" :src="item.FriendAvatar | transformImgUrl" alt=""></div>

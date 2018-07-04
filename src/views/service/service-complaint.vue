@@ -40,9 +40,6 @@
 <script>
 import util from '@/plugins/util'
 export default {
-  metaInfo: {
-    title: '投诉'
-  },
   data () {
     return {
       exceedText: false,
@@ -80,6 +77,9 @@ export default {
       }
       this.disabled = true
       this.AddComplaintParam.MissionID = this.$route.params.id
+      if (this.AddComplaintParam.Imgs === '') {
+        this.AddComplaintParam.Imgs = null
+      }
       const res = await this.$http.post('/Complaint', this.AddComplaintParam)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({

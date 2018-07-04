@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
+import http from '../api'
 // import router from '@/router'
 
 const _TIMEOUT_ = 15000
@@ -11,8 +12,11 @@ axios.interceptors.response.use(response => {
     // token无效，重新登录
     if (error.response.data.Code === 100010) {
       sessionStorage.removeItem('userAccount')
-      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.wechatOption.appId}&redirect_uri=` +
-        encodeURIComponent(process.env.wechatOption.redirectUrl) + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+      http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
+        if (res.data.Code === 100000) {
+          window.location.href = res.data.Data.LoginUrl
+        }
+      })
     }
   } else {
     Vue.prototype.$popupTop('出错了，请重试')

@@ -8,9 +8,6 @@
 
 <script>
 export default {
-  metaInfo: {
-    title: '悉心健康-登录'
-  },
   methods: {
     async login () {
       const option = {

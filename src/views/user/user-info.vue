@@ -133,7 +133,8 @@ export default {
             time: 500,
             onHide () {
               that.$store.dispatch('getAccount').then(() => {
-                that.$router.push('/user')
+                const path = sessionStorage.getItem('to_path') || '/'
+                this.$router.replace(path)
               })
             }
           })

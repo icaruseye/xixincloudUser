@@ -77,7 +77,7 @@ export default {
             if (res.data.Code === 100000) {
               that.$router.replace('/result/paySuccess')
             } else {
-              that.$vux.toast.text('出错了')
+              that.$vux.toast.text('出错了，如支付失败请联系客服')
             }
           }
         }

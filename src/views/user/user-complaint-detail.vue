@@ -14,13 +14,13 @@
         结果
       </xx-step-items>
     </xx-step-bar>
-    <h2 class="cells_title">订单编号   </h2>
+    <h2 class="cells_title">订单编号</h2>
     <div class="cells">
       <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
       <div class="mid">
         <div style="display:flex;justify-content: space-between;">
           <div class="title">{{data.MissionName}}</div>
-          <div class="orderid">服务单号：201806031203</div>
+          <div class="orderid">服务单号：{{data.MissionID}}</div>
         </div>
         <div class="describe"></div>
       </div>
@@ -51,11 +51,10 @@
         <div class="label">其他备注</div>
         <div class="right">{{data.UserComplaintContent}}</div>
       </div>
-      <div class="cell">
+      <div class="cell" v-if="data.UserComplaintImgs && data.UserComplaintImgs !== null && data.UserComplaintImgs !== ''">
         <div class="label">相关图片</div>
         <div class="right">
-          <image-preview-item v-if="data.UserComplaintImgs.length > 0" :list="data.UserComplaintImgs"></image-preview-item>
-          <span v-else>无相关图片</span>
+          <image-preview-item :list="data.UserComplaintImgs"></image-preview-item>
         </div>
       </div>
       <div class="cell" v-if="data.State === 0 || data.State === 1">

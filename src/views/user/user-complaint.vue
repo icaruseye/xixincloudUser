@@ -37,9 +37,6 @@
 <script>
 import { Sticky } from 'vux'
 export default {
-  metaInfo: {
-    title: '我的投诉'
-  },
   components: {
     Sticky
   },

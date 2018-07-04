@@ -14,7 +14,7 @@
       <div class="weui-form-cell">
         <div class="weui-cell-top">
             <label class="label" for="" style="width:95px">标签</label>
-            <input v-model="UserAddress.Remark" name="tag" type="text" placeholder="请输入标签" style="width:70px;">
+            <input v-model="UserAddress.Remark" name="tag" type="text" placeholder="请输入标签" style="width:60px;margin-right:10px">
             <checker v-model="UserAddress.Remark" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
               <checker-item value="家">家</checker-item>
               <checker-item value="公司">公司</checker-item>

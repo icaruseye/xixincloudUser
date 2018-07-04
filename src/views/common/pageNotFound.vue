@@ -4,7 +4,7 @@
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-icon-test1"></use>
       </svg>
-      <div class="text">你访问的页面被外星人抓走了啦~</div>
+      <div class="text">访问的页面不存在</div>
       <a href="/" class="button">首页</a>
     </div>
 

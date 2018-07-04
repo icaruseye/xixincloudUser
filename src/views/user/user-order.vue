@@ -17,7 +17,7 @@
           <div class="weui-cells" :key="index">
             <div class="row-1">
               <div>订单编号:{{item.UserOrder.OrderID}}</div>
-              <div v-if="item.UserOrder.State === 0">需支付：￥{{item.UserOrder.ShouldPayPrice}}元</div>
+              <div v-if="item.UserOrder.State === 0">需支付：￥{{item.UserOrder.ShouldPayPrice ? (item.UserOrder.ShouldPayPrice/100).toFixed(2) : '0.0'}}元</div>
               <div v-if="item.UserOrder.State === 2">已付款</div>
             </div>
             <div class="row-2">
@@ -35,7 +35,7 @@
             <div class="row-3">
               <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">待付款</button></div>
               <!-- <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">去付款</button></div> -->
-              <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice}}元</div>
+              <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice ? (item.UserOrder.ShouldPayPrice/100).toFixed(2) : '0.0'}}元</div>
             </div>
           </div>
         </template>
@@ -49,7 +49,7 @@
           <div class="weui-cells" :key="index">
             <div class="row-1">
               <div>订单编号:{{item.UserOrder.OrderID}}</div>
-              <div v-if="item.UserOrder.State === 0">需支付：￥{{item.UserOrder.ShouldPayPrice}}元</div>
+              <div v-if="item.UserOrder.State === 0">需支付：￥{{item.UserOrder.ShouldPayPrice ? (item.UserOrder.ShouldPayPrice/100).toFixed(2) : '0.0'}}元</div>
               <div v-if="item.UserOrder.State === 2">已付款</div>
             </div>
             <div class="row-2">
@@ -67,7 +67,7 @@
             <div class="row-3">
               <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">待付款</button></div>
               <!-- <div class="text" v-if="item.UserOrder.State === 0"><button class="btn" @canplay="toPay">去付款</button></div> -->
-              <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice}}元</div>
+              <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice ? (item.UserOrder.ShouldPayPrice/100).toFixed(2) : '0.0'}}元</div>
             </div>
           </div>
         </template>
@@ -81,7 +81,7 @@
           <div class="weui-cells" :key="index">
             <div class="row-1">
               <div>订单编号:{{item.UserOrder.OrderID}}</div>
-              <div v-if="item.UserOrder.State === 0">需支付：￥{{item.UserOrder.ShouldPayPrice}}元</div>
+              <div v-if="item.UserOrder.State === 0">需支付：￥{{item.UserOrder.ShouldPayPrice ? (item.UserOrder.ShouldPayPrice/100).toFixed(2) : '0.0'}}元</div>
               <div v-if="item.UserOrder.State === 2">已付款</div>
             </div>
             <div class="row-2">
@@ -98,7 +98,7 @@
             </div>
             <div class="row-3">
               <div class="text" v-if="item.UserOrder.State === 0"><button class="btn">去付款</button></div>
-              <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice}}元</div>
+              <div class="text" v-if="item.UserOrder.State === 2">已付款：￥{{item.UserOrder.ShouldPayPrice ? (item.UserOrder.ShouldPayPrice/100).toFixed(2) : '0.0'}}元</div>
             </div>
           </div>
         </template>

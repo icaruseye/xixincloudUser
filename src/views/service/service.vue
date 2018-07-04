@@ -110,7 +110,9 @@
                   <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
-                <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div>
+                <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->
+                <div class="describe" v-if="item.Type === 1">{{item.ViewTime}}</div>
+                <div class="describe" v-if="item.Type === 0">下单时间：{{item.CreateTime | timeFormatElse('YYYY-MM-DD HH:mm')}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -158,9 +160,6 @@
 <script>
 import { Sticky, dateFormat } from 'vux'
 export default {
-  metaInfo: {
-    title: '服务'
-  },
   filters: {
     timeFormatElse (value, format = 'YYYY-MM-DD HH:mm:ss') {
       return dateFormat(new Date(value), format)
