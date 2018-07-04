@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="has-tabbar">
-      <sticky>
+      <sticky
+      :check-sticky-support="true">
         <router-link class="system_message_entrance_container" to="/systemMail">
           <div class="avatar_container"><img :src="userAccount.Avatar | transformImgUrl" alt=""></div>
           <div class="content">

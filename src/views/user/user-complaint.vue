@@ -3,7 +3,7 @@
     <sticky
       ref="sticky"
       :offset="0"
-      :check-sticky-support="false">
+      :check-sticky-support="true">
       <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
         <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">投诉中</xx-tab-item>
         <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">已完成</xx-tab-item>

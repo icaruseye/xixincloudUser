@@ -4,7 +4,7 @@
       <sticky
         ref="sticky"
         :offset="0"
-        :check-sticky-support="false">
+        :check-sticky-support="true">
         <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
           <xx-tab-item selected @on-item-click="onItemClick">全部</xx-tab-item>
           <xx-tab-item @on-item-click="onItemClick">待付款</xx-tab-item>
@@ -28,7 +28,7 @@
                 <div class="title">{{item.PackageName}}</div>
                 <div>服务者: {{item.ServantName}}</div>
                 <div class="time">
-                  <span>{{item.UserOrder.PayTime}}</span>
+                  <span>{{item.UserOrder.PayTime | timeFormat}}</span>
                 </div>
               </div>
             </div>
@@ -60,7 +60,7 @@
                 <div class="title">{{item.PackageName}}</div>
                 <div>服务者: {{item.ServantName}}</div>
                 <div class="time">
-                  <span>{{item.UserOrder.PayTime}}</span>
+                  <span>{{item.UserOrder.PayTime | timeFormat}}</span>
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@
                 <div class="title">{{item.PackageName}}</div>
                 <div>服务者: {{item.ServantName}}</div>
                 <div class="time">
-                  <span>{{item.UserOrder.PayTime}}</span>
+                  <span>{{item.UserOrder.PayTime | timeFormat}}</span>
                 </div>
               </div>
             </div>

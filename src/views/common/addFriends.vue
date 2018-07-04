@@ -21,7 +21,7 @@
       </div>
     </div>
     <div v-if="!userAccount.IsSubscribe">
-      <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + shopID" alt=""></div>
+      <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + userAccount.shopID" alt=""></div>
       <div style="text-align: center;font-size: 14px;color: #333;">长按二维码 关注微信公众号</div>
     </div>
   </div>
@@ -34,12 +34,11 @@ export default {
       isShow: false,
       addSuccess: false,
       isFollow: false,
-      shopID: JSON.parse(sessionStorage.getItem('userAccount')).ShopID,
       info: {
         ServAccount: {}
       },
       qrcode: '',
-      userAccount: JSON.parse(sessionStorage.getItem('userAccount'))
+      userAccount: ''
     }
   },
   computed: {
@@ -49,7 +48,9 @@ export default {
   },
   mounted () {
     this.addFirends()
-    sessionStorage.setItem('isAddFriends', this.$route.query.id)
+    this.userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
+    // sessionStorage.setItem('isAddFriends', 1)
+    // sessionStorage.setItem('friendsID', this.$route.query.id)
   },
   methods: {
     async getServantInfo () {

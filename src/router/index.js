@@ -22,7 +22,6 @@ router.beforeEach((to, from, next) => {
   router.app.$store.commit('SET_ROUTER_LOADING', true)
   const userAccount = JSON.parse(sessionStorage.getItem('userAccount')) || {}
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
-  const isAddFriends = JSON.parse(sessionStorage.getItem('isAddFriends'))
 
   /* 路由发生变化修改页面title */
   if (to.meta.title) {
@@ -51,16 +50,13 @@ router.beforeEach((to, from, next) => {
     router.replace('/user/phone')
     return false
   }
+
   // 实名认证
   if (userAccount.ID && userInfo.Mobile && !userInfo.IDCard && to.path !== '/user/info') {
     router.replace('/user/info')
     return false
   }
 
-  if (isAddFriends && to.path !== '/servant/service') {
-    router.replace(`/servant/service/${isAddFriends}`)
-    return false
-  }
   next()
 })
 router.afterEach(() => {

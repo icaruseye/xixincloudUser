@@ -3,7 +3,7 @@
     <sticky
       ref="sticky"
       :offset="0"
-      :check-sticky-support="false">
+      :check-sticky-support="true">
       <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
         <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">已购买</xx-tab-item>
         <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">服务中</xx-tab-item>
@@ -34,7 +34,7 @@
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
-                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormatElse('YYYY-MM-DD')}}</div>
+                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
                     </div>
                     <div class="btn">
                       <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
@@ -70,7 +70,7 @@
                           <div class="title text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                         </div>
-                        <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormatElse('YYYY-MM-DD')}}</div>
+                        <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
                       </div>
                       <div class="btn">
                       <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
@@ -109,10 +109,11 @@
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                   <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
-                <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 1">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->
                 <div class="describe" v-if="item.Type === 1">{{item.ViewTime}}</div>
-                <div class="describe" v-if="item.Type === 0">下单时间：{{item.CreateTime | timeFormatElse('YYYY-MM-DD HH:mm')}}</div>
+                <div class="describe" v-if="item.Type === 0">下单时间：{{item.CreateTime | timeFormat('YYYY-MM-DD HH:mm')}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -161,7 +162,7 @@
 import { Sticky, dateFormat } from 'vux'
 export default {
   filters: {
-    timeFormatElse (value, format = 'YYYY-MM-DD HH:mm:ss') {
+    timeFormat (value, format = 'YYYY-MM-DD HH:mm:ss') {
       return dateFormat(new Date(value), format)
     }
   },

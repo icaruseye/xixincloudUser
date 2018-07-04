@@ -114,7 +114,7 @@ export default {
       fd.append('fileUpload', _img.file)
       var options = {
         method: 'post',
-        url: 'http://xixincloud.com:6883/File/Upload',
+        url: `${process.env.IMG_PATH}/File/Upload`,
         data: fd,
         timeout: 15000,
         onUploadProgress: function (progressEvent) {

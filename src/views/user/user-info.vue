@@ -134,7 +134,7 @@ export default {
             onHide () {
               that.$store.dispatch('getAccount').then(() => {
                 const path = sessionStorage.getItem('to_path') || '/'
-                this.$router.replace(path)
+                that.$router.replace(path)
               })
             }
           })
