@@ -17,6 +17,7 @@
       购买前请仔细阅读<span @click="showTips">《购买须知》</span> ，当中包含购买规则及退款规则（包括找客服退款）
     </div>
     <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">立即购买 ￥{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}</button>
+    <button v-if="saleOut" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" disabled="disabled">卖光了</button>
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
         <div class="tips-content">
@@ -44,6 +45,7 @@ export default {
     return {
       isShowTips: false,
       showPay: true,
+      saleOut: false,
       Item: {},
       ItemActionDetails: []
     }
@@ -51,6 +53,10 @@ export default {
   created () {
     if (this.$route.query.type === '0') {
       this.showPay = false
+    }
+    if (this.$route.query.count === '0') {
+      this.showPay = false
+      this.saleOut = true
     }
     // this.initData()
     this.getPackageDetail()
@@ -89,10 +95,7 @@ export default {
         this.$vux.toast.show({
           type: 'cancel',
           text: res.data.Msg,
-          time: 800,
-          onHide () {
-            that.$router.back()
-          }
+          time: 800
         })
       }
     }

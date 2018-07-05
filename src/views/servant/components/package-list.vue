@@ -1,7 +1,7 @@
 <template>
   <div class="weui-list_container">
     <template v-for="(item, index) in list">
-      <div class="weui-list_item" :key="index" @click="toItem(item.ID)" v-if="index <= max - 1">
+      <div class="weui-list_item" :key="index" @click="toItem(item.ID, item.Count)" v-if="index <= max - 1">
         <div class="icon">
           <img src="@/assets/images/icon_picc.png" alt="">
         </div>
@@ -14,7 +14,8 @@
           </div>
         </div>
         <div class="btn">
-          <button>购买</button>
+          <button v-if="item.Count > 0">购买</button>
+          <span class="sale-out" v-if="item.Count === 0">卖光了</span>
         </div>
       </div>
     </template>
@@ -46,8 +47,8 @@ export default {
     }
   },
   methods: {
-    toItem (id) {
-      const url = this.isItem === true ? `/servant/detail/item/${id}` : `/servant/detail/package/${id}`
+    toItem (id, count) {
+      const url = this.isItem === true ? `/servant/detail/item/${id}?count=${count}` : `/servant/detail/package/${id}?count=${count}`
       this.$router.push(url)
     },
     toggleUnfold () {
@@ -64,5 +65,9 @@ export default {
 @import url(../components/index.less);
 .weui-list_container {
   padding: 0 10px;
+}
+.sale-out {
+  color: #999;
+  font-size: 13px;
 }
 </style>

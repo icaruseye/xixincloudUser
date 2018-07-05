@@ -29,7 +29,8 @@
         </div>
       </x-dialog>
     </div>
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
+    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
+    <button v-if="saleOut" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" disabled="disabled">卖光了</button>
   </div>
 </template>
 
@@ -45,6 +46,8 @@ export default {
   },
   data () {
     return {
+      showPay: true,
+      saleOut: false,
       isShowTips: false,
       Package: {},
       PackageItemDetailsList: []
@@ -52,6 +55,10 @@ export default {
   },
   created () {
     this.initData()
+    if (this.$route.query.count === '0') {
+      this.showPay = false
+      this.saleOut = true
+    }
   },
   methods: {
     showTips () {
@@ -83,10 +90,7 @@ export default {
         this.$vux.toast.show({
           type: 'cancel',
           text: res.data.Msg,
-          time: 800,
-          onHide () {
-            that.$router.back()
-          }
+          time: 800
         })
       }
     }
