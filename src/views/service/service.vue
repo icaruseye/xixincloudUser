@@ -137,14 +137,19 @@
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
-                  <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
+                <div class="servant">护士：{{item.ServantName}}</div>
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Discription ? item.Discription : '没有备注消息'}}</div>
                 <div class="describe">完成时间：{{item.EndTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
               <img v-if="item.State === 4" style="width:50px;height:50px;" src="@/assets/images/ic_dpj.png" alt="">
+              <div class="cancel-icon">
+                <svg aria-hidden="true" class="icon" v-if="item.State === -1">
+                  <use xlink:href="#icon-yiquxiao"></use>
+                </svg>
+              </div>
             </div>
           </template>
         </div>
@@ -174,7 +179,7 @@ export default {
       dataList: [],
       dataListDone: [],
       tabIndex: this.$store.getters.serviceTabIndex,
-      checkerIndex: 0, // 0、全部；1、待确认；2、待服务；3、待评价
+      checkerIndex: this.$store.getters.serviceTabIndex2, // 0、全部；1、待确认；2、待服务；3、待评价
       UserOrderDetailsList: {
         ItemsByDoc: [],
         PackByDoc: []
@@ -188,6 +193,9 @@ export default {
   watch: {
     serviceTabIndex (val) {
       this.tabIndex = val
+    },
+    serviceTabIndex2 (val) {
+      this.checkerIndex = val
     },
     checkerIndex () {
       this.initData()
@@ -302,6 +310,7 @@ export default {
     },
     changeChecker (index) {
       this.checkerIndex = index
+      this.$store.commit('setServiceTabIndex2', index)
     },
     onItemClick (id) {
       this.$store.commit('setServiceTabIndex', id)
@@ -487,6 +496,15 @@ export default {
     li.active {
       color: #3ecccc;
     }
+  }
+}
+
+.cancel-icon {
+  color: #999;
+  .icon {
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
   }
 }
 </style>

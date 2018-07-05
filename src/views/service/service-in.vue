@@ -1,6 +1,6 @@
 <template>
   <div class="wrap has-tabbar">
-    <xx-step-bar :step="steps">
+    <xx-step-bar :step="steps" v-if="serviceItemInfo.State !== -1">
       <xx-step-items slot="items">
         预约
       </xx-step-items>
@@ -11,6 +11,17 @@
         已完成
       </xx-step-items>
     </xx-step-bar>
+    <div class="cancel-box" v-if="serviceItemInfo.State === -1">
+      <div class="">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-yiquxiao"></use>
+        </svg>
+      </div>
+      <div style="padding: 0 10px;">
+        <div class="title">{{serviceItemInfo.CancelTypeMsg ? serviceItemInfo.CancelTypeMsg : '该任务已取消'}}</div>
+        <div class="describe">{{serviceItemInfo.CancelDescription ? serviceItemInfo.CancelDescription : '没有备注信息'}}</div>
+      </div>
+    </div>
     <xx-timeLine :step="timeLines" class="mgt10">
       <xx-timeLine-items
         slot="items"
@@ -66,20 +77,22 @@
     <div class="tips warn">
       提示：若用户预约任务时已勾选需要服务携带药品或者工具，该服务单原则上不可取消，所以此情况下的“取消任务”按钮消失。平台考虑到各种不可控因素，为了用户权益，若用户着实需要取消，可联系您的服务者说明原因，待服务者同意后再电话联系平台客服说明情况后，客服向服务者确认后，后台取消该次任务，该次服务的次数退回到用户账户。
     </div>
-    <div class="btn-bar" v-if="serviceItemInfo.State === 0">
+    <div class="btn-bar" v-if="serviceItemInfo.State === 0 && serviceItemInfo.Type === 0">
       <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;flex:1;" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
-      <button type="button" class="weui-btn weui-btn_primary" style="flex:1" @click="showCancelConfirm" v-show="serviceItemInfo.CanCancel">取消预约</button>
+      <button type="button" class="weui-btn weui-btn_primary" style="flex:1" @click="showCancelReserve = true" v-show="serviceItemInfo.CanCancel">取消预约</button>
     </div>
-    <div class="btn-bar" v-if="serviceItemInfo.State === 3">
-      <button type="button" style="flex:1" class="weui-btn weui-btn_primary" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
-      <button type="button" style="flex:1" class="weui-btn weui-btn_primary" @click="showCancelConfirm" v-show="serviceItemInfo.CanCancel">取消预约</button>
+    <div class="btn-bar" v-if="(serviceItemInfo.State === 3 || serviceItemInfo.State === 0) && serviceItemInfo.Type === 1">
+      <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;flex:1;" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
+      <button type="button" class="weui-btn weui-btn_primary" style="flex:1" @click="showCancelMission = true" v-show="serviceItemInfo.CanCancel">取消任务</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 4">
       <button class="weui-btn weui-btn_primary" style="background: #ffc349;" @click="toComplaint">投诉</button>
       <button type="button" class="weui-btn weui-btn_primary" @click="submitComments" :disabled="disabled">确定</button>
     </div>
     <!-- 取消预约 -->
-    <div v-transfer-dom>
+    <cancel-mission-popup v-model="showCancelReserve" @comfirmCancel="cancelReserve"></cancel-mission-popup>
+    <cancel-mission-popup v-model="showCancelMission" @comfirmCancel="cancelMission"></cancel-mission-popup>
+    <!-- <div v-transfer-dom>
       <confirm v-model="showCancel"
         class="cancel-wrap"
         title="取消预约"
@@ -93,12 +106,13 @@
           <input type="text" v-model="CancleDescription" placeholder="取消描述(可选)">
         </div>
       </confirm>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { TransferDom, Rater, Confirm } from 'vux'
+import CancelMissionPopup from '@/components/cancelMissionPopup'
+import { TransferDom, Rater } from 'vux'
 import util from '@/plugins/util'
 export default {
   directives: {
@@ -106,12 +120,13 @@ export default {
   },
   components: {
     Rater,
-    Confirm
+    CancelMissionPopup
   },
   data () {
     return {
       disabled: false,
-      showCancel: false,
+      showCancelReserve: false,
+      showCancelMission: false,
       steps: '1',
       timeLines: '0',
       rate: 5,
@@ -188,12 +203,25 @@ export default {
       }
     },
     // 取消预约
-    async cancelReserve () {
+    async cancelReserve (opt) {
       const that = this
-      const res = await this.$http.send(`/ReserveService/Cancel?ID=${this.serviceItemInfo.ID}`, 'put', {
-        CancelType: this.CancelType,
-        CancleDescription: ''
-      })
+      const res = await this.$http.put(`/ReserveService/Cancel?ID=${this.serviceItemInfo.ID}`, opt)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: res.data.Msg,
+          time: 500,
+          onHide () {
+            that.$router.back()
+          }
+        })
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 取消任务
+    async cancelMission (opt) {
+      const that = this
+      const res = await this.$http.put(`/Mission/Cancel?missionID=${this.serviceItemInfo.ID}`, opt)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: res.data.Msg,
@@ -208,9 +236,6 @@ export default {
     },
     toComplaint (id) {
       this.$router.push(`/service/complaint/${this.$route.params.id}`)
-    },
-    showCancelConfirm () {
-      this.showCancel = true
     },
     setState () {
       // 已确认
@@ -237,6 +262,10 @@ export default {
         this.timeLines = '3'
         this.title3 = '已评价'
         this.subhead3 = `评价时间：${util.timeFormat(this.serviceItemInfo.EndTime)}`
+      }
+      // 已取消
+      if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State === -1) {
+        this.timeLines = '0'
       }
     },
     // 跳转聊天
@@ -278,7 +307,7 @@ export default {
   width: 100%;
   display: flex;
   .weui-btn:nth-child(2) {
-    width: 300px;
+    width: 340px;
   }
 }
 
@@ -364,5 +393,24 @@ export default {
   background: #FFFBF2;
   border: 1px solid #FFDCA1;
   border-radius: 2px;
+}
+
+.cancel-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 15px;
+  .icon {
+    font-size: 60px;
+    color: #ff5f5f;
+  }
+  .title {
+    font-size: 16px;
+    color: #666;
+  }
+  .describe {
+    font-size: 14px;
+    color: #999;
+  }
 }
 </style>

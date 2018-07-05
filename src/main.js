@@ -7,7 +7,7 @@ import router from './router'
 import store from './store/index'
 import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
-import { DatetimePlugin, ToastPlugin, XDialog } from 'vux'
+import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin } from 'vux'
 import xxComponents from './components/common'
 import http from '@/api'
 
@@ -16,6 +16,7 @@ Vue.use(xxComponents)
 // Vux组件
 Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
+Vue.use(ConfirmPlugin)
 Vue.use(registryPopup)
 Vue.component('x-dialog', XDialog)
 
