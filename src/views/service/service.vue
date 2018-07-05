@@ -107,8 +107,8 @@
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
-                  <div class="servant">护士：{{item.ServantName}}</div>
                 </div>
+                <div class="servant">护士：{{item.ServantName}}</div>
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 1">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->

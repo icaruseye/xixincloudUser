@@ -19,8 +19,8 @@
             <div class="mid">
               <div style="display: flex;justify-content: space-between;align-items: baseline;">
                 <div class="title text-overflow-1" style="font-size:18px;">{{item.MissionName}}</div>
-                <div class="servant">医生：{{item.ServantName}}</div>
               </div>
+              <div class="servant">医生：{{item.ServantName}}</div>
               <div style="color:#666;font-size:14px;width:160px" class="of-hide">投诉原因：{{item.UserComplaintTitle}}</div>
               <div class="describe">投诉时间：{{item.CreateTime | timeFormat}}</div>
             </div>
@@ -122,7 +122,6 @@ export default {
     flex: 1;
     margin: 0 19px;
     .title {
-      width: 160px;
       font-size: 15px;
       color: #333;
     }
