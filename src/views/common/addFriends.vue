@@ -21,7 +21,7 @@
       </div>
     </div>
     <div v-if="!userAccount.IsSubscribe">
-      <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + userAccount.shopID" alt=""></div>
+      <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + userAccount.ShopID" alt=""></div>
       <div style="text-align: center;font-size: 14px;color: #333;">长按二维码 关注微信公众号</div>
     </div>
   </div>
@@ -38,6 +38,7 @@ export default {
         ServAccount: {}
       },
       qrcode: '',
+      ShopID: JSON.parse(sessionStorage.getItem('userAccount')).ShopID,
       userAccount: ''
     }
   },

@@ -64,7 +64,7 @@
           <xx-checker v-model="reqParams.NeedPill" typeName="checkbox" name="NeedPill" style="display:block;"></xx-checker>
         </div>
       </xx-cell-items>
-      <div class="tips normal">
+      <div class="tips warn">
         *为保障服务者的利益，以上两项如有一项勾选则该服务单不可取消，请谨慎选择。勾选任一项需在服务进行完后向服务者支付相关费用。若误选可取消该单，重新下单
       </div>
       <div class="tips text">
@@ -446,17 +446,14 @@ export default {
     padding-right: 10px;
   }
 }
-.tips.normal {
-  margin: 10px;
-  padding: 10px 0;
-  font-size: 12px;
-  color: #f44336;
-  border-radius: 4px;
-}
 .tips.warn {
-  padding: 11px 11px 0 11px;
+  margin: 0 10px;
+  padding: 11px;
   font-size: 12px;
-  color: #f44336;
+  color: #999;
+  background: #FFFBF2;
+  border: 1px solid #FFDCA1;
+  border-radius: 2px;
 }
 
 .tips.text {

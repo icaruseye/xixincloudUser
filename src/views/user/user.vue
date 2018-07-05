@@ -25,7 +25,7 @@
         </router-link>
       </div>
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
-        <router-link to="/user/info" class="setting-panel_item vux-1px-b">
+        <router-link to="/user/info?edit=1" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">个人资料</span>
           <i class="iconfont icon-jiantouyou"></i>

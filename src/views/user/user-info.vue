@@ -57,7 +57,7 @@
           <div v-if="disabled">{{age}}</div>
       </div>
     </div>
-    <div class="tips">
+    <div class="tips warn">
       *用户昵称不得出现违法和不良信息，您必须填写正确的身份证号码才可享受服务。若您填写的资料不合法、不真实、不准确、不完整，平台有权拒绝为您提供服务并删除该账号，且您需承担因此引起的相应责任及后果。
     </div>
     <div class="weui-form-cell">
@@ -133,8 +133,12 @@ export default {
             time: 500,
             onHide () {
               that.$store.dispatch('getAccount').then(() => {
-                const path = sessionStorage.getItem('to_path') || '/'
-                that.$router.replace(path)
+                if (that.$route.query.edit === '1') {
+                  that.$router.back()
+                } else {
+                  const path = sessionStorage.getItem('to_path') || '/'
+                  that.$router.replace(path)
+                }
               })
             }
           })
@@ -196,5 +200,14 @@ export default {
   color: #e64340;
   background: #f1f1f1;
   border-radius: 4px;
+}
+
+.tips.warn {
+  padding: 11px;
+  font-size: 12px;
+  color: #999;
+  background: #FFFBF2;
+  border: 1px solid #FFDCA1;
+  border-radius: 2px;
 }
 </style>

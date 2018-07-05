@@ -63,6 +63,9 @@
         </div>
       </xx-timeLine-items>
     </xx-timeLine>
+    <div class="tips warn">
+      提示：若用户预约任务时已勾选需要服务携带药品或者工具，该服务单原则上不可取消，所以此情况下的“取消任务”按钮消失。平台考虑到各种不可控因素，为了用户权益，若用户着实需要取消，可联系您的服务者说明原因，待服务者同意后再电话联系平台客服说明情况后，客服向服务者确认后，后台取消该次任务，该次服务的次数退回到用户账户。
+    </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 0">
       <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;flex:1;" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
       <button type="button" class="weui-btn weui-btn_primary" style="flex:1" @click="showCancelConfirm" v-show="serviceItemInfo.CanCancel">取消预约</button>
@@ -342,5 +345,24 @@ export default {
   height: 12px;
   background: #F6E5C8;
   border-radius: 50%;
+}
+
+.tips {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 12px;
+  color: #e64340;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.tips.warn {
+  margin: 0 10px;
+  padding: 11px;
+  font-size: 12px;
+  color: #999;
+  background: #FFFBF2;
+  border: 1px solid #FFDCA1;
+  border-radius: 2px;
 }
 </style>

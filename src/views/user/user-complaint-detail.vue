@@ -14,7 +14,7 @@
         结果
       </xx-step-items>
     </xx-step-bar>
-    <h2 class="cells_title">订单编号</h2>
+    <h2 class="cells_title">投诉编号：{{data.ID}}</h2>
     <div class="cells">
       <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
       <div class="mid">

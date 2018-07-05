@@ -1,17 +1,16 @@
 <template>
   <div class="wrap_container">
     <div class="userInfo_container">
-      <img class="avatar" :src="info.Avatar | transformImgUrl" alt="">
-      <div class="right">
-        <h3 class="nickName">
-          {{info.NickName}}
-          <!-- <span class="actor">主治医师</span> -->
-        </h3>
-        <!-- <p class="desc">四川大学华西医院妇儿院四川大学华西医院妇儿院</p> -->
+      <div class="user_avatar_container">
+        <img class="avatar" :src="info.Avatar | transformImgUrl" alt="">
       </div>
+      <h3 class="nickName">
+        {{info.NickName}}
+      </h3>
+      <p class="desc">{{info.Description | stringSub(85)}}</p>
     </div>
     <div class="qr_code_box">
-      <img :src="API_PATH + '/QRCode/' + info.ViewID" alt="">
+      <img :src="API_PATH+'/QRCode/'+info.ViewID" alt="">
     </div>
     <p class="hint_desc">扫一扫二维码，可加我为好友</p>
   </div>
@@ -24,6 +23,12 @@ export default {
       default: {}
     }
   },
+  filters: {
+    stringSub (value, len) {
+      if (!value) return ''
+      return value.length > len ? value.substring(0, len) + '…' : value
+    }
+  },
   computed: {
     API_PATH () {
       return process.env.API_PATH
@@ -34,7 +39,7 @@ export default {
 <style lang="less" scoped>
 .wrap_container
 {
-  padding: 35px 20px;
+  padding: 25px 20px;
 }
 .qr_code_box
 {
@@ -42,9 +47,9 @@ export default {
   margin: 0 auto;
   width: 200px;
   height: 200px;
-  margin-top: 30px;
-  img
-  {
+  margin-top: 10px;
+  overflow: hidden;
+  img {
     position: relative;
     z-index: 2;
   }
@@ -66,43 +71,39 @@ export default {
 }
 .userInfo_container
 {
-  display: flex;
-  flex-flow: nowrap;
-  justify-content: center;
-  align-items: center;
   .avatar
   {
     display: block;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    margin: 0 auto;
   }
-  .right
+  .nickName
   {
-    margin-left: 20px;
-    .nickName
+    text-align: left;
+    color: #333;
+    font-weight: normal;
+    font-size: 18px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    margin-top: 10px;
+    .actor
     {
-      text-align: left;
-      color: #333;
-      font-weight: normal;
-      font-size: 18px;
-      height: 25px;
-      line-height: 25px;
-      .actor
-      {
-        display: inline-block;
-        color: #666;
-        font-size: 14px;
-        margin-left: 15px;
-      }
+      display: inline-block;
+      color: #666;
+      font-size: 14px;
+      margin-left: 15px;
     }
-    .desc
-    {
-      font-size: 12px;
-      color: #999;
-      line-height: 20px;
-      text-align: left
-    }
+  }
+  .desc
+  {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #999;
+    line-height: 20px;
+    text-align: justify
   }
 }
 .hint_desc
