@@ -1,0 +1,204 @@
+<template>
+  <div class="container" ref="operContainerRef">
+    <div class="oper_container">
+      <label class="select_img_btn">
+        <label class="icon-tupian iconfont"  for="uploadImgBtn"></label>
+        <input id="uploadImgBtn" type="file" @change="uploadImg">
+      </label>
+      <div class="input_control_box">
+        <input type="text"
+         style="background:#fff;"
+         @focus="emojiContainerShow = false"
+         ref="chatInput"
+         v-model="msg">
+      </div>
+      <div class="emoji_show_container" @click="emojiContainerShow = !emojiContainerShow">
+        <i v-if="!emojiContainerShow" class="iconfont icon-biaoqing-xue"></i>
+        <i v-else class="iconfont icon-jianpan"></i>
+      </div>
+      <div class="send_msg_container">
+        <button @click="sendTextMsg">发送</button>
+      </div>
+    </div>
+    <div v-if="emojiContainerShow" class="emoji_container">
+      <a href="javascript:;" style="margin:0 3px;" v-for="(item, index) in faceList" :key="index" @click="chooseFace(item)">{{item}}</a>
+    </div>
+  </div>
+</template>
+<script>
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      msg: '',
+      emojiContainerShow: false,
+      faceList: ['😀', '😂', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '😗', '😙', '😚', '😇', '😐', '😑', '😶', '😏', '😣', '😥', '😮', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '😒', '😒', '😓', '😔', '😕', '😲', '😷', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😬', '😰', '😱', '😳', '😵', '😡', '😠', '💪', '👈', '👉', '✌', '👆', '👇', '✋', '👌', '👍', '👏', '👐', '🙏'],
+      imgUploadProgress: 0
+    }
+  },
+  watch: {
+    emojiContainerShow () {
+      this.operContainerHeight()
+    }
+  },
+  methods: {
+    chooseFace (face) {
+      this.msg = this.msg + face
+    },
+    operContainerHeight () {
+      this.$nextTick(() => {
+        this.$emit('changeHeight', this.$refs.operContainerRef.offsetHeight)
+      })
+    },
+    sendTextMsg () {
+      const msg = {
+        originator: 'to',
+        text: this.msg
+      }
+      this.msg = ''
+      this.$refs.chatInput.focus()
+      this.$emit('sendMsg', msg)
+    },
+    async uploadImg (e) {
+      const that = this
+      that.imgUploadProgress = 0
+      let file = e.target.files[0]
+      if (!file) return false
+      if (!this.checkSize(file, e)) return false
+      let fd = new FormData()
+      fd.append('fileUpload', file)
+      var options = {
+        method: 'post',
+        url: `${process.env.IMAGE_HOST}/File/Upload`,
+        data: fd,
+        timeout: 15000,
+        onUploadProgress: function (progressEvent) {
+          that.imgUploadProgress = (progressEvent.loaded / progressEvent.total * 100 | 0)
+        }
+      }
+      let reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function (e) {
+        const msg = {
+          originator: 'to',
+          Imgs: this.result
+        }
+        that.$emit('sendMsg', msg)
+      }
+      e.target.value = ''
+      try {
+        // that.$vux.loading.show(that.imgUploadProgress + '%')
+        await axios(options)
+        // that.$vux.loading.hide()
+      } catch (error) {
+        this.$vux.toast.text('网络错误，上传失败')
+      }
+    },
+    checkSize (file, e) {
+      if (file.size > 1024 * 1024 * 5) {
+        this.$vux.toast.text('上传图片大小超出限制')
+        return false
+      }
+      return true
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.container
+{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+}
+.oper_container
+{
+  display: flex;
+  flex-flow: nowrap;
+  width: 100%;
+  height: 52px;
+  .select_img_btn
+  {
+    position: relative;
+    display: block;
+    flex: 0 0 60px;
+    line-height: 52px;
+    text-align: center;
+    overflow: hidden;
+    .iconfont
+    {
+      font-size: 36px;
+      color: #999;
+      z-index: 0;
+    }
+    input[type=file]
+    {
+      position: absolute;
+      left: 0;
+      top: 0;
+      visibility: hidden;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+  }
+  .input_control_box
+  {
+    flex: 1;
+    padding: 11px 0;
+    box-sizing: border-box;
+    input
+    {
+      border: none;
+      border-bottom: 1px solid #979797;
+      width: 100%;
+      height: 100%;
+      padding: 0 10px;
+      outline: none;
+      color: #999;
+      border-radius: 0;
+      font-size: 14px;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: rgba(0,0,0,0)
+    }
+  }
+  .emoji_show_container
+  {
+    flex: 0 0 60px;
+    text-align: center;
+    line-height: 52px;
+    .iconfont
+    {
+      font-size: 36px;
+      color: #999
+    }
+  }
+  .send_msg_container
+  {
+    flex: 0 0 80px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    button
+    {
+      width: 100%;
+      height: 100%;
+      border: none;
+      font-size: 14px;
+      color: #fff;
+      border-radius: 5px;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      background-color: #3ac7f5
+    }
+  }
+}
+.emoji_container
+{
+  padding: 15px;
+  font-size: 22px;
+  text-align: justify
+}
+</style>

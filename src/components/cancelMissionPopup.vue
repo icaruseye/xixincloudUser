@@ -68,7 +68,7 @@ export default {
     },
     cancelMission () {
       const that = this
-      this.$emit('comfirmCancel', {
+      this.$emit('confirmCancel', {
         CancelType: that.radioValue,
         CancelDescription: that.cancelDescription
       })

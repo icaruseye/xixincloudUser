@@ -28,6 +28,13 @@ export default [
     meta: {
       title: '预约服务'
     }
+  },
+  {
+    path: '/service/consult/:id',
+    component: _import('/service/service-consult/index'),
+    meta: {
+      title: '图文咨询'
+    }
   }
   // {
   //   path: '/service/list/:id',

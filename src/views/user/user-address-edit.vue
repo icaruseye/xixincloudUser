@@ -48,7 +48,8 @@
 </template>
 
 <script>
-import { Group, XAddress, ChinaAddressV4Data, Checker, CheckerItem, InlineXSwitch, Confirm, TransferDom } from 'vux'
+import ChinaAddressV4Data from '@/plugins/datas/ChinaAddressV4Data.json'
+import { Group, XAddress, Checker, CheckerItem, InlineXSwitch, Confirm, TransferDom } from 'vux'
 import util from '@/plugins/util'
 export default {
   directives: {

@@ -86,12 +86,12 @@
       <button type="button" class="weui-btn weui-btn_primary" style="flex:1" @click="showCancelMission = true" v-show="serviceItemInfo.CanCancel">取消任务</button>
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 4">
-      <button class="weui-btn weui-btn_primary" style="background: #ffc349;" @click="toComplaint">投诉</button>
+      <button class="weui-btn weui-btn_primary" style="background: #ffc349;flex:1" @click="toComplaint">投诉</button>
       <button type="button" class="weui-btn weui-btn_primary" @click="submitComments" :disabled="disabled">确定</button>
     </div>
     <!-- 取消预约 -->
-    <cancel-mission-popup v-model="showCancelReserve" @comfirmCancel="cancelReserve"></cancel-mission-popup>
-    <cancel-mission-popup v-model="showCancelMission" @comfirmCancel="cancelMission"></cancel-mission-popup>
+    <cancel-mission-popup v-model="showCancelReserve" @confirmCancel="cancelReserve"></cancel-mission-popup>
+    <cancel-mission-popup v-model="showCancelMission" @confirmCancel="cancelMission"></cancel-mission-popup>
     <!-- <div v-transfer-dom>
       <confirm v-model="showCancel"
         class="cancel-wrap"
@@ -307,7 +307,7 @@ export default {
   width: 100%;
   display: flex;
   .weui-btn:nth-child(2) {
-    width: 340px;
+    width: 250px;
   }
 }
 

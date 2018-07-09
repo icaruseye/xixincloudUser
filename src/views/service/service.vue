@@ -55,7 +55,6 @@
               <div class="icon"><img :src="pItem.ContentOfItems[0].AvatorIMG | transformImgUrl" alt=""></div>
               <div class="mid">
                 <div class="name">{{pItem.ContentOfItems[0].DoctorName}}</div>
-                <!-- <div class="role">萌宠砖家</div> -->
               </div>
             </div>
             <template v-for="(cItem, cIndex) in pItem.ContentOfItems">

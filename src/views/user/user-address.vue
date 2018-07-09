@@ -25,8 +25,9 @@
 </template>
 
 <script>
+import ChinaAddressV4Data from '@/plugins/datas/ChinaAddressV4Data.json'
 import userAddressEdit from './user-address-edit'
-import { ChinaAddressV4Data, Popup, TransferDom } from 'vux'
+import { Popup, TransferDom } from 'vux'
 export default {
   directives: {
     TransferDom

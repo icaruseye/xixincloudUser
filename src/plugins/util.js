@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { ToastPlugin, ChinaAddressV4Data } from 'vux'
+import ChinaAddressV4Data from './datas/ChinaAddressV4Data.json'
+import { ToastPlugin } from 'vux'
 Vue.use(ToastPlugin)
 
 export default {

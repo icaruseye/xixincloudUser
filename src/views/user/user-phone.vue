@@ -16,7 +16,7 @@
     </div>
     <div class="weui-form-cell userAgreement">
       <input type="checkbox" id="userAgreement" value="" v-model="userAgreement">
-      <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《悉心健康用户协议》</a></label>
+      <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《患者用户服务协议》</a></label>
     </div>
   </div>
   <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>
@@ -121,9 +121,6 @@
           <li>十二、法律管辖及争议解决：</li>
           <li>12.1本服务条款的订立、执行和解释及争议的解决均应适用中国法律。</li>
           <li>12.2如本服务条款内容或其执行发生任何争议，平台将尽可能与您友好协商解决；协商不成时，任何一方均可向平台经营者所在地的人民法院提起诉讼。</li>
-          <li></li>
-          <li></li>
-          <li></li>
           </ol>
       </div>
     </div>

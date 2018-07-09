@@ -71,17 +71,18 @@ export default {
     setTimeout(function () {
       that.goDown()
     }, 0)
-    window.userTimer = setInterval(function () {
-      that.chatRecordTimePoll()
+    const userTimer = setInterval(() => {
+      console.log('123')
+      this.chatRecordTimePoll()
     }, 5000)
+    this.$once('hook:beforeDestroy', () => {
+      clearInterval(userTimer)
+    })
   },
   mounted () {
     this.goDown()
     this.faceboxHeight = document.getElementById('chatFaceBox').offsetHeight // 获取表情高度
     this.translateFace = this.faceboxHeight + 5 // 表情上弹高度
-  },
-  destroyed () {
-    clearInterval(window.userTimer)
   },
   methods: {
     // 页面逻辑函数
@@ -89,13 +90,10 @@ export default {
       this.chatMsg = this.chatMsg + face
     },
     showFace () {
-      const that = this
       this.isFaceShow = true
       this.translateFace = 0
       this.faceHeight = this.faceboxHeight + 100 // padding-bottom高度加上表情高度
-      setTimeout(function () {
-        that.goDown()
-      }, 500)
+      this.goDown()
     },
     hideFace () {
       this.isFaceShow = false
@@ -103,14 +101,13 @@ export default {
       this.faceHeight = 100 // 还原padding-bottom初始高度
     },
     inputFocus () {
-      const that = this
       this.hideFace()
-      setTimeout(function () {
-        that.goDown()
-      }, 500)
+      this.goDown()
     },
     goDown () {
-      document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight
+      this.$nextTick(() => {
+        document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight
+      })
     },
     // 功能逻辑函数
     // 轮询聊天消息
