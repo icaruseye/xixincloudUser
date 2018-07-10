@@ -36,7 +36,7 @@
       </xx-cell-items>
     </div>
     <!-- 图文咨询 -->
-    <div class="content_container" style="padding: 15px 0 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="state === 2">
+    <div class="content_container" style="padding: 15px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="state === 2">
       <system-msg-item>
         温馨提示：服务者的回复仅供参考，不能作为诊断及医疗依据
       </system-msg-item>
@@ -58,13 +58,13 @@
       </div>
     </div>
     <!-- 按钮 -->
-    <send-msg-bar @changeHeight="changePaddingBottom" @sendMsg="sendMsg"></send-msg-bar>
-    <!-- <div>
+    <!-- <send-msg-bar @changeHeight="changePaddingBottom" @sendMsg="sendMsg"></send-msg-bar> -->
+    <div>
       <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">提交</button>
-    </div> -->
+    </div>
     <!-- <div class="btn-bar">
       <button type="button" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;">投诉</button>
-      <button type="button" class="weui-btn weui-btn_primary"><i class="iconfont icon-xiaoxi"></i>再次在线咨询</button>
+      <button type="button" class="weui-btn weui-btn_primary"><i class="iconfont icon-xiaoxi"></i>查看服务者详情</button>
     </div> -->
     <!-- 评价 -->
     <comments v-model="showCommentPanel" @confirmCancel="cancelComments"></comments>
@@ -103,6 +103,34 @@ export default {
           originator: 'to',
           time: '2018年07月4日12:21:05',
           text: '好的，请稍等一下。好的，请稍等一下。好的，请稍等一下。'
+        },
+        {
+          originator: 'from',
+          title: '图文咨询',
+          time: '2018年07月4日12:21:05',
+          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
+          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
+        },
+        {
+          originator: 'from',
+          title: '图文咨询',
+          time: '2018年07月4日12:21:05',
+          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
+          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
+        },
+        {
+          originator: 'from',
+          title: '图文咨询',
+          time: '2018年07月4日12:21:05',
+          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
+          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
+        },
+        {
+          originator: 'from',
+          title: '图文咨询',
+          time: '2018年07月4日12:21:05',
+          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
+          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
         },
         {
           originator: 'from',

@@ -28,8 +28,7 @@ Vue.filter('transformImgUrl', function (val) {
   if (val.indexOf('http') === -1) {
     if (val.indexOf('Upload') === -1) {
       // 值为id
-      // return 'http://xixincloud.com:6883/File/GetImage/' + val
-      return 'http://image.xixincloud.com/File/GetImage/' + val
+      return `${process.env.IMG_PATH}/File/GetImage/${val}`
     } else {
       // 第三种情况
       return val

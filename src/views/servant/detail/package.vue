@@ -27,6 +27,9 @@
           <p>②用户购买后若需要退款需在购买7天内发起退款申请。申请方式为致电平台客服。7天内未预约服务（或预约服务后医护并未实际服务），经后台审核后方可退款，审核周期为1~2个工作日。其余情况平台不予退款。</p>
           <p>Notice：需要服务者提供医疗/护理服务，请保证预约时能提供正规医院的处方、医嘱，且保障处方、医嘱的真实有效，服务者审核处方、医嘱不符合规范，或者医疗风险性较高，有权不接受您的预约。所以，请尽量避免因处方问题导致购买后退费，以免影响您的使用体验。</p>
         </div>
+        <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
+          <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
+        </div>
       </x-dialog>
     </div>
     <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
@@ -55,12 +58,19 @@ export default {
   },
   created () {
     this.initData()
+    this.getShopAgreement()
     if (this.$route.query.count === '0') {
       this.showPay = false
       this.saleOut = true
     }
   },
   methods: {
+    async getShopAgreement () {
+      const res = await this.$http.get(`/ShopAgreement?ProtocalType=5&ShopCertificateID=0`)
+      if (res.data.Code === 100000) {
+        console.log(res)
+      }
+    },
     showTips () {
       this.isShowTips = true
     },

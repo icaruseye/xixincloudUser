@@ -20,8 +20,8 @@
       <div class="mid">
         <div style="display:flex;justify-content: space-between;">
           <div class="title">{{data.MissionName}}</div>
-          <div class="orderid">服务单号：{{data.ServiceID}}</div>
         </div>
+        <div class="orderid">服务单号：{{data.ServiceID}}</div>
         <div class="describe"></div>
       </div>
     </div>

@@ -122,6 +122,9 @@
           <p>①在服务者未点击“生成任务”的情况下，用户可无责取消问诊单。</p>
           <p>②服务者上线查看您的预约详情页，若您的问题超出服务者的能力范围，服务者会点击“取消任务”，填写取消原因并给您相应的建议，钱款原路退回。</p>
         </div>
+        <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
+          <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
+        </div>
       </x-dialog>
     </div>
   </div>
@@ -181,8 +184,15 @@ export default {
   },
   created () {
     this.getAddressList()
+    this.getShopAgreement()
   },
   methods: {
+    async getShopAgreement () {
+      const res = await this.$http.get(`/ShopAgreement?ProtocalType=6&ShopCertificateID=0`)
+      if (res.data.Code === 100000) {
+        console.log(res)
+      }
+    },
     showTips () {
       this.isShowTips = true
     },
