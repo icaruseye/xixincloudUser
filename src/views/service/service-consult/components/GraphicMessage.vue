@@ -1,31 +1,37 @@
 <template>
-  <div :class="['container','clearfix', originator+'_container']">
+  <div :class="['container', 'clearfix', originator+'_container']">
     <img :src="avatar | transformImgUrl" class="avatar" alt="">
-    <!-- 只有图片的类型 -->
-    <div v-if="MsgType === 2" :class="[originator+'_imgChat_msg']">
-      <div class="thumbs_container">
-        <img :src="Content | transformImgUrl" @click="previewImage(0)" class="previewer-img" :class="[imgGroupClass]" @load="onloaded">
+    <div :class="[originator+'_textChat_msg', 'content_container']">
+      <h4 class="msg_title">
+        <template v-if="MsgType === 5">
+          图文咨询
+        </template>
+        <template v-if="MsgType === 6">
+          咨询结果
+        </template>
+      </h4>
+      <p v-if="MsgType === 5" class="serviceID_p">
+        服务单号：{{Content.ServiceID}}
+      </p>
+      <div class="msg_text_container">
+        {{Content.ReserveRemark}}
       </div>
-      <div v-transfer-dom>
-        <previewer ref="previewer" :list="[{src: Content}]" :options="options"></previewer>
+      <div class="msg_imsg_container">
+        <image-preview-item v-if="MsgType === 5" :list="Content.ReserveImgs" @onloaded="onloaded"></image-preview-item>
+        <image-preview-item v-if="MsgType === 6" :list="Content.ServiceImgs" @onloaded="onloaded"></image-preview-item>
       </div>
-    </div>
-    <!-- 文本 -->
-    <div v-if="MsgType === 1" :class="[originator+'_textChat_msg', (IsServantReceive === 0) ?'yellow_textChat':'']">
-      <div v-if="Content" class="msg_text_container">
-        {{Content}}
+      <div v-if="MsgType === 6" class="msg_link_btn" @click="showComment">
+        去评价
+        <i class="iconfont icon-jiantouyou"></i>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { Previewer, TransferDom } from 'vux'
+import ImagePreviewItem from '@/components/ImagePreViewItem'
 export default {
-  directives: {
-    TransferDom
-  },
   components: {
-    Previewer
+    ImagePreviewItem
   },
   props: {
     avatar: {
@@ -37,8 +43,8 @@ export default {
       default: 0
     },
     Content: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     },
     MsgType: {
       type: Number,
@@ -48,32 +54,21 @@ export default {
   computed: {
     originator () {
       return (this.IsServantReceive === 1) ? 'to' : 'from'
-    },
-    imgGroupClass () {
-      return `preview_image_${Math.floor(Math.random() * 9999 + 1000)}`
-    },
-    options () {
-      const that = this
-      return {
-        getThumbBoundsFn (index) {
-          let thumbnail = document.querySelectorAll(`.${that.imgGroupClass}`)[index]
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
-      }
     }
   },
+  created () {
+  },
   methods: {
-    previewImage (index) {
-      this.$refs.previewer.show(index)
-    },
     onloaded () {
       this.$emit('onloaded')
+    },
+    showComment () {
+      this.$emit('showComment')
     }
   }
 }
 </script>
+
 <style lang="less" scoped>
 .container
 {
@@ -103,6 +98,16 @@ export default {
     left: 0;
   }
 }
+.content_container
+{
+  min-width: 200px;
+}
+.serviceID_p
+{
+  padding: 0 15px;
+  font-size: 12px;
+  color: #999;
+}
 .to_textChat_msg,
 .from_textChat_msg
 {
@@ -125,6 +130,13 @@ export default {
     border-style: solid;
     border-width: 1px;
   }
+  .msg_title
+  {
+    color: #3AC7F5;
+    font-size: 16px;
+    margin-bottom: 5px;
+    padding: 0 15px;
+  }
   .msg_text_container
   {
     margin-bottom: 10px;
@@ -132,6 +144,26 @@ export default {
     font-size: 14px;
     text-align: justify;
     color: #666;
+  }
+  .msg_imsg_container
+  {
+    margin-bottom: 10px;
+    padding: 0 15px;
+  }
+  .msg_link_btn
+  {
+    height: 32px;
+    line-height: 32px;
+    font-size: 12px;
+    color: #999;
+    padding: 0 15px;
+    border-top: 1px solid #E3F8F7;
+    .iconfont
+    {
+      font-size: 12px;
+      float: right;
+      color: #999;
+    }
   }
 }
 .to_textChat_msg
@@ -163,4 +195,7 @@ export default {
   }
 }
 
+
 </style>
+
+

@@ -51,12 +51,23 @@ export default {
       })
     },
     sendTextMsg () {
+      if (this.msg.length <= 0) {
+        this.$vux.toast.show({
+          text: '消息不可为空',
+          position: 'bottom',
+          type: 'text'
+        })
+        return false
+      }
       const msg = {
-        originator: 'to',
-        text: this.msg
+        IsServantReceive: 1,
+        MsgType: 1,
+        Content: this.msg
       }
       this.msg = ''
-      this.$refs.chatInput.focus()
+      if (!this.emojiContainerShow) {
+        this.$refs.chatInput.focus()
+      }
       this.$emit('sendMsg', msg)
     },
     async uploadImg (e) {
@@ -76,22 +87,25 @@ export default {
           that.imgUploadProgress = (progressEvent.loaded / progressEvent.total * 100 | 0)
         }
       }
-      let reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = function (e) {
-        const msg = {
-          originator: 'to',
-          Imgs: this.result
-        }
-        that.$emit('sendMsg', msg)
-      }
-      e.target.value = ''
       try {
-        // that.$vux.loading.show(that.imgUploadProgress + '%')
-        await axios(options)
-        // that.$vux.loading.hide()
+        that.$vux.loading.show('发送中')
+        const res = await axios(options)
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function (e) {
+          const msg = {
+            IsServantReceive: 0,
+            MsgType: 2,
+            Content: this.result,
+            Image: res.data.data.objectId
+          }
+          that.$emit('sendMsg', msg)
+        }
+        e.target.value = ''
+        that.$vux.loading.hide()
       } catch (error) {
-        this.$vux.toast.text('网络错误，上传失败')
+        that.$vux.loading.hide()
+        this.$vux.toast.text('网络异常，发送失败')
       }
     },
     checkSize (file, e) {
@@ -191,7 +205,7 @@ export default {
       border-radius: 5px;
       outline: none;
       -webkit-tap-highlight-color: rgba(0,0,0,0);
-      background-color: #3ac7f5
+      background-color: #3ecccc
     }
   }
 }

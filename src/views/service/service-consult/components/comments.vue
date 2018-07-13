@@ -67,7 +67,11 @@ export default {
   },
   methods: {
     submit () {
-      console.log('submit')
+      if (this.exceedText) {
+        this.$vux.toast.text('备注字数超出限制')
+        return false
+      }
+      this.$emit('onSubmit')
     },
     limitCount (max) {
       this.exceedText = this.Discription.length > max

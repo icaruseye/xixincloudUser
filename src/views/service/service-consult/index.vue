@@ -2,7 +2,7 @@
   <div>
     <sticky
       :check-sticky-support="true">
-      <xx-step-bar step="1">
+      <xx-step-bar :step="detail.State | stepFilter">
         <xx-step-items slot="items">
           预约
         </xx-step-items>
@@ -15,14 +15,14 @@
       </xx-step-bar>
     </sticky>
     <!-- 预约 -->
-    <div class="reserve-wrap" style="padding-bottom:60px" v-if="state === 1">
+    <div class="reserve-wrap" style="padding-bottom:60px" v-if="isMission === 0">
       <xx-cell-items label="服务项" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="text-align: right;font-size:13px;color: #999">图文咨询</div>
       </xx-cell-items>
       <xx-cell-items label="病情症状或备注" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div class="service_remark_textarea_container">
-          <textarea v-model="reqParams.Discription" class="service_remark_textarea" placeholder="请输入备注" @keyup="limitCount(200)"></textarea>
-          <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.Discription.length}} / 200</span>
+          <textarea v-model="reqParams.ReserveRemark" class="service_remark_textarea" placeholder="请输入备注" @keyup="limitCount(200)"></textarea>
+          <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.ReserveRemark.length}} / 200</span>
         </div>
       </xx-cell-items>
       <xx-cell-items label="相关医嘱病历图片上传" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
@@ -36,38 +36,56 @@
       </xx-cell-items>
     </div>
     <!-- 图文咨询 -->
-    <div class="content_container" style="padding: 15px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="state === 2">
+    <div class="content_container" style="padding: 15px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="isMission === 1">
       <system-msg-item>
         温馨提示：服务者的回复仅供参考，不能作为诊断及医疗依据
       </system-msg-item>
-      <div v-for="(item, index) in messageList" :key="index">
-        <system-msg-item v-if="item.time" msgType="time" class="mgt25">
-          {{item.time}}
-        </system-msg-item>
-        <text-chat-item
-          :originator="item.originator"
-          class="mgt10"
-          :avatar="userAccount.Avatar"
-          :text="item.text"
-          :imgs="item.Imgs"
-          :title="item.title"
-          :linkName="item.linkName"
-          @onloaded = "scrollToBottom"
-        >
-        </text-chat-item>
-      </div>
+      <a v-if="pageIndex < totalPagesCount" href="javascript:" class="moreMessage_text" @click="moreMessage">
+        <i class="icon-clock iconfont"></i>
+        查看更多消息
+      </a>
+      <template v-if="messageList.length > 0">
+        <div v-for="(item, index) in messageList" :key="index">
+          <system-msg-item v-if="item.SendTime" msgType="time" class="mt25px">
+            {{item.SendTime | timeFormat}}
+          </system-msg-item>
+          <text-chat-item
+            v-if="item.MsgType === 1 || item.MsgType === 2"
+            :IsServantReceive="item.IsServantReceive"
+            class="mgt10"
+            :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
+            :Content="item.Content"
+            :MsgType="item.MsgType"
+            @onloaded = "scrollToBottom"
+          >
+          </text-chat-item>
+          <graphic-message 
+            v-if="item.MsgType === 5 || item.MsgType === 6"
+            class="mgt10"
+            :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
+            :IsServantReceive="item.IsServantReceive"
+            :Content="detail"
+            @onloaded = "scrollToBottom"
+            @showComment="showCommentPanel = true"
+            :MsgType="item.MsgType"
+          >
+          </graphic-message>
+        </div>
+      </template>
     </div>
-    <!-- 按钮 -->
-    <!-- <send-msg-bar @changeHeight="changePaddingBottom" @sendMsg="sendMsg"></send-msg-bar> -->
-    <div>
+    <!-- 提交按钮 -->
+    <div v-if="isMission === 0">
       <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">提交</button>
     </div>
-    <!-- <div class="btn-bar">
-      <button type="button" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;">投诉</button>
-      <button type="button" class="weui-btn weui-btn_primary"><i class="iconfont icon-xiaoxi"></i>查看服务者详情</button>
-    </div> -->
-    <!-- 评价 -->
-    <comments v-model="showCommentPanel" @confirmCancel="cancelComments"></comments>
+    <!-- 聊天按钮 -->
+    <send-msg-bar v-if="detail.State === 0 || detail.State === 3" @changeHeight="changePaddingBottom" @sendMsg="sendMsg"></send-msg-bar>
+    <!-- 投诉按钮 -->
+    <div class="btn-bar" v-if="detail.State === 4">
+      <button type="button" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;" @click="complaint">投诉</button>
+      <button type="button" class="weui-btn weui-btn_primary" @click="toServant"><i class="iconfont icon-xiaoxi"></i>查看服务者详情</button>
+    </div>
+    <!-- 评价弹层 -->
+    <comments v-model="showCommentPanel" @confirmCancel="cancelComments" @onSubmit="submitComments"></comments>
   </div>
 </template>
 
@@ -77,6 +95,7 @@ import { mapGetters } from 'vuex'
 import SystemMsgItem from './components/systemMsgItem'
 import TextChatItem from './components/textChatItem'
 import SendMsgBar from './components/sendMsgBar'
+import GraphicMessage from './components/GraphicMessage'
 import comments from './components/comments'
 export default {
   components: {
@@ -84,107 +103,195 @@ export default {
     comments,
     SystemMsgItem,
     TextChatItem,
-    SendMsgBar
+    SendMsgBar,
+    GraphicMessage
+  },
+  filters: {
+    stepFilter (val = 0) {
+      switch (val) {
+        case 0: {
+          return '1'
+        }
+        case 3: {
+          return '2'
+        }
+        case 4: {
+          return '3'
+        }
+      }
+    }
   },
   data () {
     return {
-      state: 2,
+      isMission: 0,
+      pageIndex: 1,
+      totalPagesCount: 0,
       boxPaddingBottom: 82,
       submitDisable: false,
       exceedText: false,
       showCommentPanel: false,
       imgList: [],
       reqParams: {
-        Discription: '',
-        Imgs: ''
+        ReserveRemark: '',
+        ReserveImg: ''
       },
-      messageList: [
-        {
-          originator: 'to',
-          time: '2018年07月4日12:21:05',
-          text: '好的，请稍等一下。好的，请稍等一下。好的，请稍等一下。'
-        },
-        {
-          originator: 'from',
-          title: '图文咨询',
-          time: '2018年07月4日12:21:05',
-          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
-          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
-        },
-        {
-          originator: 'from',
-          title: '图文咨询',
-          time: '2018年07月4日12:21:05',
-          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
-          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
-        },
-        {
-          originator: 'from',
-          title: '图文咨询',
-          time: '2018年07月4日12:21:05',
-          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
-          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
-        },
-        {
-          originator: 'from',
-          title: '图文咨询',
-          time: '2018年07月4日12:21:05',
-          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
-          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
-        },
-        {
-          originator: 'from',
-          title: '图文咨询',
-          time: '2018年07月4日12:21:05',
-          text: '目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。',
-          Imgs: 'http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132,http://thirdwx.qlogo.cn/mmopen/vi_32/lDJ7C7uBGLbIwu6QHCoYs9BQ2be15GTILiaajhr1dbXuZMSptQLNm6uCBWgOiaDZv7GE4K7ItYUBAbYkUfL9Gmzg/132'
-        }
-      ]
+      messageList: [],
+      detail: {},
+      FromAvatar: ''
     }
   },
   computed: {
     ...mapGetters([
       'userAccount',
       'userInfo'
-    ])
+    ]),
+    ID () {
+      return this.$route.params.id || ''
+    }
   },
   mounted () {
-    this.init()
+    this.isMission = +this.$route.query.isMission
+    if (+this.$route.query.isMission !== 0) {
+      this.init().then(() => {
+        const rotation = setInterval(() => {
+          this.rotationMessageList()
+        }, 5000)
+        this.$once('hook:beforeDestroy', () => {
+          clearInterval(rotation)
+        })
+      })
+    }
   },
   methods: {
-    // 提交前弹窗确认
-    submit () {
-      this.showCommentPanel = true
+    // 创建咨询
+    async submit () {
+      const that = this
       if (this.exceedText) {
         this.$vux.toast.text('备注字数超出限制')
         return false
       }
+      this.submitDisable = true
+      const res = await this.$http.post(`/Consult?id=${this.ID}`, this.reqParams)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '提交成功',
+          time: 500,
+          onHide () {
+            that.isMission = 1
+            that.$router.replace(`/service/consult/${res.data.Data.ID}?isMission=1`)
+            that.init()
+          }
+        })
+        this.submitDisable = false
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+        this.submitDisable = false
+      }
     },
-    limitCount (max) {
-      this.exceedText = this.reqParams.Discription.length > max
+    // 初始化
+    async init () {
+      this.getMissionDetail().then(result => {
+        if (result.Code === 100000) {
+          this.detail = result.Data
+        }
+      })
+      this.getMessageList().then(result => {
+        if (result.Code === 100000) {
+          this.messageList = result.Data.ContentList
+          this.FromAvatar = result.Data.Avatar
+          this.totalPagesCount = result.Data.totalPagesCount
+          this.scrollToBottom()
+        }
+      })
     },
+    // 获取任务详情
+    async getMissionDetail () {
+      const res = await this.$http.get(`/QueryConsult?missionId=${this.ID}`)
+      return res.data
+    },
+    // 获取消息列表
+    async getMessageList () {
+      const res = await this.$http.get(`/QueryConsultDialog?missionId=${this.ID}&pageIndex=${this.pageIndex}`)
+      return res.data
+    },
+    // 轮训消息
+    async rotationMessageList () {
+      const res = await this.$http.get(`/GraphicConsultationChat?missionID=${this.ID}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.length > 0) {
+          this.messageList.push(...res.data.Data)
+          if (document.documentElement.clientHeight + document.documentElement.scrollTop >= document.querySelector('body').scrollHeight - 20) {
+            this.scrollToBottom()
+          } else {
+            this.$vux.toast.show({
+              text: '滚到底部查看新消息',
+              position: 'bottom',
+              type: 'text',
+              width: '12em'
+            })
+          }
+        }
+      }
+    },
+    // 更多的消息
+    moreMessage () {
+      this.pageIndex += 1
+      this.getMessageList().then(result => {
+        this.messageList = [
+          ...result.Data.ContentList,
+          ...this.messageList
+        ]
+      })
+    },
+    // 提交评价
+    async submitComments () {
+      const res = this.$http.get(``)
+      if (res.data.Code === 100000) {
+        console.log(res.data.Data)
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 提交用户发送内容
+    async sendMsg (msg) {
+      msg.MissionID = this.ID
+      const res = await this.$http.post(`/Chat`, msg)
+      if (res.data.Code === 100000) {
+        console.log(res.data.Data)
+        this.messageList.push(msg)
+        this.scrollToBottom()
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 创建任务上传图片
     onUpdate (id) {
       console.log(id.join(','))
-      this.reqParams.Imgs = id.join(',')
+      this.reqParams.ReserveImg = id.join(',')
     },
+    // 文本域字数限制
+    limitCount (max) {
+      this.exceedText = this.reqParams.ReserveRemark.length > max
+    },
+    // 取消评价
     cancelComments () {
       console.log('cancelComments')
     },
-    sendMsg (msg) {
-      this.messageList.push(msg)
-      this.scrollToBottom()
-    },
+    // 滚到底部
     scrollToBottom () {
       this.$nextTick(() => {
         document.body.scrollTop = document.documentElement.scrollTop = document.querySelector('body').scrollHeight
       })
     },
-    init () {
-      this.scrollToBottom()
-    },
     changePaddingBottom (height) {
       this.boxPaddingBottom = (height + 30)
       this.scrollToBottom()
+    },
+    toServant () {
+      this.$router.push(`/servant/service/${this.ID}`)
+    },
+    complaint () {
+      this.$router.push(`/service/complaint/${this.ID}`)
     }
   }
 }
@@ -273,5 +380,13 @@ export default {
 .to_imgChat_msg .thumbs_container
 {
   float: right;
+}
+.moreMessage_text
+{
+  font-size: 14px;
+  text-align: center;
+  display: block;
+  padding: 20px 0;
+  color: #3ac7f5
 }
 </style>

@@ -34,10 +34,11 @@
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
-                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
+                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
                     </div>
                     <div class="btn">
-                      <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
+                      <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">预约</button>
+                      <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">咨询</button>
                     </div>
                   </div>
                 </template>
@@ -72,7 +73,8 @@
                         <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
                       </div>
                       <div class="btn">
-                      <button @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name)">预约</button>
+                      <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">预约</button>
+                      <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">咨询</button>
                       </div>
                     </div>
                   </template>
@@ -101,18 +103,18 @@
       <div class="weui-panel" style="margin-top:0">
         <div class="weui-list_container">
           <template v-for="(item, index) in dataList">
-            <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type)">
+            <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
               <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                 </div>
                 <div class="servant">护士：{{item.ServantName}}</div>
-                <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 1">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
-                <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 1 && item.UseType !== 2">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
+                <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0 && item.UseType !== 2">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->
-                <div class="describe" v-if="item.Type === 1">{{item.ViewTime}}</div>
-                <div class="describe" v-if="item.Type === 0">下单时间：{{item.CreateTime | timeFormat('YYYY-MM-DD HH:mm')}}</div>
+                <div class="describe" v-if="item.Type === 1 && item.UseType !== 2">{{item.ViewTime}}</div>
+                <div class="describe" v-if="item.Type === 0">下单时间：{{item.CreateTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -131,7 +133,7 @@
       <div class="weui-panel">
         <div class="weui-list_container">
           <template v-for="(item, index) in dataListDone">
-            <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type)">
+            <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
               <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
@@ -163,11 +165,12 @@
 </template>
 
 <script>
-import { Sticky, dateFormat } from 'vux'
+import util from '@/plugins/util'
+import { Sticky } from 'vux'
 export default {
   filters: {
-    timeFormat (value, format = 'YYYY-MM-DD HH:mm:ss') {
-      return dateFormat(new Date(value), format)
+    timeFormat (value) {
+      return util.timeFormat(value)
     }
   },
   components: {
@@ -304,8 +307,13 @@ export default {
         this.$vux.toast.text('出错了')
       }
     },
-    missionDetail (id, type) {
-      this.$router.push(`/service/in/${id}?type=${type}`)
+    missionDetail (id, type, useType) {
+      if (useType === 1) {
+        this.$router.push(`/service/in/${id}?type=${type}`)
+      }
+      if (useType === 2) {
+        this.$router.push(`/service/consult/${id}?isMission=1`)
+      }
     },
     changeChecker (index) {
       this.checkerIndex = index
@@ -317,8 +325,13 @@ export default {
     toDetail (id) {
       this.$router.push(`/service/in/${id}`)
     },
-    toReserve (id, servant, name) {
-      this.$router.push(`/service/reserve/${id}?servant=${servant}&name=${name}`)
+    toReserve (id, servant, name, useType) {
+      if (useType === 1) {
+        this.$router.push(`/service/reserve/${id}?servant=${servant}&name=${name}`)
+      }
+      if (useType === 2) {
+        this.$router.push(`/service/consult/${id}?isMission=0`)
+      }
     }
   }
 }
