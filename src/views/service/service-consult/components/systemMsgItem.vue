@@ -31,6 +31,7 @@ export default {
   }
   .time_container
   {
+    margin-top: 10px;
     text-align: center;
     font-size: 12px;
     color: #999

@@ -19,9 +19,11 @@
       <div class="msg_text_container" v-if="MsgType === 6">
         {{Content.Result}}
       </div>
-      <div class="msg_imsg_container">
-        <image-preview-item v-if="MsgType === 5" :list="Content.ReserveImgs" @onloaded="onloaded"></image-preview-item>
-        <image-preview-item v-if="MsgType === 6" :list="Content.ServiceImgs" @onloaded="onloaded"></image-preview-item>
+      <div class="msg_imsg_container" v-if="MsgType === 5 && Content.ReserveImgs">
+        <image-preview-item :list="Content.ReserveImgs" @onloaded="onloaded"></image-preview-item>
+      </div>
+      <div class="msg_imsg_container" v-if="MsgType === 6 && Content.ServiceImgs">
+        <image-preview-item :list="Content.ServiceImgs" @onloaded="onloaded"></image-preview-item>
       </div>
       <div v-if="MsgType === 6 && State === 4" class="msg_link_btn" @click="showComment">
         去评价

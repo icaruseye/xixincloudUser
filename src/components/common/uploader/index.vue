@@ -22,7 +22,7 @@
                 </li>
               </template>
             </ul>
-            <div class="weui-uploader__input-box" v-show="count !== limit">
+            <div class="weui-uploader__input-box" v-show="count < limit">
                 <input class="weui-uploader__input" type="file" @change="change">
             </div>
         </div>
@@ -105,7 +105,7 @@ export default {
         }
       }
       this.upload(_img)
-
+      console.log(this.count)
       e.target.value = ''
     },
     async upload (_img) {
@@ -147,14 +147,15 @@ export default {
     removeImg (index) {
       this.list.splice(index, 1)
       this.guid.splice(index, 1)
-      this.count--
+      this.count -= 1
+      console.log(this.count)
       this.$emit('onUpdate', this.guid)
     },
     checkCount (e) {
       if (this.isAvatar) {
         return true
       }
-      if (this.count === this.limit) {
+      if (this.count > this.limit) {
         AlertModule.show({
           title: '提示',
           content: '上传图片张数已达上限'

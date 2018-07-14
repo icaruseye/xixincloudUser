@@ -30,7 +30,7 @@
           class="upload"
           :maxSize="1024 * 1024 * 5"
           :imgList="imgList"
-          :limit="3"
+          :limit="9"
           @onUpdate="onUpdate"
         ></xx-uploader>
       </xx-cell-items>
@@ -40,7 +40,7 @@
       <system-msg-item>
         温馨提示：服务者的回复仅供参考，不能作为诊断及医疗依据
       </system-msg-item>
-      <a v-if="pageIndex < totalPagesCount" href="javascript:" class="moreMessage_text" @click="moreMessage">
+      <a v-if="messageId !== -1" href="javascript:" class="moreMessage_text" @click="moreMessage">
         <i class="icon-clock iconfont"></i>
         查看更多消息
       </a>
@@ -56,7 +56,6 @@
             :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
             :Content="item.Content"
             :MsgType="item.MsgType"
-            @onloaded = "scrollToBottom"
           >
           </text-chat-item>
           <graphic-message 
@@ -65,7 +64,6 @@
             :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
             :IsServantReceive="item.IsServantReceive"
             :Content="detail"
-            @onloaded = "scrollToBottom"
             @showComment="showCommentPanel"
             :MsgType="item.MsgType"
             :State="detail.State"
@@ -128,8 +126,7 @@ export default {
   data () {
     return {
       isMission: 0,
-      pageIndex: 1,
-      totalPagesCount: 0,
+      messageId: 0,
       boxPaddingBottom: 82,
       submitDisable: false,
       exceedText: false,
@@ -204,7 +201,7 @@ export default {
         if (result.Code === 100000) {
           this.messageList = result.Data.ContentList
           this.FromAvatar = result.Data.Avatar
-          this.totalPagesCount = result.Data.totalPagesCount
+          this.messageId = result.Data.MessageID
           this.scrollToBottom()
         }
       })
@@ -216,16 +213,22 @@ export default {
     },
     // 获取消息列表
     async getMessageList () {
-      const res = await this.$http.get(`/QueryConsultDialog?missionId=${this.ID}&pageIndex=${this.pageIndex}`)
+      const res = await this.$http.get(`/QueryConsultDialog?missionId=${this.ID}&messageId=${this.messageId}`)
       return res.data
     },
     // 轮训消息
     async rotationMessageList () {
       const res = await this.$http.get(`/GraphicConsultationChat?missionID=${this.ID}`)
       if (res.data.Code === 100000) {
-        if (res.data.Data.length > 0) {
-          this.messageList.push(...res.data.Data)
-          if (document.documentElement.clientHeight + document.documentElement.scrollTop >= document.querySelector('body').scrollHeight - 20) {
+        if (res.data.Data && res.data.Data.length > 0) {
+          this.messageList = [
+            ...this.messageList,
+            ...res.data.Data
+          ]
+          console.log(document.documentElement.clientHeight + document.body.scrollTop)
+          console.log(document.body.scrollTop)
+          console.log(document.querySelector('body').scrollHeight - 20)
+          if ((document.documentElement.clientHeight + document.body.scrollTop) >= document.querySelector('body').scrollHeight - 100) {
             this.scrollToBottom()
           } else {
             this.$vux.toast.show({
@@ -240,8 +243,8 @@ export default {
     },
     // 更多的消息
     moreMessage () {
-      this.pageIndex += 1
       this.getMessageList().then(result => {
+        this.messageId = result.Data.MessageID
         this.messageList = [
           ...result.Data.ContentList,
           ...this.messageList
@@ -257,8 +260,8 @@ export default {
         this.$vux.toast.show({
           text: '评价成功',
           onHide () {
-            that.isShowCommentPanel = false
             that.init()
+            that.isShowCommentPanel = false
           }
         })
       } else {

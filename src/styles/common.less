@@ -49,3 +49,37 @@ textarea {
   text-overflow:ellipsis;
   white-space: nowrap;
 }
+
+// 聊天气泡内的样式
+.from_textChat_msg,
+.to_textChat_msg
+{
+  .thumbs_container
+  {
+  padding: 0 !important;
+  img:last-child
+  {
+    margin-right: 0
+  }
+  }
+}
+.to_imgChat_msg,
+.from_imgChat_msg
+{
+  padding-top: 10px;
+  .thumbs_container{
+    height: 120px;
+    padding-top: 0 !important;
+    img
+    {
+      width: auto !important;
+      height: 100% !important;
+      max-width: 100%;
+      border-radius: 5px;
+    }
+  }
+}
+.to_imgChat_msg .thumbs_container
+{
+  float: right;
+}

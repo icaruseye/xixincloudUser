@@ -2,7 +2,7 @@
   <div :class="['container','clearfix', originator+'_container']">
     <img :src="avatar | transformImgUrl" class="avatar" alt="">
     <!-- 只有图片的类型 -->
-    <div v-if="MsgType === 2" :class="[originator+'_imgChat_msg']">
+    <div v-if="MsgType === 2" :class="[originator+'_imgChat_msg']" class="clearfix">
       <div class="thumbs_container">
         <img :src="Content | transformImgUrl" @click="previewImage(0)" class="previewer-img" :class="[imgGroupClass]" @load="onloaded">
       </div>
@@ -132,6 +132,7 @@ export default {
     font-size: 14px;
     text-align: justify;
     color: #666;
+    word-break: break-all;
   }
 }
 .to_textChat_msg
@@ -143,16 +144,6 @@ export default {
     border-color: #eee #eee transparent transparent
   }
 }
-.yellow_textChat
-{
-  background-color: #FFEDD1;
-  border: 1px solid #FFD797;
-  &::after
-  {
-    background-color: #FFEDD1;
-    border-color: #FFD797 #FFD797 transparent transparent
-  }
-}
 .from_textChat_msg
 {
   float: left;
@@ -162,5 +153,14 @@ export default {
     border-color: transparent transparent #eee #eee
   }
 }
-
+.yellow_textChat
+{
+  background-color: #FFEDD1;
+  border: 1px solid #FFD797;
+  &::after
+  {
+    background-color: #FFEDD1;
+    border-color: transparent transparent #FFD797 #FFD797
+  }
+}
 </style>

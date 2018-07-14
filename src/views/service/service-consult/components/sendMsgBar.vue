@@ -7,7 +7,6 @@
       </label>
       <div class="input_control_box">
         <input type="text"
-         style="background:#fff;"
          @focus="emojiContainerShow = false"
          ref="chatInput"
          v-model="msg">
@@ -40,6 +39,9 @@ export default {
     emojiContainerShow () {
       this.operContainerHeight()
     }
+  },
+  props: {
+    missionID: ''
   },
   methods: {
     chooseFace (face) {
@@ -80,7 +82,7 @@ export default {
       fd.append('fileUpload', file)
       var options = {
         method: 'post',
-        url: `${process.env.IMAGE_HOST}/File/Upload`,
+        url: `${process.env.IMG_PATH}/File/Upload`,
         data: fd,
         timeout: 15000,
         onUploadProgress: function (progressEvent) {
@@ -94,7 +96,7 @@ export default {
         reader.readAsDataURL(file)
         reader.onload = function (e) {
           const msg = {
-            IsServantReceive: 0,
+            IsServantReceive: 1,
             MsgType: 2,
             Content: this.result,
             Image: res.data.data.objectId
@@ -128,6 +130,7 @@ export default {
   right: 0;
   background-color: #fff;
 }
+
 .oper_container
 {
   display: flex;
@@ -176,7 +179,8 @@ export default {
       border-radius: 0;
       font-size: 14px;
       box-sizing: border-box;
-      -webkit-tap-highlight-color: rgba(0,0,0,0)
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      background: #fff;
     }
   }
   .emoji_show_container

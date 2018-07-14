@@ -7,7 +7,7 @@ import router from './router'
 import store from './store/index'
 import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
-import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin } from 'vux'
+import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin } from 'vux'
 import xxComponents from './components/common'
 import http from '@/api'
 
@@ -18,6 +18,7 @@ Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(registryPopup)
+Vue.use(LoadingPlugin)
 Vue.component('x-dialog', XDialog)
 
 FastClick.attach(document.body)
@@ -25,17 +26,12 @@ Vue.prototype.$http = http
 
 Vue.filter('transformImgUrl', function (val) {
   if (!val) return
-  if (val.indexOf('http') === -1) {
-    if (val.indexOf('Upload') === -1) {
-      // 值为id
-      return `${process.env.IMG_PATH}/File/GetImage/${val}`
-    } else {
-      // 第三种情况
-      return val
-    }
+  if (val.indexOf('http') === -1 && val.indexOf('Upload') === -1 && val.indexOf('base64') === -1) {
+    return `${process.env.IMG_PATH}/File/GetImage/${val}`
+  } else {
+    // 值为完整url
+    return val
   }
-  // 值为完整url
-  return val
 })
 
 Vue.filter('timeFormat', function (value = '') {
