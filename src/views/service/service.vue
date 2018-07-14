@@ -140,7 +140,7 @@
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                 </div>
                 <div class="servant">护士：{{item.ServantName}}</div>
-                <div style="font-size:14px;color:#666;width:160px" class="of-hide">内容：{{item.Discription ? item.Discription : '没有备注消息'}}</div>
+                <div style="font-size:14px;color:#666;" class="line-clamp">服务结果：{{item.Result ? item.Result : '无内容信息'}}</div>
                 <div class="describe">完成时间：{{item.EndTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
@@ -518,5 +518,13 @@ export default {
     height: 50px;
     font-size: 50px;
   }
+}
+
+.line-clamp {
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
