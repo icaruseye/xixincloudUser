@@ -13,15 +13,22 @@
       <p v-if="MsgType === 5" class="serviceID_p">
         服务单号：{{Content.ServiceID}}
       </p>
-      <div class="msg_text_container">
+      <div class="msg_text_container" v-if="MsgType === 5">
         {{Content.ReserveRemark}}
+      </div>
+      <div class="msg_text_container" v-if="MsgType === 6">
+        {{Content.Result}}
       </div>
       <div class="msg_imsg_container">
         <image-preview-item v-if="MsgType === 5" :list="Content.ReserveImgs" @onloaded="onloaded"></image-preview-item>
         <image-preview-item v-if="MsgType === 6" :list="Content.ServiceImgs" @onloaded="onloaded"></image-preview-item>
       </div>
-      <div v-if="MsgType === 6" class="msg_link_btn" @click="showComment">
+      <div v-if="MsgType === 6 && State === 4" class="msg_link_btn" @click="showComment">
         去评价
+        <i class="iconfont icon-jiantouyou"></i>
+      </div>
+      <div v-if="MsgType === 6 && State === 5" class="msg_link_btn" @click="showComment">
+        已评价
         <i class="iconfont icon-jiantouyou"></i>
       </div>
     </div>
@@ -49,6 +56,10 @@ export default {
     MsgType: {
       type: Number,
       default: ''
+    },
+    State: {
+      type: Number,
+      default: 0
     }
   },
   computed: {

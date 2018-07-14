@@ -5,22 +5,21 @@
       v-model="modelValue">
         <div class="title">咨询结果</div>
         <div class="cells result" style="flex:1;color:#A6A6A6">
-          目前咨询结果建议，注意观察肿瘤变化情况，皮肤有无破损情况，建议最好去医院做全面检查。
+          {{Detail.Result}}
         </div>
         <!-- 待评价 -->
-        <div v-if="state === 0">
+        <div v-if="State === 4">
           <div class="cells">
             <div class="left" style="font-size:16px;color:#333;font-weight:bold">待评价</div>
-            <div class="right" style="font-size:12px">评价时间： 2018/12/12</div>
           </div>
           <div class="cells">
             <div class="left">服务评价</div>
-            <div class="right"><rater v-model="rater" :font-size="18" active-color="#F8A519"></rater></div>
+            <div class="right"><rater v-model="params.Score" :font-size="18" active-color="#F8A519"></rater></div>
           </div>
           <div style="padding:15px;">
             <div class="service_remark_textarea_container">
-              <textarea v-model="Discription" class="service_remark_textarea" placeholder="请输入备注" @keyup="limitCount(200)"></textarea>
-              <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{Discription.length}} / 200</span>
+              <textarea v-model="params.Remark" class="service_remark_textarea" placeholder="请输入备注" @keyup="limitCount(200)"></textarea>
+              <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{params.Remark.length}} / 200</span>
             </div>
             <div class="tips"><img class="ic_gth" src="@/assets/images/ic_gth.png" alt=""> 超过48小时自动默认好评</div>
           </div>
@@ -30,16 +29,16 @@
           </div>
         </div>
         <!-- 已评价 -->
-        <div v-if="state === 1">
+        <div v-if="State === 5">
           <div class="cells">
             <div class="left" style="font-size:16px;color:#333;font-weight:bold">已评价</div>
-            <div class="right" style="font-size:12px">评价时间： 2018/12/12</div>
+            <div class="right" style="font-size:12px">评价时间：{{Detail.ReviewTime | timeFormat}} </div>
           </div>
           <div style="padding:15px;">
             <div class="comments-done">
-              <div class="comment">123123123</div>
+              <div class="comment">{{Detail.Remark || '没有填写评价内容'}}</div>
               <div class="rates" style="text-align: right;">
-                <rater v-model="rater" disabled="disabled" active-color="#F8A519" :font-size="14"></rater>
+                <rater v-model="Detail.Score" disabled="disabled" active-color="#F8A519" :font-size="14"></rater>
               </div>
             </div>
           </div>
@@ -55,14 +54,23 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    State: {
+      type: Number,
+      default: 4
+    },
+    Detail: {
+      type: Object,
+      default: {}
     }
   },
   data () {
     return {
       exceedText: false,
-      rater: 3,
-      Discription: '',
-      state: 0
+      params: {
+        Score: 5,
+        Remark: ''
+      }
     }
   },
   methods: {
@@ -71,10 +79,10 @@ export default {
         this.$vux.toast.text('备注字数超出限制')
         return false
       }
-      this.$emit('onSubmit')
+      this.$emit('onSubmit', this.params)
     },
     limitCount (max) {
-      this.exceedText = this.Discription.length > max
+      this.exceedText = this.params.Remark.length > max
     }
   },
   computed: {
@@ -206,6 +214,10 @@ export default {
     height:0;
     border:10px solid #f00283;
     border-color: transparent transparent #F2F2F2 transparent;
+  }
+  .comment {
+    font-size: 14px;
+    color: #666;
   }
 }
 </style>

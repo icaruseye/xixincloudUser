@@ -66,8 +66,9 @@
             :IsServantReceive="item.IsServantReceive"
             :Content="detail"
             @onloaded = "scrollToBottom"
-            @showComment="showCommentPanel = true"
+            @showComment="showCommentPanel"
             :MsgType="item.MsgType"
+            :State="detail.State"
           >
           </graphic-message>
         </div>
@@ -80,12 +81,12 @@
     <!-- 聊天按钮 -->
     <send-msg-bar v-if="detail.State === 0 || detail.State === 3" @changeHeight="changePaddingBottom" @sendMsg="sendMsg"></send-msg-bar>
     <!-- 投诉按钮 -->
-    <div class="btn-bar" v-if="detail.State === 4">
+    <div class="btn-bar" v-if="detail.State === 4 || detail.State === 5">
       <button type="button" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;" @click="complaint">投诉</button>
       <button type="button" class="weui-btn weui-btn_primary" @click="toServant"><i class="iconfont icon-xiaoxi"></i>查看服务者详情</button>
     </div>
     <!-- 评价弹层 -->
-    <comments v-model="showCommentPanel" @confirmCancel="cancelComments" @onSubmit="submitComments"></comments>
+    <comments v-model="isShowCommentPanel" :State="detail.State" :Detail="commentsDetail" @confirmCancel="cancelComments" @onSubmit="submitComments"></comments>
   </div>
 </template>
 
@@ -118,6 +119,9 @@ export default {
         case 4: {
           return '3'
         }
+        case 5: {
+          return '3'
+        }
       }
     }
   },
@@ -129,7 +133,7 @@ export default {
       boxPaddingBottom: 82,
       submitDisable: false,
       exceedText: false,
-      showCommentPanel: false,
+      isShowCommentPanel: false,
       imgList: [],
       reqParams: {
         ReserveRemark: '',
@@ -137,7 +141,8 @@ export default {
       },
       messageList: [],
       detail: {},
-      FromAvatar: ''
+      FromAvatar: '',
+      commentsDetail: {}
     }
   },
   computed: {
@@ -244,10 +249,18 @@ export default {
       })
     },
     // 提交评价
-    async submitComments () {
-      const res = this.$http.get(``)
+    async submitComments (params) {
+      const that = this
+      params.MissionID = this.ID
+      const res = await this.$http.post('/ServantReview', params)
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
+        this.$vux.toast.show({
+          text: '评价成功',
+          onHide () {
+            that.isShowCommentPanel = false
+            that.init()
+          }
+        })
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -272,6 +285,25 @@ export default {
     // 文本域字数限制
     limitCount (max) {
       this.exceedText = this.reqParams.ReserveRemark.length > max
+    },
+    // 打开评价面板
+    async showCommentPanel () {
+      if (this.detail.State === 4) {
+        this.isShowCommentPanel = true
+      }
+      if (this.detail.State === 5) {
+        this.getComments().then(result => {
+          if (result.Code === 100000) {
+            this.commentsDetail = result.Data
+            this.isShowCommentPanel = true
+          }
+        })
+      }
+    },
+    // 获取已评价内容
+    async getComments () {
+      const res = await this.$http.get(`/ServantReview?missionID=${this.ID}`)
+      return res.data
     },
     // 取消评价
     cancelComments () {
