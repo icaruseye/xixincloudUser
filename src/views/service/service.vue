@@ -109,12 +109,12 @@
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                 </div>
-                <div class="servant">护士：{{item.ServantName}}</div>
+                <div class="servant">服务人员：{{item.ServantName}}</div>
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 1 && item.UseType !== 2">内容：{{item.Result ? item.Result.substr(0,20) : '没有备注消息'}}</div>
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0 && item.UseType !== 2">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->
                 <div class="describe" v-if="item.Type === 1 && item.UseType !== 2">{{item.ViewTime}}</div>
-                <div class="describe" v-if="item.Type === 0">下单时间：{{item.CreateTime | timeFormat}}</div>
+                <div class="describe">下单时间：{{item.CreateTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -139,7 +139,7 @@
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
                 </div>
-                <div class="servant">护士：{{item.ServantName}}</div>
+                <div class="servant">服务人员：{{item.ServantName}}</div>
                 <div style="font-size:14px;color:#666;" class="line-clamp">服务结果：{{item.Result ? item.Result : '无内容信息'}}</div>
                 <div class="describe">完成时间：{{item.EndTime | timeFormat}}</div>
               </div>

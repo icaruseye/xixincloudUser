@@ -68,7 +68,8 @@
         *为保障服务者的利益，以上两项如有一项勾选则该服务单不可取消，请谨慎选择。勾选任一项需在服务进行完后向服务者支付相关费用。若误选可取消该单，重新下单
       </div>
       <div class="tips text">
-        预约前请仔细阅读<span @click="showTips">《预约须知》</span> ，当中包含预约规则及取消预约规则
+        <input type="checkbox" name="" v-model="fuwusuzhi" id="fuwuxuzhi">
+        <label for="fuwuxuzhi">预约前请仔细阅读<span @click="showTips">《预约须知》</span> ，当中包含预约规则及取消预约规则</label>
       </div>
     </xx-cell>
     <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">确定</button>
@@ -172,14 +173,15 @@ export default {
         Discription: '',
         NeedPill: false,
         NeedTools: false,
-        Imgs: ''
+        Imgs: '',
       },
       authText: {
         Address: {
           required: true,
           text: '上门地址'
         }
-      }
+      },
+      fuwusuzhi: false
     }
   },
   created () {
@@ -327,6 +329,14 @@ export default {
     // 提交前弹窗确认
     submit () {
       const validate = util.validateForm(this.reqParams, this.authText)
+      if (!this.fuwusuzhi) {
+        this.$vux.toast.show({
+          type: 'text',
+          width: '13em',
+          text: '需阅读并同意《预约须知》'
+        })
+        return false
+      }
       if (!validate) return false
       if (this.exceedText) {
         this.$vux.toast.text('备注字数超出限制')

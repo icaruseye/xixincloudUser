@@ -80,8 +80,8 @@
     <send-msg-bar v-if="detail.State === 0 || detail.State === 3" @changeHeight="changePaddingBottom" @sendMsg="sendMsg"></send-msg-bar>
     <!-- 投诉按钮 -->
     <div class="btn-bar" v-if="detail.State === 4 || detail.State === 5">
-      <button type="button" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;" @click="complaint">投诉</button>
-      <button type="button" class="weui-btn weui-btn_primary" @click="toServant"><i class="iconfont icon-xiaoxi"></i>查看服务者详情</button>
+      <button type="button" v-if="detail.State === 4" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;" @click="complaint">投诉</button>
+      <button type="button" class="weui-btn weui-btn_primary" @click="showCommentPanel"><i class="iconfont icon-xiaoxi"></i>评价</button>
     </div>
     <!-- 评价弹层 -->
     <comments v-model="isShowCommentPanel" :State="detail.State" :Detail="commentsDetail" @confirmCancel="cancelComments" @onSubmit="submitComments"></comments>
@@ -225,9 +225,6 @@ export default {
             ...this.messageList,
             ...res.data.Data
           ]
-          console.log(document.documentElement.clientHeight + document.body.scrollTop)
-          console.log(document.body.scrollTop)
-          console.log(document.querySelector('body').scrollHeight - 20)
           if ((document.documentElement.clientHeight + document.body.scrollTop) >= document.querySelector('body').scrollHeight - 100) {
             this.scrollToBottom()
           } else {
@@ -321,9 +318,6 @@ export default {
     changePaddingBottom (height) {
       this.boxPaddingBottom = (height + 30)
       this.scrollToBottom()
-    },
-    toServant () {
-      this.$router.push(`/servant/service/${this.ID}`)
     },
     complaint () {
       this.$router.push(`/service/complaint/${this.ID}`)

@@ -11,7 +11,7 @@
     </div> -->
     <div class="item-info mgt10">
       <div class="item-info-title">注意事项</div>
-      <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；护士只提供上门输液服务，不提供相关药品；年龄不满18岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
+      <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；服务人员只提供上门输液服务，不提供相关药品；年龄不满18岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
     </div>
     <div class="item-info mgt10 tips">
       购买前请仔细阅读<span @click="showTips">《购买须知》</span> ，当中包含购买规则及退款规则

@@ -57,19 +57,14 @@ export default {
     previewImage (index) {
       this.$refs.previewer.show(index)
     },
-    transformImgUrl (imageName) {
-      if (!imageName) return
-      if (imageName.indexOf('http') === -1) {
-        if (imageName.indexOf('Upload') === -1) {
-          // 值为id
-          return 'http://xixincloud.com:6883/File/GetImage/' + imageName
-        } else {
-          // 第三种情况
-          return imageName
-        }
+    transformImgUrl (val) {
+      if (!val) return
+      if (val.indexOf('http') === -1 && val.indexOf('Upload') === -1 && val.indexOf('base64') === -1) {
+        return `${process.env.IMG_PATH}/File/GetImage/${val}`
+      } else {
+        // 值为完整url
+        return val
       }
-      // 值为完整url
-      return imageName
     }
   }
 }
