@@ -28,7 +28,10 @@
               <div class="weui-list_container" :key="cIndex">
                 <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
                   <div class="weui-list_item" :key="mIndex">
-                    <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
+                    <div class="icon">
+                      <img v-if="mItem.OrderDetail.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
+                      <img v-if="mItem.OrderDetail.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+                    </div>
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
@@ -64,7 +67,12 @@
                 <div class="weui-list_container">
                   <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
                     <div class="weui-list_item" :key="mIndex">
-                      <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
+                      <div class="icon">
+                        <img v-if="mItem.OrderDetail.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
+                        <img v-if="mItem.OrderDetail.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+                      </div>
+                      <div class="avatar">
+                      </div>
                       <div class="mid">
                         <div style="display: flex;justify-content: space-between;align-items: baseline;">
                           <div class="title text-overflow-1">{{mItem.SingleItem.Name}}</div>
@@ -104,7 +112,10 @@
         <div class="weui-list_container">
           <template v-for="(item, index) in dataList">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
-              <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
+              <div class="avatar">
+                <img v-if="item.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
+                <img v-if="item.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+              </div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
@@ -134,7 +145,10 @@
         <div class="weui-list_container">
           <template v-for="(item, index) in dataListDone">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
-              <div class="avatar"><img src="@/assets/images/icon_picc.png" alt=""></div>
+              <div class="avatar">
+                <img v-if="item.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
+                <img v-if="item.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+              </div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
                   <div class="title text-overflow-1" style="font-weight:normal">{{item.ItemName}}</div>
@@ -221,10 +235,7 @@ export default {
           that.getAll()
           break
         case 1:
-          that.getUserReserveServiceList().then(value => {
-            that.dataList = value
-            this.flag2 = that.dataList.length === 0
-          })
+          that.getTotalWaitForConfirm()
           break
         case 2:
           that.getAllWaitForService()
@@ -240,6 +251,9 @@ export default {
     /** 查看全部 */
     async getAll () {
       const that = this
+      await that.getWaitForConfirm().then(value => {
+        that.dataList = that.dataList.concat(value)
+      })
       await that.getUserReserveServiceList().then(value => {
         that.dataList = that.dataList.concat(value)
       })
@@ -265,7 +279,22 @@ export default {
       })
       this.flag2 = that.dataList.length === 0
     },
-    /** 待确认 */
+    // 合并待确认
+    async getTotalWaitForConfirm () {
+      await this.getWaitForConfirm().then(value => {
+        this.dataList = this.dataList.concat(value)
+      })
+      await this.getUserReserveServiceList().then(value => {
+        this.dataList = this.dataList.concat(value)
+      })
+      this.flag2 = this.dataList.length === 0
+    },
+    // 获取图文待确认
+    async getWaitForConfirm () {
+      const res = await this.$http.get('/ConsultList/WaitForConfirm')
+      return res.data.Data
+    },
+    /** 获取任务待确认 */
     async getUserReserveServiceList () {
       const res = await this.$http.get('/UserReserveServiceList')
       return res.data.Data

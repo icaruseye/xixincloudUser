@@ -7,7 +7,7 @@
         <img :src="Content | transformImgUrl" @click="previewImage(0)" class="previewer-img" :class="[imgGroupClass]" @load="onloaded">
       </div>
       <div v-transfer-dom>
-        <previewer ref="previewer" :list="[{src: Content}]" :options="options"></previewer>
+        <previewer ref="previewer" :list="previewImgUrlList" :options="options"></previewer>
       </div>
     </div>
     <!-- 文本 -->
@@ -16,9 +16,15 @@
         {{Content}}
       </div>
     </div>
+    <div v-if="MsgType === 7" class="from_textChat_msg yellow_textChat">
+      <div v-if="Content" class="msg_text_container">
+        请开始你的表演
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import util from '@/plugins/util'
 import { Previewer, TransferDom } from 'vux'
 export default {
   directives: {
@@ -46,6 +52,14 @@ export default {
     }
   },
   computed: {
+    previewImgUrlList () {
+      const that = this
+      return [
+        {
+          src: util.transformImgUrl(that.Content)
+        }
+      ]
+    },
     originator () {
       return (this.IsServantReceive === 1) ? 'to' : 'from'
     },
@@ -62,6 +76,11 @@ export default {
           return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
         }
       }
+    }
+  },
+  mounted () {
+    if (this.MsgType === 7) {
+      this.$emit('initMission')
     }
   },
   methods: {

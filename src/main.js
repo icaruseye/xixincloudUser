@@ -10,6 +10,7 @@ import registryPopup from './components/common/popupTop/index'
 import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin } from 'vux'
 import xxComponents from './components/common'
 import http from '@/api'
+import util from '@/plugins/util'
 
 // 自定义组件
 Vue.use(xxComponents)
@@ -25,13 +26,7 @@ FastClick.attach(document.body)
 Vue.prototype.$http = http
 
 Vue.filter('transformImgUrl', function (val) {
-  if (!val) return
-  if (val.indexOf('http') === -1 && val.indexOf('Upload') === -1 && val.indexOf('base64') === -1) {
-    return `${process.env.IMG_PATH}/File/GetImage/${val}`
-  } else {
-    // 值为完整url
-    return val
-  }
+  return util.transformImgUrl(val)
 })
 
 Vue.filter('timeFormat', function (value = '') {

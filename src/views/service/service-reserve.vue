@@ -173,7 +173,7 @@ export default {
         Discription: '',
         NeedPill: false,
         NeedTools: false,
-        Imgs: '',
+        Imgs: ''
       },
       authText: {
         Address: {

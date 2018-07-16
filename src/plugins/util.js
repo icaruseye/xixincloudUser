@@ -102,17 +102,12 @@ export default {
   // 转换图片地址
   transformImgUrl (val) {
     if (!val) return
-    if (val.indexOf('http') === -1) {
-      if (val.indexOf('Upload') === -1) {
-        // 值为id
-        return `${process.env.IMG_PATH}/File/GetImage/${val}`
-      } else {
-        // 第三种情况
-        return val
-      }
+    if (val.indexOf('http') === -1 && val.indexOf('Upload') === -1 && val.indexOf('base64') === -1) {
+      return `${process.env.IMG_PATH}/File/GetImage/${val}`
+    } else {
+      // 值为完整url
+      return val
     }
-    // 值为完整url
-    return val
   },
   timeFormat (value = '') {
     let lastIndexOf = value.lastIndexOf('.')

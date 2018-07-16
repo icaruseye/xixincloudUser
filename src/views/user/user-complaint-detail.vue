@@ -40,6 +40,7 @@
     </div>
     <div class="cells cells_result" v-if="data.State === 3">
       <div class="title">您好，根据您和服务者所提交的资料中和判定 结果为：<span>投诉未通过</span></div>
+      <div class="content">驳回原因：{{data.FailReason}}</div>
     </div>
     <h2 class="cells_title">用户投诉内容 <span>用户提交时间：{{data.CreateTime | timeFormat}}</span></h2>
     <div class="complaint_content">

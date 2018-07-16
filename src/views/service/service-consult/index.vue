@@ -50,12 +50,13 @@
             {{item.SendTime | timeFormat}}
           </system-msg-item>
           <text-chat-item
-            v-if="item.MsgType === 1 || item.MsgType === 2"
+            v-if="item.MsgType === 1 || item.MsgType === 2 || item.MsgType === 7"
             :IsServantReceive="item.IsServantReceive"
             class="mgt10"
             :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
             :Content="item.Content"
             :MsgType="item.MsgType"
+            @initMission="initMission"
           >
           </text-chat-item>
           <graphic-message 
@@ -63,10 +64,11 @@
             class="mgt10"
             :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
             :IsServantReceive="item.IsServantReceive"
-            :Content="detail"
-            @showComment="showCommentPanel"
             :MsgType="item.MsgType"
             :State="detail.State"
+            :Content="detail"
+            @showComment="showCommentPanel"
+            @initMission="initMission"
           >
           </graphic-message>
         </div>
@@ -81,15 +83,17 @@
     <!-- 投诉按钮 -->
     <div class="btn-bar" v-if="detail.State === 4 || detail.State === 5">
       <button type="button" v-if="detail.State === 4" class="weui-btn weui-btn_primary" style="background: #F8A519;flex:1;" @click="complaint">投诉</button>
-      <button type="button" class="weui-btn weui-btn_primary" @click="showCommentPanel"><i class="iconfont icon-xiaoxi"></i>评价</button>
+      <button type="button" v-if="detail.State === 4" class="weui-btn weui-btn_primary" @click="showCommentPanel"><i class="iconfont icon-xiaoxi"></i>评价</button>
+      <button type="button" v-if="detail.State === 5" class="weui-btn weui-btn_primary" @click="showCommentPanel"><i class="iconfont icon-xiaoxi"></i>查看评价</button>
     </div>
     <!-- 评价弹层 -->
     <comments v-model="isShowCommentPanel" :State="detail.State" :Detail="commentsDetail" @confirmCancel="cancelComments" @onSubmit="submitComments"></comments>
+    <toast @click.native="scrollToBottom" v-model="showNewMessageRemind" position="bottom" width="12em" type="text">收到新的消息<i class="iconfont icon-arrow-down1"></i> </toast>
   </div>
 </template>
 
 <script>
-import { Sticky } from 'vux'
+import { Sticky, Toast } from 'vux'
 import { mapGetters } from 'vuex'
 import SystemMsgItem from './components/systemMsgItem'
 import TextChatItem from './components/textChatItem'
@@ -103,7 +107,8 @@ export default {
     SystemMsgItem,
     TextChatItem,
     SendMsgBar,
-    GraphicMessage
+    GraphicMessage,
+    Toast
   },
   filters: {
     stepFilter (val = 0) {
@@ -128,6 +133,7 @@ export default {
       isMission: 0,
       messageId: 0,
       boxPaddingBottom: 82,
+      showNewMessageRemind: false,
       submitDisable: false,
       exceedText: false,
       isShowCommentPanel: false,
@@ -181,7 +187,14 @@ export default {
           onHide () {
             that.isMission = 1
             that.$router.replace(`/service/consult/${res.data.Data.ID}?isMission=1`)
-            that.init()
+            that.init().then(() => {
+              const rotation = setInterval(() => {
+                that.rotationMessageList()
+              }, 5000)
+              that.$once('hook:beforeDestroy', () => {
+                clearInterval(rotation)
+              })
+            })
           }
         })
         this.submitDisable = false
@@ -190,13 +203,17 @@ export default {
         this.submitDisable = false
       }
     },
-    // 初始化
-    async init () {
+    // 初始化任务
+    async initMission () {
       this.getMissionDetail().then(result => {
         if (result.Code === 100000) {
           this.detail = result.Data
         }
       })
+    },
+    // 初始化
+    async init () {
+      this.initMission()
       this.getMessageList().then(result => {
         if (result.Code === 100000) {
           this.messageList = result.Data.ContentList
@@ -228,12 +245,7 @@ export default {
           if ((document.documentElement.clientHeight + document.body.scrollTop) >= document.querySelector('body').scrollHeight - 100) {
             this.scrollToBottom()
           } else {
-            this.$vux.toast.show({
-              text: '滚到底部查看新消息',
-              position: 'bottom',
-              type: 'text',
-              width: '12em'
-            })
+            this.showNewMessageRemind = true
           }
         }
       }
@@ -267,14 +279,18 @@ export default {
     },
     // 提交用户发送内容
     async sendMsg (msg) {
-      msg.MissionID = this.ID
-      const res = await this.$http.post(`/Chat`, msg)
+      const res = await this.$http.post(`/Chat`, {
+        Content: (msg.MsgType === 2) ? msg.Image : msg.Content,
+        MsgType: msg.MsgType,
+        MissionID: this.ID
+      })
       if (res.data.Code === 100000) {
         console.log(res.data.Data)
         this.messageList.push(msg)
         this.scrollToBottom()
       } else {
-        this.$vux.toast.text(res.data.Msg)
+        this.$vux.toast.text('发送失败')
+        this.init()
       }
     },
     // 创建任务上传图片
@@ -416,6 +432,6 @@ export default {
   text-align: center;
   display: block;
   padding: 20px 0;
-  color: #3ac7f5
+  color: #3ecccc;
 }
 </style>

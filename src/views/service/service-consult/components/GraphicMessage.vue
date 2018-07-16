@@ -17,7 +17,7 @@
         {{Content.ReserveRemark}}
       </div>
       <div class="msg_text_container" v-if="MsgType === 6">
-        {{Content.Result}}
+        {{Content.Result ? Content.Result : '服务人员没有填写服务结果'}}
       </div>
       <div class="msg_imsg_container" v-if="MsgType === 5 && Content.ReserveImgs">
         <image-preview-item :list="Content.ReserveImgs" @onloaded="onloaded"></image-preview-item>
@@ -69,7 +69,10 @@ export default {
       return (this.IsServantReceive === 1) ? 'to' : 'from'
     }
   },
-  created () {
+  mounted () {
+    if (this.MsgType === 6) {
+      this.$emit('initMission')
+    }
   },
   methods: {
     onloaded () {
@@ -145,7 +148,7 @@ export default {
   }
   .msg_title
   {
-    color: #3AC7F5;
+    color: #3ecccc;
     font-size: 16px;
     margin-bottom: 5px;
     padding: 0 15px;

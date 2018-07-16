@@ -5,7 +5,7 @@
       v-model="modelValue">
         <div class="title">咨询结果</div>
         <div class="cells result" style="flex:1;color:#A6A6A6">
-          {{Detail.Result}}
+          {{Detail.Result ? Detail.Result : '服务人员没有填写服务结果'}}
         </div>
         <!-- 待评价 -->
         <div v-if="State === 4">
