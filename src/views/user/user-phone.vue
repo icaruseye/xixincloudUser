@@ -20,8 +20,10 @@
     </div>
   </div>
   <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>
-  <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '50%', 'background-color': 'transparent'}">
-    <div class="dialog-content" v-html="AgreementList.Content">
+  <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': 'transparent'}">
+    <div class="tips-content">
+      <div class="title">{{AgreementList.Title}}</div>
+      <div class="content" v-html="AgreementList.Content"></div>
       <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
     </div>
   </x-dialog>
@@ -190,6 +192,7 @@ export default {
   overflow: auto;
   line-height: 2;
   text-align: left;
+  max-height: 100%;
   .title {
     font-size: 16px;
     color: #333;
@@ -212,7 +215,7 @@ export default {
 }
 
 .read-btn {
-  margin: 0 auto;
+  margin: 15px auto 0;
   width: 130px;
   height: 50px;
   line-height: 50px;
@@ -223,6 +226,27 @@ export default {
   text-align: center;
   font-size: 16px;
   color: #3ecccc;
+}
+
+.tips-content {
+  max-height: 400px;
+  padding: 10px;
+  text-align: left;
+  overflow: scroll;
+  color: #666;
+  background: #fff;
+  font-size: 15px;
+  .title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  p {
+    line-height: 1.8;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
 }
 </style>
 

@@ -101,12 +101,14 @@
     </div>
     <div v-transfer-dom>
       <popup v-model="showAddressEdit" height="100%" style="z-index:502">
-        <userAddressEdit :defaultOnly="isEmptyList" :UserAddress="{}" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+        <userAddressEdit :UserAddress="{}" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
       </popup>
     </div>
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
-        <div class="tips-content" v-html="AgreementList[5].Content">
+        <div class="tips-content">
+          <div class="title">{{AgreementList[5].Title}}</div>
+          <div v-html="AgreementList[5].Content"></div>
         </div>
         <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
           <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
