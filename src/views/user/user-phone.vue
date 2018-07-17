@@ -21,11 +21,7 @@
   </div>
   <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>
   <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '50%', 'background-color': 'transparent'}">
-    <div class="dialog-content">
-      <div class="title">患者用户服务协议</div>
-      <div class="content" style="overflow:hidden;">
-        123
-      </div>
+    <div class="dialog-content" v-html="AgreementList.Content">
       <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
     </div>
   </x-dialog>
@@ -50,7 +46,8 @@ export default {
       code: '',
       disabled_code: false,
       time: sessionStorage.getItem('AuthCodeTime') || 60,
-      userAgreement: false
+      userAgreement: false,
+      AgreementList: {}
     }
   },
   created () {
@@ -81,9 +78,9 @@ export default {
       this.showHideOnBlur = true
     },
     async getShopAgreement () {
-      const res = await this.$http.get(`/ShopAgreement?ProtocalType=4&ShopCertificateID=0`)
+      const res = await this.$http.get(`/ShopAgreement?ProtocalType=18 &ShopCertificateID=0`)
       if (res.data.Code === 100000) {
-        console.log(res)
+        this.AgreementList = res.data.Data
       }
     },
     async getCode () {

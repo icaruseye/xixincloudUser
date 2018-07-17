@@ -1,21 +1,18 @@
 <template>
   <div>
-    <sticky
-      :check-sticky-support="true">
-      <xx-step-bar :step="detail.State | stepFilter">
-        <xx-step-items slot="items">
-          预约
-        </xx-step-items>
-        <xx-step-items slot="items">
-          服务中
-        </xx-step-items>
-        <xx-step-items slot="items">
-          已完成
-        </xx-step-items>
-      </xx-step-bar>
-    </sticky>
+    <xx-step-bar :step="detail.State | stepFilter" style="position:fixed;top:0;width:100%;z-index:99">
+      <xx-step-items slot="items">
+        预约
+      </xx-step-items>
+      <xx-step-items slot="items">
+        服务中
+      </xx-step-items>
+      <xx-step-items slot="items">
+        已完成
+      </xx-step-items>
+    </xx-step-bar>
     <!-- 预约 -->
-    <div class="reserve-wrap" style="padding-bottom:60px" v-if="isMission === 0">
+    <div class="reserve-wrap" style="padding: 100px 0 60px" v-if="isMission === 0">
       <xx-cell-items label="服务项" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="text-align: right;font-size:13px;color: #999">图文咨询</div>
       </xx-cell-items>
@@ -36,7 +33,7 @@
       </xx-cell-items>
     </div>
     <!-- 图文咨询 -->
-    <div class="content_container" style="padding: 15px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="isMission === 1">
+    <div class="content_container" style="padding: 100px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="isMission === 1">
       <system-msg-item>
         温馨提示：服务者的回复仅供参考，不能作为诊断及医疗依据
       </system-msg-item>
@@ -52,7 +49,7 @@
           <text-chat-item
             v-if="item.MsgType === 1 || item.MsgType === 2 || item.MsgType === 7"
             :IsServantReceive="item.IsServantReceive"
-            class="mgt10"
+            :class="['mt10px', 'message_item_'+item.ID]"
             :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
             :Content="item.Content"
             :MsgType="item.MsgType"
@@ -61,7 +58,7 @@
           </text-chat-item>
           <graphic-message 
             v-if="item.MsgType === 5 || item.MsgType === 6"
-            class="mgt10"
+            :class="['mt10px', 'message_item_'+item.ID]"
             :avatar="(item.IsServantReceive === 0)?FromAvatar:userAccount.Avatar"
             :IsServantReceive="item.IsServantReceive"
             :MsgType="item.MsgType"
@@ -251,13 +248,18 @@ export default {
       }
     },
     // 更多的消息
-    moreMessage () {
-      this.getMessageList().then(result => {
+    async moreMessage () {
+      const prePageLastDomClass = `.message_item_${this.messageList[0].ID}`
+      const prePageLastDomTop = document.querySelector(prePageLastDomClass).offsetTop
+      await this.getMessageList().then(result => {
         this.messageId = result.Data.MessageID
         this.messageList = [
           ...result.Data.ContentList,
           ...this.messageList
         ]
+      })
+      this.$nextTick(() => {
+        document.body.scrollTop = document.documentElement.scrollTop = document.querySelector(prePageLastDomClass).offsetTop - prePageLastDomTop
       })
     },
     // 提交评价
@@ -391,7 +393,9 @@ export default {
 }
 .content_container
 {
-  padding: 15px 15px 80px
+  padding: 15px 15px 80px;
+  max-width: 100%;
+  overflow: hidden;
 }
 // 聊天气泡内的样式
 .from_textChat_msg,

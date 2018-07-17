@@ -31,7 +31,8 @@
           服务者还未确认服务时间
         </div>
         <div class="content" v-if="serviceItemInfo.Type === 1">
-          服务项：{{serviceItemInfo.ItemName}}
+          服务项：{{serviceItemInfo.ItemName}} <br/>
+          服务单号：{{serviceItemInfo.ServiceID}} <br/>
         </div>
       </xx-timeLine-items>
       <xx-timeLine-items
@@ -152,6 +153,12 @@ export default {
     this.initData()
   },
   methods: {
+    async getShopAgreement () {
+      const res = await this.$http.get(`/ShopAgreement?ProtocalType=12&ShopCertificateID=0`)
+      if (res.data.Code === 100000) {
+        console.log(res)
+      }
+    },
     async initData () {
       let url = this.$route.query.type === '0' ? `/UserReserveService/${this.$route.params.id}` : `/Mission?missionID=${this.$route.params.id}`
       const res = await this.$http.get(url)

@@ -160,6 +160,8 @@ export default {
     font-size: 14px;
     text-align: justify;
     color: #666;
+    word-wrap: break-word;
+    word-break: break-word;
   }
   .msg_imsg_container
   {

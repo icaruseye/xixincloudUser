@@ -197,6 +197,7 @@ export default {
   display: flex;
   flex-direction: row;
   .chat-item-content {
+    word-break: break-all;
     margin-left: 15px;
     background: #fff;
     border: 1px solid #f3f1f1;
@@ -222,6 +223,7 @@ export default {
     margin: 0 15px 0 10px;
     background: #90d936;
     border: 1px solid #87d02d;
+    word-break: break-all;
     &::after {
       content: "";
       position: absolute;
@@ -246,6 +248,7 @@ export default {
   line-height: 20px;
   border-radius: 4px;
   box-sizing: border-box;
+  word-break: break-all;
 }
 
 .chat-item-avatar {

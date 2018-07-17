@@ -44,7 +44,7 @@
           <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.Discription.length}} / 200</span>
         </div>
       </xx-cell-items>
-      <xx-cell-items label="相关医嘱病历图片上传" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
+      <xx-cell-items :label="AgreementList[0].Content" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <xx-uploader
           class="upload"
           :maxSize="1024 * 1024 * 5"
@@ -53,22 +53,22 @@
           @onUpdate="onUpdate1"
         ></xx-uploader>
       </xx-cell-items>
-      <div class="tips warn">* 需要服务者提供医疗/护理服务，请提供正规医院的处方、医嘱，请保障处方、医嘱的真实有效，服务者审核处方、医嘱不符合规范，或者医疗风险性较高，有权不接受您的预约。</div>
-      <xx-cell-items label="需要服务人员准备必要工具" @click.native="changeRadio1" class="noraml_cell" style="padding: 20px 0 15px 0;">
+      <div class="tips warn">{{AgreementList[1].Content}}</div>
+      <xx-cell-items :label="AgreementList[2].Content" @click.native="changeRadio1" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display: flex;justify-content: flex-end;">
           <xx-checker v-model="reqParams.NeedTools" typeName="checkbox" name="NeedTools" style="display:block;"></xx-checker>
         </div>
       </xx-cell-items>
-      <xx-cell-items label="需要服务人员准备必要药品" @click.native="changeRadio2" class="noraml_cell" style="padding: 20px 0 15px 0;">
+      <xx-cell-items :label="AgreementList[3].Content" @click.native="changeRadio2" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div style="display: flex;justify-content: flex-end;">
           <xx-checker v-model="reqParams.NeedPill" typeName="checkbox" name="NeedPill" style="display:block;"></xx-checker>
         </div>
       </xx-cell-items>
       <div class="tips warn">
-        *为保障服务者的利益，以上两项如有一项勾选则该服务单不可取消，请谨慎选择。勾选任一项需在服务进行完后向服务者支付相关费用。若误选可取消该单，重新下单
+        {{AgreementList[4].Content}}
       </div>
       <div class="tips text">
-        <input type="checkbox" name="" v-model="fuwusuzhi" id="fuwuxuzhi">
+        <input type="checkbox" name="" v-model="fuwuxuzhi" id="fuwuxuzhi">
         <label for="fuwuxuzhi">预约前请仔细阅读<span @click="showTips">《预约须知》</span> ，当中包含预约规则及取消预约规则</label>
       </div>
     </xx-cell>
@@ -106,22 +106,7 @@
     </div>
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
-        <div class="tips-content">
-          <div class="title">上门服务预约规则</div>
-          <p>1.上门服务预约规则</p>
-          <p>①	为了保障双方的人身安全，上门服务时间不得早于每日6：00，不得晚于每日21：00。 </p>
-          <p>②	需要服务者提供医疗/护理服务，请提供正规医院的处方、医嘱，请保障处方、医嘱的真实有效，服务者审核处方、医嘱不符合规范，或者医疗风险性较高，有权不接受您的预约。</p>
-          <p>③	当预约时您勾选了“需要提供医疗耗材”，服务者则会在医院购买相应的医疗耗材，服务结束时医护会把购买发票交予您，并发起付款，请您仔细查看发票及详单后支付。</p>
-          <p>2.上门服务取消规则</p>
-          <p>①服务者在未点击“生成任务”时，均可以无责取消预约单。若发现预约信息填写错误，需取消该单后重新预约。</p>
-          <p>②服务者点击“生成任务”后（预约时未勾选“需要提供医疗耗材”），用户可在距离服务者上门时间12小时前无责取消，服务者只能在上门6小时前无责取消该服务单。服务者超出无责取消时间取消，该项服务次数立即退回您的账户且平台会给予相应补偿，例如优惠券、折扣券等。用户超出无责取消时间取消，该项服务次数不予退回。</p>
-          <p>③预约服务时若勾选了“需要提供医疗耗材”，服务者在您取消服务单时可能已经为您购买了医疗耗材。为了保护服务者的权益，平台规定此类服务单原则上不论时限均不可取消。若您与服务者协商好，服务者同意您取消该服务单，您需要联系平台客服说明情况，并由客服联系您的服务者核实后，后台关闭该服务单。该项服务次数立即退回您的账户。</p>
-          <p>3.图文问诊规则</p>
-          <p>①填写预约详情页的个人现病史、既往史、过敏史等（系统会自动记录您的既往史、过敏史等，下次问诊时无需再次填写），发起问诊请求，等待服务者回复。</p>
-          <p>②问诊服务单保留时长为3小时，服务者3小时内未处理，则该单自动取消，钱款原路退回。</p>
-          <p>4.图文问诊取消规则</p>
-          <p>①在服务者未点击“生成任务”的情况下，用户可无责取消问诊单。</p>
-          <p>②服务者上线查看您的预约详情页，若您的问题超出服务者的能力范围，服务者会点击“取消任务”，填写取消原因并给您相应的建议，钱款原路退回。</p>
+        <div class="tips-content" v-html="AgreementList[5].Content">
         </div>
         <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
           <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
@@ -181,20 +166,15 @@ export default {
           text: '上门地址'
         }
       },
-      fuwusuzhi: false
+      fuwuxuzhi: false,
+      AgreementList: [{}, {}, {}, {}, {}, {}]
     }
   },
   created () {
     this.getAddressList()
-    this.getShopAgreement()
+    this.getAgreementList()
   },
   methods: {
-    async getShopAgreement () {
-      const res = await this.$http.get(`/ShopAgreement?ProtocalType=6&ShopCertificateID=0`)
-      if (res.data.Code === 100000) {
-        console.log(res)
-      }
-    },
     showTips () {
       this.isShowTips = true
     },
@@ -292,6 +272,13 @@ export default {
     onUpdate1 (id) {
       this.reqParams.Imgs = id.join(',')
     },
+    // 获取配置文字
+    async getAgreementList () {
+      const res = await this.$http.get(`/AgreementList?typeList=6,7,8,9,10,11`)
+      if (res.data.Code === 100000) {
+        this.AgreementList = res.data.Data
+      }
+    },
     // 提交预约
     async onConfirm () {
       const that = this
@@ -329,7 +316,7 @@ export default {
     // 提交前弹窗确认
     submit () {
       const validate = util.validateForm(this.reqParams, this.authText)
-      if (!this.fuwusuzhi) {
+      if (!this.fuwuxuzhi) {
         this.$vux.toast.show({
           type: 'text',
           width: '13em',

@@ -18,7 +18,7 @@
     </div>
     <div v-if="MsgType === 7" class="from_textChat_msg yellow_textChat">
       <div v-if="Content" class="msg_text_container">
-        请开始你的表演
+        服务已开始
       </div>
     </div>
   </div>
@@ -125,6 +125,7 @@ export default {
 .to_textChat_msg,
 .from_textChat_msg
 {
+  max-width: 100%;
   position: relative;
   padding-top: 10px;
   border-radius: 3px;
@@ -151,7 +152,8 @@ export default {
     font-size: 14px;
     text-align: justify;
     color: #666;
-    word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-word;
   }
 }
 .to_textChat_msg

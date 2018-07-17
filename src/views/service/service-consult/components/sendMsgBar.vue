@@ -7,6 +7,7 @@
       </label>
       <div class="input_control_box">
         <input type="text"
+         @keyup.enter="sendTextMsg"
          @focus="emojiContainerShow = false"
          ref="chatInput"
          v-model="msg">
@@ -60,6 +61,13 @@ export default {
           type: 'text'
         })
         return false
+      }
+      if (this.msg.length > 200) {
+        this.$vux.toast.show({
+          text: '消息不可超过200字符',
+          position: 'bottom',
+          type: 'text'
+        })
       }
       const msg = {
         IsServantReceive: 1,
