@@ -81,7 +81,7 @@ export default {
     },
     async getShopAgreement () {
       const res = await this.$http.get(`/ShopAgreement?ProtocalType=18 &ShopCertificateID=0`)
-      if (res.data.Code === 100000) {
+      if (res.data.Code === 100000 && res.data.Data) {
         this.AgreementList = res.data.Data
       }
     },

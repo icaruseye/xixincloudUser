@@ -1,8 +1,8 @@
 <template>
   <div style="padding: 5px" v-if="isShow">
     <div class="servant-panel_info">
-      <img class="avatar" :src="info.ServAccount.Avatar | transformImgUrl">
-      <span class="name">{{info.ServAccount.NickName}}</span>
+      <img class="avatar" :src="info.ServantAccount.Avatar | transformImgUrl">
+      <span class="name">{{info.ServantAccount.NickName}}</span>
       <!-- <img class="qrcode" src="@/assets/images/code.png"> -->
     </div>
     <!-- 服务评分 -->
@@ -35,7 +35,7 @@ export default {
       addSuccess: false,
       isFollow: false,
       info: {
-        ServAccount: {}
+        ServantAccount: {}
       },
       qrcode: '',
       ShopID: JSON.parse(sessionStorage.getItem('userAccount')).ShopID,
@@ -66,7 +66,7 @@ export default {
       const res = await this.$http.get(`/AddFriend/${this.$route.query.id}`)
       if (res.data.Code === 100000) {
         if (this.userAccount.IsSubscribe) {
-          this.$router.push(`/servant/service/${this.$route.query.id}`)
+          this.$router.push(`/servant/service/${this.$route.query.id}?isShare=1`)
         } else {
           this.isShow = true
         }

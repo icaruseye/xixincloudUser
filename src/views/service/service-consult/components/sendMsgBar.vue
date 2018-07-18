@@ -119,7 +119,7 @@ export default {
       }
     },
     checkSize (file, e) {
-      if (file.size > 1024 * 1024 * 5) {
+      if (file.size > 1024 * 1024 * 20) {
         this.$vux.toast.text('上传图片大小超出限制')
         return false
       }

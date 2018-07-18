@@ -47,7 +47,7 @@
       <xx-cell-items :label="AgreementList[0].Content" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <xx-uploader
           class="upload"
-          :maxSize="1024 * 1024 * 5"
+          :maxSize="1024 * 1024 * 20"
           :imgList="imgList1"
           :limit="3"
           @onUpdate="onUpdate1"
@@ -101,7 +101,7 @@
     </div>
     <div v-transfer-dom>
       <popup v-model="showAddressEdit" height="100%" style="z-index:502">
-        <userAddressEdit :UserAddress="{}" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+        <userAddressEdit :UserAddress="UserAddress" :id="-1" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
       </popup>
     </div>
     <div v-transfer-dom>
@@ -153,6 +153,10 @@ export default {
       servant: this.$route.query.servant,
       name: this.$route.query.name,
       imgList1: [],
+      UserAddress: {
+        Remark: '',
+        IsDefault: 1
+      },
       reqParams: {
         StartTime: dateFormat(new Date(), dataFormatRule),
         EndTime: dateFormat(that.addOneDay(new Date()), dataFormatRule),

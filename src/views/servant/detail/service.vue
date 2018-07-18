@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="has-tabbar">
+      <router-link to="/" class="share-btn" v-if="isShare"><i class="iconfont icon-qushouye"></i></router-link>
       <div class="servant-panel">
         <servantInfo :data="servantInfos"></servantInfo>
       </div>
@@ -45,6 +46,11 @@ export default {
       itemList: [],
       packageList: []
       // comments: []
+    }
+  },
+  computed: {
+    isShare () {
+      return this.$route.query.isShare === '1'
     }
   },
   mounted () {
@@ -116,5 +122,21 @@ export default {
 }
 .icon-jiantoushang {
   font-size: 12px;
+}
+.share-btn {
+  position: fixed;
+  bottom: 70px;
+  right: 10px;
+  font-size: 30px;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  z-index: 99;
+  .iconfont {
+    border-radius: 50%;
+    font-size: 45px;
+    color: #3ecccc;
+    background: #fff;
+  }
 }
 </style>

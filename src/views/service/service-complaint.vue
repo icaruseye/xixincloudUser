@@ -28,7 +28,7 @@
         <xx-uploader
           class="upload"
           :limit="9"
-          :maxSize="1024 * 1024 * 5"
+          :maxSize="1024 * 1024 * 20"
           :imgList="imgList1"
           @onUpdate="onUpdate1"
         ></xx-uploader>

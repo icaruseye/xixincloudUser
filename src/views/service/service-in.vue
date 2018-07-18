@@ -76,7 +76,7 @@
       </xx-timeLine-items>
     </xx-timeLine>
     <div class="tips warn">
-      提示：若用户预约任务时已勾选需要服务携带药品或者工具，该服务单原则上不可取消，所以此情况下的“取消任务”按钮消失。平台考虑到各种不可控因素，为了用户权益，若用户着实需要取消，可联系您的服务者说明原因，待服务者同意后再电话联系平台客服说明情况后，客服向服务者确认后，后台取消该次任务，该次服务的次数退回到用户账户。
+      {{Agreement.Content}}
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 0 && serviceItemInfo.Type === 0">
       <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;flex:1;" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
@@ -146,17 +146,19 @@ export default {
         Remark: '',
         MissionID: ''
       },
-      ServantReview: {}
+      ServantReview: {},
+      Agreement: {}
     }
   },
   created () {
     this.initData()
+    this.getShopAgreement()
   },
   methods: {
     async getShopAgreement () {
       const res = await this.$http.get(`/ShopAgreement?ProtocalType=12&ShopCertificateID=0`)
-      if (res.data.Code === 100000) {
-        console.log(res)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.Agreement = res.data.Data
       }
     },
     async initData () {
@@ -202,6 +204,7 @@ export default {
       const res = await this.$http.get(`/ServantReview?missionID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.ServantReview = res.data.Data
+        this.setState()
       } else {
         this.$vux.toast.show({
           type: 'text',
@@ -268,7 +271,7 @@ export default {
         this.steps = '3'
         this.timeLines = '3'
         this.title3 = '已评价'
-        this.subhead3 = `评价时间：${util.timeFormat(this.serviceItemInfo.EndTime)}`
+        this.subhead3 = `评价时间：${util.timeFormat(this.ServantReview.ReviewTime)}`
       }
       // 已取消
       if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State === -1) {
