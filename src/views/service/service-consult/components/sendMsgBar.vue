@@ -27,6 +27,7 @@
 </template>
 <script>
 import axios from 'axios'
+import util from '@/plugins/util'
 export default {
   data () {
     return {
@@ -86,37 +87,52 @@ export default {
       let file = e.target.files[0]
       if (!file) return false
       if (!this.checkSize(file, e)) return false
-      let fd = new FormData()
-      fd.append('fileUpload', file)
-      var options = {
-        method: 'post',
-        url: `${process.env.IMG_PATH}/File/Upload`,
-        data: fd,
-        timeout: 15000,
-        onUploadProgress: function (progressEvent) {
-          that.imgUploadProgress = (progressEvent.loaded / progressEvent.total * 100 | 0)
-        }
-      }
-      try {
-        that.$vux.loading.show('发送中')
-        const res = await axios(options)
+      // 获取图片旋转方向
+      util.getPhotoOrientation(file, function (file, orient) {
         let reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = function (e) {
-          const msg = {
-            IsServantReceive: 1,
-            MsgType: 2,
-            Content: this.result,
-            Image: res.data.data.objectId
+          var image = new Image()
+          image.src = e.target.result
+          image.onload = function () {
+            // 旋转图片、获取base64、blob文件
+            util.drawPhoto(file, orient, image, async function (blob, base64) {
+              let fd = new FormData()
+              fd.append('fileUpload', blob)
+              var options = {
+                method: 'post',
+                url: `${process.env.IMG_PATH}/File/Upload`,
+                data: fd,
+                timeout: 15000,
+                onUploadProgress: function (progressEvent) {
+                  that.imgUploadProgress = (progressEvent.loaded / progressEvent.total * 100 | 0)
+                }
+              }
+              try {
+                that.$vux.loading.show('发送中')
+                const res = await axios(options)
+                let reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = function (e) {
+                  const msg = {
+                    IsServantReceive: 1,
+                    MsgType: 2,
+                    Content: base64,
+                    Image: res.data.data.objectId
+                  }
+                  that.$emit('sendMsg', msg)
+                }
+                e.target.value = ''
+                that.$vux.loading.hide()
+              } catch (error) {
+                that.$vux.loading.hide()
+                this.$vux.toast.text('网络异常，发送失败')
+              }
+            })
           }
-          that.$emit('sendMsg', msg)
+          e.target.value = ''
         }
-        e.target.value = ''
-        that.$vux.loading.hide()
-      } catch (error) {
-        that.$vux.loading.hide()
-        this.$vux.toast.text('网络异常，发送失败')
-      }
+      })
     },
     checkSize (file, e) {
       if (file.size > 1024 * 1024 * 20) {

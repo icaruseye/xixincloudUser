@@ -97,6 +97,7 @@ export default {
               file: '',
               name: ''
             }
+            // 旋转图片、获取base64、blob文件
             util.drawPhoto(file, orient, image, function (blob, base64) {
               let _img = Object.assign({}, img)
               _img.file = blob
