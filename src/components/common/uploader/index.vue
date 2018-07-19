@@ -62,10 +62,15 @@ export default {
     return {
       count: 0,
       list: [],
-      guid: []
+      guid: [],
+      reader: new FileReader(),
+      image: new Image(),
+      file: null,
+      orient: null
     }
   },
   created () {
+    this.readyImage()
     if (this.imgList) {
       this.list = this.imgList
       this.list.map((item) => {
@@ -74,45 +79,45 @@ export default {
     }
   },
   methods: {
-    change (e) {
+    readyImage () {
       const that = this
-      let file = e.target.files[0]
-      console.log(file)
-      this.count++
-      if (!this.checkSize(file, e)) return false
-      if (!this.checkCount(e)) return false
-
-      // 获取图片旋转方向
-      util.getPhotoOrientation(file, function (file, orient) {
-        let reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = function (e) {
-          var image = new Image()
-          image.src = e.target.result
-          image.onload = function () {
-            let img = {
-              url: '',
-              status: 0,
-              progress: 0,
-              file: '',
-              name: ''
-            }
-            // 旋转图片、获取base64、blob文件
-            util.drawPhoto(file, orient, image, function (blob, base64) {
-              let _img = Object.assign({}, img)
-              _img.file = blob
-              _img.name = file.name
-              _img.url = base64
-              if (that.isAvatar) {
-                that.list = [_img]
-              } else {
-                that.list.push(_img)
-              }
-              that.upload(_img)
-            })
+      const initImage = {
+        url: '',
+        status: 0,
+        progress: 0,
+        file: '',
+        name: ''
+      }
+      that.reader.onload = function (e) {
+        that.image.src = e.target.result
+      }
+      that.image.onload = function (e) {
+        // 旋转图片、获取base64、blob文件
+        util.drawPhoto(that.file, that.orient, that.image, (blob, base64) => {
+          let _img = Object.assign({}, initImage)
+          _img.file = blob
+          _img.url = base64
+          if (that.isAvatar) {
+            that.list = [_img]
+          } else {
+            that.list.push(_img)
           }
-          e.target.value = ''
-        }
+          that.upload(_img)
+        })
+      }
+    },
+    change (e) {
+      if (!this.checkSize(this.file, e)) return false
+      if (!this.checkCount(e)) return false
+      
+      const that = this
+      // 获取照片的元信息（拍摄方向）
+      EXIF.getData(that.file, function () {
+        that.count++
+        that.file = e.target.files[0]
+        that.orient = EXIF.getTag(this, 'Orientation')
+        that.reader.readAsDataURL(that.file)
+        e.target.value = ''
       })
     },
     async upload (_img) {
@@ -130,17 +135,17 @@ export default {
         }
       }
       try {
-        let res = await axios(options)
-        _img.status = 1
+        const res = await axios(options)
+        if (!res.data.Code === 100000) {
+          _img.status = 1
+          this.count--
+        }
         if (this.isAvatar) {
           this.guid = [res.data.data.objectId]
         } else {
           this.guid.push(res.data.data.objectId)
         }
         this.$emit('onUpdate', this.guid)
-        if (!res.data.Code === 100000) {
-          this.count--
-        }
       } catch (error) {
         this.count--
         AlertModule.show({

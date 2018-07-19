@@ -119,20 +119,12 @@ export default {
     }
     return value
   },
-  // 获取照片的元信息（拍摄方向）
-  getPhotoOrientation (file, cb) {
-    EXIF.getData(file, function () {
-      var orient = EXIF.getTag(this, 'Orientation')
-      cb(file, orient)
-    })
-  },
-  // 返回旋转后图片
+  // 构造旋转后图片
   drawPhoto (file, orient, image, cb) {
-    console.log(orient)
     const canvas = document.createElement('canvas')
-    let ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d')
     if (canvas.getContext) {
-      let scale = image.width / 750 > 1 ? image.width / 750 : 1
+      const scale = image.width / 750 > 1 ? image.width / 750 : 1
       canvas.width = Number(image.width / scale)
       canvas.height = Number(image.height / scale)
       if (orient !== undefined && orient !== 1 && orient !== '') {
