@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import ChinaAddressV4Data from './datas/ChinaAddressV4Data.json'
+import EXIF from 'exif-js'
 import { ToastPlugin } from 'vux'
 Vue.use(ToastPlugin)
 
@@ -117,5 +118,52 @@ export default {
       value = value.replace('T', ' ')
     }
     return value
+  },
+  // 获取照片的元信息（拍摄方向）
+  getPhotoOrientation (file, cb) {
+    EXIF.getData(file, function () {
+      var orient = EXIF.getTag(this, 'Orientation')
+      cb(file, orient)
+    })
+  },
+  // 返回旋转后图片
+  drawPhoto (file, orient, image, cb) {
+    console.log(orient)
+    const canvas = document.createElement('canvas')
+    let ctx = canvas.getContext('2d')
+    if (canvas.getContext) {
+      let scale = image.width / 750 > 1 ? image.width / 750 : 1
+      canvas.width = Number(image.width / scale)
+      canvas.height = Number(image.height / scale)
+      if (orient !== undefined && orient !== 1 && orient !== '') {
+        switch (orient) {
+          case 3:
+            // 逆时针90度
+            ctx.rotate(Math.PI)
+            ctx.drawImage(image, -canvas.width, -canvas.height, canvas.width, canvas.height)
+            break
+          case 6:
+            // 顺时针90度
+            canvas.width = Number(image.height / scale)
+            canvas.height = Number(image.width / scale)
+            ctx.rotate(Math.PI / 2)
+            ctx.drawImage(image, 0, -canvas.width, canvas.height, canvas.width)
+            break
+          case 8:
+            // 旋转180度
+            canvas.width = Number(image.height / scale)
+            canvas.height = Number(image.width / scale)
+            ctx.rotate(3 * Math.PI / 2)
+            ctx.drawImage(image, -canvas.height, 0, canvas.height, canvas.width)
+            break
+        }
+      } else {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+      }
+      canvas.toBlob(function (blob) {
+        let _file = new window.File([blob], file.name, {type: file.type})
+        cb(_file, canvas.toDataURL(file.type))
+      })
+    }
   }
 }

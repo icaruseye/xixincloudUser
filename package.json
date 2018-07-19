@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "exif-js": "^2.3.0",
     "fastclick": "^1.0.6",
     "qs": "^6.5.1",
     "vee-validate": "2.0.0-rc.25",

@@ -29,7 +29,7 @@
       </div>
       <!-- 头像 -->
       <div v-else class="weui-uploader">
-        <div class="is-avatar" :style="{ 'background-image': 'url(' + list[0].url + ')'}">
+        <div class="is-avatar" :style="{'background-image': 'url(' + list[0].url + ')'}">
             <input class="weui-uploader__input" type="file" @change="change">
         </div>
       </div>
@@ -77,36 +77,42 @@ export default {
     change (e) {
       const that = this
       let file = e.target.files[0]
-      let reader = new FileReader()
+      console.log(file)
       this.count++
       if (!this.checkSize(file, e)) return false
       if (!this.checkCount(e)) return false
-      // if (!this.checkName(file.name, e)) return false
 
-      let img = {
-        url: '',
-        status: 0,
-        progress: 0,
-        file: '',
-        name: ''
-      }
-
-      let _img = Object.assign({}, img)
-      _img.file = file
-      _img.name = file.name
-
-      reader.readAsDataURL(file)
-      reader.onload = function (e) {
-        _img.url = this.result
-        if (that.isAvatar) {
-          that.list = [_img]
-        } else {
-          that.list.push(_img)
+      // 获取图片旋转方向
+      util.getPhotoOrientation(file, function (file, orient) {
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function (e) {
+          var image = new Image()
+          image.src = e.target.result
+          image.onload = function () {
+            let img = {
+              url: '',
+              status: 0,
+              progress: 0,
+              file: '',
+              name: ''
+            }
+            util.drawPhoto(file, orient, image, function (blob, base64) {
+              let _img = Object.assign({}, img)
+              _img.file = blob
+              _img.name = file.name
+              _img.url = base64
+              if (that.isAvatar) {
+                that.list = [_img]
+              } else {
+                that.list.push(_img)
+              }
+              that.upload(_img)
+            })
+          }
+          e.target.value = ''
         }
-      }
-      this.upload(_img)
-      console.log(this.count)
-      e.target.value = ''
+      })
     },
     async upload (_img) {
       const that = this
@@ -148,7 +154,6 @@ export default {
       this.list.splice(index, 1)
       this.guid.splice(index, 1)
       this.count -= 1
-      console.log(this.count)
       this.$emit('onUpdate', this.guid)
     },
     checkCount (e) {
