@@ -4,7 +4,16 @@
     <!-- 只有图片的类型 -->
     <div v-if="MsgType === 2" :class="[originator+'_imgChat_msg']" class="clearfix">
       <div class="thumbs_container">
-        <img :src="Content | transformImgUrl" @click="previewImage(0)" class="previewer-img" :class="[imgGroupClass]" @load="onloaded">
+        <x-img 
+          :src="Content | transformImgUrl"
+          default-src="https://cdn.dribbble.com/users/1093439/screenshots/3156979/d_helix-css-gif-_50fps-selective_-1a.gif"
+          :offset="-100"
+          :class="[imgGroupClass]"
+          @click.native="previewImage(0)"
+          @load="onloaded"
+          class="previewer-img"
+          container="#vux_view_box_body">
+        </x-img>
       </div>
       <div v-transfer-dom>
         <previewer ref="previewer" :list="previewImgUrlList" :options="options"></previewer>
@@ -25,13 +34,14 @@
 </template>
 <script>
 import util from '@/plugins/util'
-import { Previewer, TransferDom } from 'vux'
+import { Previewer, TransferDom, XImg } from 'vux'
 export default {
   directives: {
     TransferDom
   },
   components: {
-    Previewer
+    Previewer,
+    XImg
   },
   props: {
     avatar: {

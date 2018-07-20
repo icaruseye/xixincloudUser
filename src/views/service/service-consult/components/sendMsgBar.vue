@@ -3,7 +3,7 @@
     <div class="oper_container">
       <label class="select_img_btn">
         <label class="icon-tupian iconfont"  for="uploadImgBtn"></label>
-        <input id="uploadImgBtn" type="file" @change="uploadImg">
+        <input id="uploadImgBtn" type="file" @change="change">
       </label>
       <div class="input_control_box">
         <input type="text"
@@ -28,14 +28,22 @@
 <script>
 import axios from 'axios'
 import util from '@/plugins/util'
+import EXIF from 'exif-js'
 export default {
   data () {
     return {
       msg: '',
       emojiContainerShow: false,
       faceList: ['😀', '😂', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '😗', '😙', '😚', '😇', '😐', '😑', '😶', '😏', '😣', '😥', '😮', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '😒', '😒', '😓', '😔', '😕', '😲', '😷', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😬', '😰', '😱', '😳', '😵', '😡', '😠', '💪', '👈', '👉', '✌', '👆', '👇', '✋', '👌', '👍', '👏', '👐', '🙏'],
-      imgUploadProgress: 0
+      imgUploadProgress: 0,
+      reader: new FileReader(),
+      image: new Image(),
+      file: null,
+      orient: null
     }
+  },
+  mounted () {
+    this.readyImage()
   },
   watch: {
     emojiContainerShow () {
@@ -81,58 +89,57 @@ export default {
       }
       this.$emit('sendMsg', msg)
     },
-    async uploadImg (e) {
+    readyImage () {
       const that = this
-      that.imgUploadProgress = 0
-      let file = e.target.files[0]
-      if (!file) return false
-      if (!this.checkSize(file, e)) return false
-      // 获取图片旋转方向
-      util.getPhotoOrientation(file, function (file, orient) {
-        let reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = function (e) {
-          var image = new Image()
-          image.src = e.target.result
-          image.onload = function () {
-            // 旋转图片、获取base64、blob文件
-            util.drawPhoto(file, orient, image, async function (blob, base64) {
-              let fd = new FormData()
-              fd.append('fileUpload', blob)
-              var options = {
-                method: 'post',
-                url: `${process.env.IMG_PATH}/File/Upload`,
-                data: fd,
-                timeout: 15000,
-                onUploadProgress: function (progressEvent) {
-                  that.imgUploadProgress = (progressEvent.loaded / progressEvent.total * 100 | 0)
-                }
-              }
-              try {
-                that.$vux.loading.show('发送中')
-                const res = await axios(options)
-                let reader = new FileReader()
-                reader.readAsDataURL(file)
-                reader.onload = function (e) {
-                  const msg = {
-                    IsServantReceive: 1,
-                    MsgType: 2,
-                    Content: base64,
-                    Image: res.data.data.objectId
-                  }
-                  that.$emit('sendMsg', msg)
-                }
-                e.target.value = ''
-                that.$vux.loading.hide()
-              } catch (error) {
-                that.$vux.loading.hide()
-                this.$vux.toast.text('网络异常，发送失败')
-              }
-            })
+      that.reader.onload = function (e) {
+        that.image.src = e.target.result
+      }
+      that.image.onload = function (e) {
+        util.drawPhoto(that.file, that.orient, that.image)
+        .then(([blob, base64]) => {
+          let fd = new FormData()
+          fd.append('fileUpload', blob)
+          const msg = {
+            IsServantReceive: 1,
+            MsgType: 2,
+            Content: base64,
+            Image: '',
+            file: fd
           }
-          e.target.value = ''
-        }
+          that.uploadImg(msg)
+        })
+      }
+    },
+    change (e) {
+      const that = this
+      that.file = e.target.files[0]
+      if (!that.file) return false
+
+      // 获取照片的元信息（拍摄方向）
+      EXIF.getData(that.file, function () {
+        that.orient = EXIF.getTag(this, 'Orientation')
+        that.reader.readAsDataURL(that.file)
+        e.target.value = ''
       })
+    },
+    async uploadImg (msg) {
+      const that = this
+      let options = {
+        method: 'post',
+        url: `${process.env.IMG_PATH}/File/Upload`,
+        data: msg.file,
+        timeout: 15000
+      }
+      try {
+        that.$vux.loading.show('发送中')
+        const res = await axios(options)
+        msg.Image = res.data.data.objectId
+        that.$emit('sendMsg', msg)
+        that.$vux.loading.hide()
+      } catch (error) {
+        that.$vux.loading.hide()
+        this.$vux.toast.text('网络异常，发送失败')
+      }
     },
     checkSize (file, e) {
       if (file.size > 1024 * 1024 * 20) {

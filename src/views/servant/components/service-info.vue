@@ -3,7 +3,7 @@
     <!-- 基本信息 -->
     <div class="servant-panel_info">
       <img class="avatar" :src="info.Avatar | transformImgUrl">
-      <span class="name">{{info.NickName}}</span>
+      <span class="name">{{info.RealName}}</span>
       <img class="qrcode" src="@/assets/images/code.png" @click="showQrcode">
     </div>
     <!-- 服务评分 -->

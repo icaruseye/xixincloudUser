@@ -12,7 +12,7 @@
       </xx-step-items>
     </xx-step-bar>
     <xx-cell class="mgt10">
-      <xx-cell-items label="服务地址" class="noraml_cell" style="padding: 20px 0 15px 0;" @click.native="showAddress">
+      <xx-cell-items :label="addressTitleText" class="noraml_cell" style="padding: 20px 0 15px 0;" @click.native="showAddress">
         <div style="display:flex;align-items:center;justify-content:flex-end;width:220px;text-align:right;">
           <img style="width:10px;height:auto" src="@/assets/images/ic_address.png" />
           <div style="padding:0 0 0 5px;text-align:left">{{reqParams.Address}}</div>
@@ -87,7 +87,7 @@
               <i v-if="addressIndex === index" class="iconfont icon-xuanzhong"></i>
             </div>
           </template>
-          <div class="address-list_item_add" @click="addAddress">+新增地址</div>
+          <div v-if="useType === 1" class="address-list_item_add" @click="addAddress">+新增地址</div>
         </div>
       </popup>
     </div>
@@ -174,6 +174,22 @@ export default {
       },
       fuwuxuzhi: false,
       AgreementList: [{}, {}, {}, {}, {}, {}]
+    }
+  },
+  computed: {
+    useType () {
+      return +this.$route.query.useType
+    },
+    addressUrl () {
+      if (this.useType === 1) {
+        return '/UserAddress'
+      }
+      if (this.useType === 3) {
+        return `/ServantAddress?servantViewID=${this.$route.query.viewID}`
+      }
+    },
+    addressTitleText () {
+      return this.useType === 3 ? '服务人员地址' : '服务地址'
     }
   },
   created () {
@@ -305,14 +321,14 @@ export default {
     },
     // 获取用户地址列表
     async getAddressList () {
-      const res = await this.$http.get('/UserAddress')
+      const res = await this.$http.get(this.addressUrl)
       if (res.data.Code === 100000) {
         const data = res.data.Data
         this.addressList = data
         if (data.length > 0) {
           this.reqParams.Address = this.transformAddress(data[0].Province) + this.transformAddress(data[0].City) + this.transformAddress(data[0].Area) + data[0].SpecificAddress
         } else {
-          this.address = '请选择地址'
+          this.reqParams.Address = '请选择地址'
           this.isEmptyList = false
         }
       } else {

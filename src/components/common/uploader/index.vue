@@ -41,6 +41,7 @@
 import axios from 'axios'
 import { AlertModule } from 'vux'
 import util from '@/plugins/util'
+import EXIF from 'exif-js'
 export default {
   props: {
     title: String,
@@ -93,7 +94,8 @@ export default {
       }
       that.image.onload = function (e) {
         // 旋转图片、获取base64、blob文件
-        util.drawPhoto(that.file, that.orient, that.image, (blob, base64) => {
+        util.drawPhoto(that.file, that.orient, that.image)
+        .then(([blob, base64]) => {
           let _img = Object.assign({}, initImage)
           _img.file = blob
           _img.url = base64
@@ -107,14 +109,13 @@ export default {
       }
     },
     change (e) {
-      if (!this.checkSize(this.file, e)) return false
-      if (!this.checkCount(e)) return false
-      
       const that = this
+      that.file = e.target.files[0]
+      if (!that.checkCount(e)) return false
+
       // 获取照片的元信息（拍摄方向）
       EXIF.getData(that.file, function () {
         that.count++
-        that.file = e.target.files[0]
         that.orient = EXIF.getTag(this, 'Orientation')
         that.reader.readAsDataURL(that.file)
         e.target.value = ''

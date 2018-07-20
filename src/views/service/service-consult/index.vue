@@ -281,6 +281,7 @@ export default {
     },
     // 提交用户发送内容
     async sendMsg (msg) {
+      console.log(msg)
       const res = await this.$http.post(`/Chat`, {
         Content: (msg.MsgType === 2) ? msg.Image : msg.Content,
         MsgType: msg.MsgType,

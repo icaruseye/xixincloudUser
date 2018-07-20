@@ -55,10 +55,12 @@ export default {
   created () {
     const userInfo = this.$store.getters.userInfo
     if (userInfo.IsMobileChecked === 1) {
-      history.back()
       AlertModule.show({
         title: '提示',
-        content: '已绑定过手机号'
+        content: '已绑定过手机号',
+        onHide () {
+          history.back()
+        }
       })
     }
     if (this.time < 60) {
@@ -69,7 +71,7 @@ export default {
   },
   computed: {
     codeText: function () {
-      return this.time < 60 ? this.time + 's 后重新获取' : '获取验证码'
+      return this.time < 60 ? `重新获取(${this.time}s)` : '获取验证码'
     }
   },
   methods: {
@@ -160,12 +162,13 @@ export default {
         align-items: center;
         height: 50px;
         .weui-vcode-btn {
+          margin-left: 10px;
           border: 0;
           color: #fff;
           font-size: 12px;
           background: #3ecccc;
-          height: 30px;
-          line-height: 30px;
+          height: 35px;
+          line-height: 35px;
           width: 100px;
           text-align: center;
           border-radius: 3px;

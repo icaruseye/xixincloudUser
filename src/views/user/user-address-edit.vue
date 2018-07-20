@@ -2,7 +2,7 @@
   <div style="position:fixed;left:0;top:0;right:0;">
     <div class="form-panel">
       <div class="weui-form-cell">
-        <x-address title="省市区" :raw-value="true" v-model="UserAddress.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center" :popup-style="{'z-index': 503}"></x-address>
+        <x-address title="省市区" v-model="UserAddress.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center" :popup-style="{'z-index': 503}"></x-address>
         <input v-model="UserAddress.citys" name="citys" type="hidden">
       </div>
       <div class="weui-form-cell">
@@ -117,17 +117,6 @@ export default {
     showRemove () {
       this.isShowRemove = true
     },
-    // async getData (id) {
-    //   const res = await this.$http.get(`/UserAddress/${id}`)
-    //   const data = res.data.Data
-    //   const UserAddress = {
-    //     IsDefault: data.IsDefault,
-    //     citys: [data.Province, data.City, data.Area],
-    //     SpecificAddress: data.SpecificAddress,
-    //     Remark: data.Remark
-    //   }
-    //   this.UserAddress = UserAddress
-    // },
     async removeAddress () {
       const that = this
       this.removeBtn = true

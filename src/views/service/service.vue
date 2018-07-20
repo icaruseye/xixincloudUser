@@ -29,7 +29,7 @@
                 <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
                   <div class="weui-list_item" :key="mIndex">
                     <div class="icon">
-                      <img v-if="mItem.OrderDetail.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
+                      <img v-if="mItem.OrderDetail.UseType === 1 || mItem.OrderDetail.UseType === 3" src="@/assets/images/icon_picc.png" alt="">
                       <img v-if="mItem.OrderDetail.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
                     </div>
                     <div class="mid">
@@ -41,6 +41,7 @@
                     </div>
                     <div class="btn">
                       <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">预约</button>
+                      <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
                       <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">咨询</button>
                     </div>
                   </div>
@@ -68,7 +69,7 @@
                   <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
                     <div class="weui-list_item" :key="mIndex">
                       <div class="icon">
-                        <img v-if="mItem.OrderDetail.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
+                        <img v-if="mItem.OrderDetail.UseType === 1 || mItem.OrderDetail.UseType === 3" src="@/assets/images/icon_picc.png" alt="">
                         <img v-if="mItem.OrderDetail.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
                       </div>
                       <div class="avatar">
@@ -82,6 +83,7 @@
                       </div>
                       <div class="btn">
                       <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">预约</button>
+                      <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
                       <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, pItem.ContentOfItems[0].DoctorName, mItem.SingleItem.Name, mItem.OrderDetail.UseType)">咨询</button>
                       </div>
                     </div>
@@ -354,9 +356,9 @@ export default {
     toDetail (id) {
       this.$router.push(`/service/in/${id}`)
     },
-    toReserve (id, servant, name, useType) {
-      if (useType === 1) {
-        this.$router.push(`/service/reserve/${id}?servant=${servant}&name=${name}`)
+    toReserve (id, servant, name, useType, viewID) {
+      if (useType === 1 || useType === 3) {
+        this.$router.push(`/service/reserve/${id}?servant=${servant}&name=${name}&viewID=${viewID}&useType=${useType}`)
       }
       if (useType === 2) {
         this.$router.push(`/service/consult/${id}?isMission=0`)

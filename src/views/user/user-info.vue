@@ -61,7 +61,7 @@
       *用户昵称不得出现违法和不良信息，您必须填写正确的身份证号码才可享受服务。若您填写的资料不合法、不真实、不准确、不完整，平台有权拒绝为您提供服务并删除该账号，且您需承担因此引起的相应责任及后果。
     </div>
     <div class="weui-form-cell">
-      <button class="weui-btn weui-btn_primary" @click="validateBeforeSubmit" :disabled="submitBtn">保存</button>
+      <button class="weui-btn weui-btn_primary" style="border-radius:4px" @click="validateBeforeSubmit" :disabled="submitBtn">保存</button>
     </div>
   </div>
 </template>
@@ -174,6 +174,7 @@ export default {
 <style lang="less" scoped>
 
 .form-panel {
+  min-height: 100vh;
   .weui-cells {
     margin-top: 0;
   }
