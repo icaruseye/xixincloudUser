@@ -17,7 +17,7 @@
     <div v-transfer-dom>
       <popup v-model="showAddress" height="100%">
         <div v-if="showAddress">
-          <userAddressEdit :UserAddress="UserAddress" :id="addressID" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
+          <userAddressEdit :UserAddress="UserAddress" :id="addressID" :defaultOnly="defaultOnly" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
         </div>
       </popup>
     </div>
@@ -41,7 +41,7 @@ export default {
       flag: false,
       showAddress: false,
       addressList: [],
-      isEmptyList: false,
+      defaultOnly: false,
       index: '',
       addressID: null,
       UserAddress: {}
@@ -79,27 +79,9 @@ export default {
       }
     },
     toEdit (id, index) {
-      // 只有一项地址
-      if (this.addressList.length === 1) {
-        if (id === -1) {
-          this.isEmptyList = false
-        } else {
-          this.isEmptyList = true
-        }
-      }
-      // 尚未添加地址
-      if (this.addressList.length === 0) {
-        this.isEmptyList = true
-      }
+      this.defaultOnly = (id !== -1 && this.addressList.length === 1) || (id === -1 && this.addressList.length === 0)
       // id：-1 新增地址
-      if (id !== -1) {
-        this.UserAddress = this.addressList[index]
-        // this.UserAddress.citys = [this.addressList[index].Province, this.addressList[index].City, this.addressList[index].Area]
-      } else {
-        this.UserAddress = {
-          IsDefault: 1
-        }
-      }
+      this.UserAddress = id !== -1 ? this.addressList[index] : {IsDefault: 1}
       this.showAddress = true
       this.addressID = id
     }

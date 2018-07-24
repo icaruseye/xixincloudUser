@@ -2,20 +2,20 @@
   <div style="position:fixed;left:0;top:0;right:0;">
     <div class="form-panel">
       <div class="weui-form-cell">
-        <x-address title="省市区" v-model="UserAddress.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center" :popup-style="{'z-index': 503}"></x-address>
-        <input v-model="UserAddress.citys" name="citys" type="hidden">
+        <x-address title="省市区" v-model="data.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center" :popup-style="{'z-index': 503}"></x-address>
+        <input v-model="data.citys" name="citys" type="hidden">
       </div>
       <div class="weui-form-cell">
         <div class="weui-cell-top">
             <label class="label" for="">具体地址</label>
-            <input v-model="UserAddress.SpecificAddress" name="address" type="text" placeholder="请输入具体地址">
+            <input v-model="data.SpecificAddress" name="address" type="text" placeholder="请输入具体地址">
         </div>
       </div>
       <div class="weui-form-cell">
         <div class="weui-cell-top">
             <label class="label" for="" style="width:95px">标签</label>
-            <input v-model="UserAddress.Remark" name="tag" type="text" placeholder="请输入标签" style="width:60px;margin-right:10px">
-            <checker v-model="UserAddress.Remark" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
+            <input v-model="data.Remark" name="tag" type="text" placeholder="请输入标签" style="width:60px;margin-right:10px">
+            <checker v-model="data.Remark" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
               <checker-item value="家">家</checker-item>
               <checker-item value="公司">公司</checker-item>
               <checker-item value="其他">其他</checker-item>
@@ -25,7 +25,7 @@
       <div class="weui-form-cell">
         <p class="weui-cell-top">
           <label class="label" for="" style="width:95px" >是否默认</label>
-          <inline-x-switch v-model="UserAddress.IsDefault" :value-map="[0, 1]" :disabled="defaultOnly"></inline-x-switch>
+          <inline-x-switch v-model="data.IsDefault" :value-map="[0, 1]" :disabled="defaultOnly"></inline-x-switch>
         </p>
       </div>
     </div>
@@ -77,6 +77,11 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    UserAddress () {
+      this.data = this.UserAddress
+    }
+  },
   mounted () {
     if (this.UserAddress.Province) {
       this.UserAddress.citys = [this.UserAddress.Province, this.UserAddress.City, this.UserAddress.Area]
@@ -86,6 +91,7 @@ export default {
   },
   data () {
     return {
+      data: this.UserAddress,
       isShowRemove: false,
       submitBtn: false,
       removeBtn: false,

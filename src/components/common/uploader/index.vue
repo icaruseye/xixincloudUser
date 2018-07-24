@@ -17,7 +17,7 @@
                     <div class="progress-bar">
                       <div class="progress-bar_in" :style="{'width': img.progress + '%'}"></div>
                     </div>
-                    <i v-if="img.status === 1" class="iconfont iconfont-remove icon-shanchuguanbicha2" v-on:click="removeImg(index)"></i>
+                    <i v-if="img.status === 1" class="iconfont iconfont-remove icon-guanbi" v-on:click="removeImg(index)"></i>
                   </div>
                 </li>
               </template>
@@ -137,10 +137,8 @@ export default {
       }
       try {
         const res = await axios(options)
-        if (!res.data.Code === 100000) {
-          _img.status = 1
-          this.count--
-        }
+        _img.status = 1
+        this.count--
         if (this.isAvatar) {
           this.guid = [res.data.data.objectId]
         } else {
@@ -257,7 +255,6 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, .6);
   border-radius: 0;
 }
 .weui-uploader__file_status .weui-uploader__file-content {
@@ -341,11 +338,11 @@ export default {
 
 .iconfont-remove {
   position: absolute;
-  top: 45%;
-  left: 50%;
-  color: #d34330;
+  top: 0;
+  right: 0;
+  color: #666;
   font-size: 20px;
-  transform: translate(-50%,-50%)
+  line-height: 1;
 }
 
 .is-avatar {

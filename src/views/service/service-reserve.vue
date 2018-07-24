@@ -15,15 +15,15 @@
       <xx-cell-items :label="addressTitleText" class="noraml_cell" style="padding: 20px 0 15px 0;" @click.native="showAddress">
         <div style="display:flex;align-items:center;justify-content:flex-end;width:220px;text-align:right;">
           <img style="width:10px;height:auto" src="@/assets/images/ic_address.png" />
-          <div style="padding:0 0 0 5px;text-align:left">{{reqParams.Address}}</div>
+          <div style="padding:0 0 0 5px;text-align:left">{{reqParams.Address ? reqParams.Address : '请选择地址'}}</div>
           <i class="iconfont icon-jiantouyou"></i>
         </div>
       </xx-cell-items>
       <xx-cell-items label="服务项" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
-        <div style="padding-right:15px">{{name}}</div>
+        <div style="padding-right:15px">{{orderDetail.ItemName}}</div>
       </xx-cell-items>
       <xx-cell-items label="服务人员" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
-        <div style="padding-right:15px">{{servant}}</div>
+        <div style="padding-right:15px">{{orderDetail.ServantName}}</div>
       </xx-cell-items>
     </xx-cell>
     <h2 class="cells_title">
@@ -87,7 +87,7 @@
               <i v-if="addressIndex === index" class="iconfont icon-xuanzhong"></i>
             </div>
           </template>
-          <div v-if="useType === 1" class="address-list_item_add" @click="addAddress">+新增地址</div>
+          <div v-if="orderDetail.ItemUseType === 1" class="address-list_item_add" @click="addAddress">+新增地址</div>
         </div>
       </popup>
     </div>
@@ -150,9 +150,8 @@ export default {
       address: '',
       addressList: [],
       addressIndex: 0,
-      servant: this.$route.query.servant,
-      name: this.$route.query.name,
       imgList1: [],
+      orderDetail: {},
       UserAddress: {
         Remark: '',
         IsDefault: 1
@@ -177,26 +176,100 @@ export default {
     }
   },
   computed: {
-    useType () {
-      return +this.$route.query.useType
-    },
     addressUrl () {
-      if (this.useType === 1) {
+      if (this.orderDetail.ItemUseType === 1) {
         return '/UserAddress'
       }
-      if (this.useType === 3) {
-        return `/ServantAddress?servantViewID=${this.$route.query.viewID}`
+      if (this.orderDetail.ItemUseType === 3) {
+        return `/ServantAddress?servantViewID=${this.orderDetail.ServantViewID}`
       }
     },
     addressTitleText () {
-      return this.useType === 3 ? '服务人员地址' : '服务地址'
+      return this.orderDetail.ItemUseType === 3 ? '服务人员地址' : '服务地址'
+    },
+    itemID () {
+      return +this.$route.query.ItemID
+    },
+    id () {
+      return this.$route.params.id
     }
   },
   created () {
-    this.getAddressList()
-    this.getAgreementList()
+    this.init()
   },
   methods: {
+    init () {
+      this.getOrderDetail().then(() => {
+        this.getAddressList()
+        this.getAgreementList()
+      })
+    },
+    async getOrderDetail () {
+      const res = await this.$http.get(`/UserOrderDetails/${this.id}?itemID=${this.itemID}`)
+      if (res.data.Code === 100000) {
+        this.orderDetail = res.data.Data
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 获取配置文字
+    async getAgreementList () {
+      const res = await this.$http.get(`/AgreementList?typeList=6,7,8,9,10,11&ItemID=${this.itemID}`)
+      if (res.data.Code === 100000) {
+        this.AgreementList = res.data.Data
+      }
+    },
+    // 提交预约
+    async onConfirm () {
+      const that = this
+      this.submitDisable = true
+      const res = await this.$http.post(`/ReserveService/${this.id}/Create`, this.reqParams)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '预约成功',
+          time: 500,
+          onHide () {
+            that.$router.replace(`/service/in/${res.data.Data}?type=0`)
+          }
+        })
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+        this.submitDisable = false
+      }
+    },
+    // 获取用户地址列表
+    async getAddressList () {
+      const res = await this.$http.get(this.addressUrl)
+      if (res.data.Code === 100000) {
+        const data = res.data.Data
+        this.addressList = data
+        if (data.length > 0) {
+          this.reqParams.Address = this.transformAddress(data[0].Province) + this.transformAddress(data[0].City) + this.transformAddress(data[0].Area) + data[0].SpecificAddress
+        } else {
+          this.isEmptyList = false
+        }
+      } else {
+        this.$vux.toast.text('出错了')
+      }
+    },
+    // 提交前弹窗确认
+    submit () {
+      const validate = util.validateForm(this.reqParams, this.authText)
+      if (!validate) return false
+      if (!this.fuwuxuzhi) {
+        this.$vux.toast.show({
+          type: 'text',
+          width: '13em',
+          text: '需阅读并同意《预约须知》'
+        })
+        return false
+      }
+      if (this.exceedText) {
+        this.$vux.toast.text('备注字数超出限制')
+        return false
+      }
+      this.isConfirm = true
+    },
     showTips () {
       this.isShowTips = true
     },
@@ -212,6 +285,7 @@ export default {
     },
     // 新增地址
     addAddress () {
+      this.UserAddress = { IsDefault: 1 }
       this.showAddressEdit = true
     },
     transformAddress (val) {
@@ -293,65 +367,6 @@ export default {
     // 上传图片
     onUpdate1 (id) {
       this.reqParams.Imgs = id.join(',')
-    },
-    // 获取配置文字
-    async getAgreementList () {
-      const res = await this.$http.get(`/AgreementList?typeList=6,7,8,9,10,11`)
-      if (res.data.Code === 100000) {
-        this.AgreementList = res.data.Data
-      }
-    },
-    // 提交预约
-    async onConfirm () {
-      const that = this
-      this.submitDisable = true
-      const res = await this.$http.post(`/ReserveService/${this.$route.params.id}/Create`, this.reqParams)
-      if (res.data.Code === 100000) {
-        this.$vux.toast.show({
-          text: '预约成功',
-          time: 500,
-          onHide () {
-            that.$router.replace(`/service/in/${res.data.Data}?type=0`)
-          }
-        })
-      } else {
-        this.$vux.toast.text(res.data.Msg)
-        this.submitDisable = false
-      }
-    },
-    // 获取用户地址列表
-    async getAddressList () {
-      const res = await this.$http.get(this.addressUrl)
-      if (res.data.Code === 100000) {
-        const data = res.data.Data
-        this.addressList = data
-        if (data.length > 0) {
-          this.reqParams.Address = this.transformAddress(data[0].Province) + this.transformAddress(data[0].City) + this.transformAddress(data[0].Area) + data[0].SpecificAddress
-        } else {
-          this.reqParams.Address = '请选择地址'
-          this.isEmptyList = false
-        }
-      } else {
-        this.$vux.toast.text('出错了')
-      }
-    },
-    // 提交前弹窗确认
-    submit () {
-      const validate = util.validateForm(this.reqParams, this.authText)
-      if (!this.fuwuxuzhi) {
-        this.$vux.toast.show({
-          type: 'text',
-          width: '13em',
-          text: '需阅读并同意《预约须知》'
-        })
-        return false
-      }
-      if (!validate) return false
-      if (this.exceedText) {
-        this.$vux.toast.text('备注字数超出限制')
-        return false
-      }
-      this.isConfirm = true
     }
   }
 }

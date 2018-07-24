@@ -82,7 +82,7 @@ export default {
       this.showHideOnBlur = true
     },
     async getShopAgreement () {
-      const res = await this.$http.get(`/ShopAgreement?ProtocalType=18 &ShopCertificateID=0`)
+      const res = await this.$http.get(`/ShopAgreement?protocalType=17&itemID=0`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.AgreementList = res.data.Data
       }

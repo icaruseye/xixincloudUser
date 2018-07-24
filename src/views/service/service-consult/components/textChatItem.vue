@@ -6,7 +6,7 @@
       <div class="thumbs_container">
         <x-img 
           :src="Content | transformImgUrl"
-          default-src="https://cdn.dribbble.com/users/1093439/screenshots/3156979/d_helix-css-gif-_50fps-selective_-1a.gif"
+          default-src="/src/assets/images/chat-loading.gif"
           :offset="-100"
           :class="[imgGroupClass]"
           @click.native="previewImage(0)"
@@ -89,6 +89,9 @@ export default {
     }
   },
   mounted () {
+    this.$nextTick(() => {
+      this.$vux.bus && this.$vux.bus.$emit('vux:after-view-enter')
+    })
     if (this.MsgType === 7) {
       this.$emit('initMission')
     }

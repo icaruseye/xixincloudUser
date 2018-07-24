@@ -152,11 +152,10 @@ export default {
   },
   created () {
     this.initData()
-    this.getShopAgreement()
   },
   methods: {
     async getShopAgreement () {
-      const res = await this.$http.get(`/ShopAgreement?ProtocalType=12&ShopCertificateID=0`)
+      const res = await this.$http.get(`/ShopAgreement?protocalType=15&itemID=${this.serviceItemInfo.ItemID}`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.Agreement = res.data.Data
       }
@@ -167,6 +166,7 @@ export default {
       if (res.data.Code === 100000) {
         this.serviceItemInfo = res.data.Data
         this.setState()
+        this.getShopAgreement()
         if (res.data.Data.State === 5) {
           this.getComments()
         }

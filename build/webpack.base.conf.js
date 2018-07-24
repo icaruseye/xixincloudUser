@@ -4,6 +4,11 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const vuxLoader = require('vux-loader')
+const vConsolePlugin = require('vconsole-webpack-plugin')
+
+const argv = require('yargs')
+  .describe('debug', 'debug 环境') // use 'webpack --debug'
+  .argv;
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -75,7 +80,10 @@ let webpackConfig = {
         }
       }
     ]
-  }
+  },
+  plugins:[
+    new vConsolePlugin({enable: !!argv.debug}),
+  ]
 }
 
 

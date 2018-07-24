@@ -55,6 +55,11 @@ export default {
       Agreement: {}
     }
   },
+  computed: {
+    itemID () {
+      return +this.$route.params.id
+    }
+  },
   created () {
     this.initData()
     this.getShopAgreement()
@@ -65,7 +70,7 @@ export default {
   },
   methods: {
     async getShopAgreement () {
-      const res = await this.$http.get(`/ShopAgreement?ProtocalType=5&ShopCertificateID=0`)
+      const res = await this.$http.get(`/ShopAgreement?protocalType=5&itemID=${this.itemID}`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.Agreement = res.data.Data
       }

@@ -14,13 +14,15 @@
     "build": "node build/build.js",
     "build:prod": "cross-env NODE_ENV=production env_config=prod node build/build.js",
     "build:dev": "cross-env NODE_ENV=development env_config=dev node build/build.js",
-    "build:beta": "cross-env NODE_ENV=beta env_config=beta node build/build.js"
+    "build:beta": "cross-env NODE_ENV=beta env_config=beta node build/build.js",
+    "build:test": "cross-env NODE_ENV=test env_config=test node build/build.js --debug"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "exif-js": "^2.3.0",
     "fastclick": "^1.0.6",
     "qs": "^6.5.1",
+    "vconsole": "^3.2.0",
     "vee-validate": "2.0.0-rc.25",
     "vue": "^2.5.2",
     "vue-meta-info": "^0.1.6",
@@ -81,6 +83,7 @@
     "shelljs": "^0.7.6",
     "url-loader": "^0.5.8",
     "vconsole": "^3.2.0",
+    "vconsole-webpack-plugin": "^1.4.0",
     "vue-jest": "^1.0.2",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",

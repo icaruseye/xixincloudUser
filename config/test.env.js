@@ -1,7 +1,6 @@
 'use strict'
-const merge = require('webpack-merge')
-const devEnv = require('./dev.env')
-
-module.exports = merge(devEnv, {
-  NODE_ENV: '"testing"'
-})
+module.exports = {
+  NODE_ENV: '"production"',
+  API_PATH: '"http://test-api.xixincloud.com/api/User"',
+  IMG_PATH: '"http://www.xixincloud.com:6883"'
+}

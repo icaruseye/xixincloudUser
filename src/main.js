@@ -7,7 +7,7 @@ import router from './router'
 import store from './store/index'
 import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
-import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin } from 'vux'
+import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin, BusPlugin } from 'vux'
 import xxComponents from './components/common'
 import http from '@/api'
 import util from '@/plugins/util'
@@ -20,6 +20,7 @@ Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(registryPopup)
 Vue.use(LoadingPlugin)
+Vue.use(BusPlugin)
 Vue.component('x-dialog', XDialog)
 
 FastClick.attach(document.body)
