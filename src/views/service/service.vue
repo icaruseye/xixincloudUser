@@ -40,9 +40,14 @@
                       <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
                     </div>
                     <div class="btn">
-                      <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
-                      <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType,cItem.Package.ServantViewID)">预约</button>
-                      <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
+                      <div v-if="cItem.Order.State !== 1">
+                        <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
+                        <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
+                        <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
+                      </div>
+                      <div v-else>
+                        <span class="waitPaySuccess" style="font-size:14px;color:#f8a519">付款确认中</span>
+                      </div>
                     </div>
                   </div>
                 </template>
@@ -82,9 +87,14 @@
                         <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
                       </div>
                       <div class="btn">
-                      <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
-                      <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
-                      <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
+                        <div v-if="cItem.Order.State !== 1">
+                          <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
+                          <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
+                          <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
+                        </div>
+                        <div v-else>
+                          <span style="font-size:14px;color:#f8a519">付款确认中</span>
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -320,9 +330,15 @@ export default {
     async getUserOrderDetailsList () {
       const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
+        const waitPaySuccess = document.querySelectorAll('.waitPaySuccess')
         this.UserOrderDetailsList = res.data.Data
         if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0) {
           this.flag1 = true
+        }
+        if (waitPaySuccess.length > 0) {
+          setTimeout(() => {
+            this.getUserOrderDetailsList()
+          }, 1000 * 30)
         }
       }
     },

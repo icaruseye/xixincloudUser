@@ -15,5 +15,12 @@ export default [
     meta: {
       title: '添加服务者'
     }
+  },
+  {
+    path: '/shareServant/:id',
+    component: _import('/common/shareServant'),
+    meta: {
+      title: '添加服务者'
+    }
   }
 ]
