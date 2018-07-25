@@ -21,7 +21,7 @@ const actions = {
     const userAccount = await api.get('/Account')
     const userInfo = await api.get('/UserInfo')
     const res = {
-      userInfo: userInfo.data.Data || '',
+      userInfo: userInfo.data.Data || {},
       userAccount: userAccount.data.Data || {}
     }
     commit(GET_USER_ACC, res)

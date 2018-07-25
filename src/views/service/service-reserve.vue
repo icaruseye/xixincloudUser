@@ -54,18 +54,15 @@
         ></xx-uploader>
       </xx-cell-items>
       <div class="tips warn">{{AgreementList[1].Content}}</div>
-      <xx-cell-items :label="AgreementList[2].Content" @click.native="changeRadio1" class="noraml_cell" style="padding: 20px 0 15px 0;">
-        <div style="display: flex;justify-content: flex-end;">
-          <xx-checker v-model="reqParams.NeedTools" typeName="checkbox" name="NeedTools" style="display:block;"></xx-checker>
-        </div>
-      </xx-cell-items>
-      <xx-cell-items :label="AgreementList[3].Content" @click.native="changeRadio2" class="noraml_cell" style="padding: 20px 0 15px 0;">
-        <div style="display: flex;justify-content: flex-end;">
-          <xx-checker v-model="reqParams.NeedPill" typeName="checkbox" name="NeedPill" style="display:block;"></xx-checker>
-        </div>
-      </xx-cell-items>
+      <template v-for="(item, index) in orderDetail.ItemCarryGoodsList">
+        <xx-cell-items :label="item.ViewName" @click.native="changeRadio(index)" class="noraml_cell" style="padding: 20px 0 15px 0;" :key="index">
+          <div style="display: flex;justify-content: flex-end;">
+            <xx-checker v-model="item.value" typeName="checkbox" name="" style="display:block;"></xx-checker>
+          </div>
+        </xx-cell-items>
+      </template>
       <div class="tips warn">
-        {{AgreementList[4].Content}}
+        {{AgreementList[2].Content}}
       </div>
       <div class="tips text">
         <input type="checkbox" name="" v-model="fuwuxuzhi" id="fuwuxuzhi">
@@ -107,8 +104,8 @@
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
         <div class="tips-content">
-          <div class="title">{{AgreementList[5].Title}}</div>
-          <div v-html="AgreementList[5].Content"></div>
+          <div class="title">{{AgreementList[3].Title}}</div>
+          <div v-html="AgreementList[3].Content"></div>
         </div>
         <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
           <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
@@ -163,7 +160,8 @@ export default {
         Discription: '',
         NeedPill: false,
         NeedTools: false,
-        Imgs: ''
+        Imgs: '',
+        PrepareGoodsTags: null
       },
       authText: {
         Address: {
@@ -172,7 +170,7 @@ export default {
         }
       },
       fuwuxuzhi: false,
-      AgreementList: [{}, {}, {}, {}, {}, {}]
+      AgreementList: [{}, {}, {}, {}]
     }
   },
   computed: {
@@ -214,7 +212,7 @@ export default {
     },
     // 获取配置文字
     async getAgreementList () {
-      const res = await this.$http.get(`/AgreementList?typeList=6,7,8,9,10,11&ItemID=${this.itemID}`)
+      const res = await this.$http.get(`/AgreementList?typeList=6,7,10,11&ItemID=${this.itemID}`)
       if (res.data.Code === 100000) {
         this.AgreementList = res.data.Data
       }
@@ -223,6 +221,7 @@ export default {
     async onConfirm () {
       const that = this
       this.submitDisable = true
+      this.reqParams.PrepareGoodsTags = this.getPrepareGoodsTags()
       const res = await this.$http.post(`/ReserveService/${this.id}/Create`, this.reqParams)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
@@ -357,12 +356,19 @@ export default {
       })
     },
     // 需要工具
-    changeRadio1 () {
-      this.reqParams.NeedTools = !this.reqParams.NeedTools
+    changeRadio (index) {
+      let arr = Object.assign({}, this.orderDetail.ItemCarryGoodsList[index])
+      arr.value = !arr.value
+      this.$set(this.orderDetail.ItemCarryGoodsList, index, arr)
     },
-    // 需要药品
-    changeRadio2 () {
-      this.reqParams.NeedPill = !this.reqParams.NeedPill
+    getPrepareGoodsTags () {
+      let arr = []
+      this.orderDetail.ItemCarryGoodsList.map((item) => {
+        if (item.value) {
+          arr.push(item.ID)
+        }
+      })
+      return arr.join()
     },
     // 上传图片
     onUpdate1 (id) {

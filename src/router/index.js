@@ -45,21 +45,27 @@ router.beforeEach((to, from, next) => {
     return false
   }
 
-  // 手机认证
-  if (userAccount.ID && !userInfo.Mobile && to.path !== '/user/phone') {
-    router.replace('/user/phone')
-    return false
-  }
-
-  // 实名认证
-  if (userAccount.ID && userInfo.Mobile && !userInfo.IDCard && to.path !== '/user/info') {
-    router.replace('/user/info')
-    return false
+  if (to.path.split('/')[2] === 'reserve') {
+    // 手机认证
+    if (userAccount.ID && !userInfo.Mobile && to.path !== '/user/phone') {
+      router.push('/user/phone')
+      return false
+    }
+    // 实名认证
+    if (userAccount.ID && userInfo.Mobile && !userInfo.IDCard && to.path !== '/user/info') {
+      router.push('/user/info')
+      return false
+    }
   }
 
   next()
 })
-router.afterEach(() => {
+router.afterEach((to, from, next) => {
+  // 预约认证流程，返回跳过认证页面
+  if (to.path.substr(0, 11) !== '/service/in' && from.path.substr(0, 16) === '/service/reserve') {
+    console.log(1)
+    router.push('/service')
+  }
   store.commit('SET_ROUTER_LOADING', false)
 })
 

@@ -32,7 +32,6 @@
 
 <script>
 export default {
-  
 }
 </script>
 

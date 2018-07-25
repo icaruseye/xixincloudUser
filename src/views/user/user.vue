@@ -47,11 +47,11 @@
           <span class="title">帮助</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link> -->
-        <!-- <router-link to="/user/phone" class="setting-panel_item item vux-1px-b">
-          <img src="@/assets/images/icon-my-phone.png" alt="">
+        <router-link to="/user/phone?edit=1" class="setting-panel_item item vux-1px-b">
+          <i class="iconfont icon-shouji" style="font-size:20px;margin-right:5px;"></i>
           <span class="title">手机认证</span>
           <i class="iconfont icon-jiantouyou"></i>
-        </router-link> -->
+        </router-link>
         <!-- <router-link to="/user/order" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">我的订单</span>

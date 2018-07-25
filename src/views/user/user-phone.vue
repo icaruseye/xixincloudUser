@@ -1,33 +1,33 @@
 <template>
-<div v-show="isShow">
-  <div class="form-panel">
-    <div class="weui-form-cell">
-      <div class="weui-cell-top">
-          <label class="label" for="">手机号</label>
-          <input v-model="mobile" name="phone" type="text" placeholder="请输入手机号">
+  <div v-if="userInfo.IsMobileChecked !== 1">
+    <div class="form-panel">
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
+            <label class="label" for="">手机号</label>
+            <input v-model="mobile" name="phone" type="text" placeholder="请输入手机号">
+        </div>
+      </div>
+      <div class="weui-form-cell weui-cell_vcode">
+        <div class="weui-cell-top">
+            <label class="label" for="">验证码</label>
+            <input v-model="code" name="code" type="number" placeholder="请输入验证码" style="width:80px">
+            <button type="button" class="weui-vcode-btn" :disabled="disabled_code" @click="getCode">{{codeText}}</button>
+        </div>
+      </div>
+      <div class="weui-form-cell userAgreement">
+        <input type="checkbox" id="userAgreement" value="" v-model="userAgreement">
+        <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《患者用户服务协议》</a></label>
       </div>
     </div>
-    <div class="weui-form-cell weui-cell_vcode">
-      <div class="weui-cell-top">
-          <label class="label" for="">验证码</label>
-          <input v-model="code" name="code" type="number" placeholder="请输入验证码" style="width:80px">
-          <button type="button" class="weui-vcode-btn" :disabled="disabled_code" @click="getCode">{{codeText}}</button>
+    <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>
+    <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': 'transparent'}">
+      <div class="tips-content">
+        <div class="title">{{AgreementList.Title}}</div>
+        <div class="content" v-html="AgreementList.Content"></div>
+        <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
       </div>
-    </div>
-    <div class="weui-form-cell userAgreement">
-      <input type="checkbox" id="userAgreement" value="" v-model="userAgreement">
-      <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《患者用户服务协议》</a></label>
-    </div>
+    </x-dialog>
   </div>
-  <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>
-  <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': 'transparent'}">
-    <div class="tips-content">
-      <div class="title">{{AgreementList.Title}}</div>
-      <div class="content" v-html="AgreementList.Content"></div>
-      <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
-    </div>
-  </x-dialog>
-</div>
 </template>
 
 <script>
@@ -43,18 +43,17 @@ export default {
     return {
       disabledSubmit: false,
       showHideOnBlur: false,
-      isShow: true,
       mobile: '',
       code: '',
       disabled_code: false,
       time: sessionStorage.getItem('AuthCodeTime') || 60,
       userAgreement: false,
-      AgreementList: {}
+      AgreementList: {},
+      userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
     }
   },
   created () {
-    const userInfo = this.$store.getters.userInfo
-    if (userInfo.IsMobileChecked === 1) {
+    if (this.userInfo.IsMobileChecked) {
       AlertModule.show({
         title: '提示',
         content: '已绑定过手机号',
@@ -137,8 +136,14 @@ export default {
           time: 500,
           onHide () {
             that.$store.dispatch('getAccount').then(() => {
-              that.$router.push('/user')
-              this.disabledSubmit = false
+              // 从user页进入
+              if (that.$route.query.edit === '1') {
+                that.$router.back()
+              } else {
+                // 从预约页进入
+                const path = sessionStorage.getItem('reserve_path') || '/'
+                that.$router.replace(path)
+              }
             })
           }
         })

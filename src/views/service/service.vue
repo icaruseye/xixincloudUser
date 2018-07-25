@@ -212,6 +212,7 @@ export default {
         ItemsByDoc: [],
         PackByDoc: []
       },
+      userAccount: JSON.parse(sessionStorage.getItem('userAccount')),
       flag1: false,
       flag2: false,
       flag3: false,
@@ -373,11 +374,28 @@ export default {
       this.$router.push(`/service/in/${id}`)
     },
     toReserve (id, ItemID, useType) {
+      const that = this
+      const url = this.reserveUrl(id, ItemID, useType)
+      if (this.userAccount.State === 0) {
+        this.$vux.confirm.show({
+          title: '提示',
+          content: '您尚未完善个人资料',
+          confirmText: '去完善',
+          onConfirm () {
+            sessionStorage.setItem('reserve_path', url)
+            that.$router.push(url)
+          }
+        })
+      } else {
+        that.$router.push(url)
+      }
+    },
+    reserveUrl (id, ItemID, useType) {
       if (useType === 1 || useType === 3) {
-        this.$router.push(`/service/reserve/${id}?ItemID=${ItemID}&useType=${useType}`)
+        return `/service/reserve/${id}?ItemID=${ItemID}&useType=${useType}`
       }
       if (useType === 2) {
-        this.$router.push(`/service/consult/${id}?isMission=0`)
+        return `/service/consult/${id}?isMission=0`
       }
     }
   }

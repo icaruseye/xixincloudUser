@@ -80,7 +80,7 @@ export default {
       UserInfo: {
         NickName: '',
         RealName: '',
-        IDCard: '',
+        IDCard: null,
         Avatar: ''
       },
       authText: {
@@ -133,10 +133,11 @@ export default {
             time: 500,
             onHide () {
               that.$store.dispatch('getAccount').then(() => {
+                // 从user页进入
                 if (that.$route.query.edit === '1') {
                   that.$router.back()
                 } else {
-                  const path = sessionStorage.getItem('to_path') || '/'
+                  const path = sessionStorage.getItem('reserve_path') || '/' // 从预约页进入
                   that.$router.replace(path)
                 }
               })
@@ -152,7 +153,7 @@ export default {
       this.UserInfo.Avatar = id.join(',')
     },
     calculate () {
-      if (this.UserInfo.IDCard === '') return false
+      if (this.UserInfo.IDCard === undefined) return false
       if (!util.CheckIDCardNum(this.UserInfo.IDCard)) {
         this.age = ''
         this.birthday = ''
