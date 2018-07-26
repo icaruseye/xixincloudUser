@@ -101,6 +101,9 @@ export default {
       this.$emit('initMission')
     }
   },
+  destroyed () {
+    this.$vux.loading.hide()
+  },
   methods: {
     previewImage (index) {
       const that = this
