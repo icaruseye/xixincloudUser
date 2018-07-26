@@ -118,6 +118,7 @@ export default {
       // 获取照片的元信息（拍摄方向）
       EXIF.getData(that.file, function () {
         that.orient = EXIF.getTag(this, 'Orientation')
+        console.log(that.orient + 'qqq')
         that.reader.readAsDataURL(that.file)
         e.target.value = ''
       })

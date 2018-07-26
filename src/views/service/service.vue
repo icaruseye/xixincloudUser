@@ -172,6 +172,7 @@
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
               <img v-if="item.State === 4" style="width:50px;height:50px;" src="@/assets/images/ic_dpj.png" alt="">
+              <img v-if="item.State === 5" style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="">
               <div class="cancel-icon">
                 <svg aria-hidden="true" class="icon" v-if="item.State === -1">
                   <use xlink:href="#icon-yiquxiao"></use>

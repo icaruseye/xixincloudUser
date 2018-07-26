@@ -11,10 +11,9 @@ import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin, Bus
 import xxComponents from './components/common'
 import http from '@/api'
 import util from '@/plugins/util'
+// import VueLazyload from 'vue-lazyload'
 
-// 自定义组件
 Vue.use(xxComponents)
-// Vux组件
 Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
@@ -22,6 +21,13 @@ Vue.use(registryPopup)
 Vue.use(LoadingPlugin)
 Vue.use(BusPlugin)
 Vue.component('x-dialog', XDialog)
+
+// Vue.use(VueLazyload, {
+//   preLoad: 1.3,
+//   error: 'https://img3.doubanio.com/icon/u113894409-4.jpg',
+//   loading: '/src/assets/images/chat-loading.gif',
+//   attempt: 1
+// })
 
 FastClick.attach(document.body)
 Vue.prototype.$http = http

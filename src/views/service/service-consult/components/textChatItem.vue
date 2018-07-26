@@ -4,19 +4,15 @@
     <!-- 只有图片的类型 -->
     <div v-if="MsgType === 2" :class="[originator+'_imgChat_msg']" class="clearfix">
       <div class="thumbs_container">
-        <x-img 
-          :src="Content | transformImgUrl"
-          default-src="/src/assets/images/chat-loading.gif"
-          :offset="-100"
+        <img 
+          :src="modelImage"
           :class="[imgGroupClass]"
-          @click.native="previewImage(0)"
+          @click="previewImage(0)"
           @load="onloaded"
-          class="previewer-img"
-          container="#vux_view_box_body">
-        </x-img>
+          class="previewer-img">
       </div>
       <div v-transfer-dom>
-        <previewer ref="previewer" :list="previewImgUrlList" :options="options"></previewer>
+        <previewer ref="previewer" :list="previewImgUrlList" @on-close="unLock" :options="options"></previewer>
       </div>
     </div>
     <!-- 文本 -->
@@ -61,6 +57,12 @@ export default {
       default: ''
     }
   },
+  data () {
+    return {
+      previewImageLock: false,
+      previewImageSample: new Image()
+    }
+  },
   computed: {
     previewImgUrlList () {
       const that = this
@@ -69,6 +71,9 @@ export default {
           src: util.transformImgUrl(that.Content)
         }
       ]
+    },
+    modelImage () {
+      return util.transformImgUrl(this.Content)
     },
     originator () {
       return (this.IsServantReceive === 1) ? 'to' : 'from'
@@ -98,10 +103,24 @@ export default {
   },
   methods: {
     previewImage (index) {
-      this.$refs.previewer.show(index)
+      const that = this
+      if (!this.previewImageLock) {
+        this.$vux.loading.show({
+          text: '加载中'
+        })
+        this.previewImageSample.src = this.modelImage
+        this.previewImageSample.onload = function () {
+          that.$refs.previewer.show(index)
+          that.$vux.loading.hide()
+        }
+        this.previewImageLock = true
+      }
     },
     onloaded () {
       this.$emit('onloaded')
+    },
+    unLock () {
+      this.previewImageLock = false
     }
   }
 }

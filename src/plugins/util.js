@@ -148,6 +148,9 @@ export default {
               ctx.rotate(3 * Math.PI / 2)
               ctx.drawImage(image, -canvas.height, 0, canvas.height, canvas.width)
               break
+            default:
+              ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+              break
           }
         } else {
           ctx.drawImage(image, 0, 0, canvas.width, canvas.height)

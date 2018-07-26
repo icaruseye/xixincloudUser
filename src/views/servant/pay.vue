@@ -71,7 +71,6 @@ export default {
           'paySign': data.paySign // 微信签名
         },
         async function (res) {
-          console.log(res)
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
             const res = await that.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
             if (res.data.Code === 100000) {

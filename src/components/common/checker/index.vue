@@ -6,6 +6,7 @@
                v-model="model"
                @change="handleChange"
                aria-hidden="true"
+               @click.stop="stop"
                class="xx-checker__original">
         <span class="xx-checker__inner"></span>
       </span>
@@ -39,6 +40,7 @@
       }
     },
     methods: {
+      stop () {},
       handleChange () {
         this.$nextTick(() => {
           this.$emit('change', this.model)

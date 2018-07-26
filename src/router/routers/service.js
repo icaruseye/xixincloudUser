@@ -27,6 +27,12 @@ export default [
     component: _import('/service/service-reserve'),
     meta: {
       title: '预约服务'
+    },
+    beforeRouteLeave (to, from, next) {
+      // 预约认证流程，返回跳过认证页面
+      if (to.path.substr(0, 11) !== '/service/in') {
+        next('/service')
+      }
     }
   },
   {

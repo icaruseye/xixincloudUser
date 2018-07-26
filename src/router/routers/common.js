@@ -22,5 +22,12 @@ export default [
     meta: {
       title: '添加服务者'
     }
+  },
+  {
+    path: '/organ/:id',
+    component: _import('/common/organ'),
+    meta: {
+      title: '机构首页'
+    }
   }
 ]

@@ -281,14 +281,12 @@ export default {
     },
     // 提交用户发送内容
     async sendMsg (msg) {
-      console.log(msg)
       const res = await this.$http.post(`/Chat`, {
         Content: (msg.MsgType === 2) ? msg.Image : msg.Content,
         MsgType: msg.MsgType,
         MissionID: this.ID
       })
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
         this.messageList.push(msg)
         this.scrollToBottom()
       } else {
@@ -298,7 +296,6 @@ export default {
     },
     // 创建任务上传图片
     onUpdate (id) {
-      console.log(id.join(','))
       this.reqParams.ReserveImg = id.join(',')
     },
     // 文本域字数限制

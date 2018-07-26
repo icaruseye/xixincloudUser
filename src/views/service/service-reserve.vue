@@ -360,6 +360,7 @@ export default {
       let arr = Object.assign({}, this.orderDetail.ItemCarryGoodsList[index])
       arr.value = !arr.value
       this.$set(this.orderDetail.ItemCarryGoodsList, index, arr)
+      console.log(this.orderDetail.ItemCarryGoodsList[index].value)
     },
     getPrepareGoodsTags () {
       let arr = []

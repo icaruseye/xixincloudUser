@@ -72,7 +72,6 @@ export default {
       that.goDown()
     }, 0)
     const userTimer = setInterval(() => {
-      console.log('123')
       this.chatRecordTimePoll()
     }, 5000)
     this.$once('hook:beforeDestroy', () => {
