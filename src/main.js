@@ -46,6 +46,17 @@ Vue.filter('timeFormat', function (value = '') {
   return value
 })
 
+Vue.filter('ItemImageByUseType', function (val = 1) {
+  switch (val) {
+    case 2:
+      return require('@/assets/images/icon_picc2.png')
+    case 3:
+      return require('@/assets/images/icon_picc3.png')
+    default:
+      return require('@/assets/images/icon_picc.png')
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   router,

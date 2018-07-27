@@ -29,8 +29,7 @@
                 <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
                   <div class="weui-list_item" :key="mIndex">
                     <div class="icon">
-                      <img v-if="mItem.OrderDetail.UseType === 1 || mItem.OrderDetail.UseType === 3" src="@/assets/images/icon_picc.png" alt="">
-                      <img v-if="mItem.OrderDetail.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+                      <img :src="mItem.OrderDetail.UseType | ItemImageByUseType" alt="">
                     </div>
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
@@ -74,8 +73,7 @@
                   <template v-for="(mItem, mIndex) in cItem._ItemsDetails">
                     <div class="weui-list_item" :key="mIndex">
                       <div class="icon">
-                        <img v-if="mItem.OrderDetail.UseType === 1 || mItem.OrderDetail.UseType === 3" src="@/assets/images/icon_picc.png" alt="">
-                        <img v-if="mItem.OrderDetail.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+                        <img :src="mItem.OrderDetail.UseType | ItemImageByUseType" alt="">
                       </div>
                       <div class="avatar">
                       </div>
@@ -125,8 +123,7 @@
           <template v-for="(item, index) in dataList">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
               <div class="avatar">
-                <img v-if="item.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
-                <img v-if="item.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+                <img :src="item.UseType | ItemImageByUseType" alt="">
               </div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
@@ -137,7 +134,7 @@
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0 && item.UseType !== 2">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->
                 <div class="describe" v-if="item.Type === 1 && item.UseType !== 2">{{item.ViewTime}}</div>
-                <div class="describe">下单时间：{{item.CreateTime | timeFormat}}</div>
+                <div class="describe" v-if="item.UseType === 2">下单时间：{{item.CreateTime | timeFormat}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -158,8 +155,7 @@
           <template v-for="(item, index) in dataListDone">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
               <div class="avatar">
-                <img v-if="item.UseType === 1" src="@/assets/images/icon_picc.png" alt="">
-                <img v-if="item.UseType === 2" src="@/assets/images/icon_picc2.png" alt="">
+                <img :src="item.UseType | ItemImageByUseType" alt="">
               </div>
               <div class="mid">
                 <div style="display: flex;justify-content: space-between;align-items: baseline;">
@@ -357,7 +353,7 @@ export default {
       }
     },
     missionDetail (id, type, useType) {
-      if (useType === 1) {
+      if (useType !== 2) {
         this.$router.push(`/service/in/${id}?type=${type}`)
       }
       if (useType === 2) {

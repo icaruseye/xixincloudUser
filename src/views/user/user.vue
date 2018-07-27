@@ -26,21 +26,18 @@
       </div>
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/info?edit=1" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-info.png" alt="">
+          <i class="iconfont icon-iconfontzhizuobiaozhun0252"></i>
           <span class="title">个人资料</span>
-          <i class="iconfont icon-jiantouyou"></i>
         </router-link>
       </div>
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-comp.png" alt="">
+          <i class="iconfont icon-tousu"></i>
           <span class="title">我的投诉</span>
-          <i class="iconfont icon-jiantouyou"></i>
         </router-link>
         <router-link to="/user/address" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-address.png" alt="">
+          <i class="iconfont icon-dizhi"></i>
           <span class="title">常用地址</span>
-          <i class="iconfont icon-jiantouyou"></i>
         </router-link>
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-help.png" alt="">
@@ -48,9 +45,8 @@
           <i class="iconfont icon-jiantouyou"></i>
         </router-link> -->
         <router-link to="/user/phone?edit=1" class="setting-panel_item item vux-1px-b">
-          <i class="iconfont icon-shouji" style="font-size:20px;margin-right:5px;"></i>
+          <i class="iconfont icon-shouji"></i>
           <span class="title">手机认证</span>
-          <i class="iconfont icon-jiantouyou"></i>
         </router-link>
         <!-- <router-link to="/user/order" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
@@ -127,7 +123,7 @@ export default {
   padding: 10px 0;
   display: flex;
   background: #fff;
-  border-bottom: #9fe6e6 1px solid;
+  border-bottom: #f1f1f1 1px solid;
   font-size: 12px;
   .user-panel_item {
     text-align: center;
@@ -156,11 +152,17 @@ export default {
   &.vux-1px-b:after {
     border-color: #e5e5e5;
   }
+  .iconfont {
+    font-size:20px;
+    margin-right:5px;
+  }
   .setting-panel_item {
+    position: relative;
+    display: block;
     width: 90%;
     margin: 0 auto;
     box-sizing: border-box;
-    padding: 15px 0;
+    padding: 15px 0 15px 40px;
     display: flex;
     align-items: center;
     color: #666;
@@ -174,11 +176,17 @@ export default {
       padding-right: 10px;
     }
     .title {
+      color: #999;
       flex: 1;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
     }
     .iconfont {
-      color: #ccc;
-      font-size: 15px;
+      position: absolute;
+      left: 0;
+      color: #999;
+      font-size: 24px;
+      margin-right: 15px;
     }
   }
 }

@@ -250,7 +250,7 @@ export default {
     // 更多的消息
     async moreMessage () {
       const prePageLastDomClass = `.message_item_${this.messageList[0].ID}`
-      const prePageLastDomTop = document.querySelector(prePageLastDomClass).offsetTop - document.documentElement.scrollTop
+      const prePageLastDomTop = document.querySelector(prePageLastDomClass).offsetTop - (document.body.scrollTop | document.documentElement.scrollTop)
       await this.getMessageList().then(result => {
         this.messageId = result.Data.MessageID
         this.messageList = [
