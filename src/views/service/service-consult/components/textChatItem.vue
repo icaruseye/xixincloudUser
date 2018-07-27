@@ -133,6 +133,7 @@ export default {
 {
   position: relative;
   min-height: 50px;
+  margin-bottom: 10px;
   padding: 0 70px;
   .avatar
   {

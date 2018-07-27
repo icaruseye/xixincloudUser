@@ -228,12 +228,7 @@ export default {
     }
   },
   created () {
-    // 预约列表
-    this.getUserOrderDetailsList()
-    // 服务中列表
-    this.initData()
-    // 已完成列表
-    this.getDone()
+    this.fromTabIndexGetData(this.tabIndex)
   },
   methods: {
     /** 初始化 */
@@ -256,6 +251,25 @@ export default {
             this.flag2 = that.dataList.length === 0
           })
           break
+      }
+    },
+    fromTabIndexGetData (index) {
+      switch (index) {
+        case 0:
+          // 预约列表
+          this.getUserOrderDetailsList()
+          break
+        case 1:
+          // 服务中列表
+          this.initData()
+          break
+        case 2:
+          // 已完成列表
+          this.getDone()
+          break
+        default:
+          // 预约列表
+          this.getUserOrderDetailsList()
       }
     },
     /** 查看全部 */
@@ -365,6 +379,7 @@ export default {
       this.$store.commit('setServiceTabIndex2', index)
     },
     onItemClick (id) {
+      this.fromTabIndexGetData(id)
       this.$store.commit('setServiceTabIndex', id)
     },
     toDetail (id) {

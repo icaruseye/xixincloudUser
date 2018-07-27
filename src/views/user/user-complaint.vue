@@ -14,7 +14,7 @@
         <template v-for="(item, index) in list">
           <div class="weui-list_item" :key="index" @click="toDetail(item.ID)">
             <div class="avatar">
-              <img src="@/assets/images/icon_picc.png" alt="">
+              <img :src="item.UseType | ItemImageByUseType" alt="">
             </div>
             <div class="mid">
               <div style="display: flex;justify-content: space-between;align-items: baseline;">
@@ -51,13 +51,11 @@ export default {
   },
   created () {
     this.getComplainting()
-    this.getComplate()
   },
   methods: {
     async getComplainting () {
       const res = await this.$http.get('/ComplaintList/Complainting')
       if (res.data.Code === 100000) {
-        this.Complainting = res.data.Data
         this.list = res.data.Data
         this.flag = res.data.Data.length === 0
       } else {
@@ -67,7 +65,8 @@ export default {
     async getComplate () {
       const res = await this.$http.get('/ComplaintList/Complate')
       if (res.data.Code === 100000) {
-        this.Complate = res.data.Data
+        this.list = res.data.Data
+        this.flag = res.data.Data.length === 0
       } else {
         this.$vux.toast.text('出错了')
       }
@@ -75,11 +74,9 @@ export default {
     onItemClick (index) {
       this.tabIndex = index
       if (index === 0) {
-        this.list = this.Complainting
-        this.flag = this.Complainting.length === 0
+        this.getComplainting()
       } else {
-        this.list = this.Complate
-        this.flag = this.Complate.length === 0
+        this.getComplate()
       }
     },
     toDetail (id) {
