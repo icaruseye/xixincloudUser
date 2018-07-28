@@ -20,7 +20,7 @@
         <div>服务评分</div>
       </div>
     </div>
-    <div v-if="userAccount.IsSubscribe">
+    <div v-if="!userAccount.IsSubscribe">
       <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + userAccount.ShopID" alt=""></div>
       <div style="text-align: center;font-size: 14px;color: #f8a519;">长按二维码点击识别， 点击关注公众号。</div>
       <div style="text-align: center;font-size: 12px;color: #666;">不知道如何操作？请看<a href="javascript:;" style="color:#3ecccc" @click="showDialog">《关注》</a> 帮助文档</div>
@@ -89,7 +89,7 @@ export default {
     async addFirends () {
       const res = await this.$http.get(`/AddFriend/${this.$route.query.id}`)
       if (res.data.Code === 100000) {
-        if (!this.userAccount.IsSubscribe) {
+        if (this.userAccount.IsSubscribe) {
           this.$router.push(`/servant/service/${this.$route.query.id}?isShare=1`)
         } else {
           this.isShow = true

@@ -5,9 +5,9 @@
       <div class="servant-panel">
         <servantInfo :data="servantInfos"></servantInfo>
       </div>
-      <!-- 医生服务 -->
+      <!-- 服务介绍 -->
       <div class="servant-panel servant-panel_service" v-if="itemList.length > 0">
-        <div class="servant-panel_title"><i class="icon icon-2"></i>医生服务</div>
+        <div class="servant-panel_title"><i class="icon icon-2"></i>服务介绍</div>
         <div class="servant-pane_subtitle">单项服务</div>
         <servantItemist :list="itemList" :isItem="true" :limit="10"></servantItemist>
       </div>
