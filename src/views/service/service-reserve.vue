@@ -53,7 +53,7 @@
           @onUpdate="onUpdate1"
         ></xx-uploader>
       </xx-cell-items>
-      <div class="tips warn">{{AgreementList[1].Content}}</div>
+      <div class="tips warn" v-if="AgreementList[1].Content">{{AgreementList[1].Content}}</div>
       <template v-for="(item, index) in orderDetail.ItemCarryGoodsList">
         <xx-cell-items :label="item.ViewName" @click.native="changeRadio(index)" class="noraml_cell" style="padding: 20px 0 15px 0;" :key="index">
           <div style="display: flex;justify-content: flex-end;">
@@ -61,7 +61,7 @@
           </div>
         </xx-cell-items>
       </template>
-      <div class="tips warn">
+      <div class="tips warn" v-if="AgreementList[2].Content">
         {{AgreementList[2].Content}}
       </div>
       <div class="tips text">
@@ -74,7 +74,7 @@
     <div v-transfer-dom
       :should-rerender-on-show="true"
       max-height="50%">
-      <popup v-model="isShowAddress">
+      <popup v-model="isShowAddressList">
         <div class="address-list_title">请选择地址</div>
         <div class="address-list_container">
           <template v-for="(item, index) in addressList">
@@ -97,7 +97,7 @@
       </confirm>
     </div>
     <div v-transfer-dom>
-      <popup v-model="showAddressEdit" height="100%" style="z-index:502">
+      <popup v-model="showAddressEdit" :should-rerender-on-show="true" height="100%" style="z-index:502">
         <userAddressEdit :UserAddress="UserAddress" :id="-1" :defaultOnly="isEmptyList" @cancel="cancelAddress" @success="successAddress"></userAddressEdit>
       </popup>
     </div>
@@ -143,7 +143,7 @@ export default {
       isEmptyList: false,
       submitDisable: false,
       isConfirm: false,
-      isShowAddress: false,
+      isShowAddressList: false,
       address: '',
       addressList: [],
       addressIndex: 0,
@@ -275,17 +275,22 @@ export default {
     limitCount (max) {
       this.exceedText = this.reqParams.Discription.length > max
     },
+    // 关闭添加地址
     cancelAddress () {
       this.showAddressEdit = false
+      this.isShowAddressList = true
     },
+    // 添加地址成功
     successAddress () {
       this.showAddressEdit = false
+      this.isShowAddressList = true
       this.getAddressList()
     },
     // 新增地址
     addAddress () {
       this.UserAddress = { IsDefault: 1 }
       this.showAddressEdit = true
+      this.isShowAddressList = false
     },
     transformAddress (val) {
       return util.transformAddress(val)
@@ -295,12 +300,12 @@ export default {
     },
     // 显示选择地址弹出层
     showAddress () {
-      this.isShowAddress = true
+      this.isShowAddressList = true
     },
     // 选择地址
     chooseAdress (index) {
       this.addressIndex = index
-      this.isShowAddress = false
+      this.isShowAddressList = false
       this.reqParams.Address = this.concatAdress(this.addressList[index])
     },
     // 转换地址

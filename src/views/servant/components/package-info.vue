@@ -59,6 +59,9 @@ export default {
       isShow: false
     }
   },
+  mounted () {
+    console.log(this.data)
+  },
   methods: {
     showQrcode () {
       this.isShow = true

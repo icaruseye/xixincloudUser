@@ -342,16 +342,19 @@ export default {
     async getUserOrderDetailsList () {
       const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
-        const waitPaySuccess = document.querySelectorAll('.waitPaySuccess')
         this.UserOrderDetailsList = res.data.Data
         if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0) {
           this.flag1 = true
         }
-        if (waitPaySuccess.length > 0) {
-          setTimeout(() => {
-            this.getUserOrderDetailsList()
-          }, 1000 * 30)
-        }
+        this.$nextTick(() => {
+          const waitPaySuccess = document.querySelectorAll('.waitPaySuccess')
+          if (waitPaySuccess.length > 0) {
+            console.log(waitPaySuccess.length)
+            setTimeout(() => {
+              this.getUserOrderDetailsList()
+            }, 15 * 1000)
+          }
+        })
       }
     },
     // 已完成
@@ -423,6 +426,10 @@ export default {
   padding-top: 17px;
   font-size: 15px;
   color: #666;
+}
+
+.weui-list_container {
+  padding: 0;
 }
 
 .weui-panel_subinfo {

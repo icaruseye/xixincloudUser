@@ -2,7 +2,15 @@
   <div style="position:fixed;left:0;top:0;right:0;">
     <div class="form-panel">
       <div class="weui-form-cell">
-        <x-address title="省市区" v-model="data.citys" :list="addressData" class="address-picker" placeholder="请选择地址" value-text-align="center" :popup-style="{'z-index': 503}"></x-address>
+        <x-address
+          title="省市区"
+          v-model="data.citys"
+          :list="addressData"
+          class="address-picker"
+          placeholder="请选择地址"
+          value-text-align="center"
+          :popup-style="{'z-index': 503}">
+        </x-address>
         <input v-model="data.citys" name="citys" type="hidden">
       </div>
       <div class="weui-form-cell">

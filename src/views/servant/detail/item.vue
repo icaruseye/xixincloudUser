@@ -9,9 +9,21 @@
         </ul>
       </div>
     </div> -->
-    <div class="item-info mgt10">
+    <div class="item-info mgt10" v-if="ItemTemplate.Attention">
       <div class="item-info-title">注意事项</div>
-      <div class="content mgt10">用户必须具备正规医疗机构开具的处方、药品及病历证明；服务人员只提供上门输液服务，不提供相关药品；年龄不满18岁者不提供上门服务；普通输液服务为扎针技术服务，包含看护时间至少20分钟。</div>
+      <div class="content mgt10">{{ItemTemplate.Attention}}</div>
+    </div>
+    <!-- 机构地址 -->
+    <div class="item-info mgt10" v-if="ItemTemplate.UseType === 3">
+      <div class="item-info-title">机构地址</div>
+      <div class="content mgt10">
+        <template v-for="(item, index) in AddressList">
+          <div class="address-list_item" :key="index" @click="chooseAdress(index)">
+            <div class="tag">{{item.Remark}}<span v-if="index === 0">(默认)</span></div>
+            <div class="detail">{{item.Province | _transformAddress}}{{item.City | _transformAddress}}{{item.Area | _transformAddress}}{{item.SpecificAddress}}</div>
+          </div>
+        </template>
+      </div>
     </div>
     <div class="item-info mgt10 tips">
       购买前请仔细阅读<span @click="showTips">《购买须知》</span> ，当中包含购买规则及退款规则
@@ -33,6 +45,7 @@
 </template>
 
 <script>
+import util from '@/plugins/util'
 import packageInfo from '../components/package-info'
 import { TransferDomDirective as TransferDom } from 'vux'
 export default {
@@ -42,6 +55,11 @@ export default {
   components: {
     packageInfo
   },
+  filters: {
+    _transformAddress (val) {
+      return util.transformAddress(val)
+    }
+  },
   data () {
     return {
       isShowTips: false,
@@ -49,7 +67,9 @@ export default {
       saleOut: false,
       Item: {},
       ItemActionDetails: [],
-      Agreement: {}
+      Agreement: {},
+      ItemTemplate: {},
+      AddressList: []
     }
   },
   computed: {
@@ -66,10 +86,25 @@ export default {
       this.saleOut = true
     }
     // this.initData()
-    this.getPackageDetail()
+    this.getPackageDetail().then((res) => {
+      this.Item = res.Data.Package
+      this.ItemTemplate = res.Data.ItemTemplate
+      if (res.Data.ItemTemplate.UseType === 3) {
+        this.getAddressList(res.Data.Package)
+      }
+    })
     this.getShopAgreement()
   },
   methods: {
+    // 获取机构地址列表
+    async getAddressList (Package) {
+      const res = await this.$http.get(`/ServantAddress?servantViewID=${Package.ServantViewID}`)
+      if (res.data.Code === 100000) {
+        this.AddressList = res.data.Data
+      } else {
+        this.$vux.toast.text('出错了')
+      }
+    },
     async getShopAgreement () {
       const res = await this.$http.get(`/ShopAgreement?protocalType=5&itemID=${this.itemID}`)
       if (res.data.Code === 100000 && res.data.Data) {
@@ -87,7 +122,7 @@ export default {
     async getPackageDetail () {
       const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        this.Item = res.data.Data.Package
+        return res.data
       } else {
         this.$vux.toast.text('出错了')
       }
@@ -225,6 +260,40 @@ export default {
     line-height: 1.8;
     margin-bottom: 10px;
     font-size: 13px;
+  }
+}
+.address-list_item {
+  position: relative;
+  background: #fff;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  &::after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    border-bottom: 1px solid #f1f1f1;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    z-index: 2;
+  }
+  &:last-child::after {
+    border: 0;
+  }
+  .tag {
+    width: 100px;
+    color: #999;
+  }
+  .detail {
+    flex: 1;
+    color: #666;
+    padding-right: 10px;
   }
 }
 </style>

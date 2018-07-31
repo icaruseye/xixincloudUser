@@ -63,7 +63,7 @@ export default {
     async getServantInfo () {
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        this.servantInfos = Object.assign(res.data.Data.ServantAccount, {AverageScore: res.data.Data.AverageScore, ServiceTimes: res.data.Data.ServiceTimes})
+        this.servantInfos = Object.assign(res.data.Data.ServantAccount, {AverageScore: res.data.Data.AverageScore, ServiceTimes: res.data.Data.ServiceTimes}, {ViewName: res.data.Data.ViewName})
         sessionStorage.setItem('myServantInfo', JSON.stringify(this.servantInfos))
       } else {
         this.$vux.toast.text('出错了')

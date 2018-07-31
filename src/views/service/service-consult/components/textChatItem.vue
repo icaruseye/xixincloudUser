@@ -12,7 +12,7 @@
           class="previewer-img">
       </div>
       <div v-transfer-dom>
-        <previewer ref="previewer" :list="previewImgUrlList" @on-close="unLock" :options="options"></previewer>
+        <previewer ref="previewer" :list="previewImgUrlList" @on-close="unLock"></previewer>
       </div>
     </div>
     <!-- 文本 -->
@@ -80,17 +80,6 @@ export default {
     },
     imgGroupClass () {
       return `preview_image_${Math.floor(Math.random() * 9999 + 1000)}`
-    },
-    options () {
-      const that = this
-      return {
-        getThumbBoundsFn (index) {
-          let thumbnail = document.querySelectorAll(`.${that.imgGroupClass}`)[index]
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
-      }
     }
   },
   mounted () {

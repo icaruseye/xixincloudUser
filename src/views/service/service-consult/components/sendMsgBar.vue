@@ -2,8 +2,8 @@
   <div class="container" ref="operContainerRef">
     <div class="oper_container">
       <label class="select_img_btn">
-        <label class="icon-tupian iconfont"  for="uploadImgBtn"></label>
-        <input id="uploadImgBtn" type="file" @change="change">
+        <label class="icon-tupian iconfont" for="uploadImgBtn"></label>
+        <input id="uploadImgBtn" type="file" accept="image/*" @change="change">
       </label>
       <div class="input_control_box">
         <input type="text"

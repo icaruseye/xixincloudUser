@@ -23,14 +23,14 @@
               </template>
             </ul>
             <div class="weui-uploader__input-box" v-show="count < limit">
-                <input class="weui-uploader__input" type="file" @change="change">
+                <input class="weui-uploader__input" type="file" accept="image/*" @change="change">
             </div>
         </div>
       </div>
       <!-- 头像 -->
       <div v-else class="weui-uploader">
         <div class="is-avatar" :style="{'background-image': 'url(' + list[0].url + ')'}">
-            <input class="weui-uploader__input" type="file" @change="change">
+            <input class="weui-uploader__input" type="file" accept="image/*" @change="change">
         </div>
       </div>
     </div>

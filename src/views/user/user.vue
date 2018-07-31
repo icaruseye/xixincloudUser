@@ -25,33 +25,38 @@
               <i class="iconfont icon-dingdan1" style="color:#f58779"></i>
               <div class="text">订单</div>
             </router-link>
+            <router-link to="/user/complaint" class="user-panel_item">
+              <i class="iconfont icon-tousu1" style="color:rgb(78, 203, 115)"></i>
+              <div class="text">投诉</div>
+            </router-link>
           </div>
         </div>
       </div>
+      
       <div class="setting-panel" style="margin-top:10px">
+        <router-link to="/user/phone?edit=1" class="setting-panel_item">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-shoujihong"></use>
+          </svg>
+          <span class="title vux-1px-b">手机认证</span>
+        </router-link>
         <router-link to="/user/info?edit=1" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-ziliao-"></use>
           </svg>
           <span class="title vux-1px-b">个人资料</span>
         </router-link>
-        <router-link to="/user/complaint" class="setting-panel_item">
+        <!-- <router-link to="/user/complaint" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-complaint"></use>
           </svg>
           <span class="title vux-1px-b">我的投诉</span>
-        </router-link>
+        </router-link> -->
         <router-link to="/user/address" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-dizhi1"></use>
           </svg>
           <span class="title vux-1px-b">常用地址</span>
-        </router-link>
-        <router-link to="/user/phone?edit=1" class="setting-panel_item">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-shoujihong"></use>
-          </svg>
-          <span class="title vux-1px-b">手机认证</span>
         </router-link>
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-help.png" alt="">
@@ -104,14 +109,14 @@ export default {
 .user-card-container {
   position: relative;
   background: #3ecccc;
-  margin-bottom: 70px;
+  margin-bottom: 60px;
   height: 110px;
 }
 .user-card {
   position: relative;
   top: 20px;
   background: #fff;
-  margin: 0 15px;
+  margin: 0 10px;
   border-radius: 4px;
 }
 // 用户信息栏

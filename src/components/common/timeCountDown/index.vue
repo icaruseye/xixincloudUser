@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     getCountDown (startTime) {
-      let t = 1000 * 60 * 60 * 24 * 3 + startTime - Date.parse(new Date())
+      let t = 1000 * 60 * 60 * (24 * 3 - 8) + startTime - Date.parse(new Date())
       let seconds = Math.floor((t / 1000) % 60)
       let minutes = Math.floor((t / 1000 / 60) % 60)
       let hours = Math.floor((t / (1000 * 60 * 60)) % 24)

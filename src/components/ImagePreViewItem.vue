@@ -5,7 +5,7 @@
         <img  v-for="(item, index) in prewimgList" :src="item.src" :key="index" @click="previewImage(index)" class="previewer-img" alt="">
       </div>
       <div v-transfer-dom>
-        <previewer ref="previewer" :list="prewimgList" :options="options"></previewer>
+        <previewer ref="previewer" :list="prewimgList"></previewer>
       </div>
     </template>
     <template v-else>
@@ -38,18 +38,6 @@ export default {
         return newList
       } else {
         return null
-      }
-    }
-  },
-  data () {
-    return {
-      options: {
-        getThumbBoundsFn (index) {
-          let thumbnail = document.querySelectorAll('.previewer-img')[index]
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
       }
     }
   },
