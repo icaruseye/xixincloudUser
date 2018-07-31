@@ -23,10 +23,10 @@
     <!-- 服务包介绍 -->
     <div class="package-info mgt10">
       <div class="title">
-        <span class="left">服务套餐介绍</span>
-        <span class="right" v-if="data.EffectiveDay">该套餐有效期：{{data.EffectiveDay}}天</span>
-        <span class="right" v-if="data.EffectiveMonth">该套餐有效期：{{data.EffectiveMonth}}月</span>
-        <span class="right" v-if="data.EffectiveYear">该套餐有效期：{{data.EffectiveYear}}年</span>
+        <span class="left">服务介绍</span>
+        <span class="right" v-if="data.EffectiveDay">有效期：{{data.EffectiveDay}}天</span>
+        <span class="right" v-if="data.EffectiveMonth">有效期：{{data.EffectiveMonth}}月</span>
+        <span class="right" v-if="data.EffectiveYear">有效期：{{data.EffectiveYear}}年</span>
       </div>
       <div class="content">
         {{data.Description}}

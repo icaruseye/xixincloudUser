@@ -110,19 +110,20 @@ export default {
   position: relative;
   background: #3ecccc;
   margin-bottom: 60px;
-  height: 110px;
+  height: 120px;
 }
 .user-card {
   position: relative;
   top: 20px;
   background: #fff;
   margin: 0 10px;
-  border-radius: 4px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .05);
 }
 // 用户信息栏
 .userinfo {
   width: 100%;
-  padding: 10px 20px;
+  padding: 15px 20px 10px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -179,9 +180,8 @@ export default {
   padding: 0 0 10px 0;
   display: flex;
   background: #fff;
-  border-bottom: #f1f1f1 1px solid;
   font-size: 12px;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 5px 5px;
   .user-panel_item {
     text-align: center;
     flex: 1;

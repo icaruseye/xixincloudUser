@@ -61,7 +61,7 @@
           </div>
         </xx-cell-items>
       </template>
-      <div class="tips warn" v-if="AgreementList[2].Content">
+      <div class="tips warn" v-if="AgreementList[2].Content && orderDetail.ItemCarryGoodsList.length > 0">
         {{AgreementList[2].Content}}
       </div>
       <div class="tips text">

@@ -258,6 +258,7 @@ export default {
       // 待服务
       if (this.serviceItemInfo.Type === 1 && [0, 1, 2, 3].indexOf(this.serviceItemInfo.State) !== -1) {
         this.steps = '2'
+        this.timeLines = '2'
       }
       // 已服务
       if (this.serviceItemInfo.Type === 1 && [4, 5, 6].indexOf(this.serviceItemInfo.State) !== -1) {

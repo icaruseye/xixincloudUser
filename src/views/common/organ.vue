@@ -3,7 +3,7 @@
     <div class="userinfo-panel">
       <div class="userinfo-block">
         <!-- 已绑定手机 -->
-        <div v-if="!userInfo.Mobile">
+        <div v-if="userInfo.Mobile">
           <div class="row-1">
             <div class="avatar">
               <img src="https://user-gold-cdn.xitu.io/2017/8/23/2d6a4f0f4b056f53e41ca657117615d7?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1" alt="">
@@ -12,8 +12,8 @@
               <div><span class="name">you make me sick</span></div>
               <div class="days">已被守护：<span>1002天</span></div>
               <div>
-                <span class="tag">实名认证</span>
-                <span class="tag">手机认证</span>
+                <span class="tag" v-if="userInfo.IDCard">实名认证</span>
+                <span class="tag" v-if="userInfo.Mobile">手机认证</span>
               </div>
             </div>
             <div class="qrcode">
@@ -21,19 +21,19 @@
             </div>
           </div>
           <div class="row-2">
-            <div class="item">
+            <div class="item" @click="go('/')">
               <i class="iconfont icon-xiaoxi1"></i>
               <div class="text">消息</div>
             </div>
-            <div class="item">
+            <div class="item" @click="go('/')">
               <i class="iconfont icon-ren1"></i>
               <div class="text">服务者</div>
             </div>
-            <div class="item">
+            <div class="item" @click="go('/service')">
               <i class="iconfont icon-neirong"></i>
               <div class="text">服务内容</div>
             </div>
-            <div class="item">
+            <div class="item" @click="go('/user')">
               <i class="iconfont icon-shijian"></i>
               <div class="text">日程</div>
             </div>
@@ -47,11 +47,11 @@
     </div>
     <!-- 机构介绍 -->
     <div class="organ-info">
-      <div class="item">
+      <div class="item" @click="showDialog">
         <img src="@/assets/images/organ-1.png" alt="">
         <div class="text">机构介绍</div>
       </div>
-      <div class="item">
+      <div class="item" @click="close">
         <img src="@/assets/images/organ-2.png" alt="">
         <div class="text">客服服务</div>
       </div>
@@ -71,20 +71,39 @@
         </div>
       </template>
     </div>
+    <!-- 机构介绍 -->
+    <div v-transfer-dom>
+      <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': '#fff'}">
+        <div class="tips-content">
+          <div class="title">{{Agreement.Title}}</div>
+          <div v-html="Agreement.Content"></div>
+        </div>
+        <div class="close" @click="showHideOnBlur = false" style="padding: 0 0 10px">
+          <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
+        </div>
+      </x-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { TransferDomDirective as TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
   data () {
     return {
-      itemList: []
+      itemList: [],
+      Agreement: {},
+      showHideOnBlur: false
     }
   },
   computed: {
     ...mapGetters([
-      'userInfo'
+      'userInfo',
+      'userAccount'
     ])
   },
   created () {
@@ -99,8 +118,23 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
+    async getShopAgreement () {
+      const res = await this.$http.get(`/ShopAgreement?protocalType=20&itemID=0`)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.Agreement = res.data.Data
+      }
+    },
+    showDialog () {
+      this.showHideOnBlur = true
+    },
     toItem (id) {
       this.$router.push(`/organ/item/${id}`)
+    },
+    go (url) {
+      this.$router.push(url)
+    },
+    close () {
+      WeixinJSBridge.call('closeWindow')
     }
   },
 }
@@ -108,6 +142,10 @@ export default {
 
 <style scoped lang="less">
 @import url(../servant/components/index.less);
+.weui-list_item .mid .title {
+  font-weight: normal;
+  color: #333;
+}
 .userinfo-panel {
   background: #A7E2F5;
   height: 170px;

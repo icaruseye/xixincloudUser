@@ -3,7 +3,7 @@
     <template v-for="(item, index) in list">
       <div class="weui-list_item" :key="index" @click="toItem(item.ID, item.Count)" v-if="index <= max - 1">
         <div class="icon">
-          <img src="@/assets/images/icon_picc.png" alt="">
+          <img :src="item.PackageType | ItemImageByUseType" alt="">
         </div>
         <div class="mid">
           <div class="title">{{item.Name}}</div>

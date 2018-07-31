@@ -91,6 +91,7 @@ export default {
   position: relative;
   min-height: 50px;
   padding: 0 70px;
+  margin-bottom: 10px;
   .avatar
   {
     position: absolute;

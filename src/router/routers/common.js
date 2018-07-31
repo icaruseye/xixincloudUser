@@ -24,8 +24,15 @@ export default [
     }
   },
   {
-    path: '/organ/:id',
+    path: '/organ',
     component: _import('/common/organ'),
+    meta: {
+      title: '机构首页'
+    }
+  },
+  {
+    path: '/organ/item/:id',
+    component: _import('/common/organItem'),
     meta: {
       title: '机构首页'
     }

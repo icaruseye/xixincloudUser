@@ -512,7 +512,6 @@ export default {
     .title {
       font-size: 15px;
       color: #666;
-      font-weight: bold;
     }
     .balance {
       font-size: 12px;

@@ -13,11 +13,11 @@
         <div>从业年限</div>
       </div> -->
       <div class="item">
-        <div><span class="color-ye">{{info.ServiceTimes ? info.ServiceTimes : '0'}}</span>次</div>
+        <div><span class="color-ye">{{info.ServiceTimes}}</span>次</div>
         <div>服务次数</div>
       </div>
       <div class="item">
-        <div><span class="color-ye">{{info.ServiceTimes ? (info.AverageScore/info.ServiceTimes).toFixed(1) : '5.0'}}</span>分</div>
+        <div><span class="color-ye">{{info.AverageScore}}</span>分</div>
         <div>服务评分</div>
       </div>
     </div>

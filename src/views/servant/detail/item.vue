@@ -1,14 +1,5 @@
 <template>
   <div class="has-tabbar">
-    <!-- <div class="item-info-time"><span class="left">服务时长</span> <span class="right"><span class="number">90</span>分钟/次</span></div> -->
-    <!-- <div class="item-info flex mgt10">
-      <div class="left">操作动作</div>
-      <div class="right">
-        <ul>
-          <li v-for="item in ItemActionDetails" :key="item.ID">{{item.Name}}</li>
-        </ul>
-      </div>
-    </div> -->
     <div class="item-info mgt10" v-if="ItemTemplate.Attention">
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">{{ItemTemplate.Attention}}</div>
