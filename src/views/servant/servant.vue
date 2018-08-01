@@ -3,6 +3,33 @@
     <div class="has-tabbar">
       <sticky
       :check-sticky-support="true">
+        <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
+          <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">消息</xx-tab-item>
+          <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">服务者</xx-tab-item>
+        </xx-tab>
+      </sticky>
+      <!-- 消息列表 -->
+      <div class="tabbox" v-show="tabIndex === 0">
+        <div class="tabbox-list vux-1px-b vux-1px-t">
+          <template v-for="(item, index) in servantList">
+            <div class="item vux-1px-b" @click="goChat(item.ServantViewID)" :key="index">
+              <div><img class="avatar" :src="item.ServantAvatar | transformImgUrl" alt=""></div>
+              <div class="mid">
+                <div style="color:#666">{{item.ServantName}}</div>
+                <div style="font-size:13px;color:#999">{{item.NewestContent}}</div>
+              </div>
+              <div style="width:30px;">
+                <i class="mail_num_icon" v-show="item.UnreadCount > 0">{{item.UnreadCount}}</i>
+              </div>
+            </div>
+          </template>
+          <xxOccupiedBox v-if="flag2">
+            <p>没有消息</p>
+          </xxOccupiedBox>
+        </div>
+      </div>
+      <!-- 服务者 -->
+      <div class="tabbox" v-show="tabIndex === 1">
         <router-link class="system_message_entrance_container" to="/systemMail">
           <div class="avatar_container"><img :src="userAccount.Avatar | transformImgUrl" alt=""></div>
           <div class="content">
@@ -15,31 +42,20 @@
             </div>
           </div>
         </router-link>
-      </sticky>
-      <div v-if="servantList.length > 0" class="tabbox-list vux-1px-b vux-1px-t mt10px" style="margin-top:10px;">
-        <template v-for="(item, index) in servantList">
-          <div class="item vux-1px-b" @click="goServant(item.FriendViewID, item.FriendID)" :key="index">
-            <div><img class="avatar" :src="item.FriendAvatar | transformImgUrl" alt=""></div>
-            <div class="mid">
-              <div class="">{{item.FriendName}}</div>
+        <div v-if="servantList.length > 0" class="tabbox-list vux-1px-b vux-1px-t mt10px" style="margin-top:10px;">
+          <template v-for="(item, index) in servantList">
+            <div class="item vux-1px-b" @click="goServant(item.ServantViewID, item.ServantID)" :key="index">
+              <div><img class="avatar" :src="item.ServantAvatar | transformImgUrl" alt=""></div>
+              <div class="mid">
+                <div class="">{{item.ServantName}}</div>
+              </div>
             </div>
-          </div>
-        </template>
-      </div>
-      <xx-occupied-box v-if="flag1">
-        <p>还没有添加服务者</p>
-      </xx-occupied-box>
-      <!-- 消息列表 -->
-      <!-- <div class="tabbox" v-show="tabIndex === 1">
-        <div class="tabbox-list vux-1px-b vux-1px-t" :class="{emptyList: flag2}">
-          <template v-for="(item, index) in msgList">
-            <mail-list-item :count="1" :key="index" @click="goChat(item.FriendViewID, index)">{{item.Message}}</mail-list-item>
           </template>
-          <xxOccupiedBox v-if="flag2">
-            <p>没有消息</p>
-          </xxOccupiedBox>
         </div>
-      </div> -->
+        <xx-occupied-box v-if="flag1">
+          <p>还没有添加服务者</p>
+        </xx-occupied-box>
+      </div>
     </div>
     <xx-tabbar></xx-tabbar>
   </div>
@@ -56,29 +72,42 @@ export default {
     TabItem,
     MailListItem
   },
-  data () {
-    return {
-      flag1: false,
-      flag2: false,
-      tabIndex: 0,
-      servantList: [],
-      UnreadSiteNotice: '',
-      occupiedText: ''
-    }
+  watch: {
+    unreadNum (val) {
+      if (val) {
+        this.getData()
+      }
+    },
+    messageTabIndex (val) {
+      this.tabIndex = val
+    },
   },
   computed: {
     ...mapGetters([
       'userAccount',
-      'userInfo'
+      'userInfo',
+      'unreadNum'
     ])
+  },
+  data () {
+    return {
+      flag1: false,
+      flag2: false,
+      tabIndex: this.$store.getters.messageTabIndex,
+      servantList: [],
+      msgList: [],
+      UnreadSiteNotice: '',
+      occupiedText: ''
+    }
   },
   created () {
     this.getData()
     this.getUnreadSiteNotice()
+    this.$store.dispatch('getHaveNewMsg')
   },
   methods: {
-    onItemClick (index) {
-      this.tabIndex = index
+    onItemClick (id) {
+      this.$store.commit('setMessageTabIndex', id)
     },
     goChat (id) {
       this.$router.push(`/servant/chat/${id}`)
@@ -110,12 +139,12 @@ export default {
 <style lang="less">
 .system_message_entrance_container
 {
+  margin-top: 10px;
   display: flex;
   height: 50px;
   width: 100%;
   flex-flow: nowrap;
   background-color: #fff;
-  box-shadow: 0 1px 6px rgba(153, 153, 153, 0.5);
   padding-left: 5px; 
   box-sizing: border-box;
   .avatar_container
@@ -217,5 +246,22 @@ export default {
   margin-right: 10px;
   width: 40px;
   height: 40px;
+}
+
+.mail_num_icon
+{
+  position: absolute;
+  padding: 0 5px;
+  height: 16px;
+  display: block;
+  font-style: normal;
+  background-color: #e7534a;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  line-height: 16px;
+  right: 10px;
+  top: 40px;
 }
 </style>

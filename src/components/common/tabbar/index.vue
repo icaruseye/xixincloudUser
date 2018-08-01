@@ -3,6 +3,7 @@
     <tabbar class="">
       <tabbar-item
         link="/servant"
+        :show-dot="isHaveNewMsg"
         :selected="'servant' == this.$route.path.split('/')[1]"
         class="weui-tabbar__icon_1">
         <div slot="icon"></div>
@@ -35,10 +36,16 @@
 
 <script>
 import { Tabbar, TabbarItem } from 'vux'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     Tabbar,
     TabbarItem
+  },
+  computed: {
+    ...mapGetters([
+      'isHaveNewMsg'
+    ])
   },
   data () {
     return {

@@ -1,22 +1,40 @@
 <template>
-  <div class="main_item_container">
+  <div class="main_item_container" @click="redirectToDetail(id)">
     <div class="left">
-      <img class="icon_img" src="@/assets/images/app-yhgl.png" alt="">
+      <svg class="icon" aria-hidden="true">
+        <use :xlink:href="msgType|xxSiteNoticeIconFilter"></use>
+      </svg>
     </div>
-    <div class="right">  
+    <div class="right">
       <h3 class="title text-overflow-1">
-        系统消息
+        {{title | xxTextTruncateFilter}}
       </h3>
-      <p class="desc text-overflow-1">服务器紧急维护通知</p>
-      <span class="time">2018/06/08 15:20</span>
-      <i class="mail_num_icon" v-if="count>0">{{count}}</i>
+      <p class="desc text-overflow-1"><slot></slot></p>
+      <span class="time">{{createTime | xxTimeFormatFilter}}</span>
+      <i class="mail_num_icon" v-if="count != null">{{count}}</i>
     </div>
   </div>
 </template>
 <script>
 export default {
   props: {
-    count: 0
+    id: null,
+    title: '',
+    count: null,
+    createTime: '',
+    msgType: {
+      type: Number,
+      default: 1
+    }
+  },
+  data () {
+    return {
+    }
+  },
+  methods: {
+    redirectToDetail () {
+      this.$router.push(`/mail/${this.id}/detail`)
+    }
   }
 }
 </script>
@@ -34,7 +52,7 @@ export default {
     justify-content: center;
     align-items: center;
     flex: 0 0 58px;
-    .icon_img
+    .icon
     {
       height: 30px;
       width: 30px;
@@ -48,7 +66,6 @@ export default {
     flex: 1;
     flex-flow: column;
     justify-content: center;
-    padding-right: 110px;
     .title
     {
       color: #333;
@@ -109,4 +126,3 @@ export default {
   display: none;
 }
 </style>
-

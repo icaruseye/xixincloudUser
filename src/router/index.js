@@ -8,6 +8,9 @@ import http from '../api'
 Vue.use(ToastPlugin)
 Vue.use(Router)
 
+// 轮询是否新消息定时器
+let newMsgTimer = null
+
 const router = new Router({
   mode: 'history',
   scrollBehavior (to, from, savedPosition) {
@@ -30,6 +33,9 @@ router.beforeEach((to, from, next) => {
 
   // 微信授权登录
   if (!userAccount.ID && window.location.pathname !== '/wxLogin') {
+    if (to.path === '/addFriends') {
+      sessionStorage.setItem('inviteCode', JSON.stringify(to.query))
+    }
     http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
       if (res.data.Code === 100000) {
         sessionStorage.setItem('to_path', to.fullPath)
@@ -37,6 +43,12 @@ router.beforeEach((to, from, next) => {
       }
     })
     return false
+  }
+
+  if (!newMsgTimer) {
+    newMsgTimer = setInterval(() => {
+      store.dispatch('getHaveNewMsg')
+    }, 5000)
   }
 
   // 加好友

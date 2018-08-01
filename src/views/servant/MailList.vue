@@ -1,19 +1,25 @@
 <template>
   <div>
-    <!-- <div>
-      <mail-group-item :count="1"></mail-group-item>
-    </div> -->
-    <div v-if="list.length > 0" class="mt10px">
-      <mail-list-item v-for="(item, index) in list"
-        :key="index" 
-        :count="item.State === 0 ? '未读': null"
-        :title="item.Title"
-      >
-        {{item.Message}}
-      </mail-list-item>
+    <div v-if="flag">
+      <div>
+        <mail-group-item :count="1" :msgType="1"></mail-group-item>
+        <mail-group-item :count="1" :msgType="2"></mail-group-item>
+      </div>
+      <div style="margin-top:10px" v-if="list.length > 0">
+        <template v-for="(item, index) in list">
+          <mail-list-item
+            :count="1"
+            :id="item.id"
+            :msgType="4"
+            :key="index"
+            :createTime="item.createTime"
+            :title="item.title">
+          </mail-list-item>
+        </template>
+      </div>
     </div>
     <xx-occupied-box v-else>
-      {{occupiedText}}
+      正在请求数据…
     </xx-occupied-box>
   </div>
 </template>
@@ -27,8 +33,8 @@ export default {
   },
   data () {
     return {
-      list: [],
-      occupiedText: ''
+      flag: false,
+      list: []
     }
   },
   created () {
@@ -36,14 +42,13 @@ export default {
   },
   methods: {
     async init () {
-      this.occupiedText = '正在请求数据…'
       await this.getData().then(value => {
         this.list = value.Data
+        this.flag = true
       })
-      this.occupiedText = '系统消息列表为空'
     },
     async getData () {
-      const res = await this.$http.get('/SiteNoticeList')
+      const res = await this.$http.get(`/SiteNoticeList/Unread?type=4`)
       if (res.data.Code === 100000) {
         return res.data
       } else {

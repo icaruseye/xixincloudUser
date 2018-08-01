@@ -56,8 +56,26 @@ Vue.filter('ItemImageByUseType', function (val = 1) {
       return require('@/assets/images/icon_picc.png')
   }
 })
+/**
+ * 站内信分类图标
+ */
+Vue.filter('xxSiteNoticeIconFilter', (type = 1) => {
+  switch (type) {
+    case 2:
+      return '#icon-dingdan1'
+    case 4:
+      return '#icon-icon_xitonggonggao'
+    default:
+      return '#icon-xiaoxi-xitongxiaoxi'
+  }
+})
+/**
+ * 文字加省略号
+ */
+Vue.filter('xxTextTruncateFilter', (value = '', len = 10) => {
+  return value.length > len ? value.substring(0, len) + '…' : value
+})
 
-/* eslint-disable no-new */
 new Vue({
   router,
   store,

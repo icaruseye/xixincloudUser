@@ -90,7 +90,7 @@ export default {
       const res = await this.$http.get(`/AddFriend/${this.$route.query.id}`)
       if (res.data.Code === 100000) {
         if (this.userAccount.IsSubscribe) {
-          this.$router.push(`/servant/service/${this.$route.query.id}?isShare=1`)
+          this.$router.replace(`/servant/service/${this.$route.query.id}?isShare=1`)
         } else {
           this.isShow = true
         }

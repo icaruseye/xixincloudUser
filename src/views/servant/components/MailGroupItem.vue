@@ -1,16 +1,25 @@
 <template>
   <div class="main_item_container">
     <div class="left">
-      <img class="icon_img" src="@/assets/images/app-yhgl.png" alt="">
+      <svg class="icon" aria-hidden="true">
+        <use :xlink:href="msgType|xxSiteNoticeIconFilter"></use>
+      </svg>
     </div>
-    <div class="right">  
+    <div class="right">
       <h3 class="title text-overflow-1">
-        系统消息
+        {{msgType|nameFilter}}
       </h3>
       <p class="desc text-overflow-1">
-        荣获《财资》杂志 “2016年最佳企业金奖”
+        <template v-if="latestNews">
+        </template>
+        <template v-else>
+          当前还没有收到{{msgType|nameFilter}}
+        </template>
       </p>
-      <span class="time">2018/06/08 15:20</span>
+      <span class="time">
+        <template v-if="latestNews">
+        </template>
+      </span>
       <i class="mail_num_icon" v-if="count > 0">{{count}}</i>
     </div>
   </div>
@@ -18,7 +27,36 @@
 <script>
 export default {
   props: {
-    count: 0
+    msgType: {
+      type: Number,
+      default: 1
+    }
+  },
+  filters: {
+    nameFilter (type = 1) {
+      switch (type) {
+        case 2:
+          return '订单消息'
+        default:
+          return '系统消息'
+      }
+    }
+  },
+  data () {
+    return {
+      count: 0,
+      latestNews: null
+    }
+  },
+  created () {
+    this.getLatestNews()
+  },
+  methods: {
+    getLatestNews () {
+      this.$http.get(`/SiteNotice/Count?type=${this.msgType}`).then(result => {
+        console.log(result)
+      })
+    }
   }
 }
 </script>
@@ -36,7 +74,7 @@ export default {
     justify-content: center;
     align-items: center;
     flex: 0 0 58px;
-    .icon_img
+    .icon
     {
       height: 30px;
       width: 30px;
@@ -111,4 +149,3 @@ export default {
   display: none;
 }
 </style>
-

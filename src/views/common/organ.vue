@@ -136,7 +136,7 @@ export default {
     close () {
       WeixinJSBridge.call('closeWindow')
     }
-  },
+  }
 }
 </script>
 
