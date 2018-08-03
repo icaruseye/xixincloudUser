@@ -1,59 +1,48 @@
 <template>
   <div>
-    <div v-if="flag">
-      <div>
-        <mail-group-item :count="1" :msgType="1"></mail-group-item>
-        <mail-group-item :count="1" :msgType="2"></mail-group-item>
-      </div>
-      <div style="margin-top:10px" v-if="list.length > 0">
-        <template v-for="(item, index) in list">
-          <mail-list-item
-            :count="1"
-            :id="item.id"
-            :msgType="4"
-            :key="index"
-            :createTime="item.createTime"
-            :title="item.title">
-          </mail-list-item>
-        </template>
-      </div>
-    </div>
-    <xx-occupied-box v-else>
-      正在请求数据…
-    </xx-occupied-box>
+      <template v-if="list.length > 0">
+        <mail-list-item v-for="(item, index) in list"
+          :id="item.ID"
+          :key="index"
+          :msgType="item.Type"
+          :createTime="item.CreateTime"
+          :count="item.State === 0 ? '未读': null"
+          :title="item.Title"
+        >
+          {{item.Message | xxTextTruncateFilter(15)}}
+        </mail-list-item>
+      </template>
+      <xx-occupied-box v-else>
+        {{type|xxSiteNoticeTypeTitleFilter}}列表为空
+      </xx-occupied-box>
   </div>
 </template>
 <script>
 import MailListItem from './components/MailListItem'
-import MailGroupItem from './components/MailGroupItem'
 export default {
   components: {
-    MailListItem,
-    MailGroupItem
+    MailListItem
+  },
+  computed: {
+    type () {
+      return this.$route.params.type
+    }
   },
   data () {
     return {
-      flag: false,
       list: []
     }
   },
   created () {
-    this.init()
+    this.getData()
   },
   methods: {
-    async init () {
-      await this.getData().then(value => {
-        this.list = value.Data
-        this.flag = true
+    getData () {
+      this.$vux.loading.show('加载中')
+      this.$http.get(`/SiteNoticeList/Unread?type=${this.type}`).then(result => {
+        this.$vux.loading.hide()
+        this.list = result.data.Data
       })
-    },
-    async getData () {
-      const res = await this.$http.get(`/SiteNoticeList/Unread?type=4`)
-      if (res.data.Code === 100000) {
-        return res.data
-      } else {
-        this.$vux.toast.text('出错了')
-      }
     }
   }
 }

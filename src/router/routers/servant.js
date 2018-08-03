@@ -17,9 +17,23 @@ export default [
   },
   {
     path: '/systemMail',
+    component: _import('/servant/MailTypeList'),
+    meta: {
+      title: '我的消息'
+    }
+  },
+  {
+    path: '/systemMail/:type/list',
     component: _import('/servant/MailList'),
     meta: {
-      title: '系统消息'
+      title: '站内信列表'
+    }
+  },
+  {
+    path: '/mail/:id/detail',
+    component: _import('/servant/MailDetail'),
+    meta: {
+      title: '站内信详情'
     }
   },
   {

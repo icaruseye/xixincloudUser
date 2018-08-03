@@ -31,11 +31,15 @@ Vue.component('x-dialog', XDialog)
 
 FastClick.attach(document.body)
 Vue.prototype.$http = http
-
+/**
+ * 图片地址
+ */
 Vue.filter('transformImgUrl', function (val) {
   return util.transformImgUrl(val)
 })
-
+/**
+ * 时间格式化
+ */
 Vue.filter('timeFormat', function (value = '') {
   let lastIndexOf = value.lastIndexOf('.')
   if (lastIndexOf > 0) {
@@ -45,7 +49,9 @@ Vue.filter('timeFormat', function (value = '') {
   }
   return value
 })
-
+/**
+ * 服务项图标
+ */
 Vue.filter('ItemImageByUseType', function (val = 1) {
   switch (val) {
     case 2:
@@ -67,6 +73,19 @@ Vue.filter('xxSiteNoticeIconFilter', (type = 1) => {
       return '#icon-icon_xitonggonggao'
     default:
       return '#icon-xiaoxi-xitongxiaoxi'
+  }
+})
+/**
+* 站内信分类标题
+*/
+Vue.filter('xxSiteNoticeTypeTitleFilter', (type = 1) => {
+  switch (type) {
+    case 2:
+      return '订单消息'
+    case 4:
+      return '系统公告'
+    default:
+      return '系统消息'
   }
 })
 /**

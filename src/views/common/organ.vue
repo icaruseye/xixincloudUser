@@ -6,11 +6,11 @@
         <div v-if="userInfo.Mobile">
           <div class="row-1">
             <div class="avatar">
-              <img src="https://user-gold-cdn.xitu.io/2017/8/23/2d6a4f0f4b056f53e41ca657117615d7?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1" alt="">
+              <img :src="userAccount.Avatar | transformImgUrl" alt="">
             </div>
             <div class="info">
-              <div><span class="name">you make me sick</span></div>
-              <div class="days">已被守护：<span>1002天</span></div>
+              <div><span class="name">{{userAccount.NickName}}</span></div>
+              <!-- <div class="days">已被守护：<span>1002天</span></div> -->
               <div>
                 <span class="tag" v-if="userInfo.IDCard">实名认证</span>
                 <span class="tag" v-if="userInfo.Mobile">手机认证</span>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="row-2">
-            <div class="item" @click="go('/')">
+            <div class="item" @click="go('/systemMail')">
               <i class="iconfont icon-xiaoxi1"></i>
               <div class="text">消息</div>
             </div>
@@ -180,6 +180,7 @@ export default {
       height: 50px;
       border-radius: 50%;
       margin-right: 10px;
+      overflow: hidden;
     }
     .info {
       flex: 1;

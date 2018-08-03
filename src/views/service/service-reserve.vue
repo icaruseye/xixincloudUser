@@ -539,4 +539,8 @@ export default {
     font-size: 13px;
   }
 }
+.address-list_container {
+  min-height: 100px;
+  background: #fff;
+}
 </style>

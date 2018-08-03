@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="user-info">
-      <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
+      <router-link :to="'/servant/service/'+ ServAccount.ViewID">
+        <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
+      </router-link>
       <span class="name">{{ServAccount.NickName}}</span>
     </div>
     <div class="chat-list" id="chatList" :style="{paddingBottom : faceHeight + 'px'}">

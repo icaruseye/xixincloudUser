@@ -26,9 +26,7 @@ const mutations = {
     state.routerLoading = flag
   },
   [HAVE_NEW_MSG] (state, res) {
-    if (res) {
-      state.unreadNum ++
-    }
+    state.unreadNum = res ? state.unreadNum + 1 : 0
     state.isHaveNewMsg = res
   }
 }

@@ -2,7 +2,7 @@
   <div>
     <!-- 服务包头部信息 -->
     <div class="package-header-info">
-      <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
+      <div class="icon"><img :src="data.PackageType | ItemImageByUseType" alt=""></div>
       <div class="mid">
         <div class="name">{{data.Name}}</div>
         <div class="sales">

@@ -111,11 +111,11 @@ export default {
     change (e) {
       const that = this
       that.file = e.target.files[0]
+      that.count++
       if (!that.checkCount(e)) return false
 
       // 获取照片的元信息（拍摄方向）
       EXIF.getData(that.file, function () {
-        that.count++
         that.orient = EXIF.getTag(this, 'Orientation')
         that.reader.readAsDataURL(that.file)
         e.target.value = ''
@@ -132,13 +132,13 @@ export default {
         timeout: 15000,
         onUploadProgress: function (progressEvent) {
           var complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+          console.log(complete)
           _img.progress = complete
         }
       }
       try {
         const res = await axios(options)
         _img.status = 1
-        this.count--
         if (this.isAvatar) {
           this.guid = [res.data.data.objectId]
         } else {
@@ -165,6 +165,7 @@ export default {
       if (this.isAvatar) {
         return true
       }
+      console.log(this.count)
       if (this.count > this.limit) {
         AlertModule.show({
           title: '提示',

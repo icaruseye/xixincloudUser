@@ -5,9 +5,6 @@
       <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
       <div class="mid">
         <div class="name">{{Item.Name}}</div>
-        <div class="sales">
-          <div class="price">{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
-        </div>
       </div>
     </div>
     <!-- 服务包介绍 -->

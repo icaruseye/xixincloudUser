@@ -12,7 +12,7 @@
         <div>从业年限</div>
       </div> -->
       <div class="item">
-        <div><span class="color-ye">{{info.ServiceTimes}</span>次</div>
+        <div><span class="color-ye">{{info.ServiceTimes}}</span>次</div>
         <div>服务次数</div>
       </div>
       <div class="item">

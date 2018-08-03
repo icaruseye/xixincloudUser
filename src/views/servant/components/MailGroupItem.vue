@@ -1,5 +1,5 @@
 <template>
-  <div class="main_item_container">
+  <div class="main_item_container" @click="redirectToList">
     <div class="left">
       <svg class="icon" aria-hidden="true">
         <use :xlink:href="msgType|xxSiteNoticeIconFilter"></use>
@@ -37,8 +37,10 @@ export default {
       switch (type) {
         case 2:
           return '订单消息'
-        default:
+        case 4:
           return '系统消息'
+        default:
+          return '系统公告'
       }
     }
   },
@@ -56,6 +58,9 @@ export default {
       this.$http.get(`/SiteNotice/Count?type=${this.msgType}`).then(result => {
         console.log(result)
       })
+    },
+    redirectToList () {
+      this.$router.push(`/systemMail/${this.msgType}/list`)
     }
   }
 }

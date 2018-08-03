@@ -1,52 +1,42 @@
 <template>
   <div>
-    <div class="has-tabbar">
-      <!-- 服务者 -->
-      <router-link class="system_message_entrance_container" to="/systemMail">
-        <div class="avatar_container"><img :src="userAccount.Avatar | transformImgUrl" alt=""></div>
-        <div class="content">
-          {{userInfo.RealName}}
-        </div>
-        <div class="icon_box">
-          <div class="sysetem_message_img_icon">
-            <img src="@/assets/images/ic_message.png" alt="">
-            <i v-if="UnreadSiteNotice > 0 || unreadNum" class="new_sysetem_message_icon"></i>
-          </div>
-        </div>
-      </router-link>
-      <div v-if="servantList.length > 0" class="tabbox-list vux-1px-b vux-1px-t mt10px" style="margin-top:10px;">
-        <template v-for="(item, index) in servantList">
-          <div class="item vux-1px-b" @click="goServant(item.ServantViewID, item.ServantID)" :key="index">
-            <div><img class="avatar" :src="item.ServantAvatar | transformImgUrl" alt=""></div>
-            <div class="mid">
-              <div class="">{{item.ServantName}}</div>
-            </div>
-          </div>
-        </template>
+    <div v-if="flag">
+      <div>
+        <mail-group-item :count="1" :msgType="1"></mail-group-item>
+        <mail-group-item :count="1" :msgType="2"></mail-group-item>
+        <mail-group-item :count="1" :msgType="4"></mail-group-item>
       </div>
-      <xx-occupied-box v-if="flag1">
-        <p>还没有添加服务者</p>
-      </xx-occupied-box>
+      <!-- 消息列表 -->
+      <div class="tabbox">
+        <div class="tabbox-list vux-1px-b vux-1px-t">
+          <template v-for="(item, index) in chatList">
+            <div class="item vux-1px-b" @click="goChat(item.ServantViewID)" :key="index">
+              <div><img class="avatar" :src="item.ServantAvatar | transformImgUrl" alt=""></div>
+              <div class="mid">
+                <div style="color:#666">{{item.ServantName}}</div>
+                <div style="font-size:13px;color:#999">{{item.NewestContent}}</div>
+              </div>
+              <div style="width:30px;display:flex;algin-items:center">
+                <i class="mail_num_icon" v-show="item.UnreadCount > 0">{{item.UnreadCount}}</i>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
     </div>
-    <xx-tabbar></xx-tabbar>
+    <xx-occupied-box v-else>
+      正在请求数据…
+    </xx-occupied-box>
   </div>
 </template>
-
 <script>
 import {mapGetters} from 'vuex'
-import { Tab, TabItem, Sticky } from 'vux'
 import MailListItem from './components/MailListItem'
+import MailGroupItem from './components/MailGroupItem'
 export default {
   components: {
-    Sticky,
-    Tab,
-    TabItem,
-    MailListItem
-  },
-  watch: {
-    messageTabIndex (val) {
-      this.tabIndex = val
-    },
+    MailListItem,
+    MailGroupItem
   },
   computed: {
     ...mapGetters([
@@ -55,43 +45,34 @@ export default {
       'unreadNum'
     ])
   },
+  watch: {
+    unreadNum (val) {
+      if (val) {
+        this.getChatList()
+      }
+    }
+  },
   data () {
     return {
-      flag1: false,
-      flag2: false,
-      tabIndex: this.$store.getters.messageTabIndex,
-      servantList: [],
-      UnreadSiteNotice: ''
+      flag: false,
+      chatList: []
     }
   },
   created () {
-    this.getData()
-    this.getUnreadSiteNotice()
-    this.$store.dispatch('getHaveNewMsg')
+    this.getChatList()
   },
   methods: {
-    onItemClick (id) {
-      this.$store.commit('setMessageTabIndex', id)
-    },
-    goServant (viewID, ID) {
-      this.$router.push(`/servant/service/${viewID}`)
-    },
-    async getData () {
+    async getChatList () {
       const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
       if (res.data.Code === 100000) {
-        this.servantList = res.data.Data
-        this.flag1 = this.servantList.length === 0
+        this.chatList = res.data.Data
+        this.flag = true
       } else {
         this.$vux.toast.text('出错了')
       }
     },
-    async getUnreadSiteNotice () {
-      const res = await this.$http.get('/SiteNotice/Count/Unread')
-      if (res.data.Code === 100000) {
-        this.UnreadSiteNotice = res.data.Data === 0 ? '' : res.data.Data
-      } else {
-        this.$vux.toast.text('出错了')
-      }
+    goChat (id) {
+      this.$router.push(`/servant/chat/${id}`)
     }
   }
 }
@@ -168,7 +149,6 @@ export default {
   border-top: 1px solid #e5e5e5;
 }
 
-
 .tabbox-list {
   padding: 15px;
   background: #fff;
@@ -208,4 +188,21 @@ export default {
   height: 40px;
 }
 
+.mail_num_icon
+{
+  position: absolute;
+  padding: 0 5px;
+  height: 16px;
+  display: block;
+  font-style: normal;
+  background-color: #e7534a;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  line-height: 16px;
+  right: 10px;
+  top: 40px;
+}
 </style>
+
