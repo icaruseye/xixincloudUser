@@ -2,10 +2,7 @@
   <div>
     <template  v-if="prewimgList != null">
       <div class="thumbs_container">
-        <img  v-for="(item, index) in prewimgList" :src="item.src" :key="index" @click="previewImage(index)" class="previewer-img" alt="">
-      </div>
-      <div v-transfer-dom>
-        <previewer ref="previewer" :list="prewimgList"></previewer>
+        <img v-for="(item, index) in prewimgList" :src="item" :key="index" @click="previewImage(index)" class="previewer-img" alt="">
       </div>
     </template>
     <template v-else>
@@ -14,16 +11,10 @@
   </div>
 </template>
 <script>
-import { Previewer, TransferDom } from 'vux'
+import { ImagePreview } from 'vant'
 export default {
-  directives: {
-    TransferDom
-  },
   props: {
     list: ''
-  },
-  components: {
-    Previewer
   },
   computed: {
     prewimgList () {
@@ -31,9 +22,7 @@ export default {
         const list = this.list.split(',')
         let newList = []
         list.map((item) => {
-          newList.push({
-            src: this.transformImgUrl(item)
-          })
+          newList.push(this.transformImgUrl(item))
         })
         return newList
       } else {
@@ -43,7 +32,8 @@ export default {
   },
   methods: {
     previewImage (index) {
-      this.$refs.previewer.show(index)
+      ImagePreview(this.prewimgList, index)
+      // this.$refs.previewer.show(index)
     },
     transformImgUrl (val) {
       if (!val) return
@@ -61,12 +51,15 @@ export default {
 .thumbs_container
 {
   padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
   .previewer-img
   {
     display: inline-block;
     width: 65px;
     height: 65px;
     margin-right: 10px;
+    margin-bottom: 5px;
   }
 }
 </style>

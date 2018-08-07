@@ -2,8 +2,8 @@
   <div class="has-tabbar">
     <!-- 服务包头部信息 -->
     <div class="package-header-info">
-      <div class="icon"><img src="@/assets/images/icon_picc.png" alt=""></div>
       <div class="mid">
+        <div class="icon"><img :src="Item.UseType | ItemImageByUseType" alt=""></div>
         <div class="name">{{Item.Name}}</div>
       </div>
     </div>
@@ -65,20 +65,24 @@ export default {
 .package-header-info {
   background: #fff;
   padding: 20px 12px 12px;
+  height: 120px;
   display: flex;
   align-items: center;
+  background: linear-gradient(to right, #3CC7F5, #42C7F6, #9EC2FB);
   .icon {
+    margin: 0 auto;
     width: 29px;
     height: 29px;
   }
   .mid {
-    margin: 0 22px;
     flex: 1;
     .name {
+      margin-top: 5px;
       font-weight: bold;
       font-size: 18px;
-      color: #666;
+      color: #fff;
       font-weight: bold;
+      text-align: center;
     }
     .describe {
       font-size: 13px;

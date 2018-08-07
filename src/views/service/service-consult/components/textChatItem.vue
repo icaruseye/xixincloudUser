@@ -7,12 +7,9 @@
         <img 
           :src="modelImage"
           :class="[imgGroupClass]"
-          @click="previewImage(0)"
+          @click="previewImage"
           @load="onloaded"
           class="previewer-img">
-      </div>
-      <div v-transfer-dom>
-        <previewer ref="previewer" :list="previewImgUrlList" @on-close="unLock"></previewer>
       </div>
     </div>
     <!-- 文本 -->
@@ -30,15 +27,8 @@
 </template>
 <script>
 import util from '@/plugins/util'
-import { Previewer, TransferDom, XImg } from 'vux'
+import { ImagePreview } from 'vant'
 export default {
-  directives: {
-    TransferDom
-  },
-  components: {
-    Previewer,
-    XImg
-  },
   props: {
     avatar: {
       type: String,
@@ -55,12 +45,6 @@ export default {
     MsgType: {
       type: Number,
       default: ''
-    }
-  },
-  data () {
-    return {
-      previewImageLock: false,
-      previewImageSample: new Image()
     }
   },
   computed: {
@@ -94,19 +78,20 @@ export default {
     this.$vux.loading.hide()
   },
   methods: {
-    previewImage (index) {
-      const that = this
-      if (!this.previewImageLock) {
-        this.$vux.loading.show({
-          text: '加载中'
-        })
-        this.previewImageSample.src = this.modelImage
-        this.previewImageSample.onload = function () {
-          that.$refs.previewer.show(index)
-          that.$vux.loading.hide()
-        }
-        this.previewImageLock = true
-      }
+    previewImage () {
+      ImagePreview([util.transformImgUrl(this.Content)])
+      // const that = this
+      // if (!this.previewImageLock) {
+      //   this.$vux.loading.show({
+      //     text: '加载中'
+      //   })
+      //   this.previewImageSample.src = this.modelImage
+      //   this.previewImageSample.onload = function () {
+      //     that.$refs.previewer.show(index)
+      //     that.$vux.loading.hide()
+      //   }
+      //   this.previewImageLock = true
+      // }
     },
     onloaded () {
       this.$emit('onloaded')
@@ -207,6 +192,13 @@ export default {
   {
     background-color: #FFEDD1;
     border-color: transparent transparent #FFD797 #FFD797
+  }
+}
+
+.thumbs_container {
+  background: #fff;
+  img {
+    background: #fff;
   }
 }
 </style>

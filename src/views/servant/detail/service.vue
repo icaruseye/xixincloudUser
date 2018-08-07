@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { Toast } from 'vant'
 import servantInfo from '../components/service-info'
 import servantItemist from '../components/package-list'
 import servantComments from '../components/comments'
@@ -54,11 +55,14 @@ export default {
     }
   },
   mounted () {
-    this.getServantInfo()
-    this.getItemList()
+    this.init()
     // this.getComments()
   },
   methods: {
+    async init () {
+      await this.getServantInfo()
+      await this.getItemList()
+    },
     // 获取服务人员信息
     async getServantInfo () {
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.params.id}`)

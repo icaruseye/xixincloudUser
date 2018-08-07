@@ -22,7 +22,7 @@
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
         <div class="tips-content">
-          <div class="title">{{Agreement.Title}}</div>
+          <!-- <div class="title">{{Agreement.Title}}</div> -->
           <div v-html="Agreement.Content"></div>
         </div>
         <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
