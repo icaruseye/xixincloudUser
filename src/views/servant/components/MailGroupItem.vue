@@ -38,9 +38,9 @@ export default {
         case 2:
           return '订单消息'
         case 4:
-          return '系统消息'
-        default:
           return '系统公告'
+        default:
+          return '系统消息'
       }
     }
   },

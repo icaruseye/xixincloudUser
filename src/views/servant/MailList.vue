@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     type () {
-      return this.$route.params.type
+      return +this.$route.params.type
     }
   },
   data () {

@@ -10,11 +10,12 @@
 export default {
   methods: {
     async login () {
-      const inviteCode = JSON.parse(sessionStorage.getItem('inviteCode')) || {}
+      const inviteParams = JSON.parse(sessionStorage.getItem('inviteParams')) || {}
       const option = {
         code: this.$route.query.code,
         shopID: this.$route.query.shopID,
-        viewID: inviteCode.id
+        RefereeViewID: inviteParams.id || 0,
+        RefereeType: inviteParams.type || 0
       }
       // 获取token
       const res = await this.$http.get('/Login', option)

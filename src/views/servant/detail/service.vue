@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { Toast } from 'vant'
 import servantInfo from '../components/service-info'
 import servantItemist from '../components/package-list'
 import servantComments from '../components/comments'

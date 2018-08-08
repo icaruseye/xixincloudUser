@@ -29,6 +29,30 @@ Vue.component('x-dialog', XDialog)
 //   attempt: 1
 // })
 
+// 错误监控
+var fundebug = require('fundebug-javascript')
+fundebug.apikey = 'fdd5b0ab154e4073ecd3b140d5ac23948a53490af859fa0c0c9ddec70406ef62'
+
+function formatComponentName (vm) {
+  if (vm.$root === vm) return 'root'
+
+  var name = vm._isVue ? (vm.$options && vm.$options.name) || (vm.$options && vm.$options._componentTag) : vm.name
+  return (name ? 'component <' + name + '>' : 'anonymous component') + (vm._isVue && vm.$options && vm.$options.__file ? ' at ' + (vm.$options && vm.$options.__file) : '')
+}
+
+Vue.config.errorHandler = function (err, vm, info) {
+  var componentName = formatComponentName(vm)
+  var propsData = vm.$options && vm.$options.propsData
+
+  fundebug.notifyError(err, {
+    metaData: {
+      componentName: componentName,
+      propsData: propsData,
+      info: info
+    }
+  })
+}
+
 FastClick.attach(document.body)
 Vue.prototype.$http = http
 /**

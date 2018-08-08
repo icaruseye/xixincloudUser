@@ -36,7 +36,6 @@
 import {mapGetters} from 'vuex'
 import { Tab, TabItem, Sticky } from 'vux'
 import MailListItem from './components/MailListItem'
-import { Toast } from 'vant'
 export default {
   components: {
     Sticky,
@@ -47,7 +46,7 @@ export default {
   watch: {
     messageTabIndex (val) {
       this.tabIndex = val
-    },
+    }
   },
   computed: {
     ...mapGetters([
@@ -78,12 +77,7 @@ export default {
       this.$router.push(`/servant/service/${viewID}`)
     },
     async getData () {
-      const loading = Toast.loading({
-        mask: true,
-        message: '加载中...'
-      });
       const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
-      loading.clear()
       if (res.data.Code === 100000) {
         this.servantList = res.data.Data
         this.flag1 = this.servantList.length === 0
