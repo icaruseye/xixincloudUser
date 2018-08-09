@@ -49,5 +49,12 @@ export default [
     meta: {
       title: '投诉详情'
     }
+  },
+  {
+    path: '/user/recommend',
+    component: _import('/user/user-recommend'),
+    meta: {
+      title: '推荐'
+    }
   }
 ]

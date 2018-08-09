@@ -14,8 +14,8 @@ export default {
       const option = {
         code: this.$route.query.code,
         shopID: this.$route.query.shopID,
-        RefereeViewID: inviteParams.id || 0,
-        RefereeType: inviteParams.type || 0
+        RefereeType: inviteParams.refereeType || 0,
+        RefereeViewID: inviteParams.refereeViewID || ''
       }
       // 获取token
       const res = await this.$http.get('/Login', option)

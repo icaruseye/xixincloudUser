@@ -46,17 +46,17 @@
           </svg>
           <span class="title vux-1px-b">个人资料</span>
         </router-link>
-        <!-- <router-link to="/user/complaint" class="setting-panel_item">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-complaint"></use>
-          </svg>
-          <span class="title vux-1px-b">我的投诉</span>
-        </router-link> -->
         <router-link to="/user/address" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-dizhi1"></use>
           </svg>
           <span class="title vux-1px-b">常用地址</span>
+        </router-link>
+        <router-link to="/user/recommend" class="setting-panel_item">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-tuijian"></use>
+          </svg>
+          <span class="title vux-1px-b">推荐</span>
         </router-link>
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-help.png" alt="">

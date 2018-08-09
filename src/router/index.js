@@ -34,6 +34,7 @@ router.beforeEach((to, from, next) => {
   // 微信授权登录
   if (!userAccount.ID && window.location.pathname !== '/wxLogin') {
     sessionStorage.setItem('inviteParams', JSON.stringify(to.query))
+    console.log(to.query)
     http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
       if (res.data.Code === 100000) {
         sessionStorage.setItem('to_path', to.fullPath)
