@@ -12,10 +12,10 @@
          ref="chatInput"
          v-model="msg">
       </div>
-      <div class="emoji_show_container" @click="emojiContainerShow = !emojiContainerShow">
+      <!-- <div class="emoji_show_container" @click="emojiContainerShow = !emojiContainerShow">
         <i v-if="!emojiContainerShow" class="iconfont icon-biaoqing-xue"></i>
         <i v-else class="iconfont icon-jianpan"></i>
-      </div>
+      </div> -->
       <div class="send_msg_container">
         <button @click="sendTextMsg">发送</button>
       </div>

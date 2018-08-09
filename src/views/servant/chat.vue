@@ -33,7 +33,7 @@
         @click="isFaceShow = false"
         @focus="inputFocus"
         @keyup.enter="sendMsg">
-        <i class="iconfont icon-biaoqing1" @click="showFace"></i>
+        <!-- <i class="iconfont icon-biaoqing1" @click="showFace"></i> -->
         <button type="button" class="send-msg" @click="sendMsg">发送</button>
       </div>
       <div class="chat-face-box" id="chatFaceBox">
@@ -284,6 +284,7 @@ export default {
       overflow: auto;
       word-break: break-all;
       color: #333;
+      margin-right: 5px;
     }
     .send-msg {
       border: 0;

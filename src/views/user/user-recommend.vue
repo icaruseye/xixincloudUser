@@ -4,10 +4,10 @@
       <div class="userinfo-pannel">
         <img :src="userAccount.Avatar | transformImgUrl" alt="">
         <div class="name">{{userAccount.NickName}}</div>
-        <!-- <div class="tag">推荐二维码</div> -->
+        <div class="tag">推荐二维码</div>
       </div>
       <div style="width:200px;margin: 0 auto 10px">
-        <button-tab v-model="index" height="30">
+        <button-tab v-model="index" :height="30">
           <button-tab-item>推荐用户</button-tab-item>
           <button-tab-item>推荐服务者</button-tab-item>
         </button-tab>

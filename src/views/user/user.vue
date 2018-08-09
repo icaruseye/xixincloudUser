@@ -52,12 +52,12 @@
           </svg>
           <span class="title vux-1px-b">常用地址</span>
         </router-link>
-        <router-link to="/user/recommend" class="setting-panel_item">
+        <!-- <router-link to="/user/recommend" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-tuijian"></use>
           </svg>
           <span class="title vux-1px-b">推荐</span>
-        </router-link>
+        </router-link> -->
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-help.png" alt="">
           <span class="title">帮助</span>
@@ -96,6 +96,7 @@ export default {
   },
   created () {
     this.$store.dispatch('getAccount')
+    console.log(navigator.userAgent)
   }
 }
 </script>
