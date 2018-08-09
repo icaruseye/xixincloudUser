@@ -4,11 +4,17 @@
       <div class="userinfo-pannel">
         <img :src="userAccount.Avatar | transformImgUrl" alt="">
         <div class="name">{{userAccount.NickName}}</div>
-        <div class="tag">推荐二维码</div>
+        <!-- <div class="tag">推荐二维码</div> -->
+      </div>
+      <div style="width:200px;margin: 0 auto 10px">
+        <button-tab v-model="index" height="30">
+          <button-tab-item>推荐用户</button-tab-item>
+          <button-tab-item>推荐服务者</button-tab-item>
+        </button-tab>
       </div>
       <div class="qrcode">
-        <!-- <img :src="API_PATH+'/QrCodeToUser/?userID=' + userAccount.ID" alt=""> -->
-        <img :src="API_PATH+'/QrCodeToServant/?userID=' + userAccount.ID" alt="">
+        <img v-show="index === 0" :src="API_PATH+'/QrCodeToUser/?userID=' + userAccount.ID" alt="">
+        <img v-show="index === 1" :src="API_PATH+'/QrCodeToServant/?userID=' + userAccount.ID" alt="">
       </div>
     </div>
   </div>
@@ -16,7 +22,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { ButtonTab, ButtonTabItem } from 'vux'
 export default {
+  components: {
+    ButtonTab,
+    ButtonTabItem
+  },
   computed: {
     ...mapGetters([
       'userAccount'
@@ -24,24 +35,33 @@ export default {
     API_PATH () {
       return process.env.API_PATH
     }
-  }
+  },
+  data() {
+    return {
+      index: 0
+    }
+  },
 }
 </script>
 
 <style scoped lang="less">
 .wrap {
   min-height: 100vh;
-  padding-top: 80px;
+  padding-top: 70px;
   box-sizing: border-box;
   background: #3ecccc;
   .container {
     position: relative;
-    padding-top: 90px;
+    padding-top: 120px;
     margin: 0 20px;
     background: #fff;
     border-radius: 2px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
     .qrcode {
+      position: relative;
+      width: 250px;
+      margin: 0 auto;
+      font-size: 0;
     }
   }
 }
