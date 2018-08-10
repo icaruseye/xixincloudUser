@@ -17,7 +17,7 @@
         {{Content.ReserveRemark}}
       </div>
       <div class="msg_text_container" v-if="MsgType === 6">
-        {{Content.Result ? Content.Result : '服务人员没有填写服务结果'}}
+        {{Content.Result ? Content.Result : '服务已完成'}}
       </div>
       <div class="msg_imsg_container" v-if="MsgType === 5 && Content.ReserveImgs">
         <image-preview-item :list="Content.ReserveImgs" @onloaded="onloaded"></image-preview-item>

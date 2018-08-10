@@ -34,12 +34,6 @@
       </div>
       
       <div class="setting-panel" style="margin-top:10px">
-        <router-link to="/user/phone?edit=1" class="setting-panel_item">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-shoujihong"></use>
-          </svg>
-          <span class="title vux-1px-b">手机认证</span>
-        </router-link>
         <router-link to="/user/info?edit=1" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-ziliao-"></use>
@@ -52,12 +46,18 @@
           </svg>
           <span class="title vux-1px-b">常用地址</span>
         </router-link>
-        <!-- <router-link to="/user/recommend" class="setting-panel_item">
+        <router-link to="/user/phone?edit=1" class="setting-panel_item">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-shoujihong"></use>
+          </svg>
+          <span class="title vux-1px-b">手机认证</span>
+        </router-link>
+        <router-link to="/user/recommend" class="setting-panel_item">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-tuijian"></use>
           </svg>
           <span class="title vux-1px-b">推荐</span>
-        </router-link> -->
+        </router-link>
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-help.png" alt="">
           <span class="title">帮助</span>

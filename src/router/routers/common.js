@@ -20,7 +20,7 @@ export default [
     path: '/shareServant/:id',
     component: _import('/common/shareServant'),
     meta: {
-      title: '添加服务者'
+      title: '分享服务者'
     }
   },
   {
@@ -34,7 +34,14 @@ export default [
     path: '/organ/item/:id',
     component: _import('/common/organItem'),
     meta: {
-      title: '机构首页'
+      title: '服务项详情'
+    }
+  },
+  {
+    path: '/recommend',
+    component: _import('/common/recommend'),
+    meta: {
+      title: '推荐注册'
     }
   }
 ]

@@ -31,6 +31,11 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title
   }
 
+  if (to.path === '/recommend') {
+    next()
+    return false
+  }
+
   // 微信授权登录
   if (!userAccount.ID && window.location.pathname !== '/wxLogin') {
     sessionStorage.setItem('inviteParams', JSON.stringify(to.query))
