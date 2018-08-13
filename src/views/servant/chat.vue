@@ -1,10 +1,18 @@
 <template>
   <div>
-    <div class="user-info">
-      <router-link :to="'/servant/service/'+ ServAccount.ViewID">
-        <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
-      </router-link>
-      <span class="name">{{ServAccount.NickName}}</span>
+    <div style="position:fixed;top:0;width:100%;z-index:99">
+      <xx-nav-bar
+        left-text="消息"
+        :right-text="userAccount.NickName"
+        :avatar="userAccount.Avatar | transformImgUrl"
+        @click-left="onNavbarClickLeft">
+      </xx-nav-bar>
+      <div class="user-info">
+        <router-link :to="'/servant/service/'+ ServAccount.ViewID">
+          <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
+        </router-link>
+        <span class="name">{{ServAccount.NickName}}</span>
+      </div>
     </div>
     <div class="chat-list" id="chatList" :style="{paddingBottom : faceHeight + 'px'}">
       <template v-for="(item, index) in chatList">
@@ -46,10 +54,17 @@
 </template>
 
 <script>
-import { InlineLoading } from 'vux'
+import { mapGetters } from 'vuex'
+import { InlineLoading, Sticky } from 'vux'
 export default {
   components: {
-    InlineLoading
+    InlineLoading,
+    Sticky
+  },
+  computed: {
+    ...mapGetters([
+      'userAccount'
+    ])
   },
   data () {
     return {
@@ -159,6 +174,9 @@ export default {
       setTimeout(function () {
         that.goDown()
       }, 0)
+    },
+    onNavbarClickLeft () {
+      this.$router.push('/systemMail')
     }
   }
 }
@@ -167,15 +185,13 @@ export default {
 <style lang="less" scoped>
 .user-info {
   z-index: 10;
-  position: fixed;
-  top: 0;
   .avatar {
     border-radius: 0;
   }
 }
 
 .chat-list {
-  padding: 110px 0 100px;
+  padding: 154px 0 100px;
 }
 
 .chat-item {

@@ -120,11 +120,11 @@ export default {
   }
   .btn-user {
     background: #3ecccc;
-    box-shadow: 0px 9px 0px #2babab;
+    box-shadow: 0px 7px 0px #2babab;
   }
   .btn-servant {
     background: #4EC7F6;
-    box-shadow: 0px 9px 0px #3facd6;
+    box-shadow: 0px 7px 0px #3facd6;
   }
 }
 

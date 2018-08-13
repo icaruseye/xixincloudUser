@@ -1,18 +1,26 @@
 <template>
   <div>
-    <xx-step-bar :step="detail.State | stepFilter" style="position:fixed;top:0;width:100%;z-index:99">
-      <xx-step-items slot="items">
-        预约
-      </xx-step-items>
-      <xx-step-items slot="items">
-        服务中
-      </xx-step-items>
-      <xx-step-items slot="items">
-        已完成
-      </xx-step-items>
-    </xx-step-bar>
+    <div style="position:fixed;top:0;width:100%;z-index:99">
+      <xx-nav-bar
+        left-text="我的服务"
+        :right-text="userAccount.NickName"
+        :avatar="userAccount.Avatar | transformImgUrl"
+        @click-left="onNavbarClickLeft">
+      </xx-nav-bar>
+      <xx-step-bar :step="detail.State | stepFilter">
+        <xx-step-items slot="items">
+          预约
+        </xx-step-items>
+        <xx-step-items slot="items">
+          服务中
+        </xx-step-items>
+        <xx-step-items slot="items">
+          已完成
+        </xx-step-items>
+      </xx-step-bar>
+    </div>
     <!-- 预约 -->
-    <div class="reserve-wrap" style="padding: 100px 0 60px" v-if="isMission === 0">
+    <div class="reserve-wrap" style="padding: 144px 0 60px" v-if="isMission === 0">
       <xx-cell-items label="服务项" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="text-align: right;font-size:13px;color: #999">图文咨询</div>
       </xx-cell-items>
@@ -33,7 +41,7 @@
       </xx-cell-items>
     </div>
     <!-- 图文咨询 -->
-    <div class="content_container" style="padding: 100px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="isMission === 1">
+    <div class="content_container" style="padding: 144px 10px 60px" :style="'padding-bottom:'+ boxPaddingBottom+'px'" v-if="isMission === 1">
       <system-msg-item>
         温馨提示：服务者的回复仅供参考，不能作为诊断及医疗依据
       </system-msg-item>
@@ -337,6 +345,19 @@ export default {
     },
     complaint () {
       this.$router.push(`/service/complaint/${this.ID}`)
+    },
+    onNavbarClickLeft () {
+      if (this.detail.Type === 0 && this.detail.State === 0) {
+        this.$store.commit('setServiceTabIndex', 0)
+      }
+      if (this.detail.Type === 1 && this.detail.State <= 4) {
+        this.$store.commit('setServiceTabIndex', 1)
+        this.$store.commit('setServiceTabIndex2', 0)
+      }
+      if (this.detail.Type === 1 && this.detail.State >= 5) {
+        this.$store.commit('setServiceTabIndex', 2)
+      }
+      this.$router.push('/service')
     }
   }
 }

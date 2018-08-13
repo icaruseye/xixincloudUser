@@ -1,5 +1,11 @@
 <template>
   <div v-if="userInfo.IsMobileChecked !== 1">
+    <xx-nav-bar
+      left-text="返回"
+      :right-text="userAccount.NickName"
+      :avatar="userAccount.Avatar | transformImgUrl"
+      @click-left="onNavbarClickLeft">
+    </xx-nav-bar>
     <div class="form-panel">
       <div class="weui-form-cell">
         <div class="weui-cell-top">
@@ -31,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { AlertModule, XDialog, TransferDomDirective as TransferDom } from 'vux'
 export default {
   directives: {
@@ -38,6 +45,11 @@ export default {
   },
   components: {
     XDialog
+  },
+  computed: {
+    ...mapGetters([
+      'userAccount'
+    ])
   },
   data () {
     return {
@@ -151,6 +163,9 @@ export default {
         this.$vux.toast.text(res.data.Msg)
         this.disabledSubmit = false
       }
+    },
+    onNavbarClickLeft () {
+      this.$router.back()
     }
   }
 }

@@ -1,5 +1,11 @@
 <template>
   <div class="wrap has-tabbar">
+    <xx-nav-bar
+      left-text="我的服务"
+      :right-text="userAccount.NickName"
+      :avatar="userAccount.Avatar | transformImgUrl"
+      @click-left="onNavbarClickLeft">
+    </xx-nav-bar>
     <xx-step-bar :step="steps" v-if="serviceItemInfo.State !== -1">
       <xx-step-items slot="items">
         预约
@@ -112,6 +118,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import CancelMissionPopup from '@/components/cancelMissionPopup'
 import { TransferDom, Rater } from 'vux'
 import util from '@/plugins/util'
@@ -122,6 +129,11 @@ export default {
   components: {
     Rater,
     CancelMissionPopup
+  },
+  computed: {
+    ...mapGetters([
+      'userAccount'
+    ])
   },
   data () {
     return {
@@ -282,6 +294,19 @@ export default {
     // 跳转聊天
     toChat (ViewID) {
       this.$router.push(`/servant/chat/${ViewID}`)
+    },
+    onNavbarClickLeft () {
+      if (this.serviceItemInfo.Type === 0 && this.serviceItemInfo.State === 0) {
+        this.$store.commit('setServiceTabIndex', 0)
+      }
+      if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State <= 4) {
+        this.$store.commit('setServiceTabIndex', 1)
+        this.$store.commit('setServiceTabIndex2', 0)
+      }
+      if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State >= 5) {
+        this.$store.commit('setServiceTabIndex', 2)
+      }
+      this.$router.push('/service')
     }
   }
 }
