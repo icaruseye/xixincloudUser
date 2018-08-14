@@ -2,7 +2,7 @@
   <div>
     <div class="has-tabbar">
       <xx-nav-bar
-        left-text="服务者列表"
+        left-text="返回"
         :right-text="userAccount.NickName"
         :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">

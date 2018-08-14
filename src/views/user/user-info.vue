@@ -1,7 +1,14 @@
 <template>
-  <div class="form-panel">
-    <div class="weui-form-cell">
-      <p class="weui-cell-top">
+  <div>
+    <xx-nav-bar
+      left-text="返回"
+      :right-text="userAccount.NickName"
+      :avatar="userAccount.Avatar | transformImgUrl"
+      @click-left="onNavbarClickLeft">
+    </xx-nav-bar>
+    <div class="form-panel">
+      <div class="weui-form-cell">
+        <p class="weui-cell-top">
           <label class="label" for="">头像</label>
           <xx-uploader
             class="upload"
@@ -11,57 +18,58 @@
             @onUpdate="onUpdate1"
           ></xx-uploader>
           <i class="iconfont icon-jiantouyou"></i>
-      </p>
-    </div>
-    <div class="weui-form-cell">
-      <div class="weui-cell-top">
+        </p>
+      </div>
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
           <label class="label" for="">昵称</label>
           <input v-model="UserInfo.NickName" name="nickname" type="text" placeholder="请输入昵称">
+        </div>
       </div>
-    </div>
-    <div class="weui-form-cell">
-      <div class="weui-cell-top">
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
           <label class="label" for="">真实姓名</label>
           <input v-if="!disabled" v-model="UserInfo.RealName" name="RealName" type="text" placeholder="请输入真实姓名">
           <div v-if="disabled">{{UserInfo.RealName}}</div>
+        </div>
       </div>
-    </div>
-    <!-- <div class="weui-form-cell">
-      <p class="weui-cell-top" :class="{ 'control': true }">
+      <!-- <div class="weui-form-cell">
+        <p class="weui-cell-top" :class="{ 'control': true }">
           <label class="label" for="">证件类型</label>
           <select name="IDCardType" id="" v-model="UserInfo.IDCardType">
             <option :value="0">身份证</option>
           </select>
           <i class="iconfont icon-jiantouyou"></i>
-      </p>
-      <span v-show="errors.has('IDCardType')" class="help is-danger">{{ errors.first('IDCardType') }}</span>
-    </div> -->
-    <div class="weui-form-cell">
-      <div class="weui-cell-top">
+        </p>
+        <span v-show="errors.has('IDCardType')" class="help is-danger">{{ errors.first('IDCardType') }}</span>
+      </div> -->
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
           <label class="label" for="">身份证号码</label>
           <input v-if="!disabled" v-model="UserInfo.IDCard" @blur="calculate" name="IDCard" type="text" placeholder="请输入身份证号码">
           <div v-if="disabled">{{UserInfo.IDCard}}</div>
+        </div>
       </div>
-    </div>
-    <div class="weui-form-cell">
-      <div class="weui-cell-top">
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
           <label class="label" for="">出生日期</label>
           <input v-if="!disabled" v-model="birthday" name="birthday" type="text" readonly placeholder="根据填入身份证号码计算">
           <div v-if="disabled">{{birthday}}</div>
+        </div>
       </div>
-    </div>
-    <div class="weui-form-cell">
-      <div class="weui-cell-top">
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
           <label class="label" for="">年龄</label>
           <input v-if="!disabled" v-model="age" name="age" type="text" readonly placeholder="根据填入身份证号码计算">
           <div v-if="disabled">{{age}}</div>
+        </div>
       </div>
-    </div>
-    <div class="tips warn">
-      *用户昵称不得出现违法和不良信息，您必须填写正确的身份证号码才可享受服务。若您填写的资料不合法、不真实、不准确、不完整，平台有权拒绝为您提供服务并删除该账号，且您需承担因此引起的相应责任及后果。
-    </div>
-    <div class="weui-form-cell">
-      <button class="weui-btn weui-btn_primary" style="border-radius:4px" @click="validateBeforeSubmit" :disabled="submitBtn">保存</button>
+      <div class="tips warn">
+        *用户昵称不得出现违法和不良信息，您必须填写正确的身份证号码才可享受服务。若您填写的资料不合法、不真实、不准确、不完整，平台有权拒绝为您提供服务并删除该账号，且您需承担因此引起的相应责任及后果。
+      </div>
+      <div class="weui-form-cell">
+        <button class="weui-btn weui-btn_primary" style="border-radius:4px" @click="validateBeforeSubmit" :disabled="submitBtn">保存</button>
+      </div>
     </div>
   </div>
 </template>
@@ -167,6 +175,9 @@ export default {
       if (!id) return false
       this.birthday = id.substr(6, 4) + '-' + id.substr(10, 2) + '-' + id.substr(12, 2)
       this.age = new Date().getFullYear() - id.substr(6, 4)
+    },
+    onNavbarClickLeft () {
+      this.$router.back()
     }
   }
 }

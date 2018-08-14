@@ -2,21 +2,26 @@
   <div>
     <div style="position:fixed;top:0;width:100%;z-index:99">
       <xx-nav-bar
-        left-text="消息"
+        left-text="返回"
         :right-text="userAccount.NickName"
         :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">
       </xx-nav-bar>
-      <div class="user-info">
+      <div class="user-info-panel">
         <router-link :to="'/servant/service/'+ ServAccount.ViewID">
           <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
         </router-link>
         <div style="flex:1">
           <div class="name">{{ServAccount.NickName}}</div>
         </div>
+        <router-link :to="'/servant/service/'+ ServAccount.ViewID" class="btn">购买服务</router-link>
       </div>
     </div>
     <div class="chat-list" id="chatList" :style="{paddingBottom : faceHeight + 'px'}">
+      <div class="tips-panel">
+        <div class="left">服务说明：此聊天窗口只解答服务包售前疑惑，不解答图文咨询的内容</div>
+        <div class="right" @click="isShowTips = true">更多 <i class="iconfont icon-jiantouyou"></i></div>
+      </div>
       <template v-for="(item, index) in chatList">
         <div class="chat-item" :key="index">
           <div class="chat-item-time" v-if="item.SendTime"><span>{{item.SendTime | timeFormat}}</span></div>
@@ -36,7 +41,8 @@
       </template>
     </div>
     <div class="mask" v-show="isFaceShow" @click="hideFace"></div>
-    <div class="chat-send-bar" :style="{ transform: 'translateY('+ translateFace +'px)' }">
+    <!-- :style="{ transform: 'translateY('+ translateFace +'px)' }" -->
+    <div class="chat-send-bar">
       <div class="top">
         <input class="input" type="text" id="chatInput"
         v-model="chatMsg"
@@ -46,22 +52,44 @@
         <!-- <i class="iconfont icon-biaoqing1" @click="showFace"></i> -->
         <button type="button" class="send-msg" @click="sendMsg">发送</button>
       </div>
-      <div class="chat-face-box" id="chatFaceBox">
+      <!-- <div class="chat-face-box" id="chatFaceBox">
         <div class="" style="font-size:22px;text-align:justify">
           <a href="javascript:;" style="margin:0 3px;" v-for="(item, index) in faceList" :key="index" @click="chooseFace(item)">{{item}}</a>
         </div>
-      </div>
+      </div> -->
+    </div>
+    <div v-transfer-dom>
+      <popup
+        style="background:#fff"
+        v-model="isShowTips">
+        <div class="tips-popup">
+          <div class="title">服务说明</div>
+          <div class="content">
+            <ul>
+              <li>• 售前咨询仅解答用户对于服务包的售前疑惑。</li>
+              <li>• 请勿直接回复图文咨询服务内容。</li>
+              <li>• 若用户在售前咨询板块询问图文咨询内容。</li>
+              <li>• 请推送图文咨询服务包引导其购买后发起咨询。</li>
+            </ul>
+          </div>
+          <div class="btn" @click="isShowTips = false">知道了</div>
+        </div>
+      </popup>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { InlineLoading, Sticky } from 'vux'
+import { InlineLoading, Sticky, Popup, TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     InlineLoading,
-    Sticky
+    Sticky,
+    Popup
   },
   computed: {
     ...mapGetters([
@@ -70,6 +98,7 @@ export default {
   },
   data () {
     return {
+      isShowTips: false,
       isFaceShow: false,
       faceHeight: 100,
       translateFace: 0,
@@ -204,11 +233,8 @@ export default {
   padding: 5px 0 10px;
   text-align: center;
   span {
-    padding: 2px 4px;
-    font-size: 13px;
-    border-radius: 3px;
-    color: #fff;
-    background: #d8d8d8;
+    font-size: 10px;
+    color: #999;
   }
 }
 
@@ -218,18 +244,21 @@ export default {
   .chat-item-content {
     word-break: break-all;
     margin-left: 15px;
-    background: #fff;
-    border: 1px solid #f3f1f1;
+    background: #FFEDD1;
+    border: 1px solid #FFD797;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
-      left: -10px;
+      border-color: transparent transparent #FFD797 #FFD797;
+      background-color: #FFEDD1;
       top: 10px;
-      width: 0;
-      height: 0;
-      border-top: 8px solid transparent;
-      border-right: 10px solid #fff;
-      border-bottom: 8px solid transparent;
+      width: 10px;
+      height: 10px;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      border-style: solid;
+      border-width: 1px;
+      left: -6px;
     }
   }
 }
@@ -240,8 +269,8 @@ export default {
   flex-direction: row-reverse;
   .chat-item-content {
     margin: 0 15px 0 10px;
-    background: #90d936;
-    border: 1px solid #87d02d;
+    background: #fff;
+    border: 1px solid #fff;
     word-break: break-all;
     &::after {
       content: "";
@@ -251,7 +280,7 @@ export default {
       width: 0;
       height: 0;
       border-top: 8px solid transparent;
-      border-left: 10px solid #90d936;
+      border-left: 10px solid #fff;
       border-bottom: 8px solid transparent;
     }
   }
@@ -285,18 +314,19 @@ export default {
   left: 0;
   right: 0;
   padding: 10px;
-  line-height: 1.6;
   background: #fff;
   .top {
     display: flex;
     align-items: center;
+    height: 35px;
     .input {
       flex: 1;
       background: #fff;
       border: #eee 1px solid;
       border-radius: 5px;
       padding: 5px;
-      line-height: 20px;
+      height: 100%;
+      line-height: 35px;
       box-sizing: border-box;
       font-size: 16px;
       overflow: auto;
@@ -308,9 +338,9 @@ export default {
       border: 0;
       color: #fff;
       font-size: 14px;
-      background: #5CB700;
-      height: 34px;
-      line-height: 34px;
+      background: #3ECCCC;
+      height: 35px;
+      line-height: 35px;
       padding: 0px 20px;
       border-radius: 5px;
       display: inline-block;
@@ -335,5 +365,84 @@ export default {
   right: 0;
   top: 0;
   background: transparent;
+}
+
+.user-info-panel {
+  display: flex;
+  padding: 22px 12px;
+  background: #fff;
+  align-items: center;
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+  .name {
+    font-size: 15px;
+    color: #666;
+  }
+  .btn {
+    display: block;
+    width: 70px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    background: #F8A519;
+    color: #fff;
+    font-size: 15px;
+    border: 0;
+    border-radius: 2px;
+  }
+}
+
+.tips-panel {
+  padding: 5px 0 5px 5px;
+  display: flex;
+  align-items: center;
+  margin: 15px;
+  background: #FFFBF2;
+  border: 1px solid #FFDCA1;
+  border-radius: 8px;
+  font-size: 10px;
+  color: #666;
+  line-height: 25px;
+  .left {
+    flex: 1;
+  }
+  .right {
+    margin-left: 10px;
+    width: 45px;
+    .iconfont {
+      font-size: 12px;
+    }
+  }
+}
+
+.tips-popup {
+  .title {
+    text-align: center;
+    padding: 30px 35px 20px 35px;
+    font-size: 15px;
+    color: #666;
+  }
+  .content {
+    color: #A6A6A6;
+    font-size: 14px;
+    padding: 0 35px 39px;
+    li {
+      line-height: 2.5;
+    }
+  }
+  .btn {
+    height: 52px;
+    line-height: 52px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    border-top: 1px solid #E7E7E7;
+  }
 }
 </style>

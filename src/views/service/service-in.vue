@@ -1,7 +1,7 @@
 <template>
   <div class="wrap has-tabbar">
     <xx-nav-bar
-      left-text="我的服务"
+      left-text="返回"
       :right-text="userAccount.NickName"
       :avatar="userAccount.Avatar | transformImgUrl"
       @click-left="onNavbarClickLeft">
@@ -302,16 +302,8 @@ export default {
         this.$store.commit('setServiceTabIndex2', 1)
       }
       if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State <= 4) {
-        let idx = 0
-        if (this.serviceItemInfo.State === 0) {
-          idx = 1
-        } else if (this.serviceItemInfo.State <= 3) {
-          idx = 2
-        } else {
-          idx = 3
-        }
         this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', idx)
+        this.$store.commit('setServiceTabIndex2', 0)
       }
       if (this.serviceItemInfo.Type === 1 && (this.serviceItemInfo.State >= 5 || this.serviceItemInfo.State < 0)) {
         this.$store.commit('setServiceTabIndex', 2)

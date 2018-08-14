@@ -2,7 +2,7 @@
   <div>
     <popup v-model="modelValue" height="60%">
       <popup-header
-        left-text="取消"
+        left-text="返回"
         right-text="确定"
         title="确认取消任务"
         :show-bottom-border="false"

@@ -2,7 +2,7 @@
   <div>
     <div style="position:fixed;top:0;width:100%;z-index:99">
       <xx-nav-bar
-        left-text="我的服务"
+        left-text="返回"
         :right-text="userAccount.NickName"
         :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">
@@ -355,16 +355,8 @@ export default {
       }
       // 服务中
       if (this.detail.Type === 1 && this.detail.State <= 4) {
-        let idx = 0
-        if (this.detail.State === 0) {
-          idx = 1
-        } else if (this.detail.State <= 3) {
-          idx = 2
-        } else {
-          idx = 3
-        }
         this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', idx)
+        this.$store.commit('setServiceTabIndex2', 0)
       }
       // 已完成
       if (this.detail.Type === 1 && (this.detail.State >= 5 || this.detail.State < 0)) {
