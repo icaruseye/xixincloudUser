@@ -5,8 +5,7 @@ const HAVE_NEW_MSG = 'HAVE_NEW_MSG'
 
 const state = {
   serviceTabIndex: 0, // 服务页Tab
-  serviceTabIndex2: 0,
-  messageTabIndex: 0, // 消息-服务者Tab
+  serviceTabIndex2: 0, // 服务中状态栏Tab
   routerLoading: false,
   isHaveNewMsg: false,
   unreadNum: 0
@@ -18,9 +17,6 @@ const mutations = {
   },
   setServiceTabIndex2 (state, id) {
     state.serviceTabIndex2 = id
-  },
-  setMessageTabIndex (state, id) {
-    state.messageTabIndex = id
   },
   [SET_ROUTER_LOADING] (state, flag) {
     state.routerLoading = flag
@@ -42,7 +38,6 @@ const actions = {
 const getters = {
   serviceTabIndex: state => state.serviceTabIndex,
   serviceTabIndex2: state => state.serviceTabIndex2,
-  messageTabIndex: state => state.messageTabIndex,
   routerLoading: state => state.routerLoading,
   isHaveNewMsg: state => state.isHaveNewMsg,
   unreadNum: state => state.unreadNum

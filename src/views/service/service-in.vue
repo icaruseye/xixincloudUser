@@ -296,14 +296,24 @@ export default {
       this.$router.push(`/servant/chat/${ViewID}`)
     },
     onNavbarClickLeft () {
+      console.log(this.serviceItemInfo.Type + '---' + this.serviceItemInfo.State)
       if (this.serviceItemInfo.Type === 0 && this.serviceItemInfo.State === 0) {
-        this.$store.commit('setServiceTabIndex', 0)
+        this.$store.commit('setServiceTabIndex', 1)
+        this.$store.commit('setServiceTabIndex2', 1)
       }
       if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State <= 4) {
+        let idx = 0
+        if (this.serviceItemInfo.State === 0) {
+          idx = 1
+        } else if (this.serviceItemInfo.State <= 3) {
+          idx = 2
+        } else {
+          idx = 3
+        }
         this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', 0)
+        this.$store.commit('setServiceTabIndex2', idx)
       }
-      if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State >= 5) {
+      if (this.serviceItemInfo.Type === 1 && (this.serviceItemInfo.State >= 5 || this.serviceItemInfo.State < 0)) {
         this.$store.commit('setServiceTabIndex', 2)
       }
       this.$router.push('/service')

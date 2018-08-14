@@ -11,7 +11,9 @@
         <router-link :to="'/servant/service/'+ ServAccount.ViewID">
           <img class="avatar" :src="ServAccount.Avatar | transformImgUrl" alt="">
         </router-link>
-        <span class="name">{{ServAccount.NickName}}</span>
+        <div style="flex:1">
+          <div class="name">{{ServAccount.NickName}}</div>
+        </div>
       </div>
     </div>
     <div class="chat-list" id="chatList" :style="{paddingBottom : faceHeight + 'px'}">

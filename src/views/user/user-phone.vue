@@ -49,7 +49,10 @@ export default {
   computed: {
     ...mapGetters([
       'userAccount'
-    ])
+    ]),
+    codeText: function () {
+      return this.time < 60 ? `重新获取(${this.time}s)` : '获取验证码'
+    }
   },
   data () {
     return {
@@ -79,11 +82,6 @@ export default {
       this.disabled_code = true
     }
     this.getShopAgreement()
-  },
-  computed: {
-    codeText: function () {
-      return this.time < 60 ? `重新获取(${this.time}s)` : '获取验证码'
-    }
   },
   methods: {
     isBindPhone () {

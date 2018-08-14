@@ -5,44 +5,67 @@
       <div v-if="!isAvatar" class="weui-uploader">
         <div class="weui-uploader__hd">
           {{title}}
+          <span class="iconfont icon-wenhao" @click="showTips"></span>
         </div>
         <div class="weui-uploader__bd">
-            <ul class="weui-uploader__files uploaderFiles">
-              <template v-for="(img, index) in list" >
-                <li
-                  :key="index"
-                  :style="{ 'background-image': 'url(' + img.url + ')'}"
-                  class="weui-uploader__file weui-uploader__file_status">
-                  <div class="weui-uploader__file-content">
-                    <div class="progress-bar">
-                      <div class="progress-bar_in" :style="{'width': img.progress + '%'}"></div>
-                    </div>
-                    <i v-if="img.status === 1" class="iconfont iconfont-remove icon-guanbi" v-on:click="removeImg(index)"></i>
+          <ul class="weui-uploader__files uploaderFiles">
+            <template v-for="(img, index) in list" >
+              <li
+                :key="index"
+                :style="{ 'background-image': 'url(' + img.url + ')'}"
+                class="weui-uploader__file weui-uploader__file_status">
+                <div class="weui-uploader__file-content">
+                  <div class="progress-bar">
+                    <div class="progress-bar_in" :style="{'width': img.progress + '%'}"></div>
                   </div>
-                </li>
-              </template>
-            </ul>
-            <div class="weui-uploader__input-box" v-show="count < limit">
-                <input class="weui-uploader__input" type="file" accept="image/*" @change="change">
-            </div>
+                  <i v-if="img.status === 1" class="iconfont iconfont-remove icon-guanbi" v-on:click="removeImg(index)"></i>
+                </div>
+              </li>
+            </template>
+          </ul>
+          <div class="weui-uploader__input-box" v-show="count < limit">
+              <input class="weui-uploader__input" type="file" accept="image/*" @change="change">
+          </div>
         </div>
       </div>
       <!-- 头像 -->
       <div v-else class="weui-uploader">
         <div class="is-avatar" :style="{'background-image': 'url(' + list[0].url + ')'}">
-            <input class="weui-uploader__input" type="file" accept="image/*" @change="change">
+          <input class="weui-uploader__input" type="file" accept="image/*" @change="change">
         </div>
       </div>
     </div>
+    <!-- 填出框：提示文字 -->
+    <x-dialog 
+      v-model="tipsIsShow"
+      class="dialog"
+      :hide-on-blur="true">
+      <div class="content">
+        <div class="title">图片上传失败原因可能有：</div>
+        <ul>
+          <li>1.图片格式不对，目前支持格式为jpg、jpeg、png、bmp、gif的图片，若不知如何转换图片格式，可将图片通过微信发送，并保存发送后的图片即可</li>
+          <li>2.图片太大，图片大小需小于2M</li>
+          <li>3.网络太慢，请最好在wifi环境下上传</li>
+          <li>如以上方法均失败，请联系机构管理员。</li>
+        </ul>
+        <button class="close" @click="tipsIsShow = false">关闭</button>
+      </div>
+    </x-dialog>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import { AlertModule } from 'vux'
 import util from '@/plugins/util'
 import EXIF from 'exif-js'
+import { AlertModule, XDialog, TransferDomDirective as TransferDom } from 'vux'
 export default {
+  directives: {
+    TransferDom
+  },
+  components: {
+    XDialog
+  },
   props: {
     title: String,
     limit: {
@@ -67,7 +90,8 @@ export default {
       reader: new FileReader(),
       image: new Image(),
       file: null,
-      orient: null
+      orient: null,
+      tipsIsShow: false
     }
   },
   created () {
@@ -186,6 +210,9 @@ export default {
         return false
       }
       return true
+    },
+    showTips () {
+      this.tipsIsShow = true
     }
     // checkName (name, e) {
     //   let flag = true
@@ -219,6 +246,13 @@ export default {
   -webkit-box-align: center;
   -webkit-align-items: center;
   align-items: center;
+  color: #333;
+  font-size: 14px;
+  .iconfont {
+    font-size: 15px;
+    margin-left: 5px;
+    color: #f8a519;
+  }
 }
 .weui-uploader__title {
   -webkit-box-flex: 1;
@@ -351,5 +385,34 @@ export default {
   width: 40px;
   height: 40px;
   background-size: cover;
+}
+
+.dialog {
+  .content {
+    padding: 15px;
+    text-align: left;
+    line-height: 2;
+    color: #666;
+    .title {
+      font-size: 15px;
+      color: #333;
+      text-align: left;
+    }
+    li {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .close {
+      display: block;
+      margin: 0 auto;
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      border: 0;
+      border-radius: 2px;
+      background: #f1f1f1;
+      color: #999;
+    }
+  }
 }
 </style>

@@ -64,7 +64,7 @@ export default [
     path: '/servant/chat/:id',
     component: _import('/servant/chat'),
     meta: {
-      title: '聊天咨询'
+      title: '售前咨询'
     }
   },
   {

@@ -44,8 +44,9 @@
           <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.Discription.length}} / 200</span>
         </div>
       </xx-cell-items>
-      <xx-cell-items :label="AgreementList[0].Content" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
+      <xx-cell-items direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <xx-uploader
+          :title="AgreementList[0].Content"
           class="upload"
           :maxSize="1024 * 1024 * 20"
           :imgList="imgList1"

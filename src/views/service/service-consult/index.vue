@@ -30,8 +30,9 @@
           <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.ReserveRemark.length}} / 200</span>
         </div>
       </xx-cell-items>
-      <xx-cell-items label="相关医嘱病历图片上传" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
+      <xx-cell-items label="" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <xx-uploader
+          title="相关医嘱病历图片上传"
           class="upload"
           :maxSize="1024 * 1024 * 20"
           :imgList="imgList"
@@ -347,14 +348,26 @@ export default {
       this.$router.push(`/service/complaint/${this.ID}`)
     },
     onNavbarClickLeft () {
+      // 待确认
       if (this.detail.Type === 0 && this.detail.State === 0) {
-        this.$store.commit('setServiceTabIndex', 0)
-      }
-      if (this.detail.Type === 1 && this.detail.State <= 4) {
         this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', 0)
+        this.$store.commit('setServiceTabIndex2', 1)
       }
-      if (this.detail.Type === 1 && this.detail.State >= 5) {
+      // 服务中
+      if (this.detail.Type === 1 && this.detail.State <= 4) {
+        let idx = 0
+        if (this.detail.State === 0) {
+          idx = 1
+        } else if (this.detail.State <= 3) {
+          idx = 2
+        } else {
+          idx = 3
+        }
+        this.$store.commit('setServiceTabIndex', 1)
+        this.$store.commit('setServiceTabIndex2', idx)
+      }
+      // 已完成
+      if (this.detail.Type === 1 && (this.detail.State >= 5 || this.detail.State < 0)) {
         this.$store.commit('setServiceTabIndex', 2)
       }
       this.$router.push('/service')

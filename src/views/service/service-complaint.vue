@@ -24,8 +24,9 @@
         <textarea v-model="AddComplaintParam.Remark" name="" placeholder="请输入其他备注" @keyup="limitCount(200)"></textarea>
         <span class="remark_textarea_nums_count" :class="{warn: exceedText}">{{AddComplaintParam.Remark.length}} / 200</span>
       </div>
-      <div class="weui-panel_title">相关图片上传</div>
+      <div class="weui-panel_title"></div>
         <xx-uploader
+          title="相关图片上传"
           class="upload"
           :limit="9"
           :maxSize="1024 * 1024 * 20"

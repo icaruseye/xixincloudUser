@@ -11,6 +11,9 @@
 export default {
   methods: {
     to (path) {
+      if (path !== '/') {
+        this.$store.commit('setServiceTabIndex', 0)
+      }
       this.$router.replace(path)
     }
   }

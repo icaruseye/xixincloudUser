@@ -40,7 +40,7 @@ export default {
       // this.$emit('click-right')
       this.$router.push('/user')
     }
-  },
+  }
 }
 </script>
 
