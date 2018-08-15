@@ -31,7 +31,7 @@
           <div>更多666条评价</div>
         </div>
       </div> -->
-      <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">发消息</button>
+      <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">购买咨询</button>
     </div>
   </div>
 </template>

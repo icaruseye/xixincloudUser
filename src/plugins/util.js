@@ -155,6 +155,20 @@ export default {
         } else {
           ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
         }
+        // HTMLCanvasElement.toBlob() Polyfill
+        if (!HTMLCanvasElement.prototype.toBlob) {
+          Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+            value: function (callback, type, quality) {
+              var binStr = atob(this.toDataURL(type, quality).split(',')[1])
+              var len = binStr.length
+              var arr = new Uint8Array(len)
+              for (var i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i)
+              }
+              callback(new Blob([arr], {type: type || 'image/png'}))
+            }
+          })
+        }
         canvas.toBlob(function (blob) {
           let _file = new window.File([blob], file.name, {type: file.type})
           resolve([_file, canvas.toDataURL(file.type, 0.7)])
