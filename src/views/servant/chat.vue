@@ -66,10 +66,10 @@
           <div class="title">服务说明</div>
           <div class="content">
             <ul>
-              <li>• 售前咨询仅解答用户对于服务包的售前疑惑。</li>
-              <li>• 请勿直接回复图文咨询服务内容。</li>
-              <li>• 若用户在售前咨询板块询问图文咨询内容。</li>
-              <li>• 请推送图文咨询服务包引导其购买后发起咨询。</li>
+              <li>• 此聊天窗口只解答服务包售前疑惑。</li>
+              <li>• 不解答图文咨询的内容。</li>
+              <li>• 若需要咨询请购买服务者图文咨询服务包。</li>
+              <li>• 对此给您带来的不便，敬请谅解。</li>
             </ul>
           </div>
           <div class="btn" @click="isShowTips = false">知道了</div>
@@ -128,8 +128,8 @@ export default {
   },
   mounted () {
     this.goDown()
-    this.faceboxHeight = document.getElementById('chatFaceBox').offsetHeight // 获取表情高度
-    this.translateFace = this.faceboxHeight + 5 // 表情上弹高度
+    // this.faceboxHeight = document.getElementById('chatFaceBox').offsetHeight // 获取表情高度
+    // this.translateFace = this.faceboxHeight + 5 // 表情上弹高度
   },
   methods: {
     // 页面逻辑函数

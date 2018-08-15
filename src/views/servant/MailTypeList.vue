@@ -1,7 +1,13 @@
 <template>
   <div>
     <div v-if="flag">
-      <div>
+      <xx-nav-bar
+        left-text="返回"
+        :right-text="userAccount.NickName"
+        :avatar="userAccount.Avatar | transformImgUrl"
+        @click-left="onNavbarClickLeft">
+      </xx-nav-bar>
+      <div style="margin-top:5px;">
         <mail-group-item :count="1" :msgType="1"></mail-group-item>
         <mail-group-item :count="1" :msgType="2"></mail-group-item>
         <mail-group-item :count="1" :msgType="4"></mail-group-item>
@@ -73,6 +79,9 @@ export default {
     },
     goChat (id) {
       this.$router.push(`/servant/chat/${id}`)
+    },
+    onNavbarClickLeft () {
+      this.$router.push('/servant')
     }
   }
 }
