@@ -36,7 +36,7 @@
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
-                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
+                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
                     </div>
                     <div class="btn">
                       <div v-if="cItem.Order.State !== 1">
@@ -82,7 +82,7 @@
                           <div class="title text-overflow-1">{{mItem.SingleItem.Name}}</div>
                           <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                         </div>
-                        <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat}}</div>
+                        <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
                       </div>
                       <div class="btn">
                         <div v-if="cItem.Order.State !== 1">
@@ -134,7 +134,7 @@
                 <div style="font-size:14px;color:#666;width:160px" class="of-hide" v-if="item.Type === 0 && item.UseType !== 2">内容：{{item.Discription ? item.Discription.substr(0,20) : '没有备注消息'}}</div>
                 <!-- <div class="describe">到期时间：{{item.EndTime | timeFormat}}</div> -->
                 <div class="describe" v-if="item.Type === 1 && item.UseType !== 2">{{item.ViewTime}}</div>
-                <div class="describe" v-if="item.UseType === 2">下单时间：{{item.CreateTime | timeFormat}}</div>
+                <div class="describe" v-if="item.UseType === 2">下单时间：{{item.CreateTime | timeFormat('YYYY-MM-DD HH:mm:ss')}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -163,7 +163,7 @@
                 </div>
                 <div class="servant">服务人员：{{item.ServantName}}</div>
                 <div style="font-size:14px;color:#666;" class="line-clamp">服务结果：{{item.Result ? item.Result : '无内容信息'}}</div>
-                <div class="describe">完成时间：{{item.EndTime | timeFormat}}</div>
+                <div class="describe">完成时间：{{item.EndTime | timeFormat('YYYY-MM-DD HH:mm:ss')}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
@@ -189,11 +189,11 @@
 
 <script>
 import util from '@/plugins/util'
-import { Sticky } from 'vux'
+import { Sticky, dateFormat} from 'vux'
 export default {
   filters: {
-    timeFormat (value) {
-      return util.timeFormat(value)
+    timeFormat (value, m) {
+      return dateFormat(new Date(value), m)
     }
   },
   components: {

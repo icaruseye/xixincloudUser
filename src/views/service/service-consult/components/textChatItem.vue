@@ -196,7 +196,6 @@ export default {
 }
 
 .thumbs_container {
-  background: #fff;
   img {
     background: #fff;
   }

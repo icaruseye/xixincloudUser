@@ -7,7 +7,7 @@ import router from './router'
 import store from './store/index'
 import './plugins/validate.js'
 import registryPopup from './components/common/popupTop/index'
-import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin, BusPlugin } from 'vux'
+import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin, BusPlugin, dateFormat } from 'vux'
 import xxComponents from './components/common'
 import http from '@/api'
 import util from '@/plugins/util'
@@ -65,13 +65,7 @@ Vue.filter('transformImgUrl', function (val) {
  * 时间格式化
  */
 Vue.filter('timeFormat', function (value = '') {
-  let lastIndexOf = value.lastIndexOf('.')
-  if (lastIndexOf > 0) {
-    value = value.replace('T', ' ').substring(0, lastIndexOf)
-  } else {
-    value = value.replace('T', ' ')
-  }
-  return value
+  return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
 })
 /**
  * 服务项图标

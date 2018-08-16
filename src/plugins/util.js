@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import ChinaAddressV4Data from './datas/ChinaAddressV4Data.json'
-import { ToastPlugin } from 'vux'
+import { ToastPlugin, dateFormat } from 'vux'
 Vue.use(ToastPlugin)
 
 export default {
@@ -110,13 +110,7 @@ export default {
     }
   },
   timeFormat (value = '') {
-    let lastIndexOf = value.lastIndexOf('.')
-    if (lastIndexOf > 0) {
-      value = value.replace('T', ' ').substring(0, lastIndexOf)
-    } else {
-      value = value.replace('T', ' ')
-    }
-    return value
+    return dateFormat(new Date(value), 'YYYY-MM-DD HH:mm:ss')
   },
   // 构造旋转后图片
   drawPhoto (file, orient, image) {
