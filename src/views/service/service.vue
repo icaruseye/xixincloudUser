@@ -163,7 +163,7 @@
                 </div>
                 <div class="servant">服务人员：{{item.ServantName}}</div>
                 <div style="font-size:14px;color:#666;" class="line-clamp">服务结果：{{item.Result ? item.Result : '无内容信息'}}</div>
-                <div class="describe">完成时间：{{item.EndTime | timeFormat('YYYY-MM-DD HH:mm:ss')}}</div>
+                <div class="describe">完成时间：{{item.FinishTime | timeFormat('YYYY-MM-DD HH:mm:ss')}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
               <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
