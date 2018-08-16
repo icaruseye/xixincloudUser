@@ -136,8 +136,8 @@
                 <div class="describe" v-if="item.Type === 1 && item.UseType !== 2">{{item.ViewTime}}</div>
                 <div class="describe" v-if="item.UseType === 2">下单时间：{{item.CreateTime | timeFormat('YYYY-MM-DD HH:mm:ss')}}</div>
               </div>
-              <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
-              <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
+              <img v-if="(item.State === 0 && item.Type === 0) || (item.State === 0 && item.Type === 1 && item.UseType === 2)" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
+              <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1 && !(item.State === 0 && item.Type === 1 && item.UseType === 2)" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
               <img v-if="item.State === 4" style="width:50px;height:50px;" src="@/assets/images/ic_dpj.png" alt="">
             </div>
           </template>
