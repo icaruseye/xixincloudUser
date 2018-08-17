@@ -188,8 +188,7 @@
 </template>
 
 <script>
-import util from '@/plugins/util'
-import { Sticky, dateFormat} from 'vux'
+import { Sticky, dateFormat } from 'vux'
 export default {
   filters: {
     timeFormat (value, m) {

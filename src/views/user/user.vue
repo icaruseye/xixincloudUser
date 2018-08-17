@@ -42,11 +42,11 @@
           <span class="title">常用地址</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
-        <router-link to="/user/recommend" class="setting-panel_item vux-1px-b">
+        <!-- <router-link to="/user/recommend" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-tuijian.png" alt="">
           <span class="title">推荐</span>
           <i class="iconfont icon-jiantouyou"></i>
-        </router-link>
+        </router-link> -->
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-help.png" alt="">
           <span class="title">帮助</span>
