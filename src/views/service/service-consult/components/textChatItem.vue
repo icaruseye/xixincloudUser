@@ -1,6 +1,7 @@
 <template>
   <div :class="['container','clearfix', originator+'_container']">
-    <img :src="avatar | transformImgUrl" class="avatar" alt="">
+    <img v-if="MsgType !== 8" :src="avatar | transformImgUrl" class="avatar" alt="">
+    <img v-if="MsgType == 8" src="@/assets/images/kefu.png" class="avatar" alt="">
     <!-- 只有图片的类型 -->
     <div v-if="MsgType === 2" :class="[originator+'_imgChat_msg']" class="clearfix">
       <div class="thumbs_container">
@@ -13,9 +14,9 @@
       </div>
     </div>
     <!-- 文本 -->
-    <div v-if="MsgType === 1" :class="[originator+'_textChat_msg', (IsServantReceive === 0) ?'yellow_textChat':'']">
+    <div v-if="MsgType === 1 || MsgType === 8" :class="[originator+'_textChat_msg', (IsServantReceive === 0) ?'yellow_textChat':'']">
       <div v-if="Content" class="msg_text_container">
-        {{Content}}
+        {{Content}}<span v-if="MsgType === 8">（助理回复）</span>
       </div>
     </div>
     <div v-if="MsgType === 7" class="from_textChat_msg yellow_textChat">
@@ -116,6 +117,7 @@ export default {
     border-radius: 50%;
     width: 50px;
     height: 50px;
+    background: #fff;
   }
 }
 .to_container

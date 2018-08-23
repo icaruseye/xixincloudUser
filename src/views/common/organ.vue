@@ -41,7 +41,7 @@
         </div>
         <!-- 未绑定手机 -->
         <div v-else class="empty-wrap">
-          <button>绑定手机号</button>
+          <router-link class="btn" to="/user/phone">绑定手机号</router-link>
         </div>
       </div>
     </div>
@@ -60,6 +60,21 @@
     <div class="servant-panel servant-panel_service" v-if="itemList.length > 0">
       <div class="servant-panel_title"><i class="icon icon-2"></i>服务介绍</div>
       <template v-for="(item, index) in itemList">
+        <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
+          <div class="icon">
+            <img :src="item.UseType | ItemImageByUseType" alt="">
+          </div>
+          <div class="mid">
+            <div class="title">{{item.Name}}</div>
+            <div class="describe text-overflow-1">{{item.Content}}</div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <!-- 推荐医师 -->
+    <div class="servant-panel servant-panel_service" v-if="servantList.length > 0">
+      <div class="servant-panel_title"><i class="icon icon-2"></i>推荐医师</div>
+      <template v-for="(item, index) in servantList">
         <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
           <div class="icon">
             <img :src="item.UseType | ItemImageByUseType" alt="">
@@ -96,6 +111,7 @@ export default {
   data () {
     return {
       itemList: [],
+      servantList: [],
       Agreement: {},
       showHideOnBlur: false
     }
@@ -158,7 +174,7 @@ export default {
   top: 12px;
   background: #fff;
   border-radius: 4px;
-  box-shadow: 0px 10px 27px #DADADA;
+  box-shadow: 0px 10px 15px rgba(218, 218, 218, .6);
   .row-1 {
     position: relative;
     display: flex;
@@ -201,8 +217,9 @@ export default {
         font-size: 12px;
         padding: 2px 7px;
         border-radius: 10px;
-        background: #3ecccc;
-        color: #fff;
+        background: #fff;
+        color: #3ecccc;
+        border: 1px solid;
       }
     }
     .qrcode {
@@ -230,11 +247,14 @@ export default {
 .organ-info {
   display: flex;
   text-align: center;
-  padding: 10px 0;
-  background: #fff;
+  margin: 12px;
+  justify-content: space-between;
   .item {
+    padding: 10px 0;
     line-height: 1;
-    flex: 1;
+    border-radius: 4px;
+    width: 48%;
+    background: #fff;
     .text {
       font-size: 13px;
       color: #666;
@@ -252,7 +272,22 @@ export default {
   padding: 15px;
 }
 .servant-panel_title {
-  padding: 0;
+  position: relative;
+  padding: 0 0 10px;
+  &::after {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #d9f7f5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    z-index: 2;
+  }
 }
 .empty-wrap {
   position: relative;
@@ -261,7 +296,8 @@ export default {
   background-size: 118px 95px;
   background-position-y: 15px;
   text-align: center;
-  button {
+  .btn {
+    display: inline-block;
     margin-top: 135px;
     width: 100px;
     height: 25px;
