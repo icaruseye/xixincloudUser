@@ -24,17 +24,31 @@ export default [
     }
   },
   {
-    path: '/organ',
-    component: _import('/common/organ'),
+    path: '/organ/item',
+    component: _import('/common/organ/itemIndex'),
     meta: {
       title: '机构首页'
     }
   },
   {
     path: '/organ/item/:id',
-    component: _import('/common/organItem'),
+    component: _import('/common/organ/itemDetail'),
     meta: {
       title: '服务项详情'
+    }
+  },
+  {
+    path: '/organ/servant',
+    component: _import('/common/organ/servantIndex'),
+    meta: {
+      title: '机构首页'
+    }
+  },
+  {
+    path: '/organ/servantList',
+    component: _import('/common/organ/servantList'),
+    meta: {
+      title: '机构首页'
     }
   },
   {

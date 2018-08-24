@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url(../servant/components/index.less);
+@import url(../../servant/components/index.less);
 .mgt10 {
   margin-top: 10px;
 }

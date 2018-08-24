@@ -27,13 +27,14 @@
           <div class="chat-item-time" v-if="item.SendTime"><span>{{item.SendTime | timeFormat}}</span></div>
           <div :class="[item.IsServantReceive ? 'chat-item-right' : 'chat-item-left']">
             <div class="chat-item-avatar" v-if="!item.IsServantReceive">
-              <img :src="ServAccount.Avatar | transformImgUrl">
+              <img v-if="item.MsgType !== 8" :src="ServAccount.Avatar | transformImgUrl">
+              <img v-if="item.MsgType === 8" src="@/assets/images/kefu.png">
             </div>
             <div class="chat-item-avatar" v-if="item.IsServantReceive">
               <img :src="mineAccount.Avatar | transformImgUrl">
             </div>
             <div class="chat-item-content">
-              {{item.Content}}
+              {{item.Content}}<span v-if="item.MsgType === 8">（助理回复）</span>
             </div>
             <inline-loading v-show="item.loading"></inline-loading>
           </div>
