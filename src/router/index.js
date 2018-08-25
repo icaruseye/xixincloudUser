@@ -51,6 +51,11 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!newMsgTimer) {
+    if (to.meta.notGetNews) {
+      clearInterval(newMsgTimer)
+      next()
+      return false
+    }
     newMsgTimer = setInterval(() => {
       store.dispatch('getHaveNewMsg')
     }, 5000)

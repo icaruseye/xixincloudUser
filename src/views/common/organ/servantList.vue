@@ -1,79 +1,126 @@
 <template>
   <div>
-    <div class="sreach-bar">
-      <input type="text" placeholder="输入医生名字搜索">
+    <div class="search-bar">
+      <input type="text" placeholder="输入医生名字搜索" v-model="searchData.search" @keyup.enter="getServantList" @keyup="inputKeywords">
     </div>
     <div class="container">
       <!-- 标签 -->
-      <div class="tags-panel">
+      <div class="tags-panel" v-if="tagList.length > 0">
         <div class="title">服务者标签</div>
-        <checker v-model="tag" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
-          <checker-item value="1">家</checker-item>
-          <checker-item value="2">公司</checker-item>
-          <checker-item value="3">其他</checker-item>
-          <checker-item value="4">安德森</checker-item>
-          <checker-item value="5">阿迪</checker-item>
-          <checker-item value="6">老哥</checker-item>
-          <checker-item value="7">蛤蛤</checker-item>
-          <checker-item value="8">嘻嘻</checker-item>
-          <checker-item value="9">其他</checker-item>
+        <checker v-model="searchData.tagId" :radio-required="true" @on-change="getServantList" default-item-class="tags-item" selected-item-class="tags-item-selected">
+          <checker-item :value="0">全部</checker-item>
+          <checker-item v-for="(item, index) in tagList" :key="index" :value="item.TagID">{{item.TagName}}</checker-item>
         </checker>
       </div>
       <!-- 推荐医师 -->
       <div class="servant-panel servant-panel_service">
         <div class="servant-panel_title">推荐医师</div>
-        <div class="weui-list_item">
-          <div class="avatar">
-            <img src="https://alioss.g-cores.com/uploads/user/d95bb3d6-38e4-4f24-9100-9b05f6a74c89_normal.jpg" alt="">
-          </div>
-          <div class="mid">
-            <div class="title">陈医生</div>
-            <div class="describe text-overflow-1">专业老中医</div>
-            <div style="margin-bottom: 8px;display: flex;align-items: center;">
-              <i class="iconfont icon-star1"></i><span class="range">5.0</span><span class="times">91次服务</span>
-            </div>
-            <div class="tags"><span>123</span><span>很不错哦</span></div>
-          </div>
-        </div>
-        <div class="weui-list_item">
-          <div class="avatar">
-            <img src="https://alioss.g-cores.com/uploads/user/d95bb3d6-38e4-4f24-9100-9b05f6a74c89_normal.jpg" alt="">
-          </div>
-          <div class="mid">
-            <div class="title">陈医生</div>
-            <div class="describe text-overflow-1">专业老中医</div>
-            <div style="margin-bottom: 8px;display: flex;align-items: center;">
-              <i class="iconfont icon-star1"></i><span class="range">5.0</span><span class="times">91次服务</span>
-            </div>
-            <div class="tags"><span>123</span><span>很不错哦</span></div>
-          </div>
-        </div>
-        <!-- <template v-for="(item, index) in itemList">
-          <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
-            <div class="icon">
-              <img :src="item.UseType | ItemImageByUseType" alt="">
+        <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
+          <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
+            <div class="avatar">
+              <img :src="item.Avatar | transformImgUrl" alt="">
             </div>
             <div class="mid">
               <div class="title">{{item.Name}}</div>
-              <div class="describe text-overflow-1">{{item.Content}}</div>
+              <!-- <div class="describe text-overflow-1">专业老中医</div> -->
+              <div style="margin-bottom: 8px;display: flex;align-items: center;">
+                <i class="iconfont icon-star1"></i><span class="range">{{item.Score}}</span><span class="times">{{item.ServiceNum}}次服务</span>
+              </div>
+              <div class="tags"><span v-for="(item, index) in item.Tags" :key="index">{{item}}</span></div>
             </div>
           </div>
-        </template> -->
+        </template>
+        <div v-if="servantList.length === 0" class="empty-box">
+          没找到相关服务者
+        </div>
+        <load-more v-if="isShowLoadMore" :show-loading="LoadMore" :tip="tips" style="color:#666"></load-more>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Checker, CheckerItem } from 'vux'
+import { Checker, CheckerItem, LoadMore } from 'vux'
 export default {
   components: {
     Checker,
-    CheckerItem
+    CheckerItem,
+    LoadMore
   },
   data () {
     return {
-      tag: ''
+      tagList: [],
+      servantList: [],
+      searchData: {
+        index: 1,
+        size: 10,
+        useType: +this.$route.query.useType,
+        tagId: 0,
+        search: ''
+      },
+      isShowLoadMore: false,
+      LoadMore: false,
+      lastPage: false,
+      tips: '加载中'
+    }
+  },
+  computed: {
+    useType () {
+      return +this.$route.query.useType
+    }
+  },
+  mounted () {
+    const that = this
+    this.getTagList()
+    this.getServantList()
+    this.isShowLoadMoreBar()
+    window.onscroll = function () {
+      if (document.documentElement.clientHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 50) {
+        if (that.lastPage || that.LoadMore) return false
+        that.LoadMore = true
+        that.searchData.index++
+        that.tips = '加载中'
+        that.listLoadMore()
+      }
+    }
+  },
+  methods: {
+    isShowLoadMoreBar () {
+      // 判断是否显示加载更多
+      if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+        this.isShowLoadMore = true
+      }
+    },
+    inputKeywords () {
+      if (this.searchData.search === '') {
+        this.getServantList()
+      }
+    },
+    toDetail (ViewId) {
+      this.$router.push(`/servant/service/${ViewId}`)
+    },
+    async getTagList () {
+      const res = await this.$http.get(`/UseType/ShopTag/List`)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.tagList = res.data.Data.ServantTagResponses
+      }
+    },
+    async getServantList () {
+      const res = await this.$http.get(`/UseType/ShopMedicalCare/List`, this.searchData)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.servantList = res.data.Data.MedicalCareResponses
+        this.isShowLoadMoreBar()
+      }
+    },
+    async listLoadMore () {
+      const res = await this.$http.get(`/UseType/ShopMedicalCare/List`, this.searchData)
+      if (res.data.Code === 100000 && res.data.Data) {
+        let listLength = res.data.Data.MedicalCareResponses.length
+        this.servantList.push(...res.data.Data.MedicalCareResponses)
+        this.LoadMore = false
+        this.lastPage = !Boolean(listLength)
+        this.tips = listLength === 0 ? '没有更多了' : '加载中...'
+      }
     }
   }
 }
@@ -99,9 +146,10 @@ export default {
     color: #3ecccc;
   }
   .tags-item {
+    display: flex;
+    align-items: center;
     margin: 0 20px 15px 0;
     height: 25px;
-    line-height: 25px;
     font-size: 13px;
     color: #bbb;
     text-align: center;
@@ -193,7 +241,8 @@ export default {
     }
   }
 }
-.sreach-bar {
+.search-bar {
+  z-index: 999;
   position: fixed;
   top: 0;
   left: 0;

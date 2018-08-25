@@ -27,28 +27,32 @@ export default [
     path: '/organ/item',
     component: _import('/common/organ/itemIndex'),
     meta: {
-      title: '机构首页'
+      title: '机构首页',
+      notGetNews: true
     }
   },
   {
     path: '/organ/item/:id',
     component: _import('/common/organ/itemDetail'),
     meta: {
-      title: '服务项详情'
+      title: '服务项详情',
+      notGetNews: true
     }
   },
   {
     path: '/organ/servant',
     component: _import('/common/organ/servantIndex'),
     meta: {
-      title: '机构首页'
+      title: '机构首页',
+      notGetNews: true
     }
   },
   {
     path: '/organ/servantList',
     component: _import('/common/organ/servantList'),
     meta: {
-      title: '机构首页'
+      title: '机构首页',
+      notGetNews: true
     }
   },
   {

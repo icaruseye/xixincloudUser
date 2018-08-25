@@ -48,7 +48,7 @@
     <!-- 机构介绍 -->
     <div class="organ-info">
       <div class="item" @click="showDialog">
-        <img src="@/assets/images/organ-1.png" alt="">
+        <img src="@/assets/images/organ-4.png" alt="">
         <div class="text">机构介绍</div>
       </div>
       <div class="item" @click="close">

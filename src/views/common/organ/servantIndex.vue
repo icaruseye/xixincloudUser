@@ -48,13 +48,19 @@
     <!-- 机构介绍 -->
     <div class="organ-info">
       <div class="item" @click="showDialog">
-        <img src="@/assets/images/organ-1.png" alt="">
+        <img src="@/assets/images/organ-4.png" alt="">
         <div class="text">机构介绍</div>
       </div>
+      <template v-for="(item, index) in aliasList">
+        <div class="item" @click="toList(item.UseType)" :key="index">
+          <img :src="item.UseType | aliasImgByUsetype" alt="">
+          <div class="text">{{item.Name}}</div>
+        </div>
+      </template>
     </div>
     <!-- 推荐医师 -->
     <div class="servant-panel servant-panel_service">
-      <div class="servant-panel_title">推荐医师<router-link to="/organ/servantList" class="more">更多</router-link></div>
+      <div class="servant-panel_title">推荐医师</div>
       <div class="weui-list_item">
         <div class="avatar">
           <img src="https://alioss.g-cores.com/uploads/user/d95bb3d6-38e4-4f24-9100-9b05f6a74c89_normal.jpg" alt="">
@@ -119,7 +125,22 @@ export default {
     return {
       itemList: [],
       Agreement: {},
+      aliasList: [],
       showHideOnBlur: false
+    }
+  },
+  filters: {
+    aliasImgByUsetype (type) {
+      switch (type) {
+        case 1:
+          return require('@/assets/images/organ-1.png')
+        case 2:
+          return require('@/assets/images/organ-2.png')
+        case 3:
+          return require('@/assets/images/organ-3.png')
+        default:
+          return require('@/assets/images/organ-1.png')
+      }
     }
   },
   computed: {
@@ -130,30 +151,28 @@ export default {
   },
   created () {
     // this.getItemTemplate()
+    this.getAlias()
   },
   methods: {
-    async getItemTemplate () {
-      const res = await this.$http.get('/ItemTemplate')
-      if (res.data.Code === 100000) {
-        this.itemList = res.data.Data
-      } else {
-        this.$vux.toast.text(res.data.Msg)
+    showDialog () {
+      this.showHideOnBlur = true
+    },
+    toList (useType) {
+      this.$router.push(`/organ/servantList?useType=${useType}`)
+    },
+    // 服务流程列表
+    async getAlias () {
+      const res = await this.$http.get(`/UseType/GetAlias/List`)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.aliasList = res.data.Data
       }
     },
+    // 机构介绍
     async getShopAgreement () {
       const res = await this.$http.get(`/ShopAgreement?protocalType=20&itemID=0`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.Agreement = res.data.Data
       }
-    },
-    showDialog () {
-      this.showHideOnBlur = true
-    },
-    toItem (id) {
-      this.$router.push(`/organ/item/${id}`)
-    },
-    go (url) {
-      this.$router.push(url)
     }
   }
 }
@@ -300,10 +319,12 @@ export default {
 .organ-info {
   display: flex;
   text-align: center;
-  margin: 12px;
+  flex-wrap: wrap;
   justify-content: space-between;
+  margin: 12px 12px 0 12px;
   .item {
     padding: 10px 0;
+    margin-bottom: 10px;
     line-height: 1;
     border-radius: 4px;
     width: 48%;
