@@ -33,6 +33,7 @@ export default {
       type: Boolean,
       default: false
     },
+    ViewID: String,
     list: Array,
     limit: Number
   },
@@ -48,7 +49,7 @@ export default {
   },
   methods: {
     toItem (id, count) {
-      const url = this.isItem === true ? `/servant/detail/item/${id}?count=${count}` : `/servant/detail/package/${id}?count=${count}`
+      const url = this.isItem === true ? `/servant/detail/item/${id}?ViewID=${this.ViewID}` : `/servant/detail/package/${id}?ViewID=${this.ViewID}`
       this.$router.push(url)
     },
     toggleUnfold () {

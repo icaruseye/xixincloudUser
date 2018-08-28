@@ -2,32 +2,32 @@
   <div class="wrap">
     <div class="container">
       <div class="userinfo-pannel">
-        <img :src="userAccount.Avatar | transformImgUrl" alt="">
-        <div class="name">{{userAccount.NickName}}</div>
-        <div class="tag">点击按钮发起推荐</div>
+        <div class="earnings"><span>￥</span>123</div>
+        <div class="text">邀请收入总金额</div>
+        <div class="help">帮助说明</div>
       </div>
       <div class="btn-panel">
         <router-link to="/recommend?isUser=1" class=" btn btn-user">推荐用户</router-link>
         <router-link to="/recommend?isUser=0" class="btn btn-servant">推荐服务者</router-link>
       </div>
-      <!-- <div style="width:200px;margin: 0 auto 10px">
-        <button-tab v-model="index" :height="30">
-          <button-tab-item>推荐用户</button-tab-item>
-          <button-tab-item>推荐服务者</button-tab-item>
-        </button-tab>
-      </div>
-      <div class="qrcode">
-        <img v-show="index === 0" :src="API_PATH+'/QrCodeToUser/?userID=' + userAccount.ID" alt="">
-        <img v-show="index === 1" :src="API_PATH+'/QrCodeToServant/?userID=' + userAccount.ID" alt="">
-      </div> -->
     </div>
-    <!-- <div class="rule">
-      <div class="title">推荐规则</div>
-      <ul>
-        <li>1 1.1 本《饿了么网上订餐平台服务协议》（以下简称本协议）为您（即商户）与上海拉扎斯信息科技有限公司（以下简称饿了么）就饿了么网上订餐服务达成的协议。饿了么在此特别提醒您认真阅读、充分理解本协议。商户应认真阅读、充分理解本协议中各条款，特别涉及免除或者限制饿了么责任的免责条款，对商户的权利限制的条款，法律适用、争议解决方式的条款。</li>
-        <li>2.1饿了么平台：是搭建、提供及维护网上订餐服务信息发布的平台，用户和商户通过饿了么平台对订餐及外卖服务达成合意。</li>
-      </ul>
-    </div> -->
+    <div class="list-panel">
+      <div class="title">推荐奖励明细</div>
+      <div class="item">
+        <div class="left">
+          <div class="name">原煤配置</div>
+          <div class="time"><span>2018-07-25 15:00</span><span>用户：张**</span></div>
+        </div>
+        <div class="right"><span>￥</span>299元</div>
+      </div>
+      <div class="item">
+        <div class="left">
+          <div class="name">原煤配置</div>
+          <div class="time"><span>2018-07-25 15:00</span><span>用户：张**</span></div>
+        </div>
+        <div class="right"><span>￥</span>299元</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,88 +58,117 @@ export default {
 <style scoped lang="less">
 .wrap {
   min-height: 100vh;
-  padding-top: 70px;
   box-sizing: border-box;
-  background: #3ecccc;
-  .container {
-    position: relative;
-    padding: 120px 0 1px 0;
-    margin: 0 20px;
-    background: #fff;
-    border-radius: 2px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-    .qrcode {
-      position: relative;
-      width: 250px;
-      margin: 0 auto;
-      font-size: 0;
-    }
-  }
 }
 .userinfo-pannel {
-  position: absolute;
-  width: 100%;
-  top: -50px;
+  z-index: 10;
+  position: relative;
+  overflow: hidden;
+  height: 135px;
   text-align: center;
-  img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid #fff;
+  background: linear-gradient(to right, #9EC2FB, #42C7F6, #3CC7F5);
+  .earnings {
+    margin-top: 15px;
+    font-size: 30px;
+    color: #fff;
+    span {
+      font-size: 25px;
+    }
   }
-  .name {
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: #333;
+  .text {
+    font-size: 13px;
+    color: #fff;
   }
-  .tag {
-    width: 125px;
-    height: 22px;
-    line-height: 22px;
-    margin: 0 auto;
-    border-radius: 4px;
+  .help {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: 1px solid #fff;
+    border-radius: 12px;
     font-size: 12px;
     color: #fff;
-    background: linear-gradient(to right, #41CCCB, #BEF3CA);
+    height: 20px;
+    line-height: 20px;
+    padding: 0 5px;
   }
 }
 .btn-panel {
+  z-index: 99;
+  position: relative;
   display: flex;
+  justify-content: center;
+  margin-top: -30px;
   .btn {
-    margin: 0 auto 40px;
+    margin: 0 20px 10px;
     display: block;
-    width: 120px;
-    height: 40px;
-    line-height: 44px;
+    padding-top: 40px;
+    width: 100px;
+    height: 75px;
     border: 0;
     color: #fff;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: bold;
     text-align: center;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, .1);
   }
   .btn-user {
     background: #3ecccc;
-    box-shadow: 0px 7px 0px #2babab;
   }
   .btn-servant {
-    background: #4EC7F6;
-    box-shadow: 0px 7px 0px #3facd6;
+    background: #687CFF;
   }
 }
-
-.rule {
-  margin: 20px;
-  color: #fff;
+.list-panel {
+  background: #fff;
   .title {
-    font-size: 14px;
-    margin-bottom: 10px;
+    height: 66px;
+    line-height: 66px;
+    text-align: center;
+    font-size: 15px;
+    color: #333;
   }
-  ul {
-    li {
-      margin-bottom: 5px;
-      line-height: 1.8;
-      font-size: 12px;
+  .item {
+    position: relative;
+    padding: 12px;
+    display: flex;
+    &::after {
+      content: " ";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 1px;
+      border-top: 1px solid #CCF0EE;
+      color: #CCF0EE;
+      -webkit-transform-origin: 0 0;
+      transform-origin: 0 0;
+      -webkit-transform: scaleY(0.5);
+      transform: scaleY(0.5);
+    }
+    .left {
+      flex: 1;
+      .name {
+        font-size: 15px;
+        color: #333;
+      }
+      .time {
+        font-size: 12px;
+        color: #999;
+        span {
+          margin-right: 25px;
+        }
+      }
+    }
+    .right {
+      width: 80px;
+      text-align: right;
+      color: #FF5F5F;
+      font-size: 15px;
+      span {
+        font-size: 13px;
+      }
     }
   }
 }

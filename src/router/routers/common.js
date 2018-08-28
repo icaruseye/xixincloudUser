@@ -7,20 +7,26 @@ export default [
   },
   {
     path: '/wxLogin',
-    component: _import('/common/login')
+    component: _import('/common/login'),
+    meta: {
+      title: '登录',
+      notGetNews: true
+    }
   },
   {
     path: '/addFriends',
     component: _import('/common/addFriends'),
     meta: {
-      title: '添加服务者'
+      title: '添加服务者',
+      notGetNews: true
     }
   },
   {
     path: '/shareServant/:id',
     component: _import('/common/shareServant'),
     meta: {
-      title: '分享服务者'
+      title: '分享服务者',
+      notGetNews: true
     }
   },
   {
@@ -59,7 +65,8 @@ export default [
     path: '/recommend',
     component: _import('/common/recommend'),
     meta: {
-      title: '推荐注册'
+      title: '推荐注册',
+      notGetNews: true
     }
   }
 ]

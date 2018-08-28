@@ -1,5 +1,6 @@
 <template>
   <div class="has-tabbar">
+    <img class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt="">
     <!-- 服务列表 -->
     <div class="weui-list-panel mgt10">
       <div class="weui-pane_subtitle">服务列表</div>
@@ -30,14 +31,15 @@
         </div>
       </x-dialog>
     </div>
-    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
-    <button v-if="saleOut" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" disabled="disabled">卖光了</button>
+    <button v-if="Package.Count > 0" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>
+    <button v-else type="button" class="weui-btn weui-btn-bottom weui-btn_primary" disabled="disabled">卖光了</button>
   </div>
 </template>
 
 <script>
 import packageInfo from '../components/package-info'
 import { TransferDomDirective as TransferDom } from 'vux'
+import { mapGetters } from 'vuex'
 export default {
   directives: {
     TransferDom
@@ -47,8 +49,6 @@ export default {
   },
   data () {
     return {
-      showPay: true,
-      saleOut: false,
       isShowTips: false,
       Package: {},
       PackageItemDetailsList: [],
@@ -56,27 +56,33 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'userAccount'
+    ]),
     itemID () {
       return +this.$route.params.id
+    },
+    servantID () {
+      return this.$route.query.ViewID
     }
   },
   created () {
     this.initData()
     this.getShopAgreement()
-    if (this.$route.query.count === '0') {
-      this.showPay = false
-      this.saleOut = true
-    }
   },
   methods: {
+    toShare () {
+      console.log(this.data)
+      this.$router.push(`/activity/share?packageID=${this.itemID}&userID=${this.userAccount.ID}&servantID=${this.servantID}`)
+    },
+    showTips () {
+      this.isShowTips = true
+    },
     async getShopAgreement () {
       const res = await this.$http.get(`/ShopAgreement?protocalType=5&itemID=${this.itemID}`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.Agreement = res.data.Data
       }
-    },
-    showTips () {
-      this.isShowTips = true
     },
     async initData () {
       const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
@@ -161,5 +167,13 @@ export default {
     margin-bottom: 10px;
     font-size: 13px;
   }
+}
+
+.share-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 22px;
+  height: 22px;
 }
 </style>

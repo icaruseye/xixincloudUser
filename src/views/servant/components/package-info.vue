@@ -10,9 +10,9 @@
           <div class="volume" v-if="data.SoldAmount">已售：{{data.SoldAmount}}份</div>
         </div>
       </div>
-      <div class="qrcode">
+      <!-- <div class="qrcode">
         <img src="@/assets/images/code.png" alt="" @click="showQrcode">
-      </div>
+      </div> -->
     </div>
     <!-- 服务人员信息 -->
     <div class="package-servant-info mgt10">

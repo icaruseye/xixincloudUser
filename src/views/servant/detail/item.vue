@@ -1,5 +1,6 @@
 <template>
   <div class="has-tabbar">
+    <img v-if="showPay" class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt="">
     <div class="item-info mgt10" v-if="ItemTemplate.Attention">
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">{{ItemTemplate.Attention}}</div>
@@ -19,8 +20,8 @@
     <div class="item-info mgt10 tips">
       购买前请仔细阅读<span @click="showTips">《购买须知》</span> ，当中包含购买规则及退款规则
     </div>
-    <button v-if="showPay" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">立即购买 ￥{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}</button>
-    <button v-if="saleOut" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" disabled="disabled">卖光了</button>
+    <button v-if="showPay && Item.Count > 0" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">立即购买 ￥{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}</button>
+    <button v-if="Item.Count < 0" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" disabled="disabled">卖光了</button>
     <div v-transfer-dom>
       <x-dialog v-model="isShowTips" :hide-on-blur="true">
         <div class="tips-content">
@@ -39,6 +40,7 @@
 import util from '@/plugins/util'
 import packageInfo from '../components/package-info'
 import { TransferDomDirective as TransferDom } from 'vux'
+import { mapGetters } from 'vuex'
 export default {
   directives: {
     TransferDom
@@ -64,17 +66,19 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'userAccount'
+    ]),
     itemID () {
       return +this.$route.params.id
+    },
+    servantID () {
+      return this.$route.query.ViewID
     }
   },
   created () {
     if (this.$route.query.type === '0') {
       this.showPay = false
-    }
-    if (this.$route.query.count === '0') {
-      this.showPay = false
-      this.saleOut = true
     }
     // this.initData()
     this.getPackageDetail().then((res) => {
@@ -137,6 +141,10 @@ export default {
     },
     showTips () {
       this.isShowTips = true
+    },
+    toShare () {
+      console.log(this.data)
+      this.$router.push(`/activity/share?packageID=${this.itemID}&userID=${this.userAccount.ID}&servantID=${this.servantID}`)
     }
   }
 }
@@ -286,5 +294,13 @@ export default {
     color: #666;
     padding-right: 10px;
   }
+}
+
+.share-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 22px;
+  height: 22px;
 }
 </style>
