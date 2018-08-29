@@ -7,8 +7,8 @@
         <div class="help">帮助说明</div>
       </div>
       <div class="btn-panel">
-        <router-link to="/recommend?isUser=1" class=" btn btn-user">推荐用户</router-link>
-        <router-link to="/recommend?isUser=0" class="btn btn-servant">推荐服务者</router-link>
+        <router-link to="/recommend?isUser=1" class=" btn btn-user"><img class="icon-user" src="@/assets/images/recommend-4.png">推荐用户</router-link>
+        <router-link to="/recommend?isUser=0" class="btn btn-servant"><img class="icon-servant" src="@/assets/images/recommend-5.png">推荐服务者</router-link>
       </div>
     </div>
     <div class="list-panel">
@@ -66,7 +66,8 @@ export default {
   overflow: hidden;
   height: 135px;
   text-align: center;
-  background: linear-gradient(to right, #9EC2FB, #42C7F6, #3CC7F5);
+  background: url(../../assets/images/recommend-3.png) no-repeat center;
+  background-size: cover;
   .earnings {
     margin-top: 15px;
     font-size: 30px;
@@ -99,6 +100,7 @@ export default {
   justify-content: center;
   margin-top: -30px;
   .btn {
+    position: relative;
     margin: 0 20px 10px;
     display: block;
     padding-top: 40px;
@@ -111,13 +113,30 @@ export default {
     font-weight: bold;
     text-align: center;
     box-sizing: border-box;
-    box-shadow: 0px 2px 12px rgba(0, 0, 0, .1);
+  }
+  .icon-user {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    margin-left: -12px;
+    width: 25px;
+    height: auto;
+  }
+  .icon-servant {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    margin-left: -12px;
+    width: 25px;
+    height: auto;
   }
   .btn-user {
-    background: #3ecccc;
+    background: url(../../assets/images/recommend-1.png) no-repeat center;
+    background-size: cover;
   }
   .btn-servant {
-    background: #687CFF;
+    background: url(../../assets/images/recommend-2.png) no-repeat center;
+    background-size: cover;
   }
 }
 .list-panel {

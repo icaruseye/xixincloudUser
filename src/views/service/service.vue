@@ -189,6 +189,7 @@
 
 <script>
 import { Sticky, dateFormat } from 'vux'
+import { mapGetters } from 'vuex'
 export default {
   filters: {
     timeFormat (value, m) {
@@ -208,12 +209,16 @@ export default {
         ItemsByDoc: [],
         PackByDoc: []
       },
-      userAccount: JSON.parse(sessionStorage.getItem('userAccount')),
       flag1: false,
       flag2: false,
       flag3: false,
       flagText: ''
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userAccount'
+    ])
   },
   watch: {
     serviceTabIndex (val) {
@@ -397,7 +402,7 @@ export default {
           confirmText: '去完善',
           onConfirm () {
             sessionStorage.setItem('reserve_path', url)
-            that.$router.push(url)
+            that.$router.push(`/user/info`)
           }
         })
       } else {

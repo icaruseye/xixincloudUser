@@ -6,8 +6,8 @@
           <img src="https://wx4.sinaimg.cn/mw690/0060fv5Fgy1fuollcy3t4j30ph0h715r.jpg" alt="">
         </div>
         <div class="title">
-          <img class="icon" :src="ItemTemplate.UseType | ItemImageByUseType" alt="">
-          <span>{{ItemTemplate.Name}}</span>
+          <img class="icon" :src="Package.PackageType | ItemImageByUseType" alt="">
+          <span>{{Package.Name}}</span>
         </div>
         <div class="describe">
           <div class="subtitle">
@@ -93,15 +93,6 @@ export default {
     // 获取服务人员信息
     async getServantInfo () {
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.servantID}`)
-      if (res.data.Code === 100000) {
-        return res.data.Data
-      } else {
-        this.$vux.toast.text('出错了')
-      }
-    },
-    // 获取服务套餐二维码
-    async getQrcode () {
-      const res = await this.$http.get(`/Recommend/QRCode?userId=${this.userID}&packageId=${this.packageID}`)
       if (res.data.Code === 100000) {
         return res.data.Data
       } else {

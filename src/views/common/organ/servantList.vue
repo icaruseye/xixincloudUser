@@ -118,7 +118,7 @@ export default {
         let listLength = res.data.Data.MedicalCareResponses.length
         this.servantList.push(...res.data.Data.MedicalCareResponses)
         this.LoadMore = false
-        this.lastPage = !Boolean(listLength)
+        this.lastPage = Boolean(!listLength)
         this.tips = listLength === 0 ? '没有更多了' : '加载中...'
       }
     }
