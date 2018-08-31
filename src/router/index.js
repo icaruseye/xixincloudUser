@@ -8,7 +8,7 @@ import http from '../api'
 Vue.use(ToastPlugin)
 Vue.use(Router)
 
-// 轮询是否新消息定时器
+// 新消息定时器
 let newMsgTimer = null
 
 const router = new Router({
@@ -50,15 +50,15 @@ router.beforeEach((to, from, next) => {
     return false
   }
 
-  if (!newMsgTimer) {
-    if (to.meta.notGetNews) {
-      clearInterval(newMsgTimer)
-      next()
-      return false
+  if (to.meta.isNeedGetNews) {
+    if (!newMsgTimer) {
+      newMsgTimer = setInterval(() => {
+        store.dispatch('getHaveNewMsg')
+      }, 5000)
     }
-    newMsgTimer = setInterval(() => {
-      store.dispatch('getHaveNewMsg')
-    }, 5000)
+  } else {
+    clearInterval(newMsgTimer)
+    newMsgTimer = null
   }
 
   // 加好友

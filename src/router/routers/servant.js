@@ -5,28 +5,32 @@ export default [
     path: '/',
     redirect: '/servant',
     meta: {
-      title: '服务者'
+      title: '服务者',
+      isNeedGetNews: true
     }
   },
   {
     path: '/servant',
     component: _import('/servant/servant'),
     meta: {
-      title: '服务者'
+      title: '服务者',
+      isNeedGetNews: true
     }
   },
   {
     path: '/systemMail',
     component: _import('/servant/MailTypeList'),
     meta: {
-      title: '我的消息'
+      title: '我的消息',
+      isNeedGetNews: true
     }
   },
   {
     path: '/systemMail/:type/list',
     component: _import('/servant/MailList'),
     meta: {
-      title: '站内信列表'
+      title: '站内信列表',
+      isNeedGetNews: true
     }
   },
   {
@@ -64,7 +68,8 @@ export default [
     path: '/servant/chat/:id',
     component: _import('/servant/chat'),
     meta: {
-      title: '售前咨询'
+      title: '售前咨询',
+      isNeedGetNews: true
     }
   },
   {

@@ -5,7 +5,8 @@ export default [
     path: '/user',
     component: _import('/user/user'),
     meta: {
-      title: '我的'
+      title: '我的',
+      isNeedGetNews: true
     }
   },
   {
@@ -55,6 +56,20 @@ export default [
     component: _import('/user/user-recommend'),
     meta: {
       title: '推荐'
+    }
+  },
+  {
+    path: '/user/account',
+    component: _import('/user/user-account'),
+    meta: {
+      title: '我的账户'
+    }
+  },
+  {
+    path: '/user/withdraw',
+    component: _import('/user/user-withdraw'),
+    meta: {
+      title: '提现'
     }
   }
 ]

@@ -36,7 +36,7 @@
       </div>
     </div>
     <!-- 填出框：提示文字 -->
-    <x-dialog 
+    <x-dialog
       v-model="tipsIsShow"
       class="dialog"
       :hide-on-blur="true">

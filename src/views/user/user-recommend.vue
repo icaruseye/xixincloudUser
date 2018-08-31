@@ -4,7 +4,7 @@
       <div class="userinfo-pannel">
         <div class="earnings"><span>￥</span>123</div>
         <div class="text">邀请收入总金额</div>
-        <div class="help">帮助说明</div>
+        <div class="help" @click="tipsIsShow = true">帮助说明</div>
       </div>
       <div class="btn-panel">
         <router-link to="/recommend?isUser=1" class=" btn btn-user"><img class="icon-user" src="@/assets/images/recommend-4.png">推荐用户</router-link>
@@ -28,16 +28,30 @@
         <div class="right"><span>￥</span>299元</div>
       </div>
     </div>
+    <x-dialog
+      v-model="tipsIsShow"
+      class="dialog"
+      :hide-on-blur="true">
+      <div class="content">
+        <div class="title">推荐用户及推荐服务者加入平台，均有相应的返利，返利会在用户预约服务完成后发放到推荐者系统钱包。</div>
+        <ul>
+          <li>①	推荐用户：通过平台生成的二维码，推荐给用户加入平台，在用户消费服务完成后会给到相应的推荐奖励。</li>
+          <li>②	邀请服务者：邀请您身边的医护好友加入平台，在服务者完成给用户的每一单服务后，会得到相应的推荐奖励。</li>
+        </ul>
+        <button class="close" @click="tipsIsShow = false">关闭</button>
+      </div>
+    </x-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { ButtonTab, ButtonTabItem } from 'vux'
+import { ButtonTab, ButtonTabItem, XDialog } from 'vux'
 export default {
   components: {
     ButtonTab,
-    ButtonTabItem
+    ButtonTabItem,
+    XDialog
   },
   computed: {
     ...mapGetters([
@@ -49,7 +63,13 @@ export default {
   },
   data () {
     return {
-      index: 0
+      index: 0,
+      tipsIsShow: false
+    }
+  },
+  methods: {
+    showTips () {
+      this.tipsIsShow = true
     }
   }
 }
@@ -188,6 +208,34 @@ export default {
       span {
         font-size: 13px;
       }
+    }
+  }
+}
+.dialog {
+  .content {
+    padding: 15px;
+    text-align: left;
+    line-height: 2;
+    color: #666;
+    .title {
+      font-size: 15px;
+      color: #333;
+      text-align: left;
+    }
+    li {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .close {
+      display: block;
+      margin: 0 auto;
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      border: 0;
+      border-radius: 2px;
+      background: #f1f1f1;
+      color: #999;
     }
   }
 }

@@ -5,6 +5,7 @@ import user from './routers/user'
 import service from './routers/service'
 import health from './routers/health'
 import activity from './routers/activity'
+import article from './routers/article'
 
 const routerList = [
   ...common,
@@ -13,7 +14,8 @@ const routerList = [
   ...service,
   ...user,
   ...health,
-  ...activity
+  ...activity,
+  ...article
 ]
 
 export default routerList

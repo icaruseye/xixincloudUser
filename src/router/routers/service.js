@@ -5,7 +5,8 @@ export default [
     path: '/service',
     component: _import('/service/service'),
     meta: {
-      title: '我的服务'
+      title: '我的服务',
+      isNeedGetNews: true
     }
   },
   {
