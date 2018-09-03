@@ -14,5 +14,12 @@ export default [
     meta: {
       title: '文章详情'
     }
+  },
+  {
+    path: '/article/detail/:id/comment',
+    component: _import('/article/comment'),
+    meta: {
+      title: '发表评论'
+    }
   }
 ]

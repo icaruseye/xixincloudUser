@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search-bar">
-      <input type="text" placeholder="输入医生名字搜索" v-model="searchData.search" @keyup.enter="getServantList" @keyup="inputKeywords">
+      <input type="text" placeholder="输入服务者名字搜索" v-model="searchData.search" @keyup.enter="getServantList" @keyup="inputKeywords">
     </div>
     <div class="container">
       <!-- 标签 -->
@@ -14,7 +14,7 @@
       </div>
       <!-- 推荐医师 -->
       <div class="servant-panel servant-panel_service">
-        <div class="servant-panel_title">推荐医师</div>
+        <div class="servant-panel_title">推荐服务者</div>
         <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
           <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
             <div class="avatar">

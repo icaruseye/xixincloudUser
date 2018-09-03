@@ -33,7 +33,7 @@
       <div class="commnents-list">
         <div class="title">
           <div class="left">精选留言</div>
-          <div class="right">写留言</div>
+          <div class="right" @click="toComment">写留言</div>
         </div>
         <div class="item">
           <div class="avatar">
@@ -78,8 +78,16 @@ export default {
     return {
     }
   },
+  computed: {
+    ID () {
+      return this.$route.params.id
+    }
+  },
   methods: {
     onNavbarClickLeft () {
+    },
+    toComment () {
+      this.$router.push(`/article/detail/${this.ID}/comment`)
     }
   }
 }

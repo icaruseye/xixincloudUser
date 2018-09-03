@@ -8,7 +8,7 @@
         <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">精选</xx-tab-item>
         <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">热点</xx-tab-item>
         <xx-tab-item :selected="tabIndex === 2" @on-item-click="onItemClick">推荐</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 2" @on-item-click="onItemClick">问答咨询</xx-tab-item>
+        <xx-tab-item :selected="tabIndex === 3" @on-item-click="onItemClick">问答咨询</xx-tab-item>
       </xx-tab>
     </sticky>
     <div class="container">

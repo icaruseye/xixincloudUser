@@ -60,34 +60,26 @@
     </div>
     <!-- 推荐医师 -->
     <div class="servant-panel servant-panel_service">
-      <div class="servant-panel_title">推荐医师</div>
-      <div class="weui-list_item">
-        <div class="avatar">
-          <img src="https://alioss.g-cores.com/uploads/user/d95bb3d6-38e4-4f24-9100-9b05f6a74c89_normal.jpg" alt="">
-        </div>
-        <div class="mid">
-          <div class="title">陈医生</div>
-          <div class="describe text-overflow-1">专业老中医</div>
-          <div style="margin-bottom: 8px;display: flex;align-items: center;">
-            <i class="iconfont icon-star1"></i><span class="range">5.0</span><span class="times">91次服务</span>
+    <div class="servant-panel_title">推荐服务者</div>
+      <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
+        <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
+          <div class="avatar">
+            <img :src="item.Avatar | transformImgUrl" alt="">
           </div>
-          <div class="tags"><span>123</span><span>很不错哦</span></div>
-        </div>
-      </div>
-      <div class="weui-list_item">
-        <div class="avatar">
-          <img src="https://alioss.g-cores.com/uploads/user/d95bb3d6-38e4-4f24-9100-9b05f6a74c89_normal.jpg" alt="">
-        </div>
-        <div class="mid">
-          <div class="title">陈医生</div>
-          <div class="describe text-overflow-1">专业老中医</div>
-          <div style="margin-bottom: 8px;display: flex;align-items: center;">
-            <i class="iconfont icon-star1"></i><span class="range">5.0</span><span class="times">91次服务</span>
+          <div class="mid">
+            <div class="title">{{item.Name}}</div>
+            <!-- <div class="describe text-overflow-1">专业老中医</div> -->
+            <div style="margin-bottom: 8px;display: flex;align-items: center;">
+              <i class="iconfont icon-star1"></i><span class="range">{{item.Score}}</span><span class="times">{{item.ServiceNum}}次服务</span>
+            </div>
+            <div class="tags"><span v-for="(item, index) in item.Tags" :key="index">{{item}}</span></div>
           </div>
-          <div class="tags"><span>123</span><span>很不错哦</span></div>
         </div>
+      </template>
+      <div v-if="servantList.length === 0" class="empty-box">
+        没找到相关服务者
       </div>
-      <!-- <template v-for="(item, index) in itemList">
+      <!-- <template v-for="(item, index) in servantList">
         <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
           <div class="icon">
             <img :src="item.UseType | ItemImageByUseType" alt="">
@@ -123,7 +115,7 @@ export default {
   },
   data () {
     return {
-      itemList: [],
+      servantList: [],
       Agreement: {},
       aliasList: [],
       showHideOnBlur: false
@@ -150,15 +142,25 @@ export default {
     ])
   },
   created () {
-    // this.getItemTemplate()
     this.getAlias()
+    this.getServantList()
   },
   methods: {
+    toDetail (ViewId) {
+      this.$router.push(`/servant/service/${ViewId}`)
+    },
     showDialog () {
       this.showHideOnBlur = true
     },
     toList (useType) {
       this.$router.push(`/organ/servantList?useType=${useType}`)
+    },
+    // 获取推荐服务者列表
+    async getServantList () {
+      const res = await this.$http.get('/GetMedicalCare/List')
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.servantList = res.data.Data.MedicalCareResponses
+      }
     },
     // 服务流程列表
     async getAlias () {
