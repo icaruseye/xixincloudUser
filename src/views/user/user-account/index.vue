@@ -1,12 +1,12 @@
 <template>
   <div style="padding-bottom:50px">
     <div class="account_head_container">
-      <router-link class="suspend_btn" style="top:13px;left:12px" to="/recommend">我的邀请</router-link>
-      <router-link class="suspend_btn" style="top:13px;right:12px" to="/user/bills">我的账单</router-link>
+      <router-link class="suspend_btn" style="top:13px;left:12px" to="/user/recommend">我的邀请</router-link>
+      <!-- <router-link class="suspend_btn" style="top:13px;right:12px" to="/user/bills">我的账单</router-link> -->
       <p class="can_withdraw_amount_container">￥{{detail.Balance | amountCompute}}</p>
       <p class="can_withdraw_amount_title"> 可提现金额</p>
       <div class="to_withdraw_btn_container">
-        <router-link class="to_withdraw_btn" to="/user/withdraw"> 立即提现</router-link>
+        <!-- <router-link class="to_withdraw_btn" to="/user/withdraw"> 立即提现</router-link> -->
       </div>
       <p class="all_earnings_text">累计提现总金额：￥{{detail.TotalWithdraw | amountCompute}}</p>
     </div>
@@ -34,15 +34,15 @@
       </dl>
     </div> -->
 
-    <div class="card_head_container mt20px">
+    <!-- <div class="card_head_container mt20px">
       <i class="first_icon iconfont icon-suo"></i>
       待审核收益
       <router-link class="right_arrow_btn" to="/">
         查看
         <i class="iconfont icon-jiantouyou"></i>
       </router-link>
-    </div>
-    <div class="flex_row_container">
+    </div> -->
+    <!-- <div class="flex_row_container">
       <dl>
         <dt>
           待结算单数
@@ -57,18 +57,18 @@
         </dt>
         <dd>￥{{detail.FreezeBalance | amountCompute}}</dd>
       </dl>
-    </div>
+    </div> -->
 
     <div class="card_head_container mt20px">
       <i class="first_icon iconfont icon-yue"></i>
       月统计
-      <router-link class="right_arrow_btn" to="/">
+      <router-link class="right_arrow_btn" to="/user/recommend">
         查看
         <i class="iconfont icon-jiantouyou"></i>
       </router-link>
     </div>
     <div class="flex_row_container">
-      <dl>
+      <!-- <dl>
         <dt>
           服务单数
           <i @click="showHint('这是服务单数')" class="iconfont icon-wenhao"></i>
@@ -81,11 +81,11 @@
           <i class="iconfont icon-wenhao"></i>
         </dt>
         <dd>￥{{detail.MonthServiceIncome | amountCompute}}</dd>
-      </dl>
+      </dl> -->
       <dl>
         <dt>
           分享赚
-          <i class="iconfont icon-wenhao"></i>
+          <i class="iconfont icon-wenhao" @click="showHint('分享赚是指当月邀请服务者、推荐用户所获得的奖励总金额。')"></i>
         </dt>
         <dd>￥{{detail.MonthRecommendIncome | amountCompute}}</dd>
       </dl>
@@ -105,11 +105,12 @@ export default {
     }
   },
   created () {
-    // this.init()
+    this.init()
   },
   methods: {
     showHint (txt) {
       this.$vux.alert.show({
+        title: '提示',
         content: txt
       })
     },

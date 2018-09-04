@@ -79,7 +79,6 @@
     align-content: center;
     font-size: 14px;
     color: #333;
-    height: 22px;
     line-height: 22px;
     font-weight: normal;
     text-align: left;

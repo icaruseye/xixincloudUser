@@ -27,8 +27,8 @@
         <p>而在数次准星对准尸体的镜头中，我们也能看到除了摸尸体捡道具的选项之外，还有一个明晃晃的选项“pick the body”，也就是扛尸体。如此看来，在短短的一个潜行暗杀的背后，实际上《赛博朋克 2077》是有一套完整的潜行机制，包含了潜行、击倒、暗杀、扛尸体、黑客技能等一系列元素，当然别忘了螳螂剑，这对利刃允许你挂在任意一面墙壁上，某种程度上来说是对关卡设计的一种解放，当你需要在高处扫描/暗杀/黑客的时候，不需要在特定的地点添加大量的横梁、挂壁、管道出口或高台了。</p>
       </div>
       <div class="handle-bar">
-        <span>点赞666</span>
-        <span>评论999</span>
+        <span class="dianzan">666</span>
+        <span class="pinglun">99</span>
       </div>
       <div class="commnents-list">
         <div class="title">
@@ -72,22 +72,31 @@ export default {
   computed: {
     ...mapGetters([
       'userAccount'
-    ])
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
+    ]),
     ID () {
       return this.$route.params.id
     }
+  },
+  data () {
+    return {
+      index: 1,
+      size: 10
+    }
+  },
+  mounted () {
+    this.getArticle()
   },
   methods: {
     onNavbarClickLeft () {
     },
     toComment () {
       this.$router.push(`/article/detail/${this.ID}/comment`)
+    },
+    async getArticle () {
+      const res = await this.$http.get(`/Article?articleId=${this.ID}&index=${this.index}&size=${this.size}`)
+      if (res.data.Code === 100000) {
+        console.log(res)
+      }
     }
   }
 }
@@ -131,6 +140,18 @@ export default {
     flex-direction: row-reverse;
     span {
       margin-right: 30px;
+    }
+    .dianzan {
+      padding-left: 20px;
+      background: url(../../assets/images/ic-zan.png) no-repeat;
+      background-size: 14px;
+      background-position-y: 2px;
+    }
+    .pinglun {
+      padding-left: 20px;
+      background: url(../../assets/images/ic-pl.png) no-repeat;
+      background-size: 15px 14px;
+      background-position-y: 3px;
     }
   }
   .commnents-list {

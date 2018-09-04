@@ -70,21 +70,24 @@ export default {
     }
   },
   mounted () {
-    const that = this
     this.getTagList()
     this.getServantList()
     this.isShowLoadMoreBar()
-    window.onscroll = function () {
-      if (document.documentElement.clientHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 50) {
-        if (that.lastPage || that.LoadMore) return false
-        that.LoadMore = true
-        that.searchData.index++
-        that.tips = '加载中'
-        that.listLoadMore()
-      }
-    }
+    this.loadmore()
   },
   methods: {
+    loadmore () {
+      const that = this
+      window.onscroll = function () {
+        if (document.documentElement.clientHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 50) {
+          if (that.lastPage || that.LoadMore) return false
+          that.LoadMore = true
+          that.searchData.index++
+          that.tips = '加载中'
+          that.listLoadMore()
+        }
+      }
+    },
     isShowLoadMoreBar () {
       // 判断是否显示加载更多
       if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {

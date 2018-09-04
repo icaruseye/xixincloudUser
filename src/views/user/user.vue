@@ -30,11 +30,11 @@
           <span class="title">个人资料</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
-        <!-- <router-link to="/user/account" class="setting-panel_item vux-1px-b">
+        <router-link to="/user/account" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">我的账户</span>
           <i class="iconfont icon-jiantouyou"></i>
-        </router-link> -->
+        </router-link>
       </div>
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
@@ -62,11 +62,11 @@
           <span class="title">手机认证</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
-        <!-- <router-link to="/user/order" class="setting-panel_item vux-1px-b">
+        <router-link to="/article/list" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
-          <span class="title">我的订单</span>
+          <span class="title">文章</span>
           <i class="iconfont icon-jiantouyou"></i>
-        </router-link> -->
+        </router-link>
       </div>
       <!-- <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user" class="setting-panel_item vux-1px-b">

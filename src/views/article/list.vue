@@ -52,14 +52,27 @@ export default {
   },
   data () {
     return {
-      tabIndex: 0
+      tabIndex: 0,
+      params: {
+        articleType: 2,
+        index: 1
+      }
     }
+  },
+  mounted () {
+    this.getArticleList()
   },
   methods: {
     onItemClick () {
     },
     toDetail (id) {
       this.$router.push(`/article/detail/${id}`)
+    },
+    async getArticleList () {
+      const res = await this.$http.get(`/ArticleList?articleType=${this.params.articleType}&index=${this.params.index}`)
+      if (res.data.Code === 100000) {
+        console.log(res.data.Data)
+      }
     }
   }
 }
