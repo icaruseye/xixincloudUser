@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <div class="html-wrap">
+  <div class="wrap">
+    <div class="html-wrap" id="html-wrap">
       <div class="html-panel">
-        <div class="poster">
+        <!-- <div class="poster">
           <img src="https://wx4.sinaimg.cn/mw690/0060fv5Fgy1fuollcy3t4j30ph0h715r.jpg" alt="">
-        </div>
+        </div> -->
         <div class="title">
           <img class="icon" :src="Package.PackageType | ItemImageByUseType" alt="">
           <span>{{Package.Name}}</span>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import html2canvas from 'html2canvas'
+import domtoimage from 'dom-to-image'
 export default {
   data () {
     return {
@@ -99,18 +99,35 @@ export default {
         this.$vux.toast.text('出错了')
       }
     },
-    canvasToImage (canvas) {
-      var image = new Image()
-      image.src = canvas.toDataURL('image/png')
-      return image
-    },
+    // canvasToImage (canvas) {
+    //   var image = new Image()
+    //   image.src = canvas.toDataURL('image/png')
+    //   return image
+    // },
     htmlToCanvas () {
-      const that = this
-      html2canvas(document.body, {
-        useCORS: true
-      }).then(function (canvas) {
-        document.querySelector('.img-wrap').appendChild(that.canvasToImage(canvas))
-      })
+      const node = document.getElementById('html-wrap')
+      domtoimage.toPng(node)
+        .then(function (dataUrl) {
+          console.log(dataUrl)
+          var img = new Image()
+          img.src = dataUrl
+          document.querySelector('.img-wrap').appendChild(img)
+        })
+        .catch(function (error) {
+            console.error('oops, something went wrong!', error)
+        })
+      // const that = this
+      // html2canvas(document.querySelector('.html-wrap'), {
+      //   useCORS: true
+      // }).then(function (canvas) {
+      //   console.log(canvas)
+      //   let ctx = canvas.getContext('2d')
+      //   ctx.fillStyle = '#f6f6f6'
+      //   ctx.shadowBlur=20
+      //   ctx.shadowColor = '#ccc'
+      //   ctx.fill()
+      //   document.querySelector('.img-wrap').appendChild(that.canvasToImage(canvas))
+      // })
     }
   }
 }
@@ -121,7 +138,6 @@ export default {
   padding: 9px 12px;
 }
 .html-panel {
-  min-height: 100vh;
   background: #fff;
   border-radius: 6px;
   overflow: hidden;

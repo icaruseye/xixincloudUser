@@ -9,7 +9,7 @@
       </h3>
       <p class="desc">{{info.Description | stringSub(85)}}</p>
     </div>
-    <div class="qr_code_box">
+    <div class="qr_code_box" v-if="info.ViewID">
       <img :src="API_PATH+'/QRCode/'+info.ViewID" alt="">
     </div>
     <p class="hint_desc">扫一扫二维码，可加我为好友</p>

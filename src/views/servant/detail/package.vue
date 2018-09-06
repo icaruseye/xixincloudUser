@@ -1,6 +1,6 @@
 <template>
   <div class="has-tabbar">
-    <img class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt="">
+    <!-- <img class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt=""> -->
     <!-- 服务列表 -->
     <div class="weui-list-panel mgt10">
       <div class="weui-pane_subtitle">服务列表</div>

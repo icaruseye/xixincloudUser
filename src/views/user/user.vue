@@ -35,6 +35,11 @@
           <span class="title">我的账户</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
+        <router-link to="/user/recommend" class="setting-panel_item vux-1px-b">
+          <img src="@/assets/images/icon-my-tuijian.png" alt="">
+          <span class="title">推荐奖励</span>
+          <i class="iconfont icon-jiantouyou"></i>
+        </router-link>
       </div>
       <div class="setting-panel vux-1px-t vux-1px-b" style="margin-top:10px">
         <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
@@ -45,11 +50,6 @@
         <router-link to="/user/address" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-address.png" alt="">
           <span class="title">常用地址</span>
-          <i class="iconfont icon-jiantouyou"></i>
-        </router-link>
-        <router-link to="/user/recommend" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-tuijian.png" alt="">
-          <span class="title">推荐</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
         <!-- <router-link to="/user" class="setting-panel_item vux-1px-b">
@@ -64,7 +64,7 @@
         </router-link>
         <router-link to="/article/list" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
-          <span class="title">文章</span>
+          <span class="title">文章资讯</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
       </div>

@@ -7,11 +7,11 @@
       </div>
       <div class="name">{{userAccount.NickName}}</div>
       <div class="text" v-show="isUser === 0">{{userAccount.NickName}}邀请您成为他的服务者</div>
-      <div class="text isuser" v-show="isUser === 1">需要优质的到家医疗护理服务 我推荐您找悉心云</div>
+      <div class="text isuser" v-show="isUser === 1">需要优质的上门服务 我推荐您找{{ShopInfo.ShopName}}</div>
     </div>
     <div class="qrcode" v-if="userAccount.ID">
-      <img v-show="isUser === 0" :src="API_PATH+'/QrCodeToUser/?userID=' + userAccount.ID" alt="">
-      <img v-show="isUser === 1" :src="API_PATH+'/QrCodeToServant/?userID=' + userAccount.ID" alt="">
+      <img v-show="isUser === 1" :src="API_PATH+'/QrCodeToUser/?userID=' + userAccount.ID" alt="">
+      <img v-show="isUser === 0" :src="API_PATH+'/QrCodeToServant/?userID=' + userAccount.ID" alt="">
       <div class="text">长按识别二维码，{{ isUser ? '接受我的邀请' : '注册成为我的服务者'}}</div>
     </div>
     <div class="items-panel">
@@ -28,7 +28,7 @@
         </template>
       </div>
     </div>
-    <div class="footer" :class="{ isuser: isUser }">长按或扫一扫上方二维码，使用悉心云</div>
+    <div class="footer" :class="{ isuser: isUser }">长按或扫一扫上方二维码，使用{{ShopInfo.ShopName}}</div>
   </div>
 </template>
 
@@ -45,6 +45,9 @@ export default {
     },
     viewId () {
       return this.$route.query.viewId
+    },
+    ShopInfo () {
+      return JSON.parse(sessionStorage.getItem('ShopInfo'))
     }
   },
   data () {

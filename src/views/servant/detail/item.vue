@@ -1,6 +1,6 @@
 <template>
   <div class="has-tabbar">
-    <img v-if="showPay" class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt="">
+    <!-- <img v-if="showPay" class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt=""> -->
     <div class="item-info mgt10" v-if="ItemTemplate.Attention">
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">{{ItemTemplate.Attention}}</div>

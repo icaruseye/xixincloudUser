@@ -4,7 +4,7 @@
       ref="sticky"
       :offset="0"
       :check-sticky-support="true">
-      <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="0">
+      <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="0" v-if="typeList.length > 0">
         <xx-tab-item v-for="(item, index) in typeList" :key="index" :selected="tabIndex === index">{{item.Name}}</xx-tab-item>
       </xx-tab>
     </sticky>
@@ -35,6 +35,14 @@
         <!-- <div class="loadmore" v-if="articleList[index].Total > articleList[index].index" @click="loadmore(index)">查看更多</div> -->
       </div>
     </template>
+    <div v-if="articleList.length === 0" style="font-size: 120px;text-align:center;margin-bottom:40px;">
+      <i style="font-size:66px;display:block">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-kong1"></use>
+        </svg>
+      </i>
+      <p style="font-size:12px;color:#999;text-align:center;">文章列表为空</p>
+    </div>
   </div>
 </template>
 

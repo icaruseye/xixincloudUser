@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
     console.log(to.query)
     http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
       if (res.data.Code === 100000) {
-        console.log(res)
+        sessionStorage.setItem('ShopInfo', JSON.stringify(res.data.Data))
         sessionStorage.setItem('to_path', to.fullPath)
         window.location.href = res.data.Data.LoginUrl
       }
