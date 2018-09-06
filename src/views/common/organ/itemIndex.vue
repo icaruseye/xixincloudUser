@@ -276,7 +276,7 @@ export default {
 .empty-wrap {
   position: relative;
   height: 100%;
-  background: url('/src/assets/images/bind-phone.png') no-repeat center;
+  background: url('../../../assets/images/bind-phone.png') no-repeat center;
   background-size: 118px 95px;
   background-position-y: 15px;
   text-align: center;

@@ -45,18 +45,18 @@ export default {
     },
     viewId () {
       return this.$route.query.viewId
-    },
-    ShopInfo () {
-      return JSON.parse(sessionStorage.getItem('ShopInfo'))
     }
   },
   data () {
     return {
-      userAccount: {}
+      userAccount: {},
+      ShopInfo: {}
     }
   },
   mounted () {
+    document.title = this.isUser ? '我推荐给您优质的上门医疗护理服务' : '我邀请你能成为我的服务者'
     this.getItemTemplate()
+    this.getShopInfo()
   },
   methods: {
     async getItemTemplate () {
@@ -64,13 +64,19 @@ export default {
       if (res.data.Code === 100000) {
         this.userAccount = res.data.Data
         wxShare({
-          title: '推荐邀请',
-          desc: '邀请描述',
+          title: this.isUser ? '我推荐给您优质的上门医疗护理服务' : '我邀请你能成为我的服务者',
+          desc: this.isUser ? '亲测服务很棒' : '希望您能为我服务',
           logo: util.transformImgUrl(res.data.Data.Avatar),
           link: `/recommend?isUser=${this.isUser}&viewId=${this.viewId}`
         })
       } else {
         this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    async getShopInfo () {
+      const res = await this.$http.get(`/ShopInfo?host=${window.location.host}`)
+      if (res.data.Code === 100000) {
+        this.ShopInfo = res.data.Data
       }
     }
   }

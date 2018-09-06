@@ -33,8 +33,14 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title
   }
 
-  // 推荐不用登陆
-  if (to.path === '/recommend') {
+  // 修复iOS版微信HTML5 History兼容性问题
+  if (IOS && to.path !== location.pathname && to.meta.share) {
+    location.assign(to.fullPath)
+    return false
+  }
+
+  // 不需要登陆直接访问目标页
+  if (to.meta.noneedLogin) {
     next()
     return false
   }
@@ -42,7 +48,6 @@ router.beforeEach((to, from, next) => {
   // 微信授权登录
   if (!userAccount.ID && window.location.pathname !== '/wxLogin') {
     sessionStorage.setItem('inviteParams', JSON.stringify(to.query))
-    console.log(to.query)
     http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
       if (res.data.Code === 100000) {
         sessionStorage.setItem('ShopInfo', JSON.stringify(res.data.Data))
@@ -50,12 +55,6 @@ router.beforeEach((to, from, next) => {
         window.location.href = res.data.Data.LoginUrl
       }
     })
-    return false
-  }
-
-  // 修复iOS版微信HTML5 History兼容性问题
-  if (IOS && to.path !== location.pathname && to.meta.share) {
-    location.assign(to.fullPath)
     return false
   }
 
