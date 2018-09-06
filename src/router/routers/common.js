@@ -58,7 +58,8 @@ export default [
     path: '/recommend',
     component: _import('/common/recommend'),
     meta: {
-      title: '推荐注册'
+      title: '推荐注册',
+      share: true
     }
   }
 ]

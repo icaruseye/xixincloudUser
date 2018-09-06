@@ -9,7 +9,7 @@
       <div class="text" v-show="isUser === 0">{{userAccount.NickName}}邀请您成为他的服务者</div>
       <div class="text isuser" v-show="isUser === 1">需要优质的到家医疗护理服务 我推荐您找悉心云</div>
     </div>
-    <div class="qrcode">
+    <div class="qrcode" v-if="userAccount.ID">
       <img v-show="isUser === 0" :src="API_PATH+'/QrCodeToUser/?userID=' + userAccount.ID" alt="">
       <img v-show="isUser === 1" :src="API_PATH+'/QrCodeToServant/?userID=' + userAccount.ID" alt="">
       <div class="text">长按识别二维码，{{ isUser ? '接受我的邀请' : '注册成为我的服务者'}}</div>
@@ -17,7 +17,7 @@
     <div class="items-panel">
       <div class="title" :class="{ isuser: isUser }"></div>
       <div class="items-list">
-        <template v-for="(item, index) in itemList">
+        <template v-for="(item, index) in userAccount.ItemTemplateResponses">
           <div class="item" :key="index">
             <div class="icon"><img :src="item.UseType | ItemImageByUseType" alt=""></div>
             <div class="content">
@@ -33,33 +33,39 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import wxShare from '@/plugins/wxShare'
+import util from '@/plugins/util'
 export default {
   computed: {
-    ...mapGetters([
-      'userInfo',
-      'userAccount'
-    ]),
     API_PATH () {
       return process.env.API_PATH
     },
     isUser () {
       return +this.$route.query.isUser
+    },
+    viewId () {
+      return this.$route.query.viewId
     }
   },
   data () {
     return {
-      itemList: []
+      userAccount: {}
     }
   },
-  created () {
+  mounted () {
     this.getItemTemplate()
   },
   methods: {
     async getItemTemplate () {
-      const res = await this.$http.get('/ItemTemplate')
+      const res = await this.$http.get(`/UserRecommend/UserItemTemplate?viewId=${this.viewId}`)
       if (res.data.Code === 100000) {
-        this.itemList = res.data.Data
+        this.userAccount = res.data.Data
+        wxShare({
+          title: '推荐邀请',
+          desc: '邀请描述',
+          logo: util.transformImgUrl(res.data.Data.Avatar),
+          link: `/recommend?isUser=${this.isUser}&viewId=${this.viewId}`
+        })
       } else {
         this.$vux.toast.text(res.data.Msg)
       }

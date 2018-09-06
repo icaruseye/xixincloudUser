@@ -24,7 +24,7 @@
             <div class="tips"><img class="ic_gth" src="@/assets/images/ic_gth.png" alt=""> 超过48小时自动默认好评</div>
           </div>
           <div style="text-align:center;display:flex;justify-content: center;margin-bottom:15px;">
-            <button class="btn green" @click="submit">确认</button>
+            <button class="btn green" @click="submit" :disabled="commentDisable">确认</button>
             <button class="btn gray" @click="modelValue = false">取消</button>
           </div>
         </div>
@@ -62,7 +62,8 @@ export default {
     Detail: {
       type: Object,
       default: {}
-    }
+    },
+    commentDisable: false
   },
   data () {
     return {
@@ -196,6 +197,9 @@ export default {
    background: #3ecccc; 
   }
   &.gray {
+    background: #ccc;
+  }
+  &:disabled {
     background: #ccc;
   }
 }

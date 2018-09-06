@@ -71,5 +71,27 @@ export default [
     meta: {
       title: '提现'
     }
+  },
+  {
+    path: '/user/bills',
+    component: _import('/user/user-bills/list'),
+    meta: {
+      title: '我的账单',
+      goBackParam: {
+        url: '/user/account',
+        title: '我的账户'
+      }
+    }
+  },
+  {
+    path: '/user/bills/:id/detail',
+    component: _import('/user/user-bills/detail'),
+    meta: {
+      title: '账单详情',
+      goBackParam: {
+        url: '/user/bills',
+        title: '我的账单'
+      }
+    }
   }
 ]

@@ -2,30 +2,41 @@
   <div class="wrap">
     <div class="container">
       <div class="userinfo-pannel">
-        <div class="earnings"><span>￥</span>123</div>
+        <div class="earnings"><span>￥</span>{{Wallet.TotalIncome}}</div>
         <div class="text">邀请收入总金额</div>
         <div class="help" @click="tipsIsShow = true">帮助说明</div>
       </div>
       <div class="btn-panel">
-        <router-link to="/recommend?isUser=1" class=" btn btn-user"><img class="icon-user" src="@/assets/images/recommend-4.png">推荐用户</router-link>
-        <router-link to="/recommend?isUser=0" class="btn btn-servant"><img class="icon-servant" src="@/assets/images/recommend-5.png">推荐服务者</router-link>
+        <router-link :to="'/recommend?isUser=1&viewId='+userAccount.ViewID" class=" btn btn-user"><img class="icon-user" src="@/assets/images/recommend-4.png">推荐用户</router-link>
+        <router-link :to="'/recommend?isUser=0&viewId='+userAccount.ViewID" class="btn btn-servant"><img class="icon-servant" src="@/assets/images/recommend-5.png">推荐服务者</router-link>
       </div>
     </div>
     <div class="list-panel">
       <div class="title">推荐奖励明细</div>
-      <div class="item">
-        <div class="left">
-          <div class="name">原煤配置</div>
-          <div class="time"><span>2018-07-25 15:00</span><span>用户：张**</span></div>
-        </div>
-        <div class="right"><span>￥</span>299元</div>
-      </div>
-      <div class="item">
-        <div class="left">
-          <div class="name">原煤配置</div>
-          <div class="time"><span>2018-07-25 15:00</span><span>用户：张**</span></div>
-        </div>
-        <div class="right"><span>￥</span>299元</div>
+      <template v-if="WalletLogList.length > 0">
+        <list-items
+          v-for="(WalletLog, index) in WalletLogList"
+          @click.native="redirectToDetail(`/user/bills/${WalletLog.ID}/detail`)"
+          :key="index"
+          :Amount="WalletLog.Amount"
+          :Type="WalletLog.OperatingType"
+          :CreateTime="WalletLog.CreateTime">
+        </list-items>
+        <xx-loadmore
+          style="margin:15px"
+          :pageindex="pageIndex"
+          :pageTotal="pageTotal"
+          :loadText="loadText"
+          @onClick="loadmore">
+        </xx-loadmore>
+      </template>
+      <div v-else style="font-size: 120px;text-align:center;margin-bottom:40px;">
+        <i style="font-size:66px;display:block">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-kong1"></use>
+          </svg>
+        </i>
+        <p style="font-size:12px;color:#999;text-align:center;">邀请列表为空</p>
       </div>
     </div>
     <x-dialog
@@ -46,12 +57,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { ButtonTab, ButtonTabItem, XDialog } from 'vux'
+import { ButtonTab, ButtonTabItem, XDialog, dateFormat } from 'vux'
+import ListItems from '../user-bills/components/listItems'
 export default {
   components: {
     ButtonTab,
     ButtonTabItem,
-    XDialog
+    XDialog,
+    ListItems
+  },
+  filters: {
+    timeFormat (value, m) {
+      return dateFormat(new Date(value), m)
+    }
   },
   computed: {
     ...mapGetters([
@@ -63,13 +81,48 @@ export default {
   },
   data () {
     return {
-      index: 0,
-      tipsIsShow: false
+      tipsIsShow: false,
+      pageIndex: 1,
+      pageTotal: 20,
+      loadText: '查看更多',
+      WalletLogList: [],
+      Wallet: {}
     }
+  },
+  watch: {
+    pageIndex () {
+      this.getWalletLogList()
+    }
+  },
+  mounted () {
+    this.getWalletLogList()
+    this.getWallet()
   },
   methods: {
     showTips () {
       this.tipsIsShow = true
+    },
+    loadmore () {
+      this.pageIndex++
+    },
+    redirectToDetail (url) {
+      this.$router.push(url)
+    },
+    async getWalletLogList () {
+      const res = await this.$http.get(`/WalletLogList?page=${this.pageIndex}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.length === 0) {
+          this.pageTotal = this.pageIndex
+          return false
+        }
+        this.WalletLogList.push(...res.data.Data)
+      }
+    },
+    async getWallet () {
+      const res = await this.$http.get(`/Wallet`)
+      if (res.data.Code === 100000) {
+        this.Wallet = res.data.Data
+      }
     }
   }
 }
@@ -86,7 +139,7 @@ export default {
   overflow: hidden;
   height: 135px;
   text-align: center;
-  background: url(../../assets/images/recommend-3.png) no-repeat center;
+  background: url(../../../assets/images/recommend-3.jpg) no-repeat center;
   background-size: cover;
   .earnings {
     margin-top: 15px;
@@ -151,15 +204,16 @@ export default {
     height: auto;
   }
   .btn-user {
-    background: url(../../assets/images/recommend-1.png) no-repeat center;
+    background: url(../../../assets/images/recommend-1.png) no-repeat center;
     background-size: cover;
   }
   .btn-servant {
-    background: url(../../assets/images/recommend-2.png) no-repeat center;
+    background: url(../../../assets/images/recommend-2.png) no-repeat center;
     background-size: cover;
   }
 }
 .list-panel {
+  overflow: hidden;
   background: #fff;
   .title {
     height: 66px;
@@ -201,8 +255,10 @@ export default {
       }
     }
     .right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
       width: 80px;
-      text-align: right;
       color: #FF5F5F;
       font-size: 15px;
       span {

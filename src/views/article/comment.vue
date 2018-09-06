@@ -1,27 +1,47 @@
 <template>
   <div>
     <div class="title">标题</div>
-    <div class="article-title">很多人对于材质并不陌生，但是每次使用后最终结果总是差强人意。</div>
+    <div class="article-title">{{title}}</div>
     <div class="title">评论</div>
     <div class="textarea">
-      <textarea v-model="Remark" @keyup="limitCount(Remark, 200)" placeholder="留言将由筛选后显示，对所有人可见。"></textarea>
-      <span class="remark_textarea_nums_count" :class="{warn: exceedText}">{{Remark.length}} / 200</span>
+      <textarea v-model="comment" @keyup="limitCount(comment, 200)" placeholder="留言将由筛选后显示，对所有人可见。"></textarea>
+      <span class="remark_textarea_nums_count" :class="{warn: exceedText}">{{comment.length}} / 200</span>
     </div>
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary">确认</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="submitComment" :disabled="!comment.length || exceedText">确认</button>
   </div>
 </template>
 
 <script>
 export default {
+  computed: {
+    articleID () {
+      return this.$route.params.id
+    },
+    title () {
+      return this.$route.query.title
+    }
+  },
   data () {
     return {
       exceedText: false,
-      Remark: ''
+      comment: ''
     }
   },
   methods: {
     limitCount (text, max) {
       this.exceedText = text.length > max
+    },
+    async submitComment () {
+      const that = this
+      const res = await this.$http.post(`/Comment?articleID=${this.articleID}&comment=${this.comment}`)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '提交成功',
+          onHide () {
+            that.$router.back()
+          }
+        })
+      }
     }
   }
 }

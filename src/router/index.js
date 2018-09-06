@@ -25,12 +25,15 @@ router.beforeEach((to, from, next) => {
   router.app.$store.commit('SET_ROUTER_LOADING', true)
   const userAccount = JSON.parse(sessionStorage.getItem('userAccount')) || {}
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
+  const u = navigator.userAgent
+  const IOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
 
-  /* 路由发生变化修改页面title */
+  // 路由发生变化修改页面title
   if (to.meta.title) {
     document.title = to.meta.title
   }
 
+  // 推荐不用登陆
   if (to.path === '/recommend') {
     next()
     return false
@@ -50,6 +53,13 @@ router.beforeEach((to, from, next) => {
     return false
   }
 
+  // 修复iOS版微信HTML5 History兼容性问题
+  if (IOS && to.path !== location.pathname && to.meta.share) {
+    location.assign(to.fullPath)
+    return false
+  }
+
+  // 轮询新消息
   if (to.meta.isNeedGetNews) {
     if (!newMsgTimer) {
       newMsgTimer = setInterval(() => {

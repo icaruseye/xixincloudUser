@@ -12,7 +12,8 @@ export default [
     path: '/article/detail/:id',
     component: _import('/article/detail'),
     meta: {
-      title: '文章详情'
+      title: '文章详情',
+      share: true
     }
   },
   {

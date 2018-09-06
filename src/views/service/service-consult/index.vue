@@ -93,7 +93,14 @@
       <button type="button" v-if="detail.State === 5" class="weui-btn weui-btn_primary" @click="showCommentPanel"><i class="iconfont icon-xiaoxi"></i>查看评价</button>
     </div>
     <!-- 评价弹层 -->
-    <comments v-model="isShowCommentPanel" :State="detail.State" :Detail="commentsDetail" @confirmCancel="cancelComments" @onSubmit="submitComments"></comments>
+    <comments
+      v-model="isShowCommentPanel"
+      :State="detail.State"
+      :Detail="commentsDetail"
+      :commentDisable="commentDisable"
+      @confirmCancel="cancelComments"
+      @onSubmit="submitComments">
+    </comments>
     <toast @click.native="scrollToBottom" v-model="showNewMessageRemind" position="bottom" width="12em" type="text">收到新的消息<i class="iconfont icon-arrow-down1"></i> </toast>
   </div>
 </template>
@@ -140,6 +147,7 @@ export default {
       messageId: 0,
       boxPaddingBottom: 82,
       showNewMessageRemind: false,
+      commentDisable: false,
       submitDisable: false,
       exceedText: false,
       isShowCommentPanel: false,
@@ -274,6 +282,7 @@ export default {
     // 提交评价
     async submitComments (params) {
       const that = this
+      this.commentDisable = true
       params.MissionID = this.ID
       const res = await this.$http.post('/ServantReview', params)
       if (res.data.Code === 100000) {
@@ -282,9 +291,11 @@ export default {
           onHide () {
             that.init()
             that.isShowCommentPanel = false
+            this.commentDisable = false
           }
         })
       } else {
+        this.commentDisable = false
         this.$vux.toast.text(res.data.Msg)
       }
     },

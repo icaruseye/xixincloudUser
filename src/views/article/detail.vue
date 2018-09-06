@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="article">
     <xx-nav-bar
       left-text="返回"
       :right-text="userAccount.NickName"
@@ -7,68 +7,68 @@
       @click-left="onNavbarClickLeft">
     </xx-nav-bar>
     <div class="container">
-      <div class="main-title">分析与猜想：《赛博朋克2077》演示里隐含的信息</div>
+      <div class="main-title">{{article.Title}}</div>
       <div class="info">
         <div>
-          <span>游戏</span>
-          <span>第一人称</span>
+          <span></span>
+          <span>{{article.CreateTime | timeFormat('HH:mm')}}</span>
         </div>
         <div>
-          <span>阅读999</span>
-          <span>点赞666</span>
+          <span>阅读{{article.ViewCount}}</span>
+          <span>点赞{{article.GiveCount}}</span>
         </div>
       </div>
       <div class="content">
-        <img src="https://alioss.g-cores.com/uploads/image/440888ce-c64f-4aa9-8b0e-2f5c9e4cb3f1_watermark.png" alt="">
-        <p>北京时间 2018 年 8 月 28 日凌晨 1 点，经过八个小时的预热之后，CDPR将先前只在小黑屋展示给媒体的《赛博朋克 2077》实机演示，第一次对所有玩家公开。</p>
-        <p>和许多兴奋的玩家一样，我也把这段 48 分钟的视频反复看了一遍又一遍。先前 E3 的三分钟预告，已经有无数“驴学家”逐帧分析其中的设定、信息以及赛博朋克文化相关内容，所以这次的 48 分钟实机演示，我就来分析点更偏向于 gameplay 部分的内容——当然不是实机演示里正面展示的内容，而是通过画面中的信息去分析更多的可能性。</p>
-        <p>演示中有过一小段潜行暗杀的演示，不过那段实际上更侧重于表现对敌人后脑进行黑客的操作，而对于传统潜行的表现不多。在罗伊斯发现信用卡里有病毒，主角和杰克通过维修管道逃脱办公室之后，又钻进了一个通风管道，从管道的空隙处跳下来，和房间里的敌人打成一团，也就是展示“穿墙霰弹”和“反弹子弹”的地方。</p>
-        <p>从通风管道跳下来之后就直接开战了，但是在跳下来之前敌人是没有发现主角，还在自顾自对话的，而跳下来的那一瞬间，通过主角的义眼扫描可以发现，有一个敌人正好向通风管道空隙处的方向走来，跳下去的主角等于和他撞了个正脸，所以立刻开战。试想一下，如果等他走过去呢，主角是不是可以用偷鸡摸狗的方法，把房间里的四个敌人一个一个勒晕，并且不惊动隔壁房间的敌人？</p>
-        <p>而在数次准星对准尸体的镜头中，我们也能看到除了摸尸体捡道具的选项之外，还有一个明晃晃的选项“pick the body”，也就是扛尸体。如此看来，在短短的一个潜行暗杀的背后，实际上《赛博朋克 2077》是有一套完整的潜行机制，包含了潜行、击倒、暗杀、扛尸体、黑客技能等一系列元素，当然别忘了螳螂剑，这对利刃允许你挂在任意一面墙壁上，某种程度上来说是对关卡设计的一种解放，当你需要在高处扫描/暗杀/黑客的时候，不需要在特定的地点添加大量的横梁、挂壁、管道出口或高台了。</p>
+        <img v-for="(item, index) in article.Imgs" :src="item | transformImgUrl" alt="" :key="index">
+        <p>{{article.Content}}</p>
       </div>
       <div class="handle-bar">
-        <span class="dianzan">666</span>
-        <span class="pinglun">99</span>
+        <span class="dianzan" :class="{active: article.Give}" @click="sendZan">{{article.GiveCount}}</span>
+        <span class="pinglun">{{article.CommentCount}}</span>
       </div>
       <div class="commnents-list">
         <div class="title">
           <div class="left">精选留言</div>
           <div class="right" @click="toComment">写留言</div>
         </div>
-        <div class="item">
-          <div class="avatar">
-            <img src="https://alioss.g-cores.com/default_thumb/user-smallat2x.png" alt="">
-          </div>
-          <div class="content">
-            <div class="name">cpl901</div>
-            <div class="text">胸部，当然是要改造成胸部导弹了（滑稽）</div>
-            <div class="author-text">
-              <div class="name">作者回复</div>
-              <div class="text">当然是要胸部喷火器喽，还能吃烧烤</div>
+        <template v-if="comments.length > 0" v-for="(item, index) in comments">
+          <div class="item" :key="index">
+            <div class="avatar">
+              <img :src="item.Avatar | transformImgUrl" alt="">
+            </div>
+            <div class="content">
+              <div class="name">{{item.CommentName}}</div>
+              <div class="text">{{item.CommentContent}}</div>
+              <div class="author-text" v-if="item.Reply">
+                <div class="name">作者回复</div>
+                <div class="text">{{item.Reply}}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="item">
-          <div class="avatar">
-            <img src="https://alioss.g-cores.com/uploads/user/50b9d6dd-cb95-4b73-8183-97bee5b8b605_smallat2x.jpg" alt="">
-          </div>
-          <div class="content">
-            <div class="name">记者德雷克</div>
-            <div class="text">普通步枪改爆弹，下一秒变忠诚</div>
-            <div class="author-text">
-              <div class="name">作者回复</div>
-              <div class="text">两把手枪加兜帽，背后背把大宝剑</div>
-            </div>
-          </div>
-        </div>
+        </template>
+        <xx-loadmore
+          v-if="comments.length > 0"
+          :pageindex="pageIndex"
+          :pageTotal="article.CommentIndex"
+          :loadText="loadText"
+          @onClick="loadmore">
+        </xx-loadmore>
+        <div v-if="comments.length === 0" class="empty-box" style="color:#999">暂无评论</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import wxShare from '@/plugins/wxShare'
 import { mapGetters } from 'vuex'
+import { dateFormat } from 'vux'
 export default {
+  filters: {
+    timeFormat (value, m) {
+      return dateFormat(new Date(value), m)
+    }
+  },
   computed: {
     ...mapGetters([
       'userAccount'
@@ -79,8 +79,15 @@ export default {
   },
   data () {
     return {
-      index: 1,
-      size: 10
+      pageIndex: 1,
+      loadText: '查看更多评论',
+      article: {},
+      comments: []
+    }
+  },
+  watch: {
+    pageIndex () {
+      this.getArticle()
     }
   },
   mounted () {
@@ -88,14 +95,43 @@ export default {
   },
   methods: {
     onNavbarClickLeft () {
+      this.$router.back()
     },
     toComment () {
-      this.$router.push(`/article/detail/${this.ID}/comment`)
+      this.$router.push(`/article/detail/${this.ID}/comment?title=${this.article.Title}`)
+    },
+    loadmore () {
+      this.pageIndex++
+      this.loadText = '加载中...'
+    },
+    async sendZan () {
+      const res = await this.$http.post(`/Like`, {
+        articleID: this.ID
+      })
+      if (res.data.Code === 100000) {
+        this.article.Give = true
+        this.article.GiveCount++
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
     },
     async getArticle () {
-      const res = await this.$http.get(`/Article?articleId=${this.ID}&index=${this.index}&size=${this.size}`)
+      this.$vux.loading.show({
+        text: '加载中...'
+      })
+      const res = await this.$http.get(`/Article?articleId=${this.ID}&index=${this.pageIndex}`)
       if (res.data.Code === 100000) {
-        console.log(res)
+        this.article = res.data.Data
+        this.article.Imgs = this.article.Imgs.split(',')
+        this.comments.push(...res.data.Data.Comments)
+        this.loadText = '查看更多评论'
+        this.$vux.loading.hide()
+        wxShare({
+          title: res.data.Data.Title,
+          desc: res.data.Data.Content,
+          logo: 'https://tva3.sinaimg.cn/crop.0.26.574.574.180/725099c1jw8fdd7kd9sr4j20h30m80ui.jpg',
+          link: `/article/detail/${res.data.Data.ArticleId}`
+        })
       }
     }
   }
@@ -124,6 +160,9 @@ export default {
     }
   }
   .content {
+    img {
+      margin-bottom: 10px;
+    }
     p {
       font-size: 14px;
       color: #999;
@@ -146,6 +185,11 @@ export default {
       background: url(../../assets/images/ic-zan.png) no-repeat;
       background-size: 14px;
       background-position-y: 2px;
+      &.active {
+        background: url(../../assets/images/ic-zaned.png) no-repeat;
+        background-size: 14px;
+        background-position-y: 2px;
+      }
     }
     .pinglun {
       padding-left: 20px;
@@ -171,7 +215,7 @@ export default {
     .item {
       display: flex;
       padding: 15px 0 5px 0;
-      border-bottom: 1px solid #d8d8d8;
+      border-bottom: 1px solid rgba(216, 216, 216, 0.4);
       &:last-child {
         border: 0;
       }
@@ -218,6 +262,20 @@ export default {
         }
       }
     }
+  }
+}
+.loadmore {
+  margin: 15px 0;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  background: #3ecccc;
+  border-radius: 2px;
+  font-size: 14px;
+  &.nomore {
+    background: transparent;
+    color: #999
   }
 }
 </style>

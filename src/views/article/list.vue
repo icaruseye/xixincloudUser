@@ -1,77 +1,108 @@
 <template>
-  <div class="has-tabbar">
+  <div class="has-tabbar" v-if="articleList">
     <sticky
       ref="sticky"
       :offset="0"
       :check-sticky-support="true">
       <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="0">
-        <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">精选</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">热点</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 2" @on-item-click="onItemClick">推荐</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 3" @on-item-click="onItemClick">问答咨询</xx-tab-item>
+        <xx-tab-item v-for="(item, index) in typeList" :key="index" :selected="tabIndex === index">{{item.Name}}</xx-tab-item>
       </xx-tab>
     </sticky>
-    <div class="container">
-      <div class="item">
-        <div class="poster">
-          <img src="https://image.g-cores.com/1b54222d-0c39-4f77-a990-019232c2fdf7.jpg?x-oss-process=style/original_hl" alt="" @click="toDetail(0)">
-        </div>
-        <div class="right">
-          <div class="title" @click="toDetail(0)">分析与猜想：《赛博朋克2077》演示里隐含的信息</div>
-          <div class="info">
-            <div class="text">游戏</div>
-            <div class="text">预告</div>
-            <div class="text">阅读180</div>
-            <div class="text">赞12</div>
+    <template v-for="(item, index) in typeList" v-if="articleList.length > 0">
+      <div class="container" :key="index" v-show="index === tabIndex" v-if="articleList[index]">
+        <template v-for="(articleItem, articleIndex) in articleList[index].ArticleResponses">
+          <div class="item" :key="articleIndex">
+            <div class="poster">
+              <img :src="articleItem.Cover | transformImgUrl" alt="" @click="toDetail(0)">
+            </div>
+            <div class="right">
+              <div class="title text-overflow-1" @click="toDetail(articleItem.ArticleId)">{{articleItem.Title}}</div>
+              <div class="tags"></div>
+              <div class="info">
+                <div class="text">{{articleItem.CreateTime | timeFormat('HH:mm')}}</div>
+                <div class="text">阅读{{articleItem.ViewCount}}</div>
+                <div class="text">点赞12</div>
+              </div>
+            </div>
           </div>
-        </div>
+        </template>
+        <xx-loadmore
+          :pageindex="articleList[index].index"
+          :pageTotal="articleList[index].Total"
+          :loadText="loadText"
+          @onClick="loadmore(index)">
+        </xx-loadmore>
+        <!-- <div class="loadmore" v-if="articleList[index].Total > articleList[index].index" @click="loadmore(index)">查看更多</div> -->
       </div>
-      <div class="item">
-        <div class="poster">
-          <img src="https://image.g-cores.com/e78dc74e-1d6c-45e5-a6ae-d3f20f3d4834.jpg?x-oss-process=style/original_hs" alt="" @click="toDetail(1)">
-        </div>
-        <div class="right">
-          <div class="title" @click="toDetail(1)">5 亿台纪念限定版 PS4 Pro 开箱视频</div>
-          <div class="info">
-            <div class="text">索尼</div>
-            <div class="text">主机</div>
-            <div class="text">求购180</div>
-            <div class="text">赞999</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
-import { Sticky } from 'vux'
+import { Sticky, dateFormat } from 'vux'
 export default {
   components: {
     Sticky
   },
+  filters: {
+    timeFormat (value, m) {
+      return dateFormat(new Date(value), m)
+    }
+  },
   data () {
     return {
+      nomore: false,
+      loadText: '查看更多',
       tabIndex: 0,
-      params: {
-        articleType: 2,
-        index: 1
-      }
+      typeList: [],
+      articleList: [],
+      totalPage: 2,
+      indexPage: 1
     }
   },
   mounted () {
-    this.getArticleList()
+    const that = this
+    this.$vux.loading.show({
+      text: '加载中...'
+    })
+    this.getArticleTypeList().then((res) => {
+      (async function () {
+        for (let index = 0; index < res.length; index++) {
+          const article = await that.getArticleList(res[index].ID, 1)
+          article.index = 1
+          that.articleList.push(article)
+        }
+      })()
+      console.log(this.articleList)
+      this.$vux.loading.hide()
+    })
   },
   methods: {
-    onItemClick () {
-    },
     toDetail (id) {
       this.$router.push(`/article/detail/${id}`)
     },
-    async getArticleList () {
-      const res = await this.$http.get(`/ArticleList?articleType=${this.params.articleType}&index=${this.params.index}`)
+    loadmore (index) {
+      const that = this
+      that.articleList[index].index++
+      that.loadText = '加载中...'
+      that.getArticleList(that.typeList[index].ID, that.articleList[index].index).then((res) => {
+        that.articleList[index].ArticleResponses.push(...res.ArticleResponses)
+        that.loadText = '查看更多'
+      })
+    },
+    // 获取文章类型列表
+    async getArticleTypeList () {
+      const res = await this.$http.get(`/ArticleTypeList`)
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
+        this.typeList = res.data.Data
+        return res.data.Data
+      }
+    },
+    // 根据类型获取文章列表
+    async getArticleList (articleType, index) {
+      const res = await this.$http.get(`/ArticleList?articleType=${articleType}&index=${index}`)
+      if (res.data.Code === 100000) {
+        return res.data.Data
       }
     }
   }
@@ -90,6 +121,7 @@ export default {
     .poster {
       font-size: 0;
       img {
+        display: block;
         margin-right: 9px;
         width: 118px;
         height: 80px;
@@ -105,6 +137,10 @@ export default {
       .title {
         font-size: 15px;
         color: #666;
+      }
+      .tags {
+        font-size: 12px;
+        color: #999
       }
       .info {
         padding-right: 10px;
@@ -122,5 +158,16 @@ export default {
       }
     }
   }
+}
+
+.loadmore {
+  margin: 15px 0;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  background: #3ecccc;
+  border-radius: 2px;
+  font-size: 14px;
 }
 </style>
