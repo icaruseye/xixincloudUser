@@ -64,6 +64,9 @@ export default {
   computed: {
     API_PATH () {
       return process.env.API_PATH
+    },
+    ID () {
+      return this.$route.params.id
     }
   },
   mounted () {
@@ -79,7 +82,7 @@ export default {
       }
     },
     async getServantInfo () {
-      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.id}`)
+      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.ID}`)
       if (res.data.Code === 100000) {
         this.info = res.data.Data
       } else {
@@ -87,15 +90,16 @@ export default {
       }
     },
     async addFirends () {
-      const res = await this.$http.get(`/AddFriend/${this.$route.query.id}`)
+      const res = await this.$http.get(`/AddFriend/${this.ID}`)
       if (res.data.Code === 100000) {
         if (this.userAccount.IsSubscribe) {
-          this.$router.replace(`/servant/service/${this.$route.query.id}?isShare=1`)
+          this.$router.replace(`/servant/service/${this.ID}?isShare=1`)
         } else {
           this.isShow = true
         }
         this.getServantInfo()
       } else {
+        console.log()
         this.$vux.toast.text('出错了')
       }
     },

@@ -18,6 +18,7 @@
     "build:test": "cross-env NODE_ENV=test env_config=test node build/build.js --debug"
   },
   "dependencies": {
+    "animate.css": "^3.7.0",
     "axios": "^0.18.0",
     "exif-js": "^2.3.0",
     "fastclick": "^1.0.6",

@@ -7,7 +7,7 @@
       <textarea v-model="comment" @keyup="limitCount(comment, 200)" placeholder="留言将由筛选后显示，对所有人可见。"></textarea>
       <span class="remark_textarea_nums_count" :class="{warn: exceedText}">{{comment.length}} / 200</span>
     </div>
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="submitComment" :disabled="!comment.length || exceedText">确认</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="submitComment" :disabled="!comment.length || exceedText || disabled">确认</button>
   </div>
 </template>
 
@@ -23,6 +23,7 @@ export default {
   },
   data () {
     return {
+      disabled: false,
       exceedText: false,
       comment: ''
     }
@@ -33,14 +34,19 @@ export default {
     },
     async submitComment () {
       const that = this
+      this.disabled = true
       const res = await this.$http.post(`/Comment?articleID=${this.articleID}&comment=${this.comment}`)
       if (res.data.Code === 100000) {
         this.$vux.toast.show({
           text: '提交成功',
+          time: 1500,
           onHide () {
             that.$router.back()
           }
         })
+      } else {
+        this.$vux.toast.text('提交失败')
+        this.disabled = false
       }
     }
   }

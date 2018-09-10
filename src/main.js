@@ -11,6 +11,11 @@ import { DatetimePlugin, ToastPlugin, XDialog, ConfirmPlugin, LoadingPlugin, Bus
 import xxComponents from './components/common'
 import http from '@/api'
 import util from '@/plugins/util'
+import Vant from 'vant'
+import 'vant/lib/vant-css/index.css'
+// import 'animate.css/animate.min.css'
+
+Vue.use(Vant)
 Vue.use(xxComponents)
 Vue.use(DatetimePlugin)
 Vue.use(ToastPlugin)
@@ -20,8 +25,6 @@ Vue.use(LoadingPlugin)
 Vue.use(BusPlugin)
 Vue.use(AlertPlugin)
 Vue.component('x-dialog', XDialog)
-
-FastClick.attach(document.body)
 
 // 错误监控
 var fundebug = require('fundebug-javascript')
@@ -47,6 +50,7 @@ Vue.config.errorHandler = function (err, vm, info) {
   })
 }
 
+FastClick.attach(document.body)
 Vue.prototype.$http = http
 /**
  * 图片地址

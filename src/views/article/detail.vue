@@ -8,9 +8,11 @@
     </xx-nav-bar>
     <div class="container">
       <div class="main-title">{{article.Title}}</div>
+      <div class="tags" v-if="article.Attributes">
+        <span v-for="(item, index) in article.Attributes.split(',')" :key="index">{{item}}</span>
+      </div>
       <div class="info">
         <div>
-          <span></span>
           <span>{{article.CreateTime | timeFormat('HH:mm')}}</span>
         </div>
         <div>
@@ -49,7 +51,7 @@
         <xx-loadmore
           v-if="comments.length > 0"
           :pageindex="pageIndex"
-          :pageTotal="article.CommentIndex"
+          :pageTotal="totalPage"
           :loadText="loadText"
           @onClick="loadmore">
         </xx-loadmore>
@@ -61,6 +63,7 @@
 
 <script>
 import wxShare from '@/plugins/wxShare'
+import util from '@/plugins/util'
 import { mapGetters } from 'vuex'
 import { dateFormat } from 'vux'
 export default {
@@ -80,6 +83,7 @@ export default {
   data () {
     return {
       pageIndex: 1,
+      totalPage: 1,
       loadText: '查看更多评论',
       article: {},
       comments: []
@@ -87,11 +91,12 @@ export default {
   },
   watch: {
     pageIndex () {
-      this.getArticle()
+      this.getCommentList()
     }
   },
   mounted () {
     this.getArticle()
+    this.getCommentList()
   },
   methods: {
     onNavbarClickLeft () {
@@ -105,6 +110,10 @@ export default {
       this.loadText = '加载中...'
     },
     async sendZan () {
+      if (this.article.Give) {
+        this.$vux.toast.text('无法重复点赞哦~')
+        return false
+      }
       const res = await this.$http.post(`/Like`, {
         articleID: this.ID
       })
@@ -119,19 +128,29 @@ export default {
       this.$vux.loading.show({
         text: '加载中...'
       })
-      const res = await this.$http.get(`/Article?articleId=${this.ID}&index=${this.pageIndex}`)
-      if (res.data.Code === 100000) {
+      const res = await this.$http.get(`/Article?articleId=${this.ID}`)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.$vux.loading.hide()
         this.article = res.data.Data
         this.article.Imgs = this.article.Imgs.split(',')
-        this.comments.push(...res.data.Data.Comments)
-        this.loadText = '查看更多评论'
-        this.$vux.loading.hide()
         wxShare({
           title: res.data.Data.Title,
           desc: res.data.Data.Content,
-          logo: 'https://tva3.sinaimg.cn/crop.0.26.574.574.180/725099c1jw8fdd7kd9sr4j20h30m80ui.jpg',
+          logo: util.transformImgUrl(this.userAccount.Avatar),
           link: `/article/detail/${res.data.Data.ArticleId}`
         })
+      } else {
+        this.$vux.loading.hide()
+      }
+    },
+    async getCommentList () {
+      const res = await this.$http.get(`/CommentList?articleId=${this.ID}&index=${this.pageIndex}`)
+      if (res.data.Code === 100000 && res.data.Data) {
+        this.comments.push(...res.data.Data.Comments)
+        this.totalPage = res.data.Data.CommentPage
+        this.loadText = '查看更多评论'
+      } else {
+        this.$vux.toast.text('拉取评论失败')
       }
     }
   }
@@ -145,6 +164,21 @@ export default {
     font-size: 15px;
     color: #666;
     padding: 12px 13px;
+  }
+  .tags {
+    padding: 0 13px 10px;
+    font-size: 9px;
+    span {
+      display: inline-block;
+      text-align: center;
+      border-radius: 10px;
+      padding: 0 5px;
+      background: #ccc;
+      height: 20px;
+      line-height: 22px;
+      color: #fff;
+      margin-right: 10px;
+    }
   }
   .info {
     display: flex;

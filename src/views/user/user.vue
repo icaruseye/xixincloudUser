@@ -134,11 +134,13 @@ export default {
   color: @theme-color;
 }
 .user-panel {
+  margin: -40px 12px 0;
   padding: 10px 0;
   display: flex;
   background: #fff;
-  border-bottom: #9fe6e6 1px solid;
+  border-radius: 4px;
   font-size: 12px;
+  box-shadow: 0 13px 15px RGBA(211, 211, 211, 0.5);
   .user-panel_item {
     text-align: center;
     flex: 1;

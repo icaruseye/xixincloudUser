@@ -6,7 +6,7 @@
       <p class="can_withdraw_amount_container">￥{{detail.Balance | amountCompute}}</p>
       <p class="can_withdraw_amount_title"> 可提现金额</p>
       <div class="to_withdraw_btn_container">
-        <!-- <router-link class="to_withdraw_btn" to="/user/withdraw"> 立即提现</router-link> -->
+        <router-link class="to_withdraw_btn" to="/user/withdraw"> 立即提现</router-link>
       </div>
       <p class="all_earnings_text">累计提现总金额：￥{{detail.TotalWithdraw | amountCompute}}</p>
     </div>

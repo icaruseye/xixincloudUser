@@ -20,6 +20,7 @@ axios.interceptors.response.use(response => {
     }
   } else {
     Vue.prototype.$popupTop('出错了，请重试')
+    Vue.$vux.toast.hide()
   }
   return Promise.reject(error)
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="has-tabbar" v-if="articleList">
+  <div class="has-tabbar">
     <sticky
       ref="sticky"
       :offset="0"
@@ -8,20 +8,22 @@
         <xx-tab-item v-for="(item, index) in typeList" :key="index" :selected="tabIndex === index">{{item.Name}}</xx-tab-item>
       </xx-tab>
     </sticky>
-    <template v-for="(item, index) in typeList" v-if="articleList.length > 0">
+    <template v-for="(item, index) in typeList" v-if="tabIndex === index">
       <div class="container" :key="index" v-show="index === tabIndex" v-if="articleList[index]">
         <template v-for="(articleItem, articleIndex) in articleList[index].ArticleResponses">
-          <div class="item" :key="articleIndex">
+          <div class="item" :key="articleIndex" @click="toDetail(articleItem.ArticleId)">
             <div class="poster">
-              <img :src="articleItem.Cover | transformImgUrl" alt="" @click="toDetail(0)">
+              <img :src="articleItem.Cover | transformImgUrl" alt="">
             </div>
             <div class="right">
-              <div class="title text-overflow-1" @click="toDetail(articleItem.ArticleId)">{{articleItem.Title}}</div>
-              <div class="tags"></div>
+              <div class="title text-overflow-1">{{articleItem.Title}}</div>
+              <div class="tags">
+                <span v-for="(item, index) in articleItem.Attributes.split(',')" :key="index">{{item}}</span>
+              </div>
               <div class="info">
                 <div class="text">{{articleItem.CreateTime | timeFormat('HH:mm')}}</div>
                 <div class="text">阅读{{articleItem.ViewCount}}</div>
-                <div class="text">点赞12</div>
+                <div class="text">点赞{{articleItem.GiveCount}}</div>
               </div>
             </div>
           </div>
@@ -29,7 +31,7 @@
         <xx-loadmore
           v-if="articleList[index].ArticleResponses.length > 0"
           :pageindex="articleList[index].index"
-          :pageTotal="articleList[index].Total"
+          :pageTotal="articleList[index].TotalPage"
           :loadText="loadText"
           @onClick="loadmore(index)">
         </xx-loadmore>
@@ -44,6 +46,14 @@
         <!-- <div class="loadmore" v-if="articleList[index].Total > articleList[index].index" @click="loadmore(index)">查看更多</div> -->
       </div>
     </template>
+    <div v-if="typeList.length === 0" style="font-size: 120px;text-align:center;margin-bottom:40px;">
+      <i style="font-size:66px;display:block">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-kong1"></use>
+        </svg>
+      </i>
+      <p style="font-size:12px;color:#999;text-align:center;">文章列表为空</p>
+    </div>
   </div>
 </template>
 
@@ -82,8 +92,9 @@ export default {
           that.articleList.push(article)
         }
       })()
-      console.log(this.articleList)
-      this.$vux.loading.hide()
+      this.$nextTick(() => {
+        this.$vux.loading.hide()
+      })
     })
   },
   methods: {

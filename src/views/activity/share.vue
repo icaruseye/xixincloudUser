@@ -114,7 +114,7 @@ export default {
           document.querySelector('.img-wrap').appendChild(img)
         })
         .catch(function (error) {
-            console.error('oops, something went wrong!', error)
+          console.error('oops, something went wrong!', error)
         })
       // const that = this
       // html2canvas(document.querySelector('.html-wrap'), {
