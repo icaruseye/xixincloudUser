@@ -10,7 +10,7 @@
         {{title | xxTextTruncateFilter}}
       </h3>
       <p class="desc text-overflow-1"><slot></slot></p>
-      <span class="time">{{createTime | xxTimeFormatFilter}}</span>
+      <span class="time">{{createTime | timeFormat}}</span>
       <i class="mail_num_icon" v-if="count != null">{{count}}</i>
     </div>
   </div>

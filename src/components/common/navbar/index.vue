@@ -6,13 +6,14 @@
     </div>
     <div class="xx-ellipsis xx-nav-bar__title">{{title}}</div>
     <div class="xx-nav-bar__right" @click="onClickRight">
-      <img class="xx-nav-bar__avatar" :src="avatar" alt="">
-      <span class="xx-nav-bar__text">{{rightText}}</span>
+      <img class="xx-nav-bar__avatar" :src="userAccount.Avatar | transformImgUrl" alt="">
+      <span class="xx-nav-bar__text">{{userAccount.NickName}}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     leftText: {
@@ -31,6 +32,11 @@ export default {
       type: String,
       default: '222'
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userAccount'
+    ])
   },
   methods: {
     onClickLeft () {

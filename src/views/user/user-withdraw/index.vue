@@ -1,5 +1,9 @@
 <template>
   <div>
+    <xx-nav-bar
+      left-text="返回"
+      @click-left="onNavbarClickLeft">
+    </xx-nav-bar>
     <div class="step_container">
       <xx-step-bar step="1">
         <xx-step-items slot="items">
@@ -147,6 +151,9 @@ export default {
     this.getWithdrawFee()
   },
   methods: {
+    onNavbarClickLeft () {
+      this.$router.back()
+    },
     amountCompute (amount = null) {
       return amount === null ? 0 : (parseFloat(amount) / 100).toFixed(2)
     },

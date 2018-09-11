@@ -36,7 +36,7 @@ export default {
       this.$vux.loading.hide()
     },
     async getData () {
-      const res = await this.$http.get('/ServantBankInfoList')
+      const res = await this.$http.get('/BankInfoList')
       return res.data
     }
   }

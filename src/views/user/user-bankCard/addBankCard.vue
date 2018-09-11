@@ -1,6 +1,5 @@
 <template>
   <div>
-    <xx-go-back></xx-go-back>
     <p style="height: 45px;line-height:45px;color:#999;padding-left:12px;font-size:12px">请绑定持卡人本人的银行卡</p>
     <div class="form_container">
       <div class="form_items" @click="hintDialogVisible = true">
@@ -128,7 +127,7 @@ export default {
       })
     },
     async submit () {
-      const res = await this.$http.post('/ServantBankInfo', {
+      const res = await this.$http.post('/BankInfo', {
         BankCard: this.bankCard,
         BankName: this.currentCardType.bankName
       })

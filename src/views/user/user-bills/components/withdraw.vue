@@ -11,8 +11,8 @@
             <p class="normal_desc_p">实际到账：￥{{FactIncome | currencyFilter}}</p>
             <p class="normal_desc_p">提现手续费：￥{{HandlingFee | currencyFilter}}</p>
             <p class="normal_desc_p">提现到：{{BankName}}（{{CardID}}）</p>
-            <p class="normal_desc_p">发起时间：{{WithdrawCreateTime | xxTimeFormatFilter}}</p>
-            <!-- <p class="normal_desc_p">流水号：{{WithdrawCreateTime | xxTimeFormatFilter('YYYYMMDDHHmmss')}}</p> -->
+            <p class="normal_desc_p">发起时间：{{WithdrawCreateTime | timeFormat}}</p>
+            <!-- <p class="normal_desc_p">流水号：{{WithdrawCreateTime | timeFormat('YYYYMMDDHHmmss')}}</p> -->
           </li>
         </ul>
       </xx-timeLine-items>
@@ -26,7 +26,7 @@
         <ul v-else>
           <li class="desc_list_items">
             <p class="normal_desc_p">审核意见：{{WithdrawState === -1 ? '拒绝' : '同意'}}</p>
-            <p class="normal_desc_p">处理时间：{{WithdrawReviewTime | xxTimeFormatFilter}}</p>
+            <p class="normal_desc_p">处理时间：{{WithdrawReviewTime | timeFormat}}</p>
           </li>
         </ul>
       </xx-timeLine-items>
@@ -78,11 +78,11 @@ export default {
     withDrawStep () {
       const WithdrawState = this.WithdrawState
       if (WithdrawState === 0) { // 待审核
-        return 2
+        return '2'
       } else if (WithdrawState === 1 || WithdrawState === -1) {
-        return 3
+        return '3'
       } else if (WithdrawState === 2) {
-        return 4
+        return '4'
       }
     }
   },

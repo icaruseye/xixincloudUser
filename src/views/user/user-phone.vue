@@ -2,8 +2,6 @@
   <div v-if="userInfo.IsMobileChecked !== 1">
     <xx-nav-bar
       left-text="返回"
-      :right-text="userAccount.NickName"
-      :avatar="userAccount.Avatar | transformImgUrl"
       @click-left="onNavbarClickLeft">
     </xx-nav-bar>
     <div class="form-panel">
@@ -37,7 +35,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { AlertModule, XDialog, TransferDomDirective as TransferDom } from 'vux'
 export default {
   directives: {
@@ -47,9 +44,6 @@ export default {
     XDialog
   },
   computed: {
-    ...mapGetters([
-      'userAccount'
-    ]),
     codeText: function () {
       return this.time < 60 ? `重新获取(${this.time}s)` : '获取验证码'
     }

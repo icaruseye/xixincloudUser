@@ -3,8 +3,6 @@
     <div style="position:fixed;top:0;width:100%;z-index:99">
       <xx-nav-bar
         left-text="返回"
-        :right-text="userAccount.NickName"
-        :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">
       </xx-nav-bar>
       <div class="user-info-panel">
@@ -31,7 +29,7 @@
               <img v-if="item.MsgType === 8" src="@/assets/images/kefu.png">
             </div>
             <div class="chat-item-avatar" v-if="item.IsServantReceive">
-              <img :src="mineAccount.Avatar | transformImgUrl">
+              <img :src="userAccount.Avatar | transformImgUrl">
             </div>
             <div class="chat-item-content">
               {{item.Content}}<span v-if="item.MsgType === 8">（助理回复）</span>
@@ -107,7 +105,6 @@ export default {
       faceList: ['😀', '😂', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '😗', '😙', '😚', '😇', '😐', '😑', '😶', '😏', '😣', '😥', '😮', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '😒', '😒', '😓', '😔', '😕', '😲', '😷', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😬', '😰', '😱', '😳', '😵', '😡', '😠', '💪', '👈', '👉', '✌', '👆', '👇', '✋', '👌', '👍', '👏', '👐', '🙏'],
       chatMsg: '',
       chatList: [],
-      mineAccount: JSON.parse(sessionStorage.getItem('userAccount')),
       ServAccount: ''
     }
   },
@@ -185,8 +182,8 @@ export default {
       }
       if (!this.chatMsg) return false
       let msg = {
-        userAvatar: this.mineAccount.Avatar,
-        userName: this.mineAccount.NickName,
+        userAvatar: this.userAccount.Avatar,
+        userName: this.userAccount.NickName,
         IsServantReceive: 1,
         Content: this.chatMsg,
         time: new Date()

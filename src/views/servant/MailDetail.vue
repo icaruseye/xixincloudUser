@@ -10,7 +10,7 @@
             {{detail.Title}}
           </h1>
           <p class="create_time">
-            {{detail.CreateTime | xxTimeFormatFilter}}
+            {{detail.CreateTime | timeFormat}}
           </p>
         </div>
         <div class="detail_message_container">

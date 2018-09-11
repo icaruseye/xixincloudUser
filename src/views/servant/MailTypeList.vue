@@ -3,8 +3,6 @@
     <div v-if="flag">
       <xx-nav-bar
         left-text="返回"
-        :right-text="userAccount.NickName"
-        :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">
       </xx-nav-bar>
       <div style="margin-top:5px;">
@@ -46,8 +44,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userAccount',
-      'userInfo',
       'unreadNum'
     ])
   },

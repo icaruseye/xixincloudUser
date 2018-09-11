@@ -2,8 +2,6 @@
   <div class="wrap has-tabbar">
     <xx-nav-bar
       left-text="返回"
-      :right-text="userAccount.NickName"
-      :avatar="userAccount.Avatar | transformImgUrl"
       @click-left="onNavbarClickLeft">
     </xx-nav-bar>
     <xx-step-bar :step="steps" v-if="serviceItemInfo.State !== -1">
@@ -118,7 +116,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import CancelMissionPopup from '@/components/cancelMissionPopup'
 import { TransferDom, Rater } from 'vux'
 import util from '@/plugins/util'
@@ -129,11 +126,6 @@ export default {
   components: {
     Rater,
     CancelMissionPopup
-  },
-  computed: {
-    ...mapGetters([
-      'userAccount'
-    ])
   },
   data () {
     return {

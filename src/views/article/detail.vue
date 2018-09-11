@@ -2,8 +2,6 @@
   <div v-if="article">
     <xx-nav-bar
       left-text="返回"
-      :right-text="userAccount.NickName"
-      :avatar="userAccount.Avatar | transformImgUrl"
       @click-left="onNavbarClickLeft">
     </xx-nav-bar>
     <div class="container">

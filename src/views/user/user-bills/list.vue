@@ -3,8 +3,6 @@
     <xx-nav-bar
       style="margin-bottom:5px;"
       left-text="返回"
-      :right-text="userAccount.NickName"
-      :avatar="userAccount.Avatar | transformImgUrl"
       @click-left="onNavbarClickLeft">
     </xx-nav-bar>
     <template v-if="WalletLogList.length > 0">
@@ -28,16 +26,10 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import ListItems from './components/listItems'
 export default {
   components: {
     ListItems
-  },
-  computed: {
-    ...mapGetters([
-      'userAccount'
-    ])
   },
   data () {
     return {

@@ -93,5 +93,29 @@ export default [
         title: '我的账单'
       }
     }
+  },
+  {
+    name: 'bankCard',
+    path: '/user/bankCard',
+    component: _import('/user/user-bankCard/list'),
+    meta: {
+      title: '我的银行卡',
+      goBackParam: {
+        url: '/user',
+        title: '我的'
+      }
+    }
+  },
+  {
+    name: 'addBankCard',
+    path: '/user/bankCard/add',
+    component: _import('/user/user-bankCard/addBankCard'),
+    meta: {
+      title: '添加银行卡',
+      goBackParam: {
+        url: '/user/bankCard',
+        title: '银行卡列表'
+      }
+    }
   }
 ]

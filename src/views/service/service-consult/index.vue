@@ -3,8 +3,6 @@
     <div style="position:fixed;top:0;width:100%;z-index:99">
       <xx-nav-bar
         left-text="返回"
-        :right-text="userAccount.NickName"
-        :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">
       </xx-nav-bar>
       <xx-step-bar :step="detail.State | stepFilter">

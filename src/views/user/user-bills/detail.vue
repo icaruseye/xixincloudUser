@@ -2,8 +2,6 @@
   <div v-if="detail" style="padding-bottom: 50px">
     <xx-nav-bar
       left-text="返回"
-      :right-text="userAccount.NickName"
-      :avatar="userAccount.Avatar | transformImgUrl"
       @click-left="onNavbarClickLeft">
     </xx-nav-bar>
     <div class="bill_status_container">
@@ -89,7 +87,6 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import { numberComma } from 'vux'
 import util from '@/plugins/util'
 import withdrawComponent from './components/withdraw'
@@ -120,9 +117,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'userAccount'
-    ]),
     billsTypeIcon () { // 账单标题icon
       const type = this.detail.LogType
       if (type === 1) {

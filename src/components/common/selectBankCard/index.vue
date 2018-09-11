@@ -89,7 +89,7 @@ export default {
     },
     // 获取并组装我的银行卡
     async getMyBankCardList () {
-      const res = await this.$http.get('/ServantBankInfoList')
+      const res = await this.$http.get('/BankInfoList')
       this.status = 0
       if (res.data.Code === 100000) {
         this.withdrawTypeList = []

@@ -51,7 +51,13 @@ Vue.config.errorHandler = function (err, vm, info) {
 }
 
 FastClick.attach(document.body)
-Vue.prototype.$http = http
+Vue.prototype.$http = http/**
+* 银行卡logo过滤器
+*/
+Vue.filter('xxGetBankCardLogoFilter', (BankAbbreviation = 'CMBC') => {
+  const bankList = util.getSupportBankList()
+  return bankList[BankAbbreviation].icon
+})
 /**
  * 图片地址
  */

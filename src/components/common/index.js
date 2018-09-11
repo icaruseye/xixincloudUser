@@ -14,6 +14,7 @@ import xxResultView from './resultView'
 import xxTimeCountDown from './timeCountDown'
 import xxNavBar from './navbar'
 import xxLoadmore from './loadmore'
+import xxCalendar from './calendar'
 
 const components = {
   install: function (Vue) {
@@ -33,6 +34,7 @@ const components = {
     Vue.component('xxTimeCountDown', xxTimeCountDown)
     Vue.component('xxNavBar', xxNavBar)
     Vue.component('xxLoadmore', xxLoadmore)
+    Vue.component('xxCalendar', xxCalendar)
   }
 }
 

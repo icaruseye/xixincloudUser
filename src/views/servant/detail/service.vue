@@ -3,8 +3,6 @@
     <div class="has-tabbar">
       <xx-nav-bar
         left-text="返回"
-        :right-text="userAccount.NickName"
-        :avatar="userAccount.Avatar | transformImgUrl"
         @click-left="onNavbarClickLeft">
       </xx-nav-bar>
       <router-link to="/" class="share-btn" v-if="isShare"><i class="iconfont icon-qushouye"></i></router-link>
@@ -37,7 +35,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import servantInfo from '../components/service-info'
 import servantItemist from '../components/package-list'
 import servantComments from '../components/comments'
@@ -58,10 +55,7 @@ export default {
   computed: {
     isShare () {
       return this.$route.query.isShare === '1'
-    },
-    ...mapGetters([
-      'userAccount'
-    ])
+    }
   },
   mounted () {
     this.init()
