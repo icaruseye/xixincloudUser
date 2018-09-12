@@ -8,9 +8,9 @@ export default {
     if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
       daysInMonth[1] = 29
     }
-
     // 当前日期当月第一天为星期几
     let currentFirst = new Date(year, month, 1).getDay()
+    currentFirst = currentFirst === 0 ? 7 : currentFirst
     let currentDaysList = []
     let preMonth = month === 0 ? 11 : month - 1
 
@@ -65,6 +65,7 @@ export default {
 
     // 当月第一天是周几
     let whatday = new Date(year, month, 1).getDay()
+
     // 周末标记为7
     whatday = whatday === 0 ? 6 : whatday - 1
 

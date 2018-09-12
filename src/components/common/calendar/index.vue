@@ -159,6 +159,7 @@ export default {
       if (this.isWeekType) {
         this.selectItem.month = this.selectItem.month ? this.selectItem.month : new Date().getMonth() + 1
         this.selectedMonth = parseInt(this.selectItem.month) - 1
+        this.selectedYear = new Date().getFullYear()
         this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
         this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
       } else {

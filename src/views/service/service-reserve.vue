@@ -29,7 +29,7 @@
     <h2 class="cells_title">
       能接受服务时间段
     </h2>
-    <xx-calendar value="2018-09-21"></xx-calendar>
+    <xx-calendar></xx-calendar>
     <xx-cell>
       <div style="display: flex;align-items:center;padding: 15px 10px;color:#f8a519;font-size:15px;">
        <span style="color:#999;margin: 0 5px;font-size:15px;">从</span>
