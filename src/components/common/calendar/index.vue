@@ -9,13 +9,13 @@
     <div class="calendar__main" :class="`${isWeekType ? 'weektype' : ''}`">
       <div class="main__item-head" v-for="headItem in calendarHeader" :key="headItem"><div class="item">{{headItem}}</div></div>
       <div
-        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''} ${item.type === 'pre' ? 'main__item-pre' : ''} ${item.type === 'next' ? 'main__item-next' : ''} ${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? 'main__item-active' : ''}`"
+        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''}${item.type === 'pre' ? 'main__item-pre' : ''}${item.type === 'next' ? 'main__item-next' : ''}${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? ' main__item-active' : ''}${item.tag && item.type === 'current' ? ' tag' : ''}${item.tagStart ? ' tagStart' : ''}${item.tagEnd ? ' tagEnd' : ''}`"
         v-for="(item, itemIndex) in calendarDays" :key="itemIndex"
         @click="clickItem(itemIndex)"
       >
         <div
           class="item"
-          :style="{'background': selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? themeColor : '#fff', 'border-color': `${item.year}-${item.month}-${item.day}` === today ? themeColor : '#fff'}"
+          :style="{'background': selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? themeColor : '', 'border-color': `${item.year}-${item.month}-${item.day}` === today ? themeColor : ''}"
         >
         {{item.day}}
         </div>
@@ -41,22 +41,14 @@ export default {
       type: String,
       default: '#3ecccc'
     },
-    value: {
-      type: [String, Array],
-      default: () => {
-        return format(new Date(), 'YYYY-MM-DD')
-      }
-    }
+    tags: Array
   },
   watch: {
-    value () {
-      this.selectDay = this.value
-    },
     selectedMonth () {
       if (!this.isWeekType) {
-        this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
+        this.displayDaysMonth()
       } else {
-        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+        this.displayDaysWeek()
       }
     },
     isWeekType () {
@@ -66,10 +58,10 @@ export default {
   data () {
     return {
       calendarHeader: ['一', '二', '三', '四', '五', '六', '日'],
-      selectedYear: new Date(this.value).getFullYear(),
-      selectedMonth: new Date(this.value).getMonth(),
-      selectedDate: new Date(this.value).getDate(),
-      selectDay: this.value, // 当前选中日期
+      selectedYear: new Date().getFullYear(),
+      selectedMonth: new Date().getMonth(),
+      selectedDate: new Date().getDate(),
+      selectDay: format(new Date(), 'YYYY-MM-DD'), // 当前选中日期
       calendarDays: [], // 当月日期集合
       today: format(new Date(), 'YYYY-MM-DD'),
       isWeekType: false,
@@ -82,7 +74,45 @@ export default {
   },
   methods: {
     initDate () {
+      this.displayDaysMonth()
+    },
+    displayDaysMonth () {
       this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
+      this.getRange()
+    },
+    displayDaysWeek () {
+      this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+      this.getRange()
+    },
+    // 设置需要标记的日期
+    getRange () {
+      // 设置标记属性到日历数组
+      this.calendarDays.forEach((date, dateIndex) => {
+        this.tags.forEach((tag, tagIndex) => {
+          if (date.day === parseInt(tag.split('-')[2])) {
+            date.tag = true
+          }
+        })
+      })
+
+      // 当前需要标记号数的数组
+      let res = []
+      this.tags.forEach((tag, tagIndex) => {
+        res.push(parseInt(tag.split('-')[2]))
+      })
+      let groupArr = util.arrange(res)
+
+      // 找出标记日期中连续的号数 设置连续号数中的头尾
+      for (let item of groupArr) {
+        for (let date of this.calendarDays) {
+          if (date.day === item[0]) {
+            date.tagStart = true
+          }
+          if (date.day === item[item.length - 1]) {
+            date.tagEnd = true
+          }
+        }
+      }
     },
     clickItem (index) {
       this.selectItem = this.calendarDays[index]
@@ -99,7 +129,7 @@ export default {
       if (this.isWeekType) {
         this.week = util.getWeek(new Date().getFullYear(), new Date().getMonth(), format(new Date(), 'YYYY-MM-DD'))
         if (this.selectedMonth === new Date().getMonth()) {
-          this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+          this.displayDaysWeek()
         }
       }
       this.selectedYear = new Date().getFullYear()
@@ -127,7 +157,7 @@ export default {
         this.getPreMonth()
       } else {
         this.week--
-        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+        this.displayDaysWeek()
       }
     },
     getNextWeek () {
@@ -136,7 +166,7 @@ export default {
         this.getNextMonth()
       } else {
         this.week++
-        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+        this.displayDaysWeek()
       }
     },
     getPreMonth () {
@@ -160,9 +190,9 @@ export default {
         this.selectItem.month = this.selectItem.month ? this.selectItem.month : new Date().getMonth() + 1
         this.selectedMonth = parseInt(this.selectItem.month) - 1
         this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
-        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+        this.displayDaysWeek()
       } else {
-        this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
+        this.displayDaysMonth()
       }
     }
   }
@@ -232,6 +262,34 @@ export default {
     color: #686868;
     height: 30px;
     font-size: 15px;
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 30px;
+      width: 30px;
+      color: #666;
+      text-align: center;
+    }
+    &.tag {
+      background: #f2f2f2;
+      &:nth-child(7n) {
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+      &:nth-child(7n+1) {
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+      }
+      &.tagStart {
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+      }
+      &.tagEnd {
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+    }
     &.main__item-today {
       .item {
         position: relative;
@@ -277,15 +335,6 @@ export default {
       .item {
         color: #ccc;
       }
-    }
-    .item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 30px;
-      width: 30px;
-      color: #666;
-      text-align: center;
     }
   }
 }

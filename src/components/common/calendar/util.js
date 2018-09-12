@@ -11,6 +11,7 @@ export default {
 
     // 当前日期当月第一天为星期几
     let currentFirst = new Date(year, month, 1).getDay()
+    currentFirst = currentFirst === 0 ? 7 : currentFirst
     let currentDaysList = []
     let preMonth = month === 0 ? 11 : month - 1
 
@@ -20,7 +21,10 @@ export default {
         type: 'current',
         day: index,
         month: zreo(month),
-        year: year
+        year: year,
+        tag: false,
+        tagStart: false,
+        tagEnd: false
       }
       currentDaysList.push(obj)
     }
@@ -70,5 +74,24 @@ export default {
 
     let week = Math.ceil((fullDate.getDate() + whatday) / 7) - 1
     return week
+  },
+  arrange (source) {
+    var t
+    var ta
+    var r = []
+
+    source.forEach(function (v) {
+      if (t === v) {
+        ta.push(t)
+        t++
+        return
+      }
+
+      ta = [v]
+      t = v + 1
+      r.push(ta)
+    })
+
+    return r
   }
 }
