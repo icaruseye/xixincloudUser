@@ -2,20 +2,20 @@
   <div class="calendar">
     <div class="calendar__header">
       <a href="javascript:;" class="calendar__today" :style="{color: themeColor}" @click="backToday">今日</a>
-      <i class="iconfont calendar__icon icon-sanjiao-left" @click="getPreMonth"></i>
-      <span class="calendar__title">{{selectedYear}}年{{parseInt(selectedMonth)+1}}月排班表</span>
-      <i class="iconfont calendar__icon icon-sanjiao-right" @click="getNextMonth"></i>
+      <i class="iconfont calendar__icon icon-sanjiao-left" @click="getPre"></i>
+      <span class="calendar__title">{{selectedYear}}年{{parseInt(selectedMonth)+1}}月</span>
+      <i class="iconfont calendar__icon icon-sanjiao-right" @click="getNext"></i>
     </div>
-    <div class="calendar__main">
+    <div class="calendar__main" :class="`${isWeekType ? 'weektype' : ''}`">
       <div class="main__item-head" v-for="headItem in calendarHeader" :key="headItem"><div class="item">{{headItem}}</div></div>
       <div
-        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''} ${item.type === 'pre' ? 'main__item-pre' : ''} ${item.type === 'next' ? 'main__item-next' : ''} ${selectDay === `${item.year}-${item.month}-${item.day}` ? 'main__item-active' : ''}`"
+        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''} ${item.type === 'pre' ? 'main__item-pre' : ''} ${item.type === 'next' ? 'main__item-next' : ''} ${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? 'main__item-active' : ''}`"
         v-for="(item, itemIndex) in calendarDays" :key="itemIndex"
         @click="clickItem(itemIndex)"
       >
         <div
           class="item"
-          :style="{'background': selectDay === `${item.year}-${item.month}-${item.day}` ? themeColor : '#fff', 'border-color': `${item.year}-${item.month}-${item.day}` === today ? themeColor : '#fff'}"
+          :style="{'background': selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? themeColor : '#fff', 'border-color': `${item.year}-${item.month}-${item.day}` === today ? themeColor : '#fff'}"
         >
         {{item.day}}
         </div>
@@ -53,7 +53,11 @@ export default {
       this.selectDay = this.value
     },
     selectedMonth () {
-      this.calendarDays = util.displayDaysPerMonth(this.selectedYear, this.selectedMonth)
+      if (!this.isWeekType) {
+        this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
+      } else {
+        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+      }
     },
     isWeekType () {
       this.toggleWeekType()
@@ -62,13 +66,15 @@ export default {
   data () {
     return {
       calendarHeader: ['一', '二', '三', '四', '五', '六', '日'],
-      selectedYear: new Date().getFullYear(),
-      selectedMonth: new Date().getMonth(),
-      selectedDate: new Date().getDate(),
-      selectDay: format(new Date(), 'YYYY-MM-DD'), // 当前选中日期
+      selectedYear: new Date(this.value).getFullYear(),
+      selectedMonth: new Date(this.value).getMonth(),
+      selectedDate: new Date(this.value).getDate(),
+      selectDay: this.value, // 当前选中日期
       calendarDays: [], // 当月日期集合
       today: format(new Date(), 'YYYY-MM-DD'),
-      isWeekType: false
+      isWeekType: false,
+      week: null,
+      selectItem: {}
     }
   },
   mounted () {
@@ -76,20 +82,62 @@ export default {
   },
   methods: {
     initDate () {
-      console.log(this.value)
-      this.calendarDays = util.displayDaysPerMonth(this.selectedYear, this.selectedMonth)
+      this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
     },
     clickItem (index) {
-      const item = this.calendarDays[index]
-      this.selectedMonth = parseInt(item.month) - 1
-      this.selectedYear = item.year
-      this.selectedDate = item.day
-      this.selectDay = `${item.year}-${item.month}-${item.day}`
-      this.$emit('onClick', item)
+      this.selectItem = this.calendarDays[index]
+      this.selectedMonth = parseInt(this.selectItem.month) - 1
+      this.selectedYear = this.selectItem.year
+      this.selectedDate = this.selectItem.day
+      this.selectDay = `${this.selectItem.year}-${this.selectItem.month}-${this.selectItem.day}`
+      if (this.isWeekType) {
+        this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
+      }
+      this.$emit('onClick', this.selectItem)
     },
     backToday () {
+      if (this.isWeekType) {
+        this.week = util.getWeek(new Date().getFullYear(), new Date().getMonth(), format(new Date(), 'YYYY-MM-DD'))
+        if (this.selectedMonth === new Date().getMonth()) {
+          this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+        }
+      }
       this.selectedYear = new Date().getFullYear()
       this.selectedMonth = new Date().getMonth()
+      this.selectedDate = new Date().getDate()
+      this.selectDay = format(new Date(), 'YYYY-MM-DD')
+    },
+    getPre () {
+      if (!this.isWeekType) {
+        this.getPreMonth()
+      } else {
+        this.getPreWeek()
+      }
+    },
+    getNext () {
+      if (!this.isWeekType) {
+        this.getNextMonth()
+      } else {
+        this.getNextWeek()
+      }
+    },
+    getPreWeek () {
+      if (this.week === 0) {
+        this.week = 5
+        this.getPreMonth()
+      } else {
+        this.week--
+        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+      }
+    },
+    getNextWeek () {
+      if (this.week === 5) {
+        this.week = 0
+        this.getNextMonth()
+      } else {
+        this.week++
+        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+      }
     },
     getPreMonth () {
       if (this.selectedMonth === 0) {
@@ -98,7 +146,6 @@ export default {
       } else {
         this.selectedMonth--
       }
-      console.log(this.selectedMonth)
     },
     getNextMonth () {
       if (this.selectedMonth === 11) {
@@ -110,15 +157,12 @@ export default {
     },
     toggleWeekType () {
       if (this.isWeekType) {
-        let row = null
-        this.calendarDays.map((item, index) => {
-          if (this.selectedDate === item.day) {
-            row = Math.floor(index / 7)
-          }
-        })
-        this.calendarDays = this.calendarDays.splice(row * 7, 7)
+        this.selectItem.month = this.selectItem.month ? this.selectItem.month : new Date().getMonth() + 1
+        this.selectedMonth = parseInt(this.selectItem.month) - 1
+        this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
+        this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
       } else {
-        this.calendarDays = util.displayDaysPerMonth(this.selectedYear, this.selectedMonth)
+        this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
       }
     }
   }
@@ -161,6 +205,11 @@ export default {
   display: flex;
   padding: 0 20px;
   flex-wrap: wrap;
+  transition: height .25s;
+  height: 336px;
+  &.weektype {
+    height: 96px;
+  }
   .main__item-head {
     display: flex;
     justify-content: center;
@@ -188,6 +237,7 @@ export default {
         position: relative;
         border: 1px solid;
         border-radius: 50%;
+        box-sizing: border-box;
         &::after {
           content: "";
           position: absolute;

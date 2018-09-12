@@ -1,6 +1,6 @@
 
 export default {
-  displayDaysPerMonth (year, month) {
+  displayDaysMonth (year, month) {
     // 每月天数
     let daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -47,11 +47,28 @@ export default {
       }
       currentDaysList.push(obj)
     }
-    console.log(currentDaysList)
     function zreo (month) {
       month++
       return month < 10 ? `0${month}` : month
     }
     return currentDaysList
+  },
+  displayDaysWeek (year, month, week) {
+    let daysList = this.displayDaysMonth(year, month)
+    return daysList.splice(week * 7, 7)
+  },
+  // 先计算出该日期为第几周
+  getWeek (year, month, fullDate) {
+    // 转为Date类型
+    fullDate = Date.parse(fullDate)
+    fullDate = new Date(fullDate)
+
+    // 当月第一天是周几
+    let whatday = new Date(year, month, 1).getDay()
+    // 周末标记为7
+    whatday = whatday === 0 ? 6 : whatday - 1
+
+    let week = Math.ceil((fullDate.getDate() + whatday) / 7) - 1
+    return week
   }
 }
