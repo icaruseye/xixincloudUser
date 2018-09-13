@@ -26,10 +26,14 @@
         <div style="padding-right:15px">{{orderDetail.ServantName}}</div>
       </xx-cell-items>
     </xx-cell>
-    <h2 class="cells_title">
+    <xx-cell class="mgt10">
+      <xx-cell-items label="服务时间" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;" @click.native="showCalendar">
+        <div style="padding-right:15px">2018-09-13 12:00</div>
+      </xx-cell-items>
+    </xx-cell>
+    <!-- <h2 class="cells_title">
       能接受服务时间段
     </h2>
-    <xx-calendar></xx-calendar>
     <xx-cell>
       <div style="display: flex;align-items:center;padding: 15px 10px;color:#f8a519;font-size:15px;">
        <span style="color:#999;margin: 0 5px;font-size:15px;">从</span>
@@ -37,7 +41,7 @@
        <span style="color:#999;margin: 0 5px;font-size:15px">至</span>
         <div @click="selectEndTime">{{reqParams.EndTime}}</div>
       </div>
-    </xx-cell>
+    </xx-cell> -->
     <xx-cell class="mgt10">
       <xx-cell-items label="病情症状或备注" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div class="service_remark_textarea_container">
@@ -72,6 +76,19 @@
       </div>
     </xx-cell>
     <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">确定</button>
+    <!-- 排班表 -->
+    <div v-transfer-dom
+      :should-rerender-on-show="true"
+      max-height="80%">
+      <popup v-model="isShowCalendar" style="padding: 15px 0;background:#fff;">
+        <xx-calendar
+          :tags="calendarTags"
+          :loading="calendarLoading"
+          @onClick="calendarItemClick"
+          @changeMonth="changeMonth">
+        </xx-calendar>
+      </popup>
+    </div>
     <!-- 地址列表 -->
     <div v-transfer-dom
       :should-rerender-on-show="true"
@@ -146,6 +163,8 @@ export default {
       submitDisable: false,
       isConfirm: false,
       isShowAddressList: false,
+      isShowCalendar: false,
+      calendarLoading: false,
       address: '',
       addressList: [],
       addressIndex: 0,
@@ -171,6 +190,9 @@ export default {
           text: '上门地址'
         }
       },
+      calendarStartTime: null,
+      calendarEndTime: null,
+      calendarTags: ['2018-09-1','2018-09-2','2018-09-3','2018-09-10','2018-09-11','2018-09-12','2018-09-18'],
       fuwuxuzhi: false,
       AgreementList: [{}, {}, {}, {}]
     }
@@ -189,6 +211,9 @@ export default {
     },
     itemID () {
       return +this.$route.query.ItemID
+    },
+    viewId () {
+      return this.$route.query.viewId
     },
     id () {
       return this.$route.params.id
@@ -253,6 +278,41 @@ export default {
         this.$vux.toast.text('出错了')
       }
     },
+    // 获取当月排班列表
+    async getScheduleList (startTime, endTime) {
+      const res = await this.$http.get(`/Schedule/IsNoSchedule?startTime=${startTime}&endTime=${endTime}&items=${this.itemID}&viewId=${this.viewId}`)
+      return res
+    },
+    // 获取某一天排班详情
+    async getScheduleDetail (dateTime) {
+      const res = await this.$http.get(`/Schedule/List?dateTime=${dateTime}&viewId=${this.viewId}`)
+      return res
+    },
+    // 选择日历日期
+    async calendarItemClick (dateTime) {
+      this.calendarLoading = true
+      const res = await this.getScheduleDetail(new Date(dateTime))
+      if (res.data.Code === 100000) {
+        console.log(res)
+      }
+      this.calendarLoading = false
+    },
+    // 改变日历月份
+    async changeMonth (item) {
+      this.calendarStartTime = `${item.year}-${item.month}-1 00:00:00`
+      this.calendarEndTime = `${item.year}-${item.month}-${item.monthdays} 23:59:59`
+      this.calendarLoading = true
+
+      const res = await this.getScheduleList(this.calendarStartTime, this.calendarEndTime)
+      if (res.data.Code === 100000) {
+        this.calendarTags = res.data.Data
+      }
+      this.calendarLoading = false
+    },
+    // 显示日历
+    showCalendar () {
+      this.isShowCalendar = true
+    },
     // 提交前弹窗确认
     submit () {
       const validate = util.validateForm(this.reqParams, this.authText)
@@ -270,12 +330,6 @@ export default {
         return false
       }
       this.isConfirm = true
-    },
-    showTips () {
-      this.isShowTips = true
-    },
-    limitCount (max) {
-      this.exceedText = this.reqParams.Discription.length > max
     },
     // 关闭添加地址
     cancelAddress () {
@@ -381,6 +435,12 @@ export default {
     // 上传图片
     onUpdate1 (id) {
       this.reqParams.Imgs = id.join(',')
+    },
+    showTips () {
+      this.isShowTips = true
+    },
+    limitCount (max) {
+      this.exceedText = this.reqParams.Discription.length > max
     }
   }
 }

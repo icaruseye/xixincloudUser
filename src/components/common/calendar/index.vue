@@ -1,5 +1,13 @@
 <template>
   <div class="calendar">
+    <div class="loading" v-if="loadingVal">
+      <div class="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <div class="calendar__header">
       <a href="javascript:;" class="calendar__today" :style="{color: themeColor}" @click="backToday">今日</a>
       <i class="iconfont calendar__icon icon-sanjiao-left" @click="getPre"></i>
@@ -9,9 +17,9 @@
     <div class="calendar__main" :class="`${isWeekType ? 'weektype' : ''}`">
       <div class="main__item-head" v-for="headItem in calendarHeader" :key="headItem"><div class="item">{{headItem}}</div></div>
       <div
-        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''}${item.type === 'pre' ? 'main__item-pre' : ''}${item.type === 'next' ? 'main__item-next' : ''}${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? ' main__item-active' : ''}${item.tag && item.type === 'current' ? ' tag' : ''}${item.tagStart ? ' tagStart' : ''}${item.tagEnd ? ' tagEnd' : ''}`"
+        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''}${item.type === 'pre' || item.isbeforeNow ? 'main__item-pre' : ''}${item.type === 'next' ? 'main__item-next' : ''}${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? ' main__item-active' : ''}${item.tag && item.type === 'current' ? ' tag' : ''}${item.tagStart ? ' tagStart' : ''}${item.tagEnd ? ' tagEnd' : ''}`"
         v-for="(item, itemIndex) in calendarDays" :key="itemIndex"
-        @click="clickItem(itemIndex)"
+        @click="clickItem(itemIndex, item.isbeforeNow)"
       >
         <div
           class="item"
@@ -41,18 +49,10 @@ export default {
       type: String,
       default: '#3ecccc'
     },
-    tags: Array
-  },
-  watch: {
-    selectedMonth () {
-      if (!this.isWeekType) {
-        this.displayDaysMonth()
-      } else {
-        this.displayDaysWeek()
-      }
-    },
-    isWeekType () {
-      this.toggleWeekType()
+    tags: Array,
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -66,7 +66,29 @@ export default {
       today: format(new Date(), 'YYYY-MM-DD'),
       isWeekType: false,
       week: null,
-      selectItem: {}
+      selectItem: {},
+      loadingVal: this.loading
+    }
+  },
+  watch: {
+    selectedMonth () {
+      if (!this.isWeekType) {
+        this.displayDaysMonth()
+      } else {
+        this.displayDaysWeek()
+      }
+    },
+    isWeekType () {
+      this.toggleWeekType()
+    },
+    loading () {
+      this.loadingVal = this.loading
+    }
+  },
+  computed: {
+    // 今天是本月第几周
+    todayWeek () {
+      return util.getWeek(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
     }
   },
   mounted () {
@@ -79,13 +101,26 @@ export default {
     displayDaysMonth () {
       this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
       this.getRange()
+      
+      this.$emit('changeMonth', {
+        year: this.selectedYear,
+        month: this.selectedMonth + 1,
+        monthdays: util.conutDaysInMonth(this.selectedYear, this.selectedMonth)
+      })
     },
     displayDaysWeek () {
       this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
       this.getRange()
+
+      this.$emit('changeMonth', {
+        year: this.selectedYear,
+        month: this.selectedMonth + 1,
+        monthdays: util.conutDaysInMonth(this.selectedYear, this.selectedMonth)
+      })
     },
     // 设置需要标记的日期
     getRange () {
+      if (!this.tags) return false
       // 设置标记属性到日历数组
       this.calendarDays.forEach((date, dateIndex) => {
         this.tags.forEach((tag, tagIndex) => {
@@ -114,16 +149,18 @@ export default {
         }
       }
     },
-    clickItem (index) {
+    clickItem (index, type) {
+      if (type) return false
       this.selectItem = this.calendarDays[index]
       this.selectedMonth = parseInt(this.selectItem.month) - 1
       this.selectedYear = this.selectItem.year
       this.selectedDate = this.selectItem.day
       this.selectDay = `${this.selectItem.year}-${this.selectItem.month}-${this.selectItem.day}`
+
       if (this.isWeekType) {
         this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
       }
-      this.$emit('onClick', this.selectItem)
+      this.$emit('onClick', `${this.selectItem.year}-${this.selectItem.month - 1}-${this.selectItem.day}`)
     },
     backToday () {
       if (this.isWeekType) {
@@ -136,12 +173,20 @@ export default {
       this.selectedMonth = new Date().getMonth()
       this.selectedDate = new Date().getDate()
       this.selectDay = format(new Date(), 'YYYY-MM-DD')
+      this.$emit('changeMonth', {
+        year: this.selectedYear,
+        month: this.selectedMonth + 1,
+        monthdays: util.conutDaysInMonth(this.selectedYear, this.selectedMonth)
+      })
     },
     getPre () {
-      if (!this.isWeekType) {
+      if (!this.isWeekType && this.beForeMonth()) {
         this.getPreMonth()
-      } else {
+        return false
+      }
+      if (this.isWeekType && this.beForeToday()) {
         this.getPreWeek()
+        return false
       }
     },
     getNext () {
@@ -152,6 +197,7 @@ export default {
       }
     },
     getPreWeek () {
+      // 第一周
       if (this.week === 0) {
         this.week = 5
         this.getPreMonth()
@@ -161,6 +207,7 @@ export default {
       }
     },
     getNextWeek () {
+      // 最后一周
       if (this.week === 5) {
         this.week = 0
         this.getNextMonth()
@@ -170,6 +217,8 @@ export default {
       }
     },
     getPreMonth () {
+      if (this.selectedMonth === new Date().getMonth()) return false
+      // 一月
       if (this.selectedMonth === 0) {
         this.selectedMonth = 11
         this.selectedYear--
@@ -178,6 +227,7 @@ export default {
       }
     },
     getNextMonth () {
+      // 十二月
       if (this.selectedMonth === 11) {
         this.selectedMonth = 0
         this.selectedYear++
@@ -195,6 +245,13 @@ export default {
       } else {
         this.displayDaysMonth()
       }
+    },
+    beForeMonth () {
+      return this.selectedMonth > new Date().getMonth()
+    },
+    beForeToday () {
+      let todayWeek = util.getWeek(new Date().getFullYear(), new Date().getMonth(), this.today)
+      return !(this.week === todayWeek && this.selectedMonth === new Date().getMonth())
     }
   }
 }
@@ -202,6 +259,7 @@ export default {
 
 <style lang="less">
 .calendar {
+  position: relative;
   width: 100%;
   background: #fff;
 }
@@ -345,5 +403,53 @@ export default {
   height: 30px;
   line-height: 30px;
   color: #999;
+}
+
+.loading {
+  z-index: 99;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, .8)
+}
+
+.lds-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38px;
+  height: 38px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  margin: 4px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #3ecccc transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

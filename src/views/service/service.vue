@@ -40,8 +40,8 @@
                     </div>
                     <div class="btn">
                       <div v-if="cItem.Order.State !== 1">
-                        <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
-                        <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
+                        <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
+                        <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
                         <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
                       </div>
                       <div v-else>
@@ -86,8 +86,8 @@
                       </div>
                       <div class="btn">
                         <div v-if="cItem.Order.State !== 1">
-                          <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
-                          <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">预约</button>
+                          <button v-if="mItem.OrderDetail.UseType === 1" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
+                          <button v-if="mItem.OrderDetail.UseType === 3" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType, cItem.Package.ServantViewID)">预约</button>
                           <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
                         </div>
                         <div v-else>
@@ -392,9 +392,9 @@ export default {
     toDetail (id) {
       this.$router.push(`/service/in/${id}`)
     },
-    toReserve (id, ItemID, useType) {
+    toReserve (id, ItemID, useType, viewId) {
       const that = this
-      const url = this.reserveUrl(id, ItemID, useType)
+      const url = this.reserveUrl(id, ItemID, useType, viewId)
       if (this.userAccount.State === 0) {
         this.$vux.confirm.show({
           title: '提示',
@@ -409,9 +409,9 @@ export default {
         that.$router.push(url)
       }
     },
-    reserveUrl (id, ItemID, useType) {
+    reserveUrl (id, ItemID, useType, viewId) {
       if (useType === 1 || useType === 3) {
-        return `/service/reserve/${id}?ItemID=${ItemID}&useType=${useType}`
+        return `/service/reserve/${id}?ItemID=${ItemID}&useType=${useType}&viewId=${viewId}`
       }
       if (useType === 2) {
         return `/service/consult/${id}?isMission=0`
