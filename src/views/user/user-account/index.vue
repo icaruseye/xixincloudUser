@@ -10,6 +10,7 @@
       </div>
       <p class="all_earnings_text">累计提现总金额：￥{{detail.TotalWithdraw | amountCompute}}</p>
     </div>
+    <xx-calendar :tags="['2018-09-1','2018-09-2','2018-09-3','2018-09-10','2018-09-11','2018-09-12','2018-09-18']"></xx-calendar>
     <!-- <div class="flex_row_container mt20px">
       <dl>
         <dt>

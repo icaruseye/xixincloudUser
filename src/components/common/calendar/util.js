@@ -20,7 +20,10 @@ export default {
         type: 'current',
         day: index,
         month: zreo(month),
-        year: year
+        year: year,
+        tag: false,
+        tagStart: false,
+        tagEnd: false
       }
       currentDaysList.push(obj)
     }
@@ -71,5 +74,24 @@ export default {
 
     let week = Math.ceil((fullDate.getDate() + whatday) / 7) - 1
     return week
+  },
+  arrange (source) {
+    var t
+    var ta
+    var r = []
+
+    source.forEach(function (v) {
+      if (t === v) {
+        ta.push(t)
+        t++
+        return
+      }
+
+      ta = [v]
+      t = v + 1
+      r.push(ta)
+    })
+
+    return r
   }
 }
