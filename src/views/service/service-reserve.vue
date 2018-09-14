@@ -192,7 +192,7 @@ export default {
       },
       calendarStartTime: null,
       calendarEndTime: null,
-      calendarTags: ['2018-09-1','2018-09-2','2018-09-3','2018-09-10','2018-09-11','2018-09-12','2018-09-18'],
+      calendarTags: [],
       fuwuxuzhi: false,
       AgreementList: [{}, {}, {}, {}]
     }
@@ -280,7 +280,12 @@ export default {
     },
     // 获取当月排班列表
     async getScheduleList (startTime, endTime) {
-      const res = await this.$http.get(`/Schedule/IsNoSchedule?startTime=${startTime}&endTime=${endTime}&items=${this.itemID}&viewId=${this.viewId}`)
+      const res = await this.$http.get(`/Schedule/IsNoSchedule`, {
+        startTime: startTime,
+        endTime: endTime,
+        items: '',
+        viewId: this.viewId
+      })
       return res
     },
     // 获取某一天排班详情
@@ -291,7 +296,7 @@ export default {
     // 选择日历日期
     async calendarItemClick (dateTime) {
       this.calendarLoading = true
-      const res = await this.getScheduleDetail(new Date(dateTime))
+      const res = await this.getScheduleDetail(dateTime)
       if (res.data.Code === 100000) {
         console.log(res)
       }
@@ -305,7 +310,12 @@ export default {
 
       const res = await this.getScheduleList(this.calendarStartTime, this.calendarEndTime)
       if (res.data.Code === 100000) {
-        this.calendarTags = res.data.Data
+        let arr = []
+        res.data.Data.map(i => {
+          arr.push(dateFormat(i, 'YYYY-MM-DD'))
+        })
+        console.log(arr)
+        this.calendarTags = arr
       }
       this.calendarLoading = false
     },

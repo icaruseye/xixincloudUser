@@ -67,10 +67,15 @@ export default {
       isWeekType: false,
       week: null,
       selectItem: {},
-      loadingVal: this.loading
+      loadingVal: this.loading,
+      tagsArr: this.tags
     }
   },
   watch: {
+    tags () {
+      this.tagsArr = this.tags
+      this.getRange(this.tags)
+    },
     selectedMonth () {
       if (!this.isWeekType) {
         this.displayDaysMonth()
@@ -100,7 +105,7 @@ export default {
     },
     displayDaysMonth () {
       this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
-      this.getRange()
+      this.getRange(this.tagsArr)
       
       this.$emit('changeMonth', {
         year: this.selectedYear,
@@ -110,7 +115,7 @@ export default {
     },
     displayDaysWeek () {
       this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
-      this.getRange()
+      this.getRange(this.tagsArr)
 
       this.$emit('changeMonth', {
         year: this.selectedYear,
@@ -119,11 +124,11 @@ export default {
       })
     },
     // 设置需要标记的日期
-    getRange () {
-      if (!this.tags) return false
+    getRange (tags) {
+      if (!tags) return false
       // 设置标记属性到日历数组
       this.calendarDays.forEach((date, dateIndex) => {
-        this.tags.forEach((tag, tagIndex) => {
+        tags.forEach((tag, tagIndex) => {
           if (date.day === parseInt(tag.split('-')[2])) {
             date.tag = true
           }
@@ -132,10 +137,14 @@ export default {
 
       // 当前需要标记号数的数组
       let res = []
-      this.tags.forEach((tag, tagIndex) => {
+      tags.forEach((tag, tagIndex) => {
         res.push(parseInt(tag.split('-')[2]))
       })
-      let groupArr = util.arrange(res)
+      
+      let groupArr = util.arrange(res.sort(function (pre, next) {
+        return pre - next
+      }))
+      console.log(groupArr)
 
       // 找出标记日期中连续的号数 设置连续号数中的头尾
       for (let item of groupArr) {
