@@ -26,22 +26,22 @@
         <div style="padding-right:15px">{{orderDetail.ServantName}}</div>
       </xx-cell-items>
     </xx-cell>
-    <xx-cell class="mgt10">
-      <xx-cell-items label="服务时间" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;" @click.native="showCalendar">
-        <div style="padding-right:15px">2018-09-13 12:00</div>
+    <xx-cell class="mgt10" v-if="newCalendar">
+      <xx-cell-items label="服务时间" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;" @click.native="isShowCalendar = true">
+        <div style="padding-right:15px">{{calendarDate}} {{scheduleListValueText}}</div>
       </xx-cell-items>
     </xx-cell>
-    <!-- <h2 class="cells_title">
+    <h2 class="cells_title" v-if="!newCalendar">
       能接受服务时间段
     </h2>
-    <xx-cell>
+    <xx-cell v-if="!newCalendar">
       <div style="display: flex;align-items:center;padding: 15px 10px;color:#f8a519;font-size:15px;">
        <span style="color:#999;margin: 0 5px;font-size:15px;">从</span>
         <div @click="selectStartTime">{{reqParams.StartTime}}</div>
        <span style="color:#999;margin: 0 5px;font-size:15px">至</span>
         <div @click="selectEndTime">{{reqParams.EndTime}}</div>
       </div>
-    </xx-cell> -->
+    </xx-cell>
     <xx-cell class="mgt10">
       <xx-cell-items label="病情症状或备注" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div class="service_remark_textarea_container">
@@ -77,16 +77,34 @@
     </xx-cell>
     <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">确定</button>
     <!-- 排班表 -->
-    <div v-transfer-dom
-      :should-rerender-on-show="true"
-      max-height="80%">
-      <popup v-model="isShowCalendar" style="padding: 15px 0;background:#fff;">
+    <div
+      v-transfer-dom
+      :should-rerender-on-show="true">
+      <popup v-model="isShowCalendar" style="padding: 15px 0;background:#fff;" max-height="80%">
         <xx-calendar
           :tags="calendarTags"
           :loading="calendarLoading"
           @onClick="calendarItemClick"
           @changeMonth="changeMonth">
         </xx-calendar>
+        <div style="background:#f6f6f6;height:5px;width:100%;"></div>
+        <div class="schedule-list" v-if="scheduleDetailList.length > 0">
+          <div class="title">当前可选时段</div>
+          <checker v-model="scheduleListValue" default-item-class="schedule-item" selected-item-class="schedule-item-selected">
+            <template v-for="(item, index) in scheduleDetailList">
+              <checker-item :value="index" :key="index">
+                <div class="item">
+                  {{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}}
+                </div>
+              </checker-item>
+            </template>
+          </checker>
+        </div>
+        <div v-else class="empty-box">当前日期没有排班</div>
+        <div style="text-align:center;display:flex;justify-content: center;margin-bottom:15px;">
+          <button class="btn green" @click="submitSchedule">确认</button>
+          <button class="btn gray" @click="isShowCalendar = false">取消</button>
+        </div>
       </popup>
     </div>
     <!-- 地址列表 -->
@@ -136,7 +154,7 @@
 
 <script>
 import util from '@/plugins/util'
-import { TransferDom, dateFormat, Popup, Confirm } from 'vux'
+import { TransferDom, dateFormat, Popup, Confirm, Checker, CheckerItem } from 'vux'
 import userAddressEdit from '../user/user-address-edit'
 const dataFormatRule = 'YYYY/MM/DD HH:mm'
 export default {
@@ -146,11 +164,16 @@ export default {
   components: {
     Popup,
     Confirm,
-    userAddressEdit
+    userAddressEdit,
+    Checker,
+    CheckerItem
   },
   filters: {
     _transformAddress (val) {
       return util.transformAddress(val)
+    },
+    timeFormat (value, m) {
+      return dateFormat(new Date(value), m)
     }
   },
   data () {
@@ -193,6 +216,11 @@ export default {
       calendarStartTime: null,
       calendarEndTime: null,
       calendarTags: [],
+      newCalendar: false,
+      calendarDate: '',
+      scheduleListValue: null,
+      scheduleListValueText: '',
+      scheduleDetailList: [],
       fuwuxuzhi: false,
       AgreementList: [{}, {}, {}, {}]
     }
@@ -224,6 +252,8 @@ export default {
   },
   methods: {
     init () {
+      const _deta = this.getAfterOneMonth()
+      this.getScheduleList(_deta.startTime, _deta.endTime)
       this.getOrderDetail().then(() => {
         this.getAddressList()
         this.getAgreementList()
@@ -286,41 +316,58 @@ export default {
         items: '',
         viewId: this.viewId
       })
-      return res
+      if (res.data.Code === 100000) {
+        this.newCalendar = res.data.Data.length > 0
+        console.log(res.data.Data.length)
+        let arr = []
+        res.data.Data.map(i => {
+          arr.push(dateFormat(i, 'YYYY-MM-DD'))
+        })
+        console.log(arr)
+        this.calendarTags = arr
+      }
     },
     // 获取某一天排班详情
     async getScheduleDetail (dateTime) {
       const res = await this.$http.get(`/Schedule/List?dateTime=${dateTime}&viewId=${this.viewId}`)
       return res
     },
-    // 选择日历日期
+    // 选择某一天
     async calendarItemClick (dateTime) {
+      this.calendarDate = dateTime
+      this.scheduleListValue = null
       this.calendarLoading = true
       const res = await this.getScheduleDetail(dateTime)
       if (res.data.Code === 100000) {
         console.log(res)
+        this.scheduleDetailList = res.data.Data.ScheduleResponses
       }
       this.calendarLoading = false
     },
-    // 改变日历月份
+    // 切换月份
     async changeMonth (item) {
-      this.calendarStartTime = `${item.year}-${item.month}-1 00:00:00`
-      this.calendarEndTime = `${item.year}-${item.month}-${item.monthdays} 23:59:59`
-      this.calendarLoading = true
+      const _deta = this.getAfterOneMonth()
+      this.getScheduleList(_deta.startTime, _deta.endTime)
+      // this.calendarStartTime = `${item.year}-${item.month}-1 00:00:00`
+      // this.calendarEndTime = `${item.year}-${item.month}-${item.monthdays} 23:59:59`
+      // this.calendarLoading = true
 
-      const res = await this.getScheduleList(this.calendarStartTime, this.calendarEndTime)
-      if (res.data.Code === 100000) {
-        let arr = []
-        res.data.Data.map(i => {
-          arr.push(dateFormat(i, 'YYYY-MM-DD'))
-        })
-        this.calendarTags = arr
-      }
-      this.calendarLoading = false
+      // const res = await this.getScheduleList(this.calendarStartTime, this.calendarEndTime)
+      // if (res.data.Code === 100000) {
+      //   let arr = []
+      //   res.data.Data.map(i => {
+      //     arr.push(dateFormat(i, 'YYYY-MM-DD'))
+      //   })
+      //   console.log(arr)
+      //   this.calendarTags = arr
+      // }
+      // this.calendarLoading = false
     },
-    // 显示日历
-    showCalendar () {
-      this.isShowCalendar = true
+    submitSchedule () {
+      if (!this.scheduleListValue) {
+        this.$vux.toast.text('请选择一个时段')
+      }
+      this.scheduleListValueText = `${dateFormat(s, 'HH:mm')}-${dateFormat(e, 'HH:mm')}`
     },
     // 提交前弹窗确认
     submit () {
@@ -450,6 +497,14 @@ export default {
     },
     limitCount (max) {
       this.exceedText = this.reqParams.Discription.length > max
+    },
+    getAfterOneMonth () {
+      let date = new Date()
+      date.setDate(date.getDate() + 30)
+      return {
+        startTime: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} 00:00:00`,
+        endTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 00:00:00`
+      }
     }
   }
 }
@@ -613,5 +668,54 @@ export default {
 .address-list_container {
   min-height: 100px;
   background: #fff;
+}
+
+.schedule-list {
+  padding: 15px;
+  .title {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+}
+.schedule-item {
+  padding-left: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #999;
+  background: #f1f1f1;
+  border-radius: 4px;
+  &.schedule-item-selected {
+    background: #3ecccc;
+    color: #fff;
+  }
+}
+.btn {
+  font-size: 15px;
+  display: block;
+  width: 90px;
+  height: 30px;
+  line-height: 32px;
+  text-align: center;
+  border: 0;
+  border-radius: 15px;
+  color: #fff;
+  &:nth-child(1) {
+    margin-right: 70px;
+  }
+  &.green {
+   background: #3ecccc; 
+  }
+  &.gray {
+    background: #ccc;
+  }
+  &:disabled {
+    background: #ccc;
+  }
 }
 </style>

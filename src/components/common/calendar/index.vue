@@ -125,7 +125,7 @@ export default {
       // 设置标记属性到日历数组
       this.calendarDays.forEach((date, dateIndex) => {
         tags.forEach((tag, tagIndex) => {
-          if (date.day === parseInt(tag.split('-')[2]) && parseInt(tag.split('-')[2]) >= today) {
+          if (date.day === parseInt(tag.split('-')[2]) && parseInt(tag.split('-')[2]) >= today && parseInt(tag.split('-')[1]) === this.selectedMonth + 1) {
             date.tag = true
           }
         })
@@ -166,7 +166,7 @@ export default {
       if (this.isWeekType) {
         this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
       }
-      this.$emit('onClick', `${this.selectItem.year}-${this.selectItem.month - 1}-${this.selectItem.day}`)
+      this.$emit('onClick', `${this.selectItem.year}-${this.selectItem.month}-${this.selectItem.day}`)
     },
     backToday () {
       if (this.isWeekType) {
@@ -179,11 +179,7 @@ export default {
       this.selectedMonth = new Date().getMonth()
       this.selectedDate = new Date().getDate()
       this.selectDay = format(new Date(), 'YYYY-MM-DD')
-      this.$emit('changeMonth', {
-        year: this.selectedYear,
-        month: this.selectedMonth + 1,
-        monthdays: util.conutDaysInMonth(this.selectedYear, this.selectedMonth)
-      })
+      this.$emit('onClick', this.selectDay)
     },
     getPre () {
       if (!this.isWeekType && this.beForeMonth()) {
