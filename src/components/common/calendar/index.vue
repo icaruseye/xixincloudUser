@@ -74,7 +74,6 @@ export default {
   watch: {
     tags () {
       this.tagsArr = this.tags
-      this.getRange(this.tags)
     },
     selectedMonth () {
       if (!this.isWeekType) {
@@ -106,7 +105,6 @@ export default {
     displayDaysMonth () {
       this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
       this.getRange(this.tagsArr)
-      
       this.$emit('changeMonth', {
         year: this.selectedYear,
         month: this.selectedMonth + 1,
@@ -144,7 +142,6 @@ export default {
       let groupArr = util.arrange(res.sort(function (pre, next) {
         return pre - next
       }))
-      console.log(groupArr)
 
       // 找出标记日期中连续的号数 设置连续号数中的头尾
       for (let item of groupArr) {
@@ -256,11 +253,30 @@ export default {
       }
     },
     beForeMonth () {
-      return this.selectedMonth > new Date().getMonth()
+      if (this.selectedYear > new Date().getFullYear()) {
+        return true
+      } else if (this.selectedYear === new Date().getFullYear() && this.selectedMonth > new Date().getMonth()) {
+        return true
+      } else {
+        return false
+      }
+      // console.log(this.selectedMonth < new Date().getMonth() && this.selectedYear <= new Date().getFullYear())
+      // return this.selectedMonth > new Date().getMonth() || this.selectedYear === new Date().getFullYear()
     },
     beForeToday () {
-      let todayWeek = util.getWeek(new Date().getFullYear(), new Date().getMonth(), this.today)
-      return !(this.week === todayWeek && this.selectedMonth === new Date().getMonth())
+      if (this.selectedMonth < new Date().getMonth() && this.selectedYear <= new Date().getFullYear()) {
+        return true
+      }
+      if (this.selectedMonth === new Date().getMonth() && this.selectedYear === new Date().getFullYear()) {
+        let todayWeek = util.getWeek(new Date().getFullYear(), new Date().getMonth(), this.today)
+        return !(this.week === todayWeek && this.selectedMonth === new Date().getMonth())
+      }
+      if (this.selectedMonth >= new Date().getMonth() && this.selectedYear >= new Date().getFullYear()) {
+        return true
+      }
+      if (this.selectedYear > new Date().getFullYear()) {
+        return true
+      }
     }
   }
 }

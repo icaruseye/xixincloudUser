@@ -314,7 +314,6 @@ export default {
         res.data.Data.map(i => {
           arr.push(dateFormat(i, 'YYYY-MM-DD'))
         })
-        console.log(arr)
         this.calendarTags = arr
       }
       this.calendarLoading = false

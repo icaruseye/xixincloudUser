@@ -18,7 +18,7 @@ export default {
     // 计算当月日期列表
     for (let index = 1; index <= daysInMonth[month]; index++) {
       let isbeforeNow = false
-      if (index < now && month <= new Date().getMonth()) {
+      if (index < now && month <= new Date().getMonth() && year === new Date().getFullYear()) {
         isbeforeNow = true
       }
       let obj = {
@@ -41,7 +41,7 @@ export default {
         day: daysInMonth[preMonth] - index,
         month: zreo(preMonth),
         year: month === 0 ? year - 1 : year,
-        isbeforeNow: preMonth < new Date().getMonth()
+        isbeforeNow: preMonth < new Date().getMonth() && year === new Date().getFullYear()
       }
       currentDaysList.unshift(obj)
     }
@@ -61,7 +61,6 @@ export default {
       month++
       return month < 10 ? `0${month}` : month
     }
-    console.log(currentDaysList)
     return currentDaysList
   },
   displayDaysWeek (year, month, week) {
