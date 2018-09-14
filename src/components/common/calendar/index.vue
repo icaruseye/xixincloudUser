@@ -74,6 +74,7 @@ export default {
   watch: {
     tags () {
       this.tagsArr = this.tags
+      this.getRange(this.tags)
     },
     selectedMonth () {
       if (!this.isWeekType) {
@@ -95,16 +96,12 @@ export default {
       return util.getWeek(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
     }
   },
-  mounted () {
-    this.initDate()
+  created () {
+    this.displayDaysMonth()
   },
   methods: {
-    initDate () {
-      this.displayDaysMonth()
-    },
     displayDaysMonth () {
       this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
-      this.getRange(this.tagsArr)
       this.$emit('changeMonth', {
         year: this.selectedYear,
         month: this.selectedMonth + 1,
@@ -124,10 +121,11 @@ export default {
     // 设置需要标记的日期
     getRange (tags) {
       if (!tags) return false
+      let today = this.selectedMonth === new Date().getMonth() ? new Date().getDate() : 0
       // 设置标记属性到日历数组
       this.calendarDays.forEach((date, dateIndex) => {
         tags.forEach((tag, tagIndex) => {
-          if (date.day === parseInt(tag.split('-')[2])) {
+          if (date.day === parseInt(tag.split('-')[2]) && parseInt(tag.split('-')[2]) >= today) {
             date.tag = true
           }
         })
@@ -136,7 +134,9 @@ export default {
       // 当前需要标记号数的数组
       let res = []
       tags.forEach((tag, tagIndex) => {
-        res.push(parseInt(tag.split('-')[2]))
+        if (parseInt(tag.split('-')[2]) >= today) {
+          res.push(parseInt(tag.split('-')[2]))
+        }
       })
       
       let groupArr = util.arrange(res.sort(function (pre, next) {
