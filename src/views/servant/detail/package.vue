@@ -26,9 +26,7 @@
           <!-- <div class="title">{{Agreement.Title}}</div> -->
           <div v-html="Agreement.Content"></div>
         </div>
-        <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
-          <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
-        </div>
+        <div class="read-btn" @click="isShowTips = false">我已阅读完毕</div>
       </x-dialog>
     </div>
     <button v-if="Package.Count > 0" type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Package.ID)">立即购买 ￥{{(Package.Price/100).toFixed(2) || '0.00'}} 元</button>

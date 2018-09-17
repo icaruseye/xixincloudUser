@@ -90,9 +90,9 @@
         <div style="background:#f6f6f6;height:5px;width:100%;"></div>
         <div class="schedule-list" v-if="scheduleDetailList.length > 0">
           <div class="title">当前可选时段</div>
-          <checker v-model="scheduleListValue" default-item-class="schedule-item" selected-item-class="schedule-item-selected">
+          <checker v-model="reqParams.scheduleListValue" default-item-class="schedule-item" selected-item-class="schedule-item-selected">
             <template v-for="(item, index) in scheduleDetailList">
-              <checker-item :value="index" :key="index">
+              <checker-item :value="item.ID" :key="index" @click.native="setScheduleText(index)">
                 <div class="item">
                   {{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}}
                 </div>
@@ -144,9 +144,7 @@
           <div class="title">{{AgreementList[3].Title}}</div>
           <div v-html="AgreementList[3].Content"></div>
         </div>
-        <div class="close" @click="isShowTips = false" style="padding: 0 0 10px">
-          <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
-        </div>
+        <div class="read-btn" @click="isShowTips = false">我已阅读完毕</div>
       </x-dialog>
     </div>
   </div>
@@ -205,6 +203,7 @@ export default {
         NeedPill: false,
         NeedTools: false,
         Imgs: '',
+        scheduleListValue: null,
         PrepareGoodsTags: null
       },
       authText: {
@@ -217,8 +216,7 @@ export default {
       calendarEndTime: null,
       calendarTags: [],
       newCalendar: false,
-      calendarDate: '',
-      scheduleListValue: null,
+      calendarDate: '请选择服务时段',
       scheduleListValueText: '',
       scheduleDetailList: [],
       fuwuxuzhi: false,
@@ -254,6 +252,7 @@ export default {
     init () {
       const _deta = this.getAfterOneMonth()
       this.getScheduleList(_deta.startTime, _deta.endTime)
+      this.getScheduleDetail(_deta.startTime)
       this.getOrderDetail().then(() => {
         this.getAddressList()
         this.getAgreementList()
@@ -330,22 +329,22 @@ export default {
     // 获取某一天排班详情
     async getScheduleDetail (dateTime) {
       const res = await this.$http.get(`/Schedule/List?dateTime=${dateTime}&viewId=${this.viewId}`)
-      return res
+      if (res.data.Code === 100000) {
+        this.scheduleDetailList = res.data.Data.ScheduleResponses
+      }
     },
     // 选择某一天
     async calendarItemClick (dateTime) {
       this.calendarDate = dateTime
-      this.scheduleListValue = null
+      this.reqParams.scheduleListValue = null
+      this.scheduleListValueText = null
       this.calendarLoading = true
-      const res = await this.getScheduleDetail(dateTime)
-      if (res.data.Code === 100000) {
-        console.log(res)
-        this.scheduleDetailList = res.data.Data.ScheduleResponses
-      }
+      await this.getScheduleDetail(dateTime)
       this.calendarLoading = false
     },
     // 切换月份
     async changeMonth (item) {
+      console.log(item)
       const _deta = this.getAfterOneMonth()
       this.getScheduleList(_deta.startTime, _deta.endTime)
       // this.calendarStartTime = `${item.year}-${item.month}-1 00:00:00`
@@ -363,11 +362,16 @@ export default {
       // }
       // this.calendarLoading = false
     },
+    setScheduleText (index) {
+      const date = this.scheduleDetailList[index]
+      this.scheduleListValueText = `${dateFormat(new Date(date.StartTime), 'HH:mm')}-${dateFormat(new Date(date.EndTime), 'HH:mm')}`
+    },
     submitSchedule () {
-      if (!this.scheduleListValue) {
+      if (!this.reqParams.scheduleListValue) {
         this.$vux.toast.text('请选择一个时段')
+        return false
       }
-      this.scheduleListValueText = `${dateFormat(s, 'HH:mm')}-${dateFormat(e, 'HH:mm')}`
+      this.isShowCalendar = false
     },
     // 提交前弹窗确认
     submit () {

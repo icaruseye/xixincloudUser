@@ -78,9 +78,7 @@
           <div class="title">{{Agreement.Title}}</div>
           <div v-html="Agreement.Content"></div>
         </div>
-        <div class="close" @click="showHideOnBlur = false" style="padding: 0 0 10px">
-          <i class="iconfont icon-shanchuguanbicha2" style="font-size:20px;color:#999;"></i>
-        </div>
+          <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
       </x-dialog>
     </div>
   </div>
