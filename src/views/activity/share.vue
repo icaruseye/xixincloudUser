@@ -99,35 +99,17 @@ export default {
         this.$vux.toast.text('出错了')
       }
     },
-    // canvasToImage (canvas) {
-    //   var image = new Image()
-    //   image.src = canvas.toDataURL('image/png')
-    //   return image
-    // },
+    // HTML页面转为图片
     htmlToCanvas () {
       const node = document.getElementById('html-wrap')
-      domtoimage.toPng(node)
-        .then(function (dataUrl) {
-          console.log(dataUrl)
-          var img = new Image()
-          img.src = dataUrl
-          document.querySelector('.img-wrap').appendChild(img)
-        })
-        .catch(function (error) {
-          console.error('oops, something went wrong!', error)
-        })
-      // const that = this
-      // html2canvas(document.querySelector('.html-wrap'), {
-      //   useCORS: true
-      // }).then(function (canvas) {
-      //   console.log(canvas)
-      //   let ctx = canvas.getContext('2d')
-      //   ctx.fillStyle = '#f6f6f6'
-      //   ctx.shadowBlur=20
-      //   ctx.shadowColor = '#ccc'
-      //   ctx.fill()
-      //   document.querySelector('.img-wrap').appendChild(that.canvasToImage(canvas))
-      // })
+      domtoimage.toPng(node).then(function (dataUrl) {
+        var img = new Image()
+        img.src = dataUrl
+        document.querySelector('.img-wrap').appendChild(img)
+      })
+      .catch(function (error) {
+        console.error('oops, something went wrong!', error)
+      })
     }
   }
 }

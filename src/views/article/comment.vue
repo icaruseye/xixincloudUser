@@ -29,9 +29,6 @@ export default {
     }
   },
   methods: {
-    limitCount (text, max) {
-      this.exceedText = text.length > max
-    },
     async submitComment () {
       const that = this
       this.disabled = true
@@ -48,6 +45,9 @@ export default {
         this.$vux.toast.text('提交失败')
         this.disabled = false
       }
+    },
+    limitCount (text, max) {
+      this.exceedText = text.length > max
     }
   }
 }

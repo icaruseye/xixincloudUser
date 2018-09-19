@@ -75,7 +75,7 @@ export default {
       'userAccount'
     ]),
     ID () {
-      return this.$route.params.id
+      return +this.$route.params.id
     }
   },
   data () {
@@ -97,35 +97,21 @@ export default {
     this.getCommentList()
   },
   methods: {
-    onNavbarClickLeft () {
-      this.$router.back()
-    },
-    toComment () {
-      this.$router.push(`/article/detail/${this.ID}/comment?title=${this.article.Title}`)
-    },
-    loadmore () {
-      this.pageIndex++
-      this.loadText = '加载中...'
-    },
     async sendZan () {
       if (this.article.Give) {
         this.$vux.toast.text('无法重复点赞哦~')
         return false
       }
-      const res = await this.$http.post(`/Like`, {
-        articleID: this.ID
-      })
+      const res = await this.$http.post(`/Like`, {articleID: this.ID})
       if (res.data.Code === 100000) {
         this.article.Give = true
         this.article.GiveCount++
       } else {
-        this.$vux.toast.text(res.data.Msg)
+        this.$vux.toast.text('出错了')
       }
     },
     async getArticle () {
-      this.$vux.loading.show({
-        text: '加载中...'
-      })
+      this.$vux.loading.show({text: '加载中...'})
       const res = await this.$http.get(`/Article?articleId=${this.ID}`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.$vux.loading.hide()
@@ -150,6 +136,16 @@ export default {
       } else {
         this.$vux.toast.text('拉取评论失败')
       }
+    },
+    onNavbarClickLeft () {
+      this.$router.back()
+    },
+    toComment () {
+      this.$router.push(`/article/detail/${this.ID}/comment?title=${this.article.Title}`)
+    },
+    loadmore () {
+      this.pageIndex++
+      this.loadText = '加载中...'
     }
   }
 }

@@ -13,7 +13,7 @@ export default [
     }
   },
   {
-    path: '/addFriends/:id',
+    path: '/addFriends',
     component: _import('/common/addFriends'),
     meta: {
       title: '添加服务者'

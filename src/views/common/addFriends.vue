@@ -23,7 +23,7 @@
     <div v-if="!userAccount.IsSubscribe">
       <div><img :src="API_PATH + '/SubscribeQRCode/?shopID=' + userAccount.ShopID" alt=""></div>
       <div style="text-align: center;font-size: 14px;color: #f8a519;">长按二维码点击识别， 点击关注公众号。</div>
-      <div style="text-align: center;font-size: 12px;color: #666;">不知道如何操作？请看<a href="javascript:;" style="color:#3ecccc" @click="showDialog">《关注》</a> 帮助文档</div>
+      <div style="text-align: center;font-size: 12px;color: #666;">不知道如何操作？请看<a href="javascript:;" style="color:#3ecccc" @click="showHideOnBlur = true">《关注》</a> 帮助文档</div>
     </div>
     <div v-transfer-dom>
       <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': '#fff'}">
@@ -39,6 +39,7 @@
 
 <script>
 import { XDialog, TransferDomDirective as TransferDom } from 'vux'
+import { mapGetters } from 'vuex'
 export default {
   directives: {
     TransferDom
@@ -49,38 +50,38 @@ export default {
   data () {
     return {
       isShow: false,
-      addSuccess: false,
-      isFollow: false,
       showHideOnBlur: false,
       AgreementList: {},
       info: {
         ServantAccount: {}
       },
       qrcode: '',
-      ShopID: JSON.parse(sessionStorage.getItem('userAccount')).ShopID,
-      userAccount: ''
     }
   },
   computed: {
+    ...mapGetters([
+      'userAccount'
+    ]),
     API_PATH () {
       return process.env.API_PATH
     },
     ID () {
-      return this.$route.params.id
+      return this.$route.query.id
     }
   },
   mounted () {
     this.addFirends()
     this.getShopAgreement()
-    this.userAccount = JSON.parse(sessionStorage.getItem('userAccount'))
   },
   methods: {
+    // 获取文档说明
     async getShopAgreement () {
       const res = await this.$http.get(`/ShopAgreement?protocalType=21&itemID=0`)
       if (res.data.Code === 100000 && res.data.Data) {
         this.AgreementList = res.data.Data
       }
     },
+    // 获取服务者详情
     async getServantInfo () {
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.ID}`)
       if (res.data.Code === 100000) {
@@ -89,6 +90,7 @@ export default {
         this.$vux.toast.text('出错了')
       }
     },
+    // 添加服务者为好友
     async addFirends () {
       const res = await this.$http.get(`/AddFriend/${this.ID}`)
       if (res.data.Code === 100000) {
@@ -99,12 +101,8 @@ export default {
         }
         this.getServantInfo()
       } else {
-        console.log()
         this.$vux.toast.text('出错了')
       }
-    },
-    showDialog () {
-      this.showHideOnBlur = true
     }
   }
 }

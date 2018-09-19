@@ -56,7 +56,7 @@
           :maxSize="1024 * 1024 * 20"
           :imgList="imgList1"
           :limit="3"
-          @onUpdate="onUpdate1"
+          @onUpdate="onUpdate"
         ></xx-uploader>
       </xx-cell-items>
       <div class="tips warn" v-if="AgreementList[1].Content">{{AgreementList[1].Content}}</div>
@@ -72,7 +72,7 @@
       </div>
       <div class="tips text">
         <input type="checkbox" name="" v-model="fuwuxuzhi" id="fuwuxuzhi">
-        <label for="fuwuxuzhi">预约前请仔细阅读<span @click="showTips">《预约须知》</span> ，当中包含预约规则及取消预约规则</label>
+        <label for="fuwuxuzhi">预约前请仔细阅读<span @click="isShowTips = true">《预约须知》</span> ，当中包含预约规则及取消预约规则</label>
       </div>
     </xx-cell>
     <button type="button" class="weui-btn weui-btn_primary" style="position:fixed;bottom:0" @click="submit" :disabled="submitDisable">确定</button>
@@ -347,20 +347,6 @@ export default {
       console.log(item)
       const _deta = this.getAfterOneMonth()
       this.getScheduleList(_deta.startTime, _deta.endTime)
-      // this.calendarStartTime = `${item.year}-${item.month}-1 00:00:00`
-      // this.calendarEndTime = `${item.year}-${item.month}-${item.monthdays} 23:59:59`
-      // this.calendarLoading = true
-
-      // const res = await this.getScheduleList(this.calendarStartTime, this.calendarEndTime)
-      // if (res.data.Code === 100000) {
-      //   let arr = []
-      //   res.data.Data.map(i => {
-      //     arr.push(dateFormat(i, 'YYYY-MM-DD'))
-      //   })
-      //   console.log(arr)
-      //   this.calendarTags = arr
-      // }
-      // this.calendarLoading = false
     },
     setScheduleText (index) {
       const date = this.scheduleDetailList[index]
@@ -407,12 +393,6 @@ export default {
       this.UserAddress = { IsDefault: 1 }
       this.showAddressEdit = true
       this.isShowAddressList = false
-    },
-    transformAddress (val) {
-      return util.transformAddress(val)
-    },
-    addOneDay (date) {
-      return new Date(date.getTime() + 24 * 60 * 60 * 1000)
     },
     // 显示选择地址弹出层
     showAddress () {
@@ -492,16 +472,6 @@ export default {
       })
       return arr.join()
     },
-    // 上传图片
-    onUpdate1 (id) {
-      this.reqParams.Imgs = id.join(',')
-    },
-    showTips () {
-      this.isShowTips = true
-    },
-    limitCount (max) {
-      this.exceedText = this.reqParams.Discription.length > max
-    },
     getAfterOneMonth () {
       let date = new Date()
       date.setDate(date.getDate() + 30)
@@ -509,6 +479,18 @@ export default {
         startTime: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} 00:00:00`,
         endTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 00:00:00`
       }
+    },
+    onUpdate (id) {
+      this.reqParams.Imgs = id.join(',')
+    },
+    limitCount (max) {
+      this.exceedText = this.reqParams.Discription.length > max
+    },
+    transformAddress (val) {
+      return util.transformAddress(val)
+    },
+    addOneDay (date) {
+      return new Date(date.getTime() + 24 * 60 * 60 * 1000)
     }
   }
 }
