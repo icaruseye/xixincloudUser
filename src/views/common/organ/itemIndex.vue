@@ -106,6 +106,7 @@ export default {
   },
   created () {
     this.getItemTemplate()
+    this.getShopAgreement()
   },
   methods: {
     async getItemTemplate () {

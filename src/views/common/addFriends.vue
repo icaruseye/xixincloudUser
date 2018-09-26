@@ -55,7 +55,7 @@ export default {
       info: {
         ServantAccount: {}
       },
-      qrcode: '',
+      qrcode: ''
     }
   },
   computed: {

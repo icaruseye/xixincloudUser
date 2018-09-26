@@ -138,7 +138,7 @@ export default {
           res.push(parseInt(tag.split('-')[2]))
         }
       })
-      
+
       let groupArr = util.arrange(res.sort(function (pre, next) {
         return pre - next
       }))
