@@ -24,7 +24,7 @@
       </xx-cell-items>
       <xx-cell-items label="病情症状或备注" direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <div class="service_remark_textarea_container">
-          <textarea v-model="reqParams.ReserveRemark" class="service_remark_textarea" placeholder="请输入备注" @keyup="limitCount(200)"></textarea>
+          <textarea v-model="reqParams.ReserveRemark" class="service_remark_textarea" placeholder="请输入" @keyup="limitCount(200)"></textarea>
           <span class="service_remark_textarea_nums_count" :class="{warn: exceedText}">{{reqParams.ReserveRemark.length}} / 200</span>
         </div>
       </xx-cell-items>
@@ -187,7 +187,11 @@ export default {
     async submit () {
       const that = this
       if (this.exceedText) {
-        this.$vux.toast.text('备注字数超出限制')
+        this.$vux.toast.text('输入字数超出限制')
+        return false
+      }
+      if (this.reqParams.ReserveRemark.trim().length === 0) {
+        this.$vux.toast.text('咨询内容不能为空')
         return false
       }
       this.submitDisable = true
