@@ -25,7 +25,7 @@
               <i class="iconfont icon-xiaoxi1"></i>
               <div class="text">消息</div>
             </div>
-            <div class="item" @click="go('/')">
+            <div class="item" @click="go('/servant')">
               <i class="iconfont icon-ren1"></i>
               <div class="text">服务者</div>
             </div>
@@ -33,7 +33,7 @@
               <i class="iconfont icon-neirong"></i>
               <div class="text">服务内容</div>
             </div>
-            <div class="item" @click="go('/user')">
+            <div class="item" @click="go('comesoon')">
               <i class="iconfont icon-shijian"></i>
               <div class="text">日程</div>
             </div>
@@ -130,6 +130,10 @@ export default {
       this.$router.push(`/organ/item/${id}`)
     },
     go (url) {
+      if (url === 'comesoon') {
+        this.$vux.toast.text('开发中')
+        return false
+      }
       this.$router.push(url)
     },
     close () {

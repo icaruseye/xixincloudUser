@@ -90,7 +90,7 @@
         <div style="background:#f6f6f6;height:5px;width:100%;"></div>
         <div class="schedule-list" v-if="scheduleDetailList.length > 0">
           <div class="title">当前可选时段</div>
-          <checker v-model="reqParams.scheduleListValue" default-item-class="schedule-item" selected-item-class="schedule-item-selected">
+          <checker v-model="reqParams.ScheduleID" default-item-class="schedule-item" selected-item-class="schedule-item-selected">
             <template v-for="(item, index) in scheduleDetailList">
               <checker-item :value="item.ID" :key="index" @click.native="setScheduleText(index)">
                 <div class="item">
@@ -203,7 +203,7 @@ export default {
         NeedPill: false,
         NeedTools: false,
         Imgs: '',
-        scheduleListValue: null,
+        ScheduleID: null,
         PrepareGoodsTags: null
       },
       authText: {
@@ -336,7 +336,7 @@ export default {
     // 选择某一天
     async calendarItemClick (dateTime) {
       this.calendarDate = dateTime
-      this.reqParams.scheduleListValue = null
+      this.reqParams.ScheduleID = null
       this.scheduleListValueText = null
       this.calendarLoading = true
       await this.getScheduleDetail(dateTime)
@@ -353,7 +353,7 @@ export default {
       this.scheduleListValueText = `${dateFormat(new Date(date.StartTime), 'HH:mm')}-${dateFormat(new Date(date.EndTime), 'HH:mm')}`
     },
     submitSchedule () {
-      if (!this.reqParams.scheduleListValue) {
+      if (!this.reqParams.ScheduleID) {
         this.$vux.toast.text('请选择一个时段')
         return false
       }

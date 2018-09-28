@@ -25,7 +25,7 @@
               <i class="iconfont icon-xiaoxi1"></i>
               <div class="text">消息</div>
             </div>
-            <div class="item" @click="go('/')">
+            <div class="item" @click="go('/servant')">
               <i class="iconfont icon-ren1"></i>
               <div class="text">服务者</div>
             </div>
@@ -33,7 +33,7 @@
               <i class="iconfont icon-neirong"></i>
               <div class="text">服务内容</div>
             </div>
-            <div class="item" @click="go('/user')">
+            <div class="item" @click="go('comesoon')">
               <i class="iconfont icon-shijian"></i>
               <div class="text">日程</div>
             </div>
@@ -60,7 +60,7 @@
     </div>
     <!-- 推荐医师 -->
     <div class="servant-panel servant-panel_service">
-    <div class="servant-panel_title">推荐服务者</div>
+    <div class="servant-panel_title">推荐专家</div>
       <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
         <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
           <div class="avatar">
@@ -142,6 +142,7 @@ export default {
   created () {
     this.getAlias()
     this.getServantList()
+    this.getShopAgreement()
   },
   methods: {
     toDetail (ViewId) {
@@ -173,6 +174,13 @@ export default {
       if (res.data.Code === 100000 && res.data.Data) {
         this.Agreement = res.data.Data
       }
+    },
+    go (url) {
+      if (url === 'comesoon') {
+        this.$vux.toast.text('开发中')
+        return false
+      }
+      this.$router.push(url)
     }
   }
 }

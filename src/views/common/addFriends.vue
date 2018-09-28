@@ -66,7 +66,7 @@ export default {
       return process.env.API_PATH
     },
     ID () {
-      return this.$route.query.id
+      return this.$route.params.id || this.$route.query.id
     }
   },
   mounted () {

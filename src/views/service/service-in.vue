@@ -79,8 +79,7 @@
         </div>
       </xx-timeLine-items>
     </xx-timeLine>
-    <div class="tips warn">
-      {{Agreement.Content}}
+    <div class="tips warn" style="margin-top:10px" v-html="Agreement.Content">
     </div>
     <div class="btn-bar" v-if="serviceItemInfo.State === 0 && serviceItemInfo.Type === 0">
       <button type="button" class="weui-btn weui-btn_primary" style="background: #ffc349;flex:1;" @click="toChat(serviceItemInfo.ServantViewID)">发消息</button>
