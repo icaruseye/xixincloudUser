@@ -312,12 +312,11 @@ export default {
       const res = await this.$http.get(`/Schedule/IsNoSchedule`, {
         startTime: startTime,
         endTime: endTime,
-        items: '',
+        items: this.itemID,
         viewId: this.viewId
       })
       if (res.data.Code === 100000) {
         this.newCalendar = res.data.Data.length > 0
-        console.log(res.data.Data.length)
         let arr = []
         res.data.Data.map(i => {
           arr.push(dateFormat(i, 'YYYY-MM-DD'))
@@ -328,7 +327,7 @@ export default {
     },
     // 获取某一天排班详情
     async getScheduleDetail (dateTime) {
-      const res = await this.$http.get(`/Schedule/List?dateTime=${dateTime}&viewId=${this.viewId}`)
+      const res = await this.$http.get(`/Schedule/List?dateTime=${dateTime}&viewId=${this.viewId}&itemId=${this.itemID}`)
       if (res.data.Code === 100000) {
         this.scheduleDetailList = res.data.Data.ScheduleResponses
       }
@@ -339,12 +338,11 @@ export default {
       this.reqParams.ScheduleID = null
       this.scheduleListValueText = null
       this.calendarLoading = true
-      await this.getScheduleDetail(dateTime)
+      await this.getScheduleDetail(dateTime + ' 00:00:00')
       this.calendarLoading = false
     },
     // 切换月份
     async changeMonth (item) {
-      console.log(item)
       const _deta = this.getAfterOneMonth()
       this.getScheduleList(_deta.startTime, _deta.endTime)
     },
