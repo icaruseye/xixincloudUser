@@ -13,19 +13,20 @@
         <div>从业年限</div>
       </div> -->
       <div class="item">
-        <div><span class="color-ye">{{info.ServiceTimes}}</span>次</div>
-        <div>服务次数</div>
+        <div><span class="color-ye">{{info.ServiceTimes}}</span>次 服务次数</div>
       </div>
       <div class="item">
-        <div><span class="color-ye">{{info.AverageScore}}</span>分</div>
-        <div>服务评分</div>
+        <div><span class="color-ye">{{info.AverageScore}}</span>分 服务评分</div>
       </div>
     </div>
     <!-- 个人简介 -->
     <div class="servant-panel_intro panel-border">
       <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
-      <div class="content">
-        {{info.Description ? info.Description : '暂无简介'}}
+      <div style="padding: 0 12px;">
+        <div class="content">
+          {{info.Description ? info.Description : '暂无简介'}}
+        </div>
+        <router-link :to="`/servant/registration/${info.ViewID}`" class="registration_btn"><i class="iconfont icon-hao"></i> 挂号</router-link>
       </div>
     </div>
     <!-- <div class="servant-unfold_bar">
@@ -80,6 +81,8 @@ export default {
 <style lang="less" scoped>
 .servant-panel_title {
   padding: 0 10px;
+  font-weight: bold;
+  font-size: 16px;
 }
 .servant-unfold_bar {
   padding: 5px 0;
@@ -90,7 +93,6 @@ export default {
 .servant-panel_info {
   padding: 12px 8px 12px 12px;
   border-radius: 6px 6px 0 0;
-  background: #3ECCCC;
   display: flex;
   align-items: center;
   .avatar {
@@ -101,7 +103,7 @@ export default {
   .name {
     padding: 0 10px;
     font-size: 18px;
-    color: #fff;
+    color: #333;
     flex: 1;
   }
   .qrcode {
@@ -118,29 +120,39 @@ export default {
   display: flex;
   background: #fff;
   font-size: 12px;
+  border-bottom: 1px solid RGBA(62, 204, 204, .2);
   .item {
+    margin: 0 10px;
+    padding: 1px 8px;
     display: block;
-    flex: 1;
     align-items: center;
     text-align: center;
     justify-content: center;
     color: #999;
-    .color-ye {
-      font-size: 18px;
-    }
-    img {
-      width: 31px;
-      margin-right: 10px;
-    }
+    background: #E9E9E9;
+    border-radius: 15px;
   }
 }
 .servant-panel_intro {
   position: relative;
   padding-top: 12px;
+  overflow: hidden;
   .content {
     font-size: 12px;
     color: #666;
-    padding: 10px 12px 12px 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid RGBA(62, 204, 204, .2);
+  }
+  .registration_btn {
+    display: block;
+    margin: 10px 0;
+    height: 35px;
+    line-height: 35px;
+    background: #3ECCCC;
+    text-align: center;
+    border-radius: 2px;
+    font-size: 15px;
+    color: #fff;
   }
 }
 .icon-jiantoushang {

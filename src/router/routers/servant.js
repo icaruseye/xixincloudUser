@@ -78,5 +78,12 @@ export default [
     meta: {
       title: '支付'
     }
+  },
+  {
+    path: '/servant/registration/:id',
+    component: _import('/servant/registration'),
+    meta: {
+      title: '在线挂号'
+    }
   }
 ]

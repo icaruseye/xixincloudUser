@@ -171,7 +171,7 @@ export default {
   padding: 15px;
 }
 .servant-panel_title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: normal;
   position: relative;
   padding: 0 0 10px;

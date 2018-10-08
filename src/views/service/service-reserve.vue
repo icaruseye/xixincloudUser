@@ -250,7 +250,7 @@ export default {
   },
   methods: {
     init () {
-      const _deta = this.getAfterOneMonth()
+      const _deta = this.getAfterOneMonth(new Date())
       this.getScheduleList(_deta.startTime, _deta.endTime)
       this.getScheduleDetail(_deta.startTime)
       this.getOrderDetail().then(() => {
@@ -321,7 +321,6 @@ export default {
         res.data.Data.map(i => {
           arr.push(dateFormat(i, 'YYYY-MM-DD'))
         })
-        console.log(arr)
         this.calendarTags = arr
       }
     },
@@ -343,7 +342,8 @@ export default {
     },
     // 切换月份
     async changeMonth (item) {
-      const _deta = this.getAfterOneMonth()
+      const dateTime = `${item.year}-${item.month}-01`
+      const _deta = this.getAfterOneMonth(dateTime)
       this.getScheduleList(_deta.startTime, _deta.endTime)
     },
     setScheduleText (index) {
@@ -459,7 +459,6 @@ export default {
       let arr = Object.assign({}, this.orderDetail.ItemCarryGoodsList[index])
       arr.value = !arr.value
       this.$set(this.orderDetail.ItemCarryGoodsList, index, arr)
-      console.log(this.orderDetail.ItemCarryGoodsList[index].value)
     },
     getPrepareGoodsTags () {
       let arr = []
@@ -470,12 +469,13 @@ export default {
       })
       return arr.join()
     },
-    getAfterOneMonth () {
-      let date = new Date()
-      date.setDate(date.getDate() + 30)
+    getAfterOneMonth (dateTime) {
+      let date = new Date(dateTime)
+      let newdate = new Date(dateTime)
+      newdate.setDate(date.getDate() + 30)
       return {
-        startTime: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} 00:00:00`,
-        endTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 00:00:00`
+        startTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 00:00:00`,
+        endTime: `${newdate.getFullYear()}-${newdate.getMonth() + 1}-${newdate.getDate()} 00:00:00`
       }
     },
     onUpdate (id) {

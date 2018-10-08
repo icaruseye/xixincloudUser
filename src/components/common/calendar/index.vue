@@ -25,7 +25,7 @@
           class="item"
           :style="{'background': selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? themeColor : '', 'border-color': `${item.year}-${item.month}-${item.day}` === today ? themeColor : ''}"
         >
-        {{item.day}}
+        {{item.day | zreoDay}}
         </div>
       </div>
     </div>
@@ -42,6 +42,9 @@ export default {
   filters: {
     detaFormat (date) {
       return format(new Date(date), 'YYYY-MM-DD')
+    },
+    zreoDay (val) {
+      return parseInt(val)
     }
   },
   props: {
@@ -64,7 +67,7 @@ export default {
       selectDay: format(new Date(), 'YYYY-MM-DD'), // 当前选中日期
       calendarDays: [], // 当月日期集合
       today: format(new Date(), 'YYYY-MM-DD'),
-      isWeekType: false,
+      isWeekType: true,
       week: null,
       selectItem: {},
       loadingVal: this.loading,
@@ -97,11 +100,17 @@ export default {
     }
   },
   created () {
-    this.displayDaysMonth()
+    if (this.isWeekType) {
+      this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
+      this.displayDaysWeek()
+    } else {
+      this.displayDaysMonth()
+    }
   },
   methods: {
     displayDaysMonth () {
       this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
+      this.getRange(this.tagsArr)
       this.$emit('changeMonth', {
         year: this.selectedYear,
         month: this.selectedMonth + 1,
@@ -125,7 +134,7 @@ export default {
       // 设置标记属性到日历数组
       this.calendarDays.forEach((date, dateIndex) => {
         tags.forEach((tag, tagIndex) => {
-          if (date.day === parseInt(tag.split('-')[2]) && parseInt(tag.split('-')[2]) >= today && parseInt(tag.split('-')[1]) === this.selectedMonth + 1) {
+          if (parseInt(date.day) === parseInt(tag.split('-')[2]) && parseInt(tag.split('-')[2]) >= today && parseInt(tag.split('-')[1]) === this.selectedMonth + 1) {
             date.tag = true
           }
         })
@@ -146,10 +155,10 @@ export default {
       // 找出标记日期中连续的号数 设置连续号数中的头尾
       for (let item of groupArr) {
         for (let date of this.calendarDays) {
-          if (date.day === item[0]) {
+          if (parseInt(date.day) === item[0]) {
             date.tagStart = true
           }
-          if (date.day === item[item.length - 1]) {
+          if (parseInt(date.day) === item[item.length - 1]) {
             date.tagEnd = true
           }
         }

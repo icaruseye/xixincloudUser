@@ -23,7 +23,7 @@ export default {
       }
       let obj = {
         type: 'current',
-        day: index,
+        day: zreoDay(index),
         month: zreo(month),
         year: year,
         tag: false,
@@ -38,7 +38,7 @@ export default {
     for (let index = 0; index < currentFirst - 1; index++) {
       let obj = {
         type: 'pre',
-        day: daysInMonth[preMonth] - index,
+        day: zreoDay(daysInMonth[preMonth] - index),
         month: zreo(preMonth),
         year: month === 0 ? year - 1 : year,
         isbeforeNow: preMonth < new Date().getMonth() && year === new Date().getFullYear()
@@ -51,7 +51,7 @@ export default {
     for (let index = 1; index <= 42 - len; index++) {
       let obj = {
         type: 'next',
-        day: index,
+        day: zreoDay(index),
         month: zreo(month === 11 ? 0 : month + 1),
         year: month === 11 ? year + 1 : year
       }
@@ -60,6 +60,9 @@ export default {
     function zreo (month) {
       month++
       return month < 10 ? `0${month}` : month
+    }
+    function zreoDay (day) {
+      return day < 10 ? `0${day}` : day
     }
     return currentDaysList
   },
