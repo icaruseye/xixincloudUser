@@ -26,7 +26,7 @@
         <div class="content">
           {{info.Description ? info.Description : '暂无简介'}}
         </div>
-        <router-link :to="`/servant/registration/${info.ViewID}`" class="registration_btn"><i class="iconfont icon-hao"></i> 挂号</router-link>
+        <!-- <router-link :to="`/servant/registration/${info.ViewID}`" class="registration_btn"><i class="iconfont icon-hao"></i> 挂号</router-link> -->
       </div>
     </div>
     <!-- <div class="servant-unfold_bar">
@@ -141,7 +141,7 @@ export default {
     font-size: 12px;
     color: #666;
     padding: 10px 0;
-    border-bottom: 1px solid RGBA(62, 204, 204, .2);
+    // border-top: 1px solid RGBA(62, 204, 204, .2);
   }
   .registration_btn {
     display: block;
