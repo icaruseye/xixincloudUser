@@ -58,11 +58,21 @@ export default [
     }]
   },
   {
-    path: '/servant/service/:id',
-    component: _import('/servant/detail/service'),
+    path: '/servant/:id',
+    component: _import('/servant/index'),
     meta: {
       title: '服务者详情'
-    }
+    },
+    children: [{
+      path: 'service',
+      component: _import('/servant/index/service')
+    }, {
+      path: 'course',
+      component: _import('/servant/index/course')
+    }, {
+      path: 'registration',
+      component: _import('/servant/index/registration')
+    }]
   },
   {
     path: '/servant/chat/:id',

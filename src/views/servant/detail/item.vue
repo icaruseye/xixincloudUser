@@ -151,7 +151,7 @@ export default {
 <style lang="less" scoped>
 .weui-list-panel {
   background: #fff;
-  .weui-pane_subtitle {
+  .weui-panel_subtitle {
     position: relative;
     padding: 16px 15px 4px 15px;
     font-size: 15px;

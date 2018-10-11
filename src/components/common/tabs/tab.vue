@@ -161,7 +161,7 @@ export default {
   background-color: #fff;
   height: 49px;
   position: relative;
-  box-shadow: 0 1px 6px RGBA(153, 153, 153, 0.5);
+  // box-shadow: 0 1px 6px RGBA(153, 153, 153, 0.5);
 }
 
 .xixin-tab .xixin-tab-item {

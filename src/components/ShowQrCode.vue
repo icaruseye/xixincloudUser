@@ -10,12 +10,13 @@
       <p class="desc">{{info.Description | stringSub(85)}}</p>
     </div>
     <div class="qr_code_box" v-if="info.ViewID">
-      <img :src="API_PATH+'/QRCode/'+info.ViewID" alt="">
+      <img :src="`${API_PATH}/QRCode/${info.ViewID}?userId=${userAccount.ViewID}`" alt="">
     </div>
     <p class="hint_desc">扫一扫二维码，可加我为好友</p>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     info: {
@@ -32,7 +33,10 @@ export default {
   computed: {
     API_PATH () {
       return process.env.API_PATH
-    }
+    },
+    ...mapGetters([
+      'userAccount'
+    ])
   }
 }
 </script>

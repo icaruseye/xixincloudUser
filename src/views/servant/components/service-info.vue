@@ -20,7 +20,7 @@
       </div>
     </div>
     <!-- 个人简介 -->
-    <div class="servant-panel_intro panel-border">
+    <div class="servant-panel_intro">
       <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
       <div style="padding: 0 12px;">
         <div class="content">
@@ -120,7 +120,6 @@ export default {
   display: flex;
   background: #fff;
   font-size: 12px;
-  border-bottom: 1px solid RGBA(62, 204, 204, .2);
   .item {
     margin: 0 10px;
     padding: 1px 8px;

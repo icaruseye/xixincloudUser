@@ -3,7 +3,7 @@
     <!-- <img class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt=""> -->
     <!-- 服务列表 -->
     <div class="weui-list-panel mgt10">
-      <div class="weui-pane_subtitle">服务列表</div>
+      <div class="weui-panel_subtitle">服务列表</div>
       <div class="weui-list_container">
         <template v-for="(item, index) in PackageItemDetailsList">
           <div class="weui-list_item" :key="index" @click="toItem(Package.ID, item.ID)">
@@ -118,7 +118,7 @@ export default {
 <style lang="less" scoped>
 .weui-list-panel {
   background: #fff;
-  .weui-pane_subtitle {
+  .weui-panel_subtitle {
     position: relative;
     padding: 16px 15px 4px 15px;
     font-size: 15px;

@@ -74,7 +74,7 @@ export default {
       this.$store.commit('setMessageTabIndex', id)
     },
     goServant (viewID, ID) {
-      this.$router.push(`/servant/service/${viewID}`)
+      this.$router.push(`/servant/${viewID}/service`)
     },
     async getData () {
       const res = await this.$http.get('/ContactFriends', { Page: 1, Size: 10 })
