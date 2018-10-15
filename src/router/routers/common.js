@@ -68,5 +68,33 @@ export default [
       share: true,
       noneedLogin: true
     }
+  },
+  {
+    path: '/organ/registration',
+    component: _import('/registration'),
+    meta: {
+      title: '预约挂号'
+    }
+  },
+  {
+    path: '/organ/registration/servant/:id',
+    component: _import('/registration/servant'),
+    meta: {
+      title: '预约挂号'
+    }
+  },
+  {
+    path: '/organ/registration/order',
+    component: _import('/registration/order'),
+    meta: {
+      title: '预约挂号'
+    }
+  },
+  {
+    path: '/organ/registration/pay',
+    component: _import('/registration/pay'),
+    meta: {
+      title: '支付'
+    }
   }
 ]
