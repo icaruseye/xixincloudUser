@@ -43,6 +43,7 @@ export default {
   methods: {
     // 获取服务人员信息
     async getServantInfo () {
+      this.$vux.loading.show()
       const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.servantInfos = Object.assign(res.data.Data.ServantAccount, {AverageScore: res.data.Data.AverageScore, ServiceTimes: res.data.Data.ServiceTimes}, {ViewName: res.data.Data.ViewName})
@@ -50,6 +51,7 @@ export default {
       } else {
         this.$vux.toast.text('出错了')
       }
+      this.$vux.loading.hide()
     },
     gochat () {
       this.$router.push(`/servant/chat/${this.$route.params.id}`)

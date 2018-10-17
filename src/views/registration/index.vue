@@ -1,50 +1,69 @@
 <template>
   <div class="wrapper">
-    <xxCalendar></xxCalendar>
-    <div class="registration_wrap">
-      <div class="title">
-        <div class="text am">上午</div>
-        <div class="time">08:00 ~ 12:00</div>
-      </div>
-      <div class="list">
-        <div class="item">
-          <img class="avatar" src="https://tvax1.sinaimg.cn/crop.0.0.473.473.180/78258c21ly8ft5x6jpwepj20d50d5wec.jpg" alt="">
-          <div class="content">
-            <div class="name">医生</div>
-          </div>
-          <router-link to="/" class="btn">挂号</router-link>
+    <xx-calendar
+      :loading="calendarLoading"
+      @onClick="calendarItemClick">
+    </xx-calendar>
+    <template v-for="(item, index) in list">
+      <div class="registration_wrap" :key="index">
+        <div class="title">
+          <div class="text am" :class="`${index%2 === 0 ? 'am' : 'pm'}`">{{item.Name}}</div>
+          <div class="time">{{item.StartTime | dateFormat('HH:mm')}} - {{item.EndTime | dateFormat('HH:mm')}}</div>
+        </div>
+        <div class="list" v-if="item.ScheduleMedicls.length > 0">
+          <template v-for="(subItem, subIndex) in item.ScheduleMedicls">
+            <div class="item" :key="subIndex">
+              <img class="avatar" :src="subItem.Avatar | transformImgUrl" alt="">
+              <div class="content">
+                <div class="name">{{subItem.Name}}</div>
+                <div class="tags"><span v-for="(tagItem, tagIndex) in subItem.Tags" :key="tagIndex">{{tagItem}}</span></div>
+              </div>
+              <router-link :to="`/organ/registration/servant/${subItem.ViewId}`" class="btn">挂号</router-link>
+            </div>
+          </template>
+        </div>
+        <div v-else class="empty-box" style="background:#fff;">
+          暂无挂号信息
         </div>
       </div>
-    </div>
-    <div class="registration_wrap">
-      <div class="title">
-        <div class="text pm">下午</div>
-        <div class="time">08:00 ~ 12:00</div>
-      </div>
-      <div class="list">
-        <div class="item">
-          <img class="avatar" src="https://tvax1.sinaimg.cn/crop.0.0.473.473.180/78258c21ly8ft5x6jpwepj20d50d5wec.jpg" alt="">
-          <div class="content">
-            <div class="name">医生</div>
-          </div>
-          <router-link to="/" class="btn">挂号</router-link>
-        </div>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
+import { dateFormat } from 'vux'
 export default {
+  filters: {
+    dateFormat (val, format = 'YYYY-MM-DD HH:mm:ss') {
+      return dateFormat(new Date(val), format)
+    }
+  },
   data () {
     return {
+      calendarLoading: false,
+      list: []
     }
   },
   created () {
   },
   mounted () {
+    this.getScheduleDetail(dateFormat(new Date(), 'YYYY-MM-DD'))
   },
   methods: {
+    // 选择某一天
+    async calendarItemClick (dateTime) {
+      this.calendarLoading = true
+      await this.getScheduleDetail(dateTime)
+      this.calendarLoading = false
+    },
+    async getScheduleDetail (dateTime) {
+      this.$vux.loading.show()
+      const res = await this.$http.get(`/Schedule/doctor-schedule?dateTime=${dateTime}`)
+      if (res.data.Code === 100000) {
+        this.list = res.data.Data
+      }
+      this.$vux.loading.hide()
+    }
   }
 }
 </script>
@@ -81,6 +100,7 @@ export default {
       padding: 30px 10px 20px 10px;
       display: flex;
       align-items: center;
+      border-bottom: 1px solid RGBA(0, 180, 171, .1);
       .avatar {
         margin-right: 10px;
         width: 60px;
@@ -95,11 +115,25 @@ export default {
         font-size: 18px;
         color: #333;
       }
+      .tags {
+        display: flex;
+        span {
+          margin-right: 5px;
+          padding: 0 5px;
+          height: 13px;
+          line-height: 15px;
+          display: block;
+          border-radius: 10px;
+          font-size: 10px;
+          border: 1px solid #3ecccc;
+          color: #3ecccc;
+        }
+      }
       .btn {
         background: #F8A519;
         color: #fff;
         font-size: 15px;
-        padding: 0 5px;
+        padding: 0 10px;
         border-radius: 2px;
       }
     }

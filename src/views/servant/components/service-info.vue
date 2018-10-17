@@ -1,32 +1,34 @@
 <template>
-  <div v-if="info !== null">
-    <!-- 基本信息 -->
-    <div class="servant-panel_info">
-      <img class="avatar" :src="info.Avatar | transformImgUrl">
-      <span class="name">{{info.ViewName}}</span>
-      <img class="qrcode" src="@/assets/images/code.png" @click="showQrcode">
-    </div>
-    <!-- 服务评分 -->
-    <div class="servant-panel_data panel-border">
-      <!-- <div class="item">
-        <div><span class="color-ye">24</span>年</div>
-        <div>从业年限</div>
-      </div> -->
-      <div class="item">
-        <div><span class="color-ye">{{info.ServiceTimes}}</span>次 服务次数</div>
+  <div class="wrap">
+    <div v-show="info.Avatar">
+      <!-- 基本信息 -->
+      <div class="servant-panel_info">
+        <img class="avatar" :src="info.Avatar | transformImgUrl">
+        <span class="name">{{info.ViewName}}</span>
+        <img class="qrcode" src="@/assets/images/code.png" @click="showQrcode">
       </div>
-      <div class="item">
-        <div><span class="color-ye">{{info.AverageScore}}</span>分 服务评分</div>
-      </div>
-    </div>
-    <!-- 个人简介 -->
-    <div class="servant-panel_intro">
-      <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
-      <div style="padding: 0 12px;">
-        <div class="content">
-          {{info.Description ? info.Description : '暂无简介'}}
+      <!-- 服务评分 -->
+      <div class="servant-panel_data panel-border">
+        <!-- <div class="item">
+          <div><span class="color-ye">24</span>年</div>
+          <div>从业年限</div>
+        </div> -->
+        <div class="item">
+          <div><span class="color-ye">{{info.ServiceTimes}}</span>次 服务次数</div>
         </div>
-        <!-- <router-link :to="`/servant/registration/${info.ViewID}`" class="registration_btn"><i class="iconfont icon-hao"></i> 挂号</router-link> -->
+        <div class="item">
+          <div><span class="color-ye">{{info.AverageScore}}</span>分 服务评分</div>
+        </div>
+      </div>
+      <!-- 个人简介 -->
+      <div class="servant-panel_intro">
+        <div class="servant-panel_title"><i class="icon icon-1"></i>个人简介</div>
+        <div style="padding: 0 12px;">
+          <div class="content">
+            {{info.Description ? info.Description : '暂无简介'}}
+          </div>
+          <!-- <router-link :to="`/servant/registration/${info.ViewID}`" class="registration_btn"><i class="iconfont icon-hao"></i> 挂号</router-link> -->
+        </div>
       </div>
     </div>
     <!-- <div class="servant-unfold_bar">
@@ -79,6 +81,10 @@ export default {
 
 
 <style lang="less" scoped>
+.wrap {
+  min-height: 210px;
+  background: #fff;
+}
 .servant-panel_title {
   padding: 0 10px;
   font-weight: bold;

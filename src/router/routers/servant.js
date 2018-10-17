@@ -58,6 +58,10 @@ export default [
     }]
   },
   {
+    path: '/servant/service/:id',
+    redirect: '/servant/:id/service'
+  },
+  {
     path: '/servant/:id',
     component: _import('/servant/index'),
     meta: {

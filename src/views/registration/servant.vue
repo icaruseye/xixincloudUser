@@ -1,34 +1,70 @@
 <template>
   <div class="wrapper">
     <div class="servant_info">
-      <img class="avatar" src="https://tvax1.sinaimg.cn/crop.0.0.473.473.180/78258c21ly8ft5x6jpwepj20d50d5wec.jpg" alt="">
+      <img class="avatar" :src="servantInfos.Avatar | transformImgUrl" alt="">
       <div class="content">
-        <div class="name">123</div>
+        <div class="name">{{servantInfos.Name}}</div>
       </div>
     </div>
-    <xxCalendar></xxCalendar>
-    <div class="servant_list">
-      <div class="item">
-        <div class="text">上午</div>
-        <div class="time">(08：00~12：00)</div>
-        <div class="price">99元</div>
-        <router-link to="/" class="btn">挂号</router-link>
-      </div>
+    <xx-calendar
+      :loading="calendarLoading"
+      @onClick="calendarItemClick">
+    </xx-calendar>
+    <div class="servant_list" v-if="list.length > 0">
+      <template v-for="(item, index) in list">
+        <div class="item" :key="index">
+          <div class="text"></div>
+          <div class="time">({{item.StartTime | dateFormat('HH:mm')}} - {{item.EndTime | dateFormat('HH:mm')}})</div>
+          <div class="price">99元</div>
+          <router-link :to="`/organ/registration/order/${ScheduleID}`" class="btn">挂号</router-link>
+        </div>
+      </template>
+    </div>
+    <div v-else class="empty-box" style="background:#fff;margin-top:10px">
+      暂无挂号
     </div>
   </div>
 </template>
 
 <script>
+import { dateFormat } from 'vux'
 export default {
+  filters: {
+    dateFormat (val, format = 'YYYY-MM-DD HH:mm:ss') {
+      return dateFormat(new Date(val), format)
+    }
+  },
   data () {
     return {
+      calendarLoading: false,
+      servantInfos: {},
+      list: []
     }
   },
   created () {
   },
+  computed: {
+    viewId () {
+      return this.$route.params.id
+    }
+  },
   mounted () {
+    this.getServantSchedule(dateFormat(new Date(), 'YYYY-MM-DD'))
   },
   methods: {
+    async getServantSchedule (dateTime) {
+      const res = await this.$http.get(`/Schedule/bespoke-registration?viewId=${this.viewId}&dateTime=${dateTime}`)
+      if (res.data.Code === 100000) {
+        this.servantInfos = res.data.Data
+        this.list = res.data.Data.RegistrationSchedules
+      }
+    },
+    // 选择某一天
+    async calendarItemClick (dateTime) {
+      this.calendarLoading = true
+      await this.getServantSchedule(dateTime)
+      this.calendarLoading = false
+    }
   }
 }
 </script>
@@ -56,13 +92,14 @@ export default {
   }
 }
 .servant_list {
-  border-top: 1px solid RGBA(0, 180, 171, .2);
+  border-top: 1px solid RGBA(0, 180, 171, .1);
+  background: #fff;
   .item {
     display: flex;
     background: #fff;
     align-items: center;
     padding: 20px 10px;
-    border-bottom: 1px solid RGBA(0, 180, 171, .2);
+    border-bottom: 1px solid RGBA(0, 180, 171, .1);
     &:last-child {
       border: 0;
     }

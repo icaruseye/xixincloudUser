@@ -46,17 +46,18 @@ router.beforeEach((to, from, next) => {
   }
 
   // 微信授权登录
-  // if (!userAccount.ID && window.location.pathname !== '/wxLogin') {
-  //   sessionStorage.setItem('inviteParams', JSON.stringify(to.query))
-  //   http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
-  //     if (res.data.Code === 100000) {
-  //       sessionStorage.setItem('ShopInfo', JSON.stringify(res.data.Data))
-  //       sessionStorage.setItem('to_path', to.fullPath)
-  //       window.location.href = res.data.Data.LoginUrl
-  //     }
-  //   })
-  //   return false
-  // }
+  if (!userAccount.ID && window.location.pathname !== '/wxLogin') {
+    sessionStorage.setItem('inviteParams', JSON.stringify(to.query))
+    http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
+      if (res.data.Code === 100000) {
+        sessionStorage.setItem('ShopInfo', JSON.stringify(res.data.Data))
+        sessionStorage.setItem('to_path', to.fullPath)
+        window.location.href = res.data.Data.LoginUrl
+        console.log(res.data.Data.LoginUrl)
+      }
+    })
+    return false
+  }
 
   // 轮询新消息
   if (to.meta.isNeedGetNews) {
