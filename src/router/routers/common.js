@@ -84,7 +84,7 @@ export default [
     }
   },
   {
-    path: '/organ/registration/order',
+    path: '/organ/registration/order/:id',
     component: _import('/registration/order'),
     meta: {
       title: '预约挂号'

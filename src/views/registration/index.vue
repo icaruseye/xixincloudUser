@@ -18,7 +18,7 @@
                 <div class="name">{{subItem.Name}}</div>
                 <div class="tags"><span v-for="(tagItem, tagIndex) in subItem.Tags" :key="tagIndex">{{tagItem}}</span></div>
               </div>
-              <router-link :to="`/organ/registration/servant/${subItem.ViewId}`" class="btn">挂号</router-link>
+              <router-link :to="`/organ/registration/servant/${subItem.ViewId}?date=${currentDate}`" class="btn">挂号</router-link>
             </div>
           </template>
         </div>
@@ -41,6 +41,7 @@ export default {
   data () {
     return {
       calendarLoading: false,
+      currentDate: null,
       list: []
     }
   },
@@ -57,6 +58,7 @@ export default {
       this.calendarLoading = false
     },
     async getScheduleDetail (dateTime) {
+      this.currentDate = dateTime
       this.$vux.loading.show()
       const res = await this.$http.get(`/Schedule/doctor-schedule?dateTime=${dateTime}`)
       if (res.data.Code === 100000) {

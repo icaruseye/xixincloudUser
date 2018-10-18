@@ -56,15 +56,19 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    currentDate: {
+      type: Date,
+      default: () => new Date()
     }
   },
   data () {
     return {
       calendarHeader: ['一', '二', '三', '四', '五', '六', '日'],
-      selectedYear: new Date().getFullYear(),
-      selectedMonth: new Date().getMonth(),
-      selectedDate: new Date().getDate(),
-      selectDay: format(new Date(), 'YYYY-MM-DD'), // 当前选中日期
+      selectedYear: new Date(this.currentDate).getFullYear(),
+      selectedMonth: new Date(this.currentDate).getMonth(),
+      selectedDate: new Date(this.currentDate).getDate(),
+      selectDay: format(new Date(this.currentDate), 'YYYY-MM-DD'), // 当前选中日期
       calendarDays: [], // 当月日期集合
       today: format(new Date(), 'YYYY-MM-DD'),
       isWeekType: true,
@@ -315,7 +319,7 @@ export default {
   }
   .calendar__today {
     position: absolute;
-    left: 10px;
+    left: 30px;
     font-size: 15px;
   }
 }

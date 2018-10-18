@@ -102,6 +102,21 @@
           </div>
         </template>
       </div>
+      <!-- 挂号列表 -->
+      <div class="weui-panel" v-if="UserOrderDetailsList.RegistrationList.length > 0">
+        <div class="weui-panel_subtitle text-overflow-1">挂号</div>
+        <div class="weui-list_container schedule-list">
+          <template v-for="(item, index) in UserOrderDetailsList.RegistrationList">
+              <router-link :to="`/organ/registration/order/${item.ScheduleID}?read=1`" :key="index">
+                <div class="item">
+                  <div class="text">{{item.DoctorName}}</div>
+                  <div class="time">({{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}})</div>
+                  <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div>
+                </div>
+              </router-link>
+          </template>
+        </div>
+      </div>
       <!-- 空状态 -->
       <xxOccupiedBox v-if="flag1">
         <p>暂无可预约服务</p>
@@ -207,7 +222,8 @@ export default {
       checkerIndex: this.$store.getters.serviceTabIndex2, // 0、全部；1、待确认；2、待服务；3、待评价
       UserOrderDetailsList: {
         ItemsByDoc: [],
-        PackByDoc: []
+        PackByDoc: [],
+        RegistrationList: []
       },
       flag1: false,
       flag2: false,
@@ -261,7 +277,7 @@ export default {
       switch (index) {
         case 0:
           // 预约列表
-          this.getUserOrderDetailsList()
+          this.getBuyAll()
           break
         case 1:
           // 服务中列表
@@ -317,6 +333,14 @@ export default {
       })
       this.flag2 = this.dataList.length === 0
     },
+    async getBuyAll () {
+      console.log(123)
+      await this.getUserOrderDetailsList()
+      await this.getRegistrationList()
+      if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0 && this.UserOrderDetailsList.RegistrationList.length === 0) {
+        this.flag1 = true
+      }
+    },
     // 获取图文待确认
     async getWaitForConfirm () {
       const res = await this.$http.get('/ConsultList/WaitForConfirm')
@@ -342,14 +366,21 @@ export default {
       const res = await this.$http.get('/MissionList/WaitForReview')
       return res.data.Data
     },
+    // 挂号列表
+    async getRegistrationList () {
+      const res = await this.$http.get('/Registration/List')
+      if (res.data.Code === 100000 && res.data.Data.length > 0) {
+        this.UserOrderDetailsList.RegistrationList = res.data.Data
+      } else {
+        this.UserOrderDetailsList.RegistrationList = []
+      }
+    },
     /** 预约列表 */
     async getUserOrderDetailsList () {
       const res = await this.$http.get('/UserOrderDetailsList')
       if (res.data.Code === 100000) {
-        this.UserOrderDetailsList = res.data.Data
-        if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0) {
-          this.flag1 = true
-        }
+        this.UserOrderDetailsList.ItemsByDoc = res.data.Data.ItemsByDoc
+        this.UserOrderDetailsList.PackByDoc = res.data.Data.PackByDoc
         this.$nextTick(() => {
           const waitPaySuccess = document.querySelectorAll('.waitPaySuccess')
           if (waitPaySuccess.length > 0) {
@@ -613,5 +644,46 @@ export default {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.schedule-list {
+  padding: 15px;
+  .title {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .item {
+    display: flex;
+    background: #fff;
+    align-items: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid RGBA(0, 180, 171, .1);
+    &:last-child {
+      border: 0;
+    }
+    .text {
+      font-size: 15px;
+      color: #666;
+    }
+    .time {
+      margin: 0 5px;
+      flex: 1;
+      font-size: 12px;
+      color: #999
+    }
+    .price {
+      font-size: 15px;
+      color: #FF5F66;
+    }
+    .btn {
+      margin-left: 15px;
+      background: #F8A519;
+      color: #fff;
+      padding: 0 10px;
+      border-radius: 2px;
+    }
+  }
 }
 </style>

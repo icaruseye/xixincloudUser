@@ -7,6 +7,7 @@
       </div>
     </div>
     <xx-calendar
+      :currentDate="currentDate"
       :loading="calendarLoading"
       @onClick="calendarItemClick">
     </xx-calendar>
@@ -15,8 +16,8 @@
         <div class="item" :key="index">
           <div class="text"></div>
           <div class="time">({{item.StartTime | dateFormat('HH:mm')}} - {{item.EndTime | dateFormat('HH:mm')}})</div>
-          <div class="price">99元</div>
-          <router-link :to="`/organ/registration/order/${ScheduleID}`" class="btn">挂号</router-link>
+          <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div>
+          <router-link :to="`/organ/registration/order/${item.ScheduleID}`" class="btn">挂号</router-link>
         </div>
       </template>
     </div>
@@ -46,14 +47,19 @@ export default {
   computed: {
     viewId () {
       return this.$route.params.id
+    },
+    currentDate () {
+      return new Date(this.$route.query.date)
     }
   },
   mounted () {
-    this.getServantSchedule(dateFormat(new Date(), 'YYYY-MM-DD'))
+    this.getServantSchedule(dateFormat(this.currentDate, 'YYYY-MM-DD'))
   },
   methods: {
     async getServantSchedule (dateTime) {
+      this.$vux.loading.show()
       const res = await this.$http.get(`/Schedule/bespoke-registration?viewId=${this.viewId}&dateTime=${dateTime}`)
+      this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.servantInfos = res.data.Data
         this.list = res.data.Data.RegistrationSchedules
@@ -61,6 +67,7 @@ export default {
     },
     // 选择某一天
     async calendarItemClick (dateTime) {
+      this.currentDate = dateTime
       this.calendarLoading = true
       await this.getServantSchedule(dateTime)
       this.calendarLoading = false
