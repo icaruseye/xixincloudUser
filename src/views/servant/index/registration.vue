@@ -22,7 +22,8 @@
           <div class="text"></div>
           <div class="time">({{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}})</div>
           <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div>
-          <router-link :to="`/organ/registration/order/${item.ScheduleID}`" class="btn">挂号</router-link>
+          <router-link v-if="item.ReserveNum > 0" :to="`/organ/registration/order/${item.ScheduleID}`" class="btn">挂号</router-link>
+          <button v-else disabled="disabled" class="btn disabled">已满</button>
         </div>
       </template>
     </div>
@@ -71,7 +72,7 @@ export default {
       this.calendarLoading = true
       const res = await this.$http.get(`/Schedule/bespoke-registration?viewId=${this.viewId}&dateTime=${dateTime}`)
       this.calendarLoading = false
-      if (res.data.Code === 100000) {
+      if (res.data.Code === 100000 && res.data.Data.RegistrationSchedules) {
         this.servantInfos = res.data.Data
         this.list = res.data.Data.RegistrationSchedules
       }
@@ -153,6 +154,10 @@ export default {
       color: #fff;
       padding: 0 10px;
       border-radius: 2px;
+      border: 0;
+      &:disabled {
+        background: #ccc;
+      }
     }
   }
 }

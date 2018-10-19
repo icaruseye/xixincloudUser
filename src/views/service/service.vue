@@ -107,11 +107,16 @@
         <div class="weui-panel_subtitle text-overflow-1">挂号</div>
         <div class="weui-list_container schedule-list">
           <template v-for="(item, index) in UserOrderDetailsList.RegistrationList">
-              <router-link :to="`/organ/registration/order/${item.ScheduleID}?read=1`" :key="index">
+              <router-link :to="`/organ/registration/order/${item.ScheduleID}?read=1`" :key="index" class="list-item">
                 <div class="item">
-                  <div class="text">{{item.DoctorName}}</div>
-                  <div class="time">({{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}})</div>
-                  <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div>
+                  <div class="icon">
+                    <img src="../../assets/images/icon_picc_gh.png" alt="">
+                  </div>
+                  <div style="flex:1">
+                    <div class="text">{{item.DoctorName}}</div>
+                    <div class="time">预约时间：{{item.StartTime | timeFormat('YYYY-MM-DD')}} ({{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}})</div>
+                  </div>
+                  <!-- <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div> -->
                 </div>
               </router-link>
           </template>
@@ -133,7 +138,7 @@
           <li :class="checkerIndex === 3 ? 'active' : ''" @click="changeChecker(3)">待评价</li>
         </ul>
       </div>
-      <div class="weui-panel" style="margin-top:0">
+      <div class="weui-panel" style="margin-top:0" v-if="!flag2">
         <div class="weui-list_container">
           <template v-for="(item, index) in dataList">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
@@ -165,7 +170,7 @@
     </div>
     <!-- 已完成 -->
     <div class="tabbox" v-show="tabIndex === 2">
-      <div class="weui-panel">
+      <div class="weui-panel" v-if="!flag3">
         <div class="weui-list_container">
           <template v-for="(item, index) in dataListDone">
             <div class="weui-list_item" :key="index" @click="missionDetail(item.ID, item.Type, item.UseType)">
@@ -647,29 +652,35 @@ export default {
 }
 
 .schedule-list {
-  padding: 15px;
+  padding: 10px 0;
   .title {
     text-align: center;
     font-size: 14px;
     color: #666;
     margin-bottom: 10px;
   }
+  .list-item {
+    display: block;
+    border-bottom: 1px solid RGBA(0, 180, 171, .1);
+    &:last-child {
+      border: 0;
+    }
+  }
   .item {
     display: flex;
     background: #fff;
     align-items: center;
-    padding: 20px 10px;
-    border-bottom: 1px solid RGBA(0, 180, 171, .1);
-    &:last-child {
-      border: 0;
+    padding: 10px 0;
+    .icon {
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
     }
     .text {
       font-size: 15px;
       color: #666;
     }
     .time {
-      margin: 0 5px;
-      flex: 1;
       font-size: 12px;
       color: #999
     }
