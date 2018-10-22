@@ -17,7 +17,7 @@
           <div class="text"></div>
           <div class="time">({{item.StartTime | dateFormat('HH:mm')}} - {{item.EndTime | dateFormat('HH:mm')}})</div>
           <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div>
-          <router-link v-if="item.ReserveNum > 0" :to="`/organ/registration/order/${item.ScheduleID}`" class="btn">挂号</router-link>
+          <router-link v-if="item.ReserveNum - item.AlreadyReserveNum > 0" :to="`/organ/registration/order/${item.ScheduleID}`" class="btn">挂号</router-link>
           <button v-else disabled="disabled" class="btn disabled">已满</button>
         </div>
       </template>
