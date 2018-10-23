@@ -44,7 +44,7 @@ export default {
         this.$vux.loading.hide()
         if (result.data.Code === 100000) {
           this.detail = result.data.Data
-          this.  .Message = this.textFormat(this.detail.Message)
+          this.detail.Message = this.textFormat(this.detail.Message)
         }
       })
     },
