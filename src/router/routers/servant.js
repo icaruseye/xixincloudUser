@@ -79,6 +79,20 @@ export default [
     }]
   },
   {
+    path: '/servant/course/:id',
+    component: _import('/servant/course/detail'),
+    meta: {
+      title: '课程详情'
+    }
+  },
+  {
+    path: '/servant/course/topic/:id',
+    component: _import('/servant/course/topic'),
+    meta: {
+      title: '练习'
+    }
+  },
+  {
     path: '/servant/chat/:id',
     component: _import('/servant/chat'),
     meta: {

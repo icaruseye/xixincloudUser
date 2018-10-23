@@ -11,7 +11,7 @@
       </div>
       <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px" style="border-bottom: 1px solid rgba(238, 238, 238, .3)">
         <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick" @click.native="to('service')">服务</xx-tab-item>
-        <!-- <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick" @click.native="to('course')">课程</xx-tab-item> -->
+        <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick" @click.native="to('course')">课程</xx-tab-item>
         <xx-tab-item :selected="tabIndex === 2" @on-item-click="tabItemClick" @click.native="to('registration')">预约挂号</xx-tab-item>
       </xx-tab>
       <router-view></router-view>
@@ -38,6 +38,7 @@ export default {
     }
   },
   mounted () {
+    this.setTabIndex()
     this.getServantInfo()
   },
   methods: {
@@ -64,6 +65,20 @@ export default {
     },
     tabItemClick (val) {
       this.tabIndex = val
+    },
+    setTabIndex () {
+      const val = this.$route.path.split('/').pop()
+      switch (val) {
+        case 'service':
+          this.tabIndex = 0
+          break
+        case 'course':
+          this.tabIndex = 1
+          break
+        default:
+          this.tabIndex = 0
+          break
+      }
     }
   }
 }

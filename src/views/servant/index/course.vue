@@ -29,7 +29,7 @@
     <div class="servant-panel" style="margin-top:10px;">
       <div class="servant-panel_subtitle">套餐课程</div>
       <div class="servant-panel_list">
-        <div class="item">
+        <div class="item" @click="to('/servant/course/1')">
           <div class="poster">
             <img src="https://via.placeholder.com/140x80" alt="">
             <span class="status">直播课</span>
@@ -70,6 +70,9 @@ export default {
   mounted () {
   },
   methods: {
+    to (url) {
+      this.$router.push(url)
+    }
   }
 }
 </script>
