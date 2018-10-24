@@ -1,6 +1,6 @@
 <template>
   <div class="has-tabbar">
-    <!-- <img v-if="showPay" class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt=""> -->
+    <img v-if="showPay" class="share-icon" @click="toShare" src="@/assets/images/share-icon.png" alt="">
     <div class="item-info mgt10" v-if="ItemTemplate.Attention">
       <div class="item-info-title">注意事项</div>
       <div class="content mgt10">{{ItemTemplate.Attention}}</div>
@@ -122,7 +122,8 @@ export default {
     },
     async getUserPreOrder (id) {
       // 生成预支付订单
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}&orderType=1`)
+      const inviteParams = JSON.parse(sessionStorage.getItem('inviteParams')) || {}
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.$route.params.id}&orderType=1&RefereeType=${inviteParams.refereeType}&RefereeViewID=${inviteParams.refereeViewID}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)

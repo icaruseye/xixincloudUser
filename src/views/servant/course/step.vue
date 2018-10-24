@@ -7,12 +7,9 @@
         <div class="step__line"></div>
         <div class="step_item_content">
           <div class="sub_item">
-            <div class="sub_item_title">1节 小儿生长发育
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-zhibo"></use>
-              </svg>
-            </div>
+            <div class="sub_item_title">1节 小儿生长发育</div>
             <div class="sub_item_time">30分钟</div>
+            <router-link to="/servant/course/topic/1">111</router-link>
             <i class="step__subcircle"></i>
             <div class="step__subline"></div>
           </div>

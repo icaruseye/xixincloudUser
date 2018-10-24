@@ -9,26 +9,18 @@
       <div class="topic_item">
         <div class="topic_title"><span>单选题</span> 31患者，男，25岁。患肺炎入院治疗。患者进入病区后，护士的初步护理工作不包括</div>
         <checker v-model="answer" type="radio" default-item-class="topic-checker-item" selected-item-class="topic-checker-item-selected" :radio-required="true">
-          <checker-item :value="1">
-            <i v-if="1 === answer" class="iconfont icon-gouSolid-copy"></i>
-            <i v-if="1 === correct" class="iconfont icon-cha"></i>
-            <i v-if="1 !== answer && 1 !== correct" class="iconfont icon-yuan"></i>
-            <span>A. 迎接新病人</span>
-          </checker-item>
-          <checker-item :value="2">
-            <i v-if="2 === answer" class="iconfont icon-gouSolid-copy"></i>
-            <i v-if="2 === correct" class="iconfont icon-cha"></i>
-            <i v-if="2 !== answer && 2 !== correct" class="iconfont icon-yuan"></i>
-            <span>A. 迎接新病人</span>
-          </checker-item>
-          <checker-item :value="3">
-            <i v-if="3 === answer" class="iconfont icon-gouSolid-copy"></i>
-            <i v-if="3 === correct" class="iconfont icon-cha"></i>
-            <i v-if="3 !== answer && 3 !== correct" class="iconfont icon-yuan"></i>
-            <span>A. 迎接新病人</span>
-          </checker-item>
+          <template v-for="val in [1,2,3]">
+            <checker-item :value="val" :key="val">
+              <i v-if="(val === answer && correct === '') || val === correct" class="iconfont icon-gouSolid-copy"></i>
+              <i v-else-if="answer !== correct && answer === val" class="iconfont icon-cha"></i>
+              <i v-else class="iconfont icon-yuan"></i>
+              <span>A. 迎接新病人{{val}}</span>
+            </checker-item>
+          </template>
         </checker>
       </div>
+      <!-- 多选题 -->
+      <!-- 填空题 -->
       <!-- 简单题 -->
       <div class="topic_item topic_item_jianda">
         <div class="topic_title"><span>简答题</span> 31患者，男，25岁。患肺炎入院治疗。患者进入病区后，护士的初步护理工作不包括</div>
@@ -40,8 +32,8 @@
       <!-- 答案解析 -->
       <div class="answer_wrap"></div>
     </div>
-    <!-- 底部统计栏  -->
-    <div class="topic_tools">
+    <!-- 底部统计栏 -->
+    <div class="topic_tools" @click="showCard = true">
       <div class="item">
         <i class="iconfont icon-dui"></i>
         <div style="color:#32C0F3">50</div>
@@ -58,24 +50,39 @@
         <span>/144</span>
       </div>
     </div>
+    <!-- 答题卡 -->
+    <div v-transfer-dom>
+      <popup
+        v-model="showCard"
+        :should-rerender-on-show="true">
+        <div>
+          <card></card>
+        </div>
+      </popup>
+    </div>
   </div>
 </template>
 
 <script>
-import { Checker, CheckerItem } from 'vux'
+import { Checker, CheckerItem, TransferDomDirective as TransferDom, Popup } from 'vux'
+import card from './card'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     Checker,
-    CheckerItem
+    CheckerItem,
+    Popup,
+    card
   },
   data () {
     return {
       tabIndex: 1,
-      answer: 1,
-      correct: 2
+      showCard: false,
+      answer: 2,
+      correct: ''
     }
-  },
-  created () {
   },
   mounted () {
   },
