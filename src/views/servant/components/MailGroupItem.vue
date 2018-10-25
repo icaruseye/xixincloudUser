@@ -7,20 +7,22 @@
     </div>
     <div class="right">
       <h3 class="title text-overflow-1">
-        {{msgType|nameFilter}}
+        {{msgType|xxSiteNoticeTypeTitleFilter}}
       </h3>
       <p class="desc text-overflow-1">
-        <template v-if="latestNews">
+        <template v-if="UnreadCount > 0">
+          {{Title}}
         </template>
         <template v-else>
-          当前还没有收到{{msgType|nameFilter}}
+          没有未读的{{msgType|xxSiteNoticeTypeTitleFilter}}
         </template>
       </p>
       <span class="time">
-        <template v-if="latestNews">
+        <template v-if="UnreadCount > 0">
+          {{CreateTime | timeFormat}}
         </template>
       </span>
-      <i class="mail_num_icon" v-if="count > 0">{{count}}</i>
+      <i class="mail_num_icon" v-if="UnreadCount > 0">{{UnreadCount}}</i>
     </div>
   </div>
 </template>
@@ -33,34 +35,27 @@ export default {
     }
   },
   filters: {
-    nameFilter (type = 1) {
-      switch (type) {
-        case 2:
-          return '订单消息'
-        case 4:
-          return '系统公告'
-        default:
-          return '系统消息'
-      }
-    }
   },
   data () {
     return {
-      count: 0,
-      latestNews: null
+      UnreadCount: 0,
+      Title: '',
+      CreateTime: ''
     }
   },
   created () {
     this.getLatestNews()
   },
   methods: {
-    getLatestNews () {
-      this.$http.get(`/SiteNotice/Count?type=${this.msgType}`).then(result => {
-        console.log(result)
-      })
-    },
     redirectToList () {
       this.$router.push(`/systemMail/${this.msgType}/list`)
+    },
+    getLatestNews () {
+      this.$http.get(`/SiteNotice/Count?type=${this.msgType}`).then(result => {
+        this.Title = result.data.Data.Title
+        this.UnreadCount = result.data.Data.UnreadCount
+        this.CreateTime = result.data.Data.CreateTime
+      })
     }
   }
 }
@@ -73,6 +68,22 @@ export default {
   flex-flow: nowrap;
   height: 70px;
   background-color: #fff;
+  &::after
+  {
+    position: absolute;
+    content: '';
+    display: block;
+    height: 1px;
+    bottom: 0;
+    left: 58px;
+    right: 0;
+    background-color: RGBA(0, 180, 171, .2);
+    transform: scaleY(.5)
+  }
+  &:last-child:after
+  {
+    display: none;
+  }
   .left
   {
     display: flex;
@@ -137,20 +148,5 @@ export default {
     }
   }
 }
-.main_item_container::after
-{
-  position: absolute;
-  content: '';
-  display: block;
-  height: 1px;
-  bottom: 0;
-  left: 12px;
-  right: 12px;
-  background-color: RGBA(0, 180, 171, .2);
-  transform: scaleY(.5)
-}
-.main_item_container:last-child:after
-{
-  display: none;
-}
 </style>
+

@@ -6,9 +6,9 @@
         @click-left="onNavbarClickLeft">
       </xx-nav-bar>
       <div style="margin-top:5px;">
-        <mail-group-item :count="1" :msgType="1"></mail-group-item>
-        <mail-group-item :count="1" :msgType="2"></mail-group-item>
-        <mail-group-item :count="1" :msgType="4"></mail-group-item>
+        <mail-group-item :msgType="1"></mail-group-item>
+        <mail-group-item :msgType="2"></mail-group-item>
+        <mail-group-item :msgType="4"></mail-group-item>
       </div>
       <!-- 消息列表 -->
       <div class="tabbox">
