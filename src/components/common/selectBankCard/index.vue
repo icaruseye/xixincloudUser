@@ -101,7 +101,7 @@ export default {
             icon: item.BankAbbreviation
           })
         })
-        this.$emit('change', this.withdrawTypeList[0])
+        this.$emit('change', this.withdrawTypeList[0] || null)
       }
     },
     /**

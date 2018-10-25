@@ -14,8 +14,7 @@ export default {
   },
   data () {
     return {
-      Package: {},
-      PackageItemDetailsList: []
+      Package: {}
     }
   },
   created () {
@@ -25,11 +24,8 @@ export default {
     async initData () {
       const res = await this.$http.get(`/PackageItem?packageID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        const info = JSON.parse(sessionStorage.getItem('myServantInfo'))
         this.Package = res.data.Data.Package
         this.Package.ViewID = res.data.Data.Package.ServantViewID
-        this.Package.Avatar = info.Avatar
-        this.Package.NickName = info.NickName
       } else {
         this.$vux.toast.text('出错了')
       }

@@ -53,10 +53,17 @@ router.beforeEach((to, from, next) => {
         sessionStorage.setItem('ShopInfo', JSON.stringify(res.data.Data))
         sessionStorage.setItem('to_path', to.fullPath)
         window.location.href = res.data.Data.LoginUrl
-        console.log(res.data.Data.LoginUrl)
       }
     })
     return false
+  }
+
+  // 获取功能开关
+  if (to.meta.ModuleSwitch) {
+    http.get('/ModuleSwitch').then(res => {
+      router.app.$store.commit('SET_MODULESWITCH', res.data.Data)
+      console.log(res)
+    })
   }
 
   // 轮询新消息

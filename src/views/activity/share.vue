@@ -28,7 +28,7 @@
             <!-- <div class="tag">实习医师</div> -->
           </div>
           <div class="qrcode">
-            <img :src="API_PATH +'/Recommend/QRCode?userId='+ userID +'&packageId='+ packageID" alt="">
+            <img :src="`${API_PATH}/QrCodeWithPackageToUser?userID=${userID}&packageID=${packageID}`" alt="">
           </div>
         </div>
         <div class="tips-panel">

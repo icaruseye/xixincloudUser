@@ -11,8 +11,8 @@
       </div>
       <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px" style="border-bottom: 1px solid rgba(238, 238, 238, .3)">
         <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick" @click.native="to('service')">服务</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick" @click.native="to('course')">课程</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 2" @on-item-click="tabItemClick" @click.native="to('registration')">预约挂号</xx-tab-item>
+        <!-- <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick" @click.native="to('course')">课程</xx-tab-item> -->
+        <xx-tab-item v-if="moduleSwitch.RegisterSwitch" :selected="tabIndex === 2" @on-item-click="tabItemClick" @click.native="to('registration')">预约挂号</xx-tab-item>
       </xx-tab>
       <router-view></router-view>
       <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">购买咨询</button>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import servantInfo from '../components/service-info'
 export default {
   components: {
@@ -35,7 +36,10 @@ export default {
   computed: {
     isShare () {
       return this.$route.query.isShare === '1'
-    }
+    },
+    ...mapGetters([
+      'moduleSwitch'
+    ])
   },
   mounted () {
     this.setTabIndex()

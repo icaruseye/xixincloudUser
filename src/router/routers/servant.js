@@ -69,7 +69,11 @@ export default [
     },
     children: [{
       path: 'service',
-      component: _import('/servant/index/service')
+      component: _import('/servant/index/service'),
+      meta: {
+        title: '服务详情',
+        ModuleSwitch: true
+      }
     }, {
       path: 'course',
       component: _import('/servant/index/course')

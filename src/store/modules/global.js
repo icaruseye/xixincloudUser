@@ -2,13 +2,15 @@ import api from '@/api'
 
 const SET_ROUTER_LOADING = 'SET_ROUTER_LOADING'
 const HAVE_NEW_MSG = 'HAVE_NEW_MSG'
+const SET_MODULESWITCH = 'SET_MODULESWITCH'
 
 const state = {
   serviceTabIndex: 0, // 服务页Tab
   serviceTabIndex2: 0, // 服务中状态栏Tab
   routerLoading: false,
   isHaveNewMsg: false,
-  unreadNum: 0
+  unreadNum: 0,
+  moduleSwitch: {}
 }
 
 const mutations = {
@@ -24,6 +26,9 @@ const mutations = {
   [HAVE_NEW_MSG] (state, res) {
     state.unreadNum = res ? state.unreadNum + 1 : 0
     state.isHaveNewMsg = res
+  },
+  [SET_MODULESWITCH] (state, res) {
+    state.moduleSwitch = res
   }
 }
 
@@ -40,7 +45,8 @@ const getters = {
   serviceTabIndex2: state => state.serviceTabIndex2,
   routerLoading: state => state.routerLoading,
   isHaveNewMsg: state => state.isHaveNewMsg,
-  unreadNum: state => state.unreadNum
+  unreadNum: state => state.unreadNum,
+  moduleSwitch: state => state.moduleSwitch
 }
 
 export default {

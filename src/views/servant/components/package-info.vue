@@ -16,8 +16,8 @@
     </div>
     <!-- 服务人员信息 -->
     <div class="package-servant-info mgt10">
-      <div class="avatar"><img :src="data.Avatar | transformImgUrl" alt=""></div>
-      <div class="name">{{data.NickName}}</div>
+      <div class="avatar"><img :src="info.Avatar | transformImgUrl" alt=""></div>
+      <div class="name">{{info.NickName}}</div>
       <!-- <div class="title">儿科 主治医师</div> -->
     </div>
     <!-- 服务包介绍 -->
@@ -56,15 +56,25 @@ export default {
   },
   data () {
     return {
-      isShow: false
+      isShow: false,
+      info: {}
     }
   },
   mounted () {
-    console.log(this.data)
+    this.getServantInfo()
   },
   methods: {
     showQrcode () {
       this.isShow = true
+    },
+    // 获取服务人员信息
+    async getServantInfo () {
+      const res = await this.$http.get(`/ServantFriendInfo?servantID=${this.$route.query.ViewID}`)
+      if (res.data.Code === 100000) {
+        this.info = res.data.Data.ServantAccount
+      } else {
+        this.$vux.toast.text('出错了')
+      }
     }
   }
 }

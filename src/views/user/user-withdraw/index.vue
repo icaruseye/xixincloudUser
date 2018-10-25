@@ -77,14 +77,21 @@
       </div>
 
       <div class="apply_withdraw_btn_box">
-        <button @click="submitWithdrawApply" :class="['apply_withdraw_btn', canWithDraw ? '': 'disabled']">
-          <template v-if="amountIsOverflow">
+        <template v-if="amountIsOverflow">
+          <button class="disabled apply_withdraw_btn">
             余额不足
-          </template>
-          <template v-else>
+          </button>
+        </template>
+        <template v-if ="this.currentWithdrawType === null">
+          <button class="apply_withdraw_btn" @click="withdrawTypeVisible = true">
+            请选择提现方式
+          </button>
+        </template>
+        <template v-if="!amountIsOverflow && (this.currentWithdrawType !== null)">
+          <button :class="`apply_withdraw_btn ${canWithDraw ? '' : 'disabled'}`" @click="submitWithdrawApply">
             提现
-          </template>
-        </button>
+          </button>
+        </template>
       </div>
     </div>
 
