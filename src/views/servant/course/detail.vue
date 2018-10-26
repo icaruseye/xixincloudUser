@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="poster">
-      <img src="https://wx4.sinaimg.cn/mw690/771d5a55ly1fwc980axlyj21jk0r8dko.jpg" alt="">
+      <div id='aliyunPlayer'></div>
     </div>
     <div class="title_info">
       <div class="title">糖尿病病人能吃土豆吗？</div>
@@ -39,10 +39,12 @@
 </template>
 
 <script>
+import aliPlayer from './aliPlayer'
 import step from './step.vue'
 export default {
   components: {
-    step
+    step,
+    aliPlayer
   },
   data () {
     return {
@@ -53,6 +55,20 @@ export default {
   created () {
   },
   mounted () {
+    var aliyunPlayer = new Aliplayer({
+      id: 'aliyunPlayer',
+      source: '//player.alicdn.com/video/aliyunmedia.mp4',
+      autoplay: false,
+      playsinline: true,
+      useH5Prism: true,
+      x5_type: 'h5'
+    }, function (player) {
+      console.log('播放器创建好了。')
+    })
+    this.$nextTick(() => {
+      document.getElementsByTagName('video')[0].setAttribute('x5-video-player-type','h5')
+      document.getElementsByTagName('video')[0].setAttribute('x5-video-player-fullscreen', true)
+    })
   },
   methods: {
     tabItemClick (val) {
@@ -60,6 +76,9 @@ export default {
     },
     to (url) {
       this.$router.replace(url)
+    },
+    play () {
+      console.log('play callback')
     }
   }
 }

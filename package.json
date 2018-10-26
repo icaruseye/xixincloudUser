@@ -30,6 +30,7 @@
     "vconsole": "^3.2.0",
     "vee-validate": "2.0.0-rc.25",
     "vue": "^2.5.2",
+    "vue-aliplayer": "^0.0.7",
     "vue-meta-info": "^0.1.6",
     "vue-router": "^3.0.1",
     "vuex": "^2.5.0",
