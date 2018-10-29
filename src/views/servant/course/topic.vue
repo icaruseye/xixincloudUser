@@ -85,8 +85,17 @@ export default {
     }
   },
   mounted () {
+    this.getCouldExam()
   },
   methods: {
+    async getCouldExam () {
+      const res = await this.$http.get(`/CouldExam?testPaperID=6`)
+      if (res.data.Code === 100000) {
+        console.log(res.data.Data)
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
     tabItemClick (val) {
       this.tabIndex = val
     },

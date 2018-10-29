@@ -7,6 +7,8 @@ const SET_MODULESWITCH = 'SET_MODULESWITCH'
 const state = {
   serviceTabIndex: 0, // 服务页Tab
   serviceTabIndex2: 0, // 服务中状态栏Tab
+  servantTabIndex: 0, // 服务者详情页Tab
+  courseTabIndex: 0, // 课程详情页Tab
   routerLoading: false,
   isHaveNewMsg: false,
   unreadNum: 0,
@@ -19,6 +21,12 @@ const mutations = {
   },
   setServiceTabIndex2 (state, id) {
     state.serviceTabIndex2 = id
+  },
+  servantTabIndex (state, id) {
+    state.servantTabIndex = id
+  },
+  courseTabIndex (state, id) {
+    state.courseTabIndex = id
   },
   [SET_ROUTER_LOADING] (state, flag) {
     state.routerLoading = flag
@@ -43,6 +51,8 @@ const actions = {
 const getters = {
   serviceTabIndex: state => state.serviceTabIndex,
   serviceTabIndex2: state => state.serviceTabIndex2,
+  servantTabIndex: state => state.servantTabIndex,
+  courseTabIndex: state => state.courseTabIndex,
   routerLoading: state => state.routerLoading,
   isHaveNewMsg: state => state.isHaveNewMsg,
   unreadNum: state => state.unreadNum,

@@ -2,15 +2,17 @@
   <div class="wrapper">
     <div class="poster">
       <div id='aliyunPlayer'></div>
+      <img v-if="courseInfo.PreViewType !== 1 && courseInfo.Img" :src="courseInfo.Img" alt="">
+      <img v-if="courseInfo.PreViewType !== 1 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
     </div>
     <div class="title_info">
-      <div class="title">糖尿病病人能吃土豆吗？</div>
+      <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
       <div>
-        <span class="price">￥1123</span>
-        <span class="count">123报名</span>
+        <span class="price">￥{{courseInfo.Price}}</span>
+        <!-- <span class="count">123报名</span> -->
       </div>
     </div>
-    <div class="servant_info">
+    <!-- <div class="servant_info">
       <div class="servant-panel_title"><i class="icon icon-2"></i>老师介绍</div>
       <div class="info">
         <img class="avatar" src="https://tva1.sinaimg.cn/crop.0.0.179.179.180/771d5a55gw1emwpljaw12j2050050t8o.jpg" alt="">
@@ -23,62 +25,108 @@
       <div class="desc">
          听力教研组组长，10年教学经验，先后在多家企业任职。是 真刀实练出的真功夫，有非常丰富的教学经验。听力教研组组长， 10年教学经验，先后在多家企业任职。是真刀实练出的真功夫， 有非常丰富的教学经验。
       </div>
-    </div>
+    </div> -->
     <div class="course_info">
       <div class="servant-panel_title"><i class="icon icon-2"></i>课程详情</div>
-      <div class="content">听力教研组组长，10年教学经验，先后在多家企业任职。是真刀 实练出的真功夫，有非常丰富的教学经验。听力教研组组长， 10年教学经验，先后在多家企业任职。是真刀实练出的真功夫， 有非常丰富的教学经验。</div>
+      <div class="content">{{courseInfo.Desctiption}}</div>
     </div>
-    <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px" style="border-bottom: 1px solid #E9E9E9;margin-top:10px;">
-      <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick" @click.native="to('course/list')">课程目录</xx-tab-item>
-      <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick" @click.native="to('course/question')">习题练习</xx-tab-item>
+    <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="30px" style="border-bottom: 1px solid #E9E9E9;margin-top:10px;">
+      <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick">课程目录</xx-tab-item>
+      <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick">习题练习</xx-tab-item>
     </xx-tab>
+    <!-- 课程列表 -->
     <div v-if="tabIndex === 0">
-      <step></step>
+      <lesson-list @on-lesson-click="playLesson"></lesson-list>
+    </div>
+    <!-- 习题列表 -->
+    <div v-if="tabIndex === 1">
+      <topic-list></topic-list>
     </div>
   </div>
 </template>
 
 <script>
-import aliPlayer from './aliPlayer'
-import step from './step.vue'
+import lessonList from './lessonList.vue'
+import topicList from './topicList.vue'
 export default {
   components: {
-    step,
-    aliPlayer
+    lessonList,
+    topicList
   },
   data () {
     return {
-      tabIndex: 0,
-      activeNames: ['1']
+      tabIndex: this.$store.getters.courseTabIndex,
+      pageIndex: 1,
+      courseInfo: {}
     }
   },
-  created () {
+  filters: {
+    setDefaultImg (val) {
+      if (!val) {
+        return require('@/assets/images/course-default.png')
+      }
+    }
+  },
+  watch: {
+    courseTabIndex (val) {
+      this.tabIndex = val
+    }
+  },
+  computed: {
+    proxyCourseID () {
+      return this.$route.params.id
+    }
   },
   mounted () {
-    var aliyunPlayer = new Aliplayer({
-      id: 'aliyunPlayer',
-      source: '//player.alicdn.com/video/aliyunmedia.mp4',
-      autoplay: false,
-      playsinline: true,
-      useH5Prism: true,
-      x5_type: 'h5'
-    }, function (player) {
-      console.log('播放器创建好了。')
-    })
-    this.$nextTick(() => {
-      document.getElementsByTagName('video')[0].setAttribute('x5-video-player-type','h5')
-      document.getElementsByTagName('video')[0].setAttribute('x5-video-player-fullscreen', true)
-    })
+    this.getShopProxyCourseDetails()
   },
   methods: {
+    // 获取课程详情
+    async getShopProxyCourseDetails () {
+      const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.proxyCourseID}`)
+      if (res.data.Code === 100000) {
+        console.log(res.data.Data)
+        this.courseInfo = res.data.Data
+        if (this.courseInfo.PreViewType === 1) {
+          this.initPlayer(this.courseInfo.PreViewContent)
+        }
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 校验是否可以播放视频
+    async getCouldWatchingVideo (lessonID) {
+      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}`)
+      if (res.data.Code === 100000) {
+        this.initPlayer(res.data.Data)
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 初始化视频插件
+    initPlayer (source) {
+      new Aliplayer({
+        id: 'aliyunPlayer',
+        source: source,
+        autoplay: false,
+        playsinline: true,
+        useH5Prism: true,
+        x5_type: 'h5'
+      }, function (player) {
+        console.log('播放器创建好了。')
+      })
+    },
+    // 播放课程视频
+    playLesson (lessonID) {
+      this.getCouldWatchingVideo(lessonID)
+    },
+    // 切换tab页
     tabItemClick (val) {
       this.tabIndex = val
+      this.$store.commit('courseTabIndex', val)
     },
     to (url) {
       this.$router.replace(url)
-    },
-    play () {
-      console.log('play callback')
     }
   }
 }
@@ -107,6 +155,7 @@ export default {
 .wrapper {
   .poster {
     font-size: 0;
+    overflow: hidden;
     img {
       width: 100%;
       height: 100%;

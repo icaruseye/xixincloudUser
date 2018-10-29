@@ -4,53 +4,36 @@
       <div class="servant-panel_title"><i class="icon icon-2"></i>医生课程</div>
       <div class="servant-panel_subtitle">单项课程</div>
       <div class="servant-panel_list">
-        <div class="item">
-          <div class="poster">
-            <img src="https://via.placeholder.com/140x80" alt="">
-            <span class="status">直播课</span>
+        <template v-for="(item, index) in CourseList">
+          <div class="item" :key="index" @click="to(`/servant/course/${item.ShopProxyCourseID}`)">
+            <div class="poster">
+              <img v-if="item.Img" :src="item.Img | transformImgUrl" alt="">
+              <img v-else src="../../../assets/images/course-default.png" alt="">
+              <span class="status">{{item.StudyType | CourseType}}</span>
+            </div>
+            <div class="right">
+              <div class="name text-overflow-1">{{item.ShopProxyCourseName}}</div>
+              <!-- <div class="tags">
+                <span>内分泌科 | 明天 20：00</span>
+              </div>
+              <div>
+                <rater v-model="rater" active-color="#32C0F3" :font-size="14" disabled></rater>
+                <span class="teacher">主讲：123</span>
+              </div> -->
+              <div>
+                <span class="price">￥{{item.Price}}</span>
+                <!-- <span class="count">123人报名</span> -->
+              </div>
+            </div>
           </div>
-          <div class="right">
-            <div class="name">糖尿病病人能吃土豆吗？</div>
-            <div class="tags">
-              <span>内分泌科 | 明天 20：00</span>
-            </div>
-            <div>
-              <rater v-model="rater" active-color="#32C0F3" :font-size="14" disabled></rater>
-              <span class="teacher">主讲：123</span>
-            </div>
-            <div>
-              <span class="price">￥99.00</span>
-              <span class="count">123人报名</span>
-            </div>
-          </div>
-        </div>
+        </template>
       </div>
     </div>
-    <div class="servant-panel" style="margin-top:10px;">
+    <!-- <div class="servant-panel" style="margin-top:10px;">
       <div class="servant-panel_subtitle">套餐课程</div>
       <div class="servant-panel_list">
-        <div class="item" @click="to('/servant/course/1')">
-          <div class="poster">
-            <img src="https://via.placeholder.com/140x80" alt="">
-            <span class="status">直播课</span>
-          </div>
-          <div class="right">
-            <div class="name">糖尿病病人能吃土豆吗？</div>
-            <div class="tags">
-              <span>内分泌科 | 明天 20：00</span>
-            </div>
-            <div>
-              <rater v-model="rater" active-color="#32C0F3" :font-size="14" disabled></rater>
-              <span class="teacher">主讲：123</span>
-            </div>
-            <div>
-              <span class="price">￥99.00</span>
-              <span class="count">123人报名</span>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -60,16 +43,42 @@ export default {
   components: {
     Rater
   },
-  data () {
-    return {
-      rater: 4
+  filters: {
+    CourseType (val) {
+      switch (val) {
+        case 1:
+          return '网授课'
+        case 2:
+          return '面授课'
+        case 3:
+          return '直播课'
+        default:
+          return '网授课'
+      }
     }
   },
-  created () {
+  data () {
+    return {
+      pageIndex: 1,
+      CourseList: []
+    }
+  },
+  computed: {
+    servantViewID () {
+      return this.$route.params.id
+    }
   },
   mounted () {
+    this.getServantCourseList()
   },
   methods: {
+    async getServantCourseList () {
+      const res = await this.$http.get(`/ServantCourseList?servantViewID=b9f71c5e482246ab98fe7803235eb670&page=${this.pageIndex}`)
+      if (res.data.Code === 100000) {
+        console.log(res.data.Data)
+        this.CourseList = res.data.Data.CourseInfoResponseList
+      }
+    },
     to (url) {
       this.$router.push(url)
     }

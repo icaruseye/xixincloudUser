@@ -17,7 +17,7 @@
     <div class="calendar__main" :class="`${isWeekType ? 'weektype' : ''}`">
       <div class="main__item-head" v-for="headItem in calendarHeader" :key="headItem"><div class="item">{{headItem}}</div></div>
       <div
-        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''}${item.type === 'pre' || item.isbeforeNow ? 'main__item-pre' : ''}${item.type === 'next' ? 'main__item-next' : ''}${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? ' main__item-active' : ''}${item.tag && item.type === 'current' ? ' tag' : ''}${item.tagStart ? ' tagStart' : ''}${item.tagEnd ? ' tagEnd' : ''}`"
+        :class="`main__item ${`${item.year}-${item.month}-${item.day}` === today ? 'main__item-today' : ''}${item.type === 'pre' || item.isbeforeNow ? ' main__item-pre' : ''}${item.type === 'next' ? 'main__item-next' : ''}${selectDay === `${item.year}-${item.month}-${item.day}` && item.type === 'current' ? ' main__item-active' : ''}${item.tag && item.type === 'current' ? ' tag' : ''}${item.tagStart ? ' tagStart' : ''}${item.tagEnd ? ' tagEnd' : ''}`"
         v-for="(item, itemIndex) in calendarDays" :key="itemIndex"
         @click="clickItem(itemIndex, item.isbeforeNow)"
       >
