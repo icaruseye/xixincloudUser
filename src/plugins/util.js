@@ -196,5 +196,18 @@ export default {
         })
       }
     })
+  },
+  NumToLetter (index = 0) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    if (typeof index === 'number') {
+      index = Math.abs(index)
+      if (index >= 0 && index < 26) {
+        return letters[index]
+      } else {
+        return `${letters[index % 26]}${Math.floor((index / 26))}`
+      }
+    } else {
+      console.error('Parameter is not a number！')
+    }
   }
 }

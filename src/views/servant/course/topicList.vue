@@ -3,8 +3,8 @@
     <div class="topic_list">
       <template v-for="(item, index) in topicList">
         <div class="item" :key="index">
-          <div class="title">{{}}</div>
-          <div class="btn">去做题</div>
+          <div class="title">{{item.TestPaperName}}</div>
+          <div class="btn" @click="toTopic(item.TestPaperID)">去做题</div>
         </div>
       </template>
     </div>
@@ -22,6 +22,7 @@ export default {
   },
   mounted () {
     this.getShopProxyCourseTestPaperList()
+    this.$store.commit('initCourseNums')
   },
   methods: {
     async getShopProxyCourseTestPaperList () {
@@ -31,6 +32,9 @@ export default {
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
+    },
+    toTopic (id) {
+      this.$router.push(`/servant/course/topic/${id}`)
     }
   }
 }
@@ -51,8 +55,10 @@ export default {
     .title {
       flex: 1;
       color: #666;
+      font-size: 14px;
     }
     .btn {
+      margin-left: 15px;
       font-size: 13px;
       color: #3ecccc;
     }

@@ -1,53 +1,47 @@
 <template>
   <div class="wrapper">
     <xx-tab v-model="tabIndex" active-color="#32C0F3" custom-bar-width="25px">
-      <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick">课程目录</xx-tab-item>
       <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick">习题练习</xx-tab-item>
     </xx-tab>
-    <div class="topic_wrap">
-      <!-- 单选题 -->
-      <div class="topic_item">
-        <div class="topic_title"><span>单选题</span> 31患者，男，25岁。患肺炎入院治疗。患者进入病区后，护士的初步护理工作不包括</div>
-        <checker v-model="answer" type="radio" default-item-class="topic-checker-item" selected-item-class="topic-checker-item-selected" :radio-required="true">
-          <template v-for="val in [1,2,3]">
-            <checker-item :value="val" :key="val">
-              <i v-if="(val === answer && correct === '') || val === correct" class="iconfont icon-gouSolid-copy"></i>
-              <i v-else-if="answer !== correct && answer === val" class="iconfont icon-cha"></i>
-              <i v-else class="iconfont icon-yuan"></i>
-              <span>A. 迎接新病人{{val}}</span>
-            </checker-item>
-          </template>
-        </checker>
-      </div>
-      <!-- 多选题 -->
+    <div class="topic_wrap" v-if="questionList.length > 0">
+      <!-- 简答题 -->
+      <topic-type1
+        v-if="questionList[answerIndex].QuestionType === 1"
+        :index="answerIndex"
+        :paperType="IsNeedAnswer"
+        :data="questionList[answerIndex]"
+        @setCourseWrongNums="wrongNums++"
+        @setCourseRightNums="rightNums++">
+      </topic-type1>
       <!-- 填空题 -->
+      <topic-type2
+        v-if="questionList[answerIndex].QuestionType === 2"
+        :index="answerIndex"
+        :paperType="IsNeedAnswer"
+        :data="questionList[answerIndex]"
+        @setCourseWrongNums="wrongNums++"
+        @setCourseRightNums="rightNums++">
+      </topic-type2>
+      <!-- 判断题 -->
+      <!-- 多选题 -->
       <!-- 简单题 -->
-      <div class="topic_item topic_item_jianda">
-        <div class="topic_title"><span>简答题</span> 31患者，男，25岁。患肺炎入院治疗。患者进入病区后，护士的初步护理工作不包括</div>
-        <textarea class="textarea" name="" id="" cols="30" rows="10"></textarea>
-        <i v-if="answer === correct" class="iconfont icon-gouSolid-copy"></i>
-        <i v-if="answer !== correct" class="iconfont icon-cha"></i>
-        <button class="submit">提交</button>
-      </div>
-      <!-- 答案解析 -->
-      <div class="answer_wrap"></div>
     </div>
     <!-- 底部统计栏 -->
-    <div class="topic_tools" @click="showCard = true">
-      <div class="item">
+    <div class="topic_tools">
+      <div class="item" v-if="IsNeedAnswer">
         <i class="iconfont icon-dui"></i>
-        <div style="color:#32C0F3">50</div>
+        <div style="color:#32C0F3">{{rightNums}}</div>
       </div>
-      <div class="item">
+      <div class="item" v-if="IsNeedAnswer">
         <i class="iconfont icon-cuo"></i>
-        <span style="color:#FF4E4E">50</span>
+        <span style="color:#FF4E4E">{{wrongNums}}</span>
       </div>
-      <div class="item">
+      <div class="item" @click="showCard = true">
         <i class="iconfont icon-caidan"></i>
       </div>
       <div class="item" style="flex:1;justify-content: flex-end;">
-        <span style="color:#32C0F3">50</span>
-        <span>/144</span>
+        <span class="btn" @click="prevQuestion" v-if="answerIndex !== 0">上一题</span>
+        <span class="btn" @click="nextQuestion" v-if="answerIndex !== questionList.length -1">下一题</span>
       </div>
     </div>
     <!-- 答题卡 -->
@@ -56,7 +50,17 @@
         v-model="showCard"
         :should-rerender-on-show="true">
         <div>
-          <card></card>
+          <card @onClick="cardClick" :paperType="IsNeedAnswer"></card>
+        </div>
+      </popup>
+    </div>
+    <!-- 完成答题 -->
+    <div v-transfer-dom>
+      <popup
+        v-model="isOver"
+        :should-rerender-on-show="true">
+        <div>
+          已完成所有题目
         </div>
       </popup>
     </div>
@@ -66,6 +70,8 @@
 <script>
 import { Checker, CheckerItem, TransferDomDirective as TransferDom, Popup } from 'vux'
 import card from './card'
+import topicType1 from './topicType1'
+import topicType2 from './topicType2'
 export default {
   directives: {
     TransferDom
@@ -74,14 +80,35 @@ export default {
     Checker,
     CheckerItem,
     Popup,
-    card
+    card,
+    topicType1,
+    topicType2
   },
   data () {
     return {
       tabIndex: 1,
-      showCard: false,
-      answer: 2,
-      correct: ''
+      isOver: false, // 完成所有题目
+      showCard: false, // 显示答题卡
+      answerIndex: 0, // 当前显示题目索引,
+      IsNeedAnswer: false,
+      wrongNums: this.$store.getters.courseWrongNums,
+      rightNums: this.$store.getters.courseRightNums,
+      questionList: []
+    }
+  },
+  watch: {
+    wrongNums () {
+      this.$store.commit('setCourseWrongNums', true)
+    },
+    rightNums () {
+      this.$store.commit('setCourseRightNums', true)
+    },
+    courseWrongNums (val) {
+      console.log(111111111)
+      this.wrongNums = val
+    },
+    courseRightNums (val) {
+      this.rightNums = val
     }
   },
   mounted () {
@@ -89,12 +116,39 @@ export default {
   },
   methods: {
     async getCouldExam () {
-      const res = await this.$http.get(`/CouldExam?testPaperID=6`)
+      const res = await this.$http.get(`/TestPaperQuestionList?testPaperID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
+        this.questionList = res.data.Data.TestPaperQuestionDetailsList
+        this.IsNeedAnswer = res.data.Data.IsNeedAnswer
+        this.setAnswerList()
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
+    },
+    setAnswerList () {
+      let arr = []
+      for (let index = 0; index < this.questionList.length; index++) {
+        arr.push(Object.assign({
+          answer: [2, 4, 5].indexOf(this.questionList[index].QuestionType) === -1 ? -1 : '',
+          id: this.questionList[index].TestPaperSubtitleQuestionID,
+          index: index,
+          correct: [2, 4, 5].indexOf(this.questionList[index].QuestionType) === -1 ? this.questionList[index].IntRightKey : this.questionList[index].StrRightKey
+        }))
+      }
+      console.log(arr)
+      sessionStorage.setItem('userAnswerList', JSON.stringify(arr))
+    },
+    cardClick (index) {
+      console.log(index)
+      this.answerIndex = index
+      this.showCard = false
+    },
+    nextQuestion () {
+      this.answerIndex++
+      console.log(this.answerIndex)
+    },
+    prevQuestion () {
+      this.answerIndex--
     },
     tabItemClick (val) {
       this.tabIndex = val
@@ -184,6 +238,14 @@ export default {
     margin: 0 0 0 20px;
     display: flex;
     align-items: center;
+    .btn {
+      font-size: 12px;
+      color: #999;
+      margin-left: 12px;
+      padding: 0 4px;
+      border-radius: 2px;
+      border: 1px solid RGBA(151, 151, 151, .4);
+    }
   }
   .iconfont {
     position: relative;

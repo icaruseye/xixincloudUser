@@ -1,20 +1,16 @@
 <template>
   <div class="wrapper">
     <div class="topic_tools">
-      <div class="item">
+      <div class="item" v-if="paperType">
         <i class="iconfont icon-dui"></i>
-        <div style="color:#32C0F3">50</div>
+        <div style="color:#32C0F3">{{rightNums}}</div>
       </div>
-      <div class="item">
+      <div class="item" v-if="paperType">
         <i class="iconfont icon-cuo"></i>
-        <span style="color:#FF4E4E">50</span>
+        <span style="color:#FF4E4E">{{wrongNums}}</span>
       </div>
       <div class="item">
         <i class="iconfont icon-caidan"></i>
-      </div>
-      <div class="item" style="flex:1;justify-content: flex-end;">
-        <span style="color:#32C0F3">50</span>
-        <span>/144</span>
       </div>
     </div>
     <div class="card_wrap">
@@ -22,10 +18,27 @@
         <div>1节 小儿生长发育</div>
         <div><i class="iconfont icon-lajitong"></i>清空</div>
       </div>
-      <div class="item-list">
-        <template v-for="val in 90">
-          <div class="main_item" :key="val">
-            <div class="item" :class="{ correct: val === 1, wrong: val === 3}">{{val}}</div>
+      <div class="item-list" v-if="paperType">
+        <template v-for="(item, index) in answerList">
+          <div class="main_item" :key="index">
+            <div
+              @click="clickItem(index)"
+              class="item"
+              :class="{ correct: item.answer === item.correct, wrong: item.answer !== item.correct && item.answer !== -1 && item.answer !== ''}">
+              {{index + 1}}
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="item-list" v-else>
+        <template v-for="(item, index) in answerList">
+          <div class="main_item" :key="index">
+            <div
+              @click="clickItem(index)"
+              class="item"
+              :class="{ correct: item.answer !== -1 }">
+              {{index + 1}}
+            </div>
           </div>
         </template>
       </div>
@@ -35,15 +48,37 @@
 
 <script>
 export default {
+  props: {
+    paperType: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
+      wrongNums: this.$store.getters.courseWrongNums,
+      rightNums: this.$store.getters.courseRightNums,
+      answerList: JSON.parse(sessionStorage.getItem('userAnswerList'))
+    }
+  },
+  watch: {
+    courseWrongNums (val) {
+      console.log(111111111)
+      this.wrongNums = val
+    },
+    courseRightNums (val) {
+      this.rightNums = val
     }
   },
   created () {
   },
   mounted () {
+    this.answerList = JSON.parse(sessionStorage.getItem('userAnswerList'))
   },
   methods: {
+    clickItem (index) {
+      this.$emit('onClick', index)
+    }
   }
 }
 </script>
