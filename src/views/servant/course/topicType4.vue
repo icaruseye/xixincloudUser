@@ -4,14 +4,14 @@
     <div class="topic_item" v-if="data.TestPaperSubtitleName">
       <div class="topic_title"><span class="tag">{{data.TestPaperSubtitleName}}</span>{{index + 1}}.{{data.QuestionTitle}}</div>
       <checker
-        v-if="correctInner === -1"
+        v-if="correctInner === ''"
         v-model="answerInner"
         type="checkbox"
         default-item-class="topic-checker-item"
         selected-item-class="topic-checker-item-selected">
         <template v-for="(val, index) in data.Content.split('><')">
           <checker-item :value="index" :key="index">
-            <i v-if="index === answerInner" class="iconfont icon-gouSolid-copy"></i>
+            <i v-if="answerInner.includes(index)" class="iconfont icon-gouSolid-copy"></i>
             <i v-else class="iconfont icon-yuan"></i>
             <span>{{index | numberToAlp}}.{{val}}</span>
           </checker-item>
@@ -20,21 +20,22 @@
       <div v-else>
         <template v-for="(val, index) in data.Content.split('><')">
           <div class="topic-checker-item" :key="index">
-            <i v-if="(index === answerInner && correctInner === '') || index === correctInner" class="iconfont icon-gouSolid-copy"></i>
-            <i v-else-if="answerInner !== correctInner && answerInner === index" class="iconfont icon-cha"></i>
+            <i v-if="answerInner.includes(index)" class="iconfont icon-gouSolid-copy"></i>
             <i v-else class="iconfont icon-yuan"></i>
-            <span>{{index | numberToAlp}}.{{val}}</span>
+            <span style="margin-right:5px">{{index | numberToAlp}}.{{val}}</span>
+            <i v-if="correctInner.includes(index)" style="color:#09bb07" class="iconfont icon-gouSolid-copy"></i>
+            <i v-if="answerInner.includes(index) && !correctInner.includes(index)" class="iconfont icon-cha"></i>
           </div>
         </template>
       </div>
     </div>
     <!-- 答案解析 -->
-    <div class="answer_wrap" v-if="correctInner !== -1">
-      <div>[正确答案] {{correctInner | numberToAlp}}</div>
+    <div class="answer_wrap" v-if="correctInner !== ''">
+      <div style="color:#3AC7F5">[正确答案] {{correctInner | arrNumberToAlp}}</div>
       <div>试题解析：</div>
       <div>{{data.AnswerRemark}}</div>
     </div>
-    <button class="submit_button" v-if="correctInner === -1" @click="submitAnswer">提交</button>
+    <button class="submit_button" v-if="paperType && correctInner === ''" @click="submitAnswer">提交</button>
   </div>
 </template>
 
@@ -45,12 +46,22 @@ export default {
   filters: {
     numberToAlp (val) {
       return util.NumToLetter(val)
+    },
+    arrNumberToAlp (val) {
+      let _val = val.map(item => {
+        return util.NumToLetter(item)
+      })
+      return _val.join()
     }
   },
   props: {
     data: {
       type: Object,
       default: {}
+    },
+    paperType: {
+      type: Boolean,
+      default: false
     },
     index: Number
   },
@@ -61,14 +72,19 @@ export default {
   data () {
     return {
       answerList: JSON.parse(sessionStorage.getItem('userAnswerList')),
-      answerInner: -1,
-      correctInner: -1
+      answerInner: [],
+      correctInner: ''
     }
   },
   watch: {
     index () {
-      console.log('index update')
       this.initData()
+    },
+    answerInner (val) {
+      if (!this.paperType) {
+        this.answerList[this.index].Answer = val.join()
+        sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
+      }
     }
   },
   mounted () {
@@ -76,23 +92,25 @@ export default {
   },
   methods: {
     submitAnswer () {
-      if (this.answerInner === -1) {
-        this.$vux.toast.text('答案不能为空')
+      if (this.answerInner.length === 0) {
+        this.$vux.toast.text('请完成题目后提交')
         return false
       }
-      if (this.data.IntRightKey !== -1) {
-        this.correctInner = this.data.IntRightKey
-        this.isShowAnswer = true
-      } else {
-        this.$emit('next-item', true)
-      }
-      this.answerList[this.index].answer = this.answerInner
+      this.correctInner = this.data.StrRightKey.split(',').map(Number)
+      this.answerList[this.index].Answer = this.answerInner.join()
       sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
-      // this.init()
+
+      this.$nextTick(() => {
+        if (document.querySelectorAll('.icon-cha').length > 0) {
+          this.$emit('setCourseWrongNums', true)
+        } else {
+          this.$emit('setCourseRightNums', true)
+        }
+      })
     },
     initData () {
-      this.answerInner = this.answerList[this.index].answer !== -1 ? this.answerList[this.index].answer : -1
-      this.correctInner = this.answerList[this.index].answer !== -1 ? this.data.IntRightKey : -1
+      this.answerInner = this.answerList[this.index].Answer !== '' ? this.answerList[this.index].Answer.split(',').map(Number) : []
+      this.correctInner = this.paperType && this.answerList[this.index].Answer !== '' ? this.data.StrRightKey.split(',').map(Number) : ''
     }
   }
 }

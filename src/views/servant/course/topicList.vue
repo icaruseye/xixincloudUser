@@ -33,8 +33,17 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
-    toTopic (id) {
-      this.$router.push(`/servant/course/topic/${id}`)
+    async getCouldExam () {
+      const res = await this.$http.get(`/CouldExam?testPaperID=${this.$route.params.id}`)
+      if (res.data.Code === 100000) {
+        return res.data.Data
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    async toTopic (id) {
+      const recordID = await this.getCouldExam()
+      this.$router.push(`/servant/course/topic/${id}?recordID=${recordID}`)
     }
   }
 }

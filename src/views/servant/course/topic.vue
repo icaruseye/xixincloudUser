@@ -23,8 +23,32 @@
         @setCourseRightNums="rightNums++">
       </topic-type2>
       <!-- 判断题 -->
+      <topic-type1
+        v-if="questionList[answerIndex].QuestionType === 3"
+        :index="answerIndex"
+        :paperType="IsNeedAnswer"
+        :data="questionList[answerIndex]"
+        @setCourseWrongNums="wrongNums++"
+        @setCourseRightNums="rightNums++">
+      </topic-type1>
       <!-- 多选题 -->
+      <topic-type4
+        v-if="questionList[answerIndex].QuestionType === 4"
+        :index="answerIndex"
+        :paperType="IsNeedAnswer"
+        :data="questionList[answerIndex]"
+        @setCourseWrongNums="wrongNums++"
+        @setCourseRightNums="rightNums++">
+      </topic-type4>
       <!-- 简单题 -->
+      <topic-type5
+        v-if="questionList[answerIndex].QuestionType === 5"
+        :index="answerIndex"
+        :paperType="IsNeedAnswer"
+        :data="questionList[answerIndex]"
+        @setCourseWrongNums="wrongNums++"
+        @setCourseRightNums="rightNums++">
+      </topic-type5>
     </div>
     <!-- 底部统计栏 -->
     <div class="topic_tools">
@@ -39,9 +63,16 @@
       <div class="item" @click="showCard = true">
         <i class="iconfont icon-caidan"></i>
       </div>
+      <div class="item" @click="checkPaper">
+        <span style="color:#32C0F3">提交试卷</span>
+      </div>
       <div class="item" style="flex:1;justify-content: flex-end;">
-        <span class="btn" @click="prevQuestion" v-if="answerIndex !== 0">上一题</span>
-        <span class="btn" @click="nextQuestion" v-if="answerIndex !== questionList.length -1">下一题</span>
+        <span class="btn" @click="prevQuestion">
+          <i class="iconfont icon-sanjiao-left" :style="{ color: answerIndex === 0 ? '#ccc' : '#3AC7F5'}"></i>
+        </span>
+        <span class="btn" @click="nextQuestion" style="margin-left:10px">
+          <i class="iconfont icon-sanjiao-right" :style="{ color: answerIndex === questionList.length -1 ? '#ccc' : '#3AC7F5'}"></i>
+        </span>
       </div>
     </div>
     <!-- 答题卡 -->
@@ -59,8 +90,13 @@
       <popup
         v-model="isOver"
         :should-rerender-on-show="true">
-        <div>
-          已完成所有题目
+        <div class="res_wrap">
+          <div class="icon_box">
+            <i class="iconfont icon-finish"></i>
+            <p v-if="IsNeedAnswer">已完成所有练习题目</p>
+            <p v-else>已完成所有题目</p>
+          </div>
+          <button class="submit_paper" @click="submitPaper">{{IsNeedAnswer ? '返回试卷列表' : '提交试卷'}}</button>
         </div>
       </popup>
     </div>
@@ -72,6 +108,8 @@ import { Checker, CheckerItem, TransferDomDirective as TransferDom, Popup } from
 import card from './card'
 import topicType1 from './topicType1'
 import topicType2 from './topicType2'
+import topicType4 from './topicType4'
+import topicType5 from './topicType5'
 export default {
   directives: {
     TransferDom
@@ -82,7 +120,9 @@ export default {
     Popup,
     card,
     topicType1,
-    topicType2
+    topicType2,
+    topicType4,
+    topicType5
   },
   data () {
     return {
@@ -96,6 +136,11 @@ export default {
       questionList: []
     }
   },
+  computed: {
+    recordID () {
+      return +this.$route.query.recordID
+    }
+  },
   watch: {
     wrongNums () {
       this.$store.commit('setCourseWrongNums', true)
@@ -104,7 +149,6 @@ export default {
       this.$store.commit('setCourseRightNums', true)
     },
     courseWrongNums (val) {
-      console.log(111111111)
       this.wrongNums = val
     },
     courseRightNums (val) {
@@ -112,10 +156,10 @@ export default {
     }
   },
   mounted () {
-    this.getCouldExam()
+    this.getTestPaperQuestionList()
   },
   methods: {
-    async getCouldExam () {
+    async getTestPaperQuestionList () {
       const res = await this.$http.get(`/TestPaperQuestionList?testPaperID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {
         this.questionList = res.data.Data.TestPaperQuestionDetailsList
@@ -125,36 +169,82 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
+    async postPaper () {
+      const that = this
+      let answerList = JSON.parse(sessionStorage.getItem('userAnswerList'))
+      for (let item of answerList) {
+        item.Answer = item.Answer + ''
+      }
+      const res = await this.$http.post(`/SubmitTestPaper?recordID=${this.recordID}`, answerList)
+      if (res.data.Code === 100000) {
+        this.$vux.toast.show({
+          text: '提交成功',
+          onHide () {
+            that.$router.back()
+          }
+        })
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
     setAnswerList () {
       let arr = []
       for (let index = 0; index < this.questionList.length; index++) {
         arr.push(Object.assign({
-          answer: [2, 4, 5].indexOf(this.questionList[index].QuestionType) === -1 ? -1 : '',
-          id: this.questionList[index].TestPaperSubtitleQuestionID,
+          Answer: [2, 4, 5].indexOf(this.questionList[index].QuestionType) === -1 ? -1 : '',
+          correct: [2, 4, 5].indexOf(this.questionList[index].QuestionType) === -1 ? this.questionList[index].IntRightKey : this.questionList[index].StrRightKey,
+          UserTestPaperAnswerParam: this.questionList[index].TestPaperSubtitleQuestionID,
           index: index,
-          correct: [2, 4, 5].indexOf(this.questionList[index].QuestionType) === -1 ? this.questionList[index].IntRightKey : this.questionList[index].StrRightKey
+          type: this.questionList[index].QuestionType
         }))
       }
-      console.log(arr)
       sessionStorage.setItem('userAnswerList', JSON.stringify(arr))
     },
+    isFinishedAllQuestions () {
+      let answerList = JSON.parse(sessionStorage.getItem('userAnswerList'))
+      let flag = true
+      for (let item of answerList) {
+        if (item.Answer === '' && [2, 4, 5].includes(item.type)) {
+          flag = false
+          return false
+        }
+        if (item.Answer === -1 && ![2, 4, 5].includes(item.type)) {
+          flag = false
+          return false
+        }
+      }
+      return flag
+    },
+    checkPaper () {
+      if (this.isFinishedAllQuestions()) {
+        this.isOver = true
+      } else {
+        this.$vux.toast.text('还有未完成题目')
+      }
+    },
+    submitPaper () {
+      if (this.IsNeedAnswer) {
+        this.$router.back()
+      } else {
+        this.postPaper()
+      }
+    },
     cardClick (index) {
-      console.log(index)
       this.answerIndex = index
       this.showCard = false
     },
     nextQuestion () {
-      this.answerIndex++
-      console.log(this.answerIndex)
+      if (this.answerIndex !== this.questionList.length - 1) {
+        this.answerIndex++
+      }
     },
     prevQuestion () {
-      this.answerIndex--
+      if (this.answerIndex !== 0) {
+        this.answerIndex--
+      }
     },
     tabItemClick (val) {
       this.tabIndex = val
-    },
-    to (url) {
-      this.$router.replace(url)
     }
   }
 }
@@ -167,61 +257,6 @@ export default {
     font-size: 15px;
     color: #666;
     margin-bottom: 20px;
-  }
-}
-.topic-checker-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  font-size: 15px;
-  color: #999;
-  height: 30px;
-  .iconfont {
-    margin-right: 5px;
-  }
-}
-.icon-yuan {
-  color: #999
-}
-.icon-gouSolid-copy {
-  color: #32C0F3;
-}
-.icon-cha {
-  color: #FF5F5F;
-}
-.topic_item_jianda {
-  .iconfont {
-    position: absolute;
-    bottom: 20px;
-    right: 10px;
-  }
-}
-.topic_item {
-  position: relative;
-  .textarea {
-    margin-bottom: 15px;
-    background: #fff;
-    width: 100%;
-    resize: none;
-    border: 0;
-    border-radius: 4px;
-    height: 120px;
-    padding: 10px 10px 25px 10px;
-    color: #999;
-    font-size: 13px;
-  }
-  .submit {
-    position: absolute;
-    right: 0;
-    width: 70px;
-    height: 25px;
-    line-height: 25px;
-    border-radius: 20px;
-    font-size: 13px;
-    text-align: center;
-    color: #fff;
-    background: #32C0F3;
-    border: 0;
   }
 }
 .topic_tools {
@@ -240,11 +275,13 @@ export default {
     align-items: center;
     .btn {
       font-size: 12px;
-      color: #999;
-      margin-left: 12px;
-      padding: 0 4px;
-      border-radius: 2px;
-      border: 1px solid RGBA(151, 151, 151, .4);
+      .iconfont {
+        color: #3AC7F5;
+      }
+      // margin-left: 12px;
+      // padding: 0 4px;
+      // border-radius: 2px;
+      // border: 1px solid RGBA(151, 151, 151, .4);
     }
   }
   .iconfont {
@@ -253,6 +290,33 @@ export default {
     margin-right: 5px;
     color: #ccc;
     font-size: 20px;
+  }
+}
+.res_wrap {
+  background: #f6f6f6;
+  .icon_box {
+    background: #fff;
+    padding: 30px 0;
+    text-align: center;
+    .iconfont {
+      font-size: 60px;
+      color: #32C0F3;
+    }
+    p {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+  .submit_paper {
+    margin-top: 10px;
+    width: 100%;
+    border: 0;
+    background: #fff;
+    color: #32C0F3;
+    font-size: 16px;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
   }
 }
 </style>

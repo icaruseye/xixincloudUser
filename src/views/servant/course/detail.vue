@@ -42,6 +42,7 @@
     <div v-if="tabIndex === 1">
       <topic-list></topic-list>
     </div>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder">购买课程</button>
   </div>
 </template>
 
@@ -103,6 +104,23 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
+    async getUserPreOrder () {
+      // 生成预支付订单
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.proxyCourseID}&orderType=2&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.RedirectState === 0) {
+          this.$router.push(`/servant/pay/${this.proxyCourseID}?OrderID=${res.data.Data.OrderID}`)
+        } else {
+          window.location.href = res.data.Data.RedirectUrl
+        }
+      } else {
+        this.$vux.toast.show({
+          type: 'cancel',
+          text: res.data.Msg,
+          time: 800
+        })
+      }
+    },
     // 初始化视频插件
     initPlayer (source) {
       new Aliplayer({
@@ -133,6 +151,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.wrapper {
+  padding-bottom: 55px;
+}
 .servant-panel_title {
   padding: 0 6px;
   font-size: 16px;

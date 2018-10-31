@@ -1,4 +1,5 @@
 <template>
+  <!-- 简答题 -->
   <div class="wrapper">
     <div class="topic_item" v-if="data.TestPaperSubtitleName">
       <div class="topic_title"><span class="tag">{{data.TestPaperSubtitleName}}</span>{{index + 1}}.{{data.QuestionTitle | formatTitle}}</div>
@@ -68,7 +69,7 @@ export default {
     },
     answerInner (val) {
       if (!this.paperType) {
-        this.answerList[this.index].answer = val.join('><')
+        this.answerList[this.index].Answer = val.join('><')
         sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
       }
     }
@@ -81,13 +82,13 @@ export default {
   methods: {
     submitAnswer () {
       if (this.answerInner.includes(undefined) || this.answerInner.includes('')) {
-        this.$vux.toast.text('请填写全部输入框')
+        this.$vux.toast.text('请完成题目后提交')
         return false
       }
       this.correctInner = this.data.StrRightKey.split('><')
-      this.answerList[this.index].answer = this.answerInner.join('><')
+      this.answerList[this.index].Answer = this.answerInner.join('><')
       sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
-      
+
       this.$nextTick(() => {
         if (document.querySelectorAll('.icon-cha').length > 0) {
           this.$emit('setCourseWrongNums', true)
@@ -97,10 +98,9 @@ export default {
       })
     },
     initData () {
-      console.log(this.answerList[this.index].answer)
       this.answerInner.length = this.data.SelectionAmount
-      this.answerInner = this.answerList[this.index].answer !== '' ? this.answerList[this.index].answer.split('><') : []
-      this.correctInner = this.paperType && this.answerList[this.index].answer !== '' ? this.data.StrRightKey.split('><') : ''
+      this.answerInner = this.answerList[this.index].Answer !== '' ? this.answerList[this.index].Answer.split('><') : []
+      this.correctInner = this.paperType && this.answerList[this.index].Answer !== '' ? this.data.StrRightKey.split('><') : ''
     }
   }
 }

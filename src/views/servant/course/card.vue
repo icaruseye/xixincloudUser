@@ -24,7 +24,7 @@
             <div
               @click="clickItem(index)"
               class="item"
-              :class="{ correct: item.answer === item.correct, wrong: item.answer !== item.correct && item.answer !== -1 && item.answer !== ''}">
+              :class="{ correct: item.Answer === item.correct, wrong: item.Answer !== item.correct && item.Answer !== -1 && item.Answer !== ''}">
               {{index + 1}}
             </div>
           </div>
@@ -36,7 +36,7 @@
             <div
               @click="clickItem(index)"
               class="item"
-              :class="{ correct: item.answer !== -1 }">
+              :class="{ correct: item.Answer !== -1 && item.Answer !== ''}">
               {{index + 1}}
             </div>
           </div>
@@ -69,8 +69,6 @@ export default {
     courseRightNums (val) {
       this.rightNums = val
     }
-  },
-  created () {
   },
   mounted () {
     this.answerList = JSON.parse(sessionStorage.getItem('userAnswerList'))

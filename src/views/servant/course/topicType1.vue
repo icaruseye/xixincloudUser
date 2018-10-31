@@ -75,8 +75,10 @@ export default {
       this.initData()
     },
     answerInner (val) {
-      this.answerList[this.index].answer = val
-      sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
+      if (!this.paperType) {
+        this.answerList[this.index].Answer = val
+        sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
+      }
     }
   },
   mounted () {
@@ -93,12 +95,14 @@ export default {
       } else {
         this.$emit('setCourseRightNums', true)
       }
+
       this.correctInner = this.data.IntRightKey
-      this.isShowAnswer = true
+      this.answerList[this.index].Answer = this.answerInner
+      sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
     },
     initData () {
-      this.answerInner = this.answerList[this.index].answer !== -1 ? this.answerList[this.index].answer : -1
-      this.correctInner = this.answerList[this.index].answer !== -1 ? this.data.IntRightKey : -1
+      this.answerInner = this.answerList[this.index].Answer !== -1 ? this.answerList[this.index].Answer : -1
+      this.correctInner = this.answerList[this.index].Answer !== -1 ? this.data.IntRightKey : -1
     }
   }
 }
