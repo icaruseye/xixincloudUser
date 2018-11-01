@@ -76,6 +76,9 @@ export default {
   computed: {
     proxyCourseID () {
       return this.$route.params.id
+    },
+    servantViewID () {
+      return this.$route.query.servantViewID
     }
   },
   mounted () {
@@ -106,7 +109,7 @@ export default {
     },
     async getUserPreOrder () {
       // 生成预支付订单
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.proxyCourseID}&orderType=2&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.proxyCourseID}&orderType=2&servantViewID=${this.servantViewID}&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           this.$router.push(`/servant/pay/${this.proxyCourseID}?OrderID=${res.data.Data.OrderID}`)

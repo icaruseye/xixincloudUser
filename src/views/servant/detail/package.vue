@@ -103,7 +103,7 @@ export default {
     },
     async getUserPreOrder (id) {
       // 生成预支付订单
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.itemID}&orderType=1&RefereeType=${this.refereeType}&RefereeViewID=${this.refereeViewID}`)
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.itemID}&orderType=1&servantViewID=&RefereeType=${this.refereeType}&RefereeViewID=${this.refereeViewID}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)

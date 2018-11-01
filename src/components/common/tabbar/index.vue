@@ -21,7 +21,7 @@
         :selected="'health' == this.$route.path.split('/')[1]"
         class="weui-tabbar__icon_3">
         <div slot="icon"></div>
-        <span slot="label">健康</span>
+        <span slot="label">课程</span>
       </tabbar-item>
       <tabbar-item
         link="/user"

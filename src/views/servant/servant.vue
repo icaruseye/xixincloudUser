@@ -74,6 +74,7 @@ export default {
       this.$store.commit('setMessageTabIndex', id)
     },
     goServant (viewID, ID) {
+      this.$store.commit('servantTabIndex', 0)
       this.$router.push(`/servant/${viewID}/service`)
     },
     async getData () {

@@ -54,6 +54,12 @@ export default {
     },
     readOnly () {
       return +this.$route.query.read || 0
+    },
+    refereeType () {
+      return this.$route.query.refereeType || ''
+    },
+    refereeViewID () {
+      return this.$route.query.refereeViewID || ''
     }
   },
   mounted () {
@@ -70,7 +76,7 @@ export default {
     },
     async getUserPreOrder (id) {
       // 生成预支付订单
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.servantInfos.ScheduleID}&orderType=3`)
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.servantInfos.ScheduleID}&orderType=3&servantViewID=&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           this.$router.push(`/servant/pay/${this.servantInfos.ScheduleID}?OrderID=${res.data.Data.OrderID}`)

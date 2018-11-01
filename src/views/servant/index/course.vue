@@ -5,7 +5,7 @@
       <div class="servant-panel_subtitle">单项课程</div>
       <div class="servant-panel_list">
         <template v-for="(item, index) in CourseList">
-          <div class="item" :key="index" @click="to(`/servant/course/${item.ShopProxyCourseID}`)">
+          <div class="item" :key="index" @click="to(`/servant/course/${item.ShopProxyCourseID}?servantViewID=${$route.params.id}`)">
             <div class="poster">
               <img v-if="item.Img" :src="item.Img | transformImgUrl" alt="">
               <img v-else src="../../../assets/images/course-default.png" alt="">
@@ -80,6 +80,7 @@ export default {
       }
     },
     to (url) {
+      this.$store.commit('courseTabIndex', 0)
       this.$router.push(url)
     }
   }
