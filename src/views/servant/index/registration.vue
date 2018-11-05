@@ -2,8 +2,10 @@
   <div class="wrapper">
     <!-- 排版表 -->
     <xx-calendar
+      :tags="calendarTags"
       :loading="calendarLoading"
-      @onClick="calendarItemClick">
+      @onClick="calendarItemClick"
+      @changeMonth="changeMonth">
     </xx-calendar>
     <div class="schedule-list" v-if="list.length > 0">
       <!-- <div class="title">当前可选时段</div> -->
@@ -64,7 +66,9 @@ export default {
     }
   },
   mounted () {
+    const _deta = this.getAfterOneMonth(new Date())
     this.getServantSchedule(dateFormat(new Date(), 'YYYY-MM-DD'))
+    this.getScheduleList(_deta.startTime, _deta.endTime)
   },
   methods: {
     // 获取某一天排班详情
@@ -77,10 +81,41 @@ export default {
         this.list = res.data.Data.RegistrationSchedules
       }
     },
+    // 获取当月排班列表
+    async getScheduleList (startTime, endTime) {
+      const res = await this.$http.get(`/Schedule/IsNoSchedule-Register`, {
+        startTime: startTime,
+        endTime: endTime,
+        viewId: this.viewId
+      })
+      if (res.data.Code === 100000) {
+        this.newCalendar = res.data.Data.length > 0
+        let arr = []
+        res.data.Data.map(i => {
+          arr.push(dateFormat(i, 'YYYY-MM-DD'))
+        })
+        this.calendarTags = arr
+      }
+    },
+    // 切换月份
+    async changeMonth (item) {
+      const dateTime = `${item.year}-${item.month}-01`
+      const _deta = this.getAfterOneMonth(dateTime)
+      this.getScheduleList(_deta.startTime, _deta.endTime)
+    },
     // 选择某一天
     async calendarItemClick (dateTime) {
       this.currentDate = dateTime
       await this.getServantSchedule(dateTime)
+    },
+    getAfterOneMonth (dateTime) {
+      let date = new Date(dateTime)
+      let newdate = new Date(dateTime)
+      newdate.setDate(date.getDate() + 30)
+      return {
+        startTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 00:00:00`,
+        endTime: `${newdate.getFullYear()}-${newdate.getMonth() + 1}-${newdate.getDate()} 00:00:00`
+      }
     }
   }
 }
@@ -119,6 +154,7 @@ export default {
 }
 .schedule-list {
   padding: 15px;
+  border-top: 1px solid #f1f1f1;
   .title {
     text-align: center;
     font-size: 14px;
