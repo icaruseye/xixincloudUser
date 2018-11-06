@@ -146,7 +146,8 @@ export default {
   },
   methods: {
     toDetail (ViewId) {
-      this.$router.push(`/servant/service/${ViewId}`)
+      this.$store.commit('servantTabIndex', 0)
+      this.$router.push(`/servant/${ViewId}/service`)
     },
     showDialog () {
       this.showHideOnBlur = true
@@ -189,6 +190,7 @@ export default {
 <style scoped lang="less">
 @import url(../../servant/components/index.less);
 .weui-list_item {
+  align-items: initial;
   .avatar {
     img {
       width: 60px;
@@ -213,8 +215,9 @@ export default {
     }
     .tags {
       display: flex;
+      flex-wrap: wrap;
       span {
-        margin-right: 5px;
+        margin: 0 5px 5px;
         padding: 0 5px;
         height: 13px;
         line-height: 15px;

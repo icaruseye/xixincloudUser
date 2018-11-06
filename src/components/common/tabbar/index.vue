@@ -17,8 +17,8 @@
         <span slot="label">服务</span>
       </tabbar-item>
       <tabbar-item
-        link="/health"
-        :selected="'health' == this.$route.path.split('/')[1]"
+        link="/course"
+        :selected="'course' == this.$route.path.split('/')[1]"
         class="weui-tabbar__icon_3">
         <div slot="icon"></div>
         <span slot="label">课程</span>

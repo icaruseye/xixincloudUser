@@ -3,7 +3,7 @@ import resultsPage from './routers/resultsPage'
 import servant from './routers/servant'
 import user from './routers/user'
 import service from './routers/service'
-import health from './routers/health'
+import course from './routers/course'
 import activity from './routers/activity'
 import article from './routers/article'
 
@@ -13,7 +13,7 @@ const routerList = [
   ...servant,
   ...service,
   ...user,
-  ...health,
+  ...course,
   ...activity,
   ...article
 ]
