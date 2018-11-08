@@ -25,7 +25,7 @@
   {
     margin-top: 10px;
     font-size: 14px;
-    color: #666;
+    color: #999;
     text-align: center;
   }
 </style>

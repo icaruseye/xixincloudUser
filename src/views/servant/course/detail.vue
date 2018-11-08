@@ -42,7 +42,7 @@
     <div v-if="tabIndex === 1">
       <topic-list></topic-list>
     </div>
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder">购买课程</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder" v-if="!isPay">购买课程</button>
   </div>
 </template>
 
@@ -79,6 +79,9 @@ export default {
     },
     servantViewID () {
       return this.$route.query.servantViewID
+    },
+    isPay () {
+      return +this.$route.query.isPay
     }
   },
   mounted () {

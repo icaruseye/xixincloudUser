@@ -1,12 +1,16 @@
 <template>
   <div class="wrapper">
-    <div class="course_list">
-      <div class="course_list_item">
-        <img src="https://tvax1.sinaimg.cn/crop.0.0.473.473.180/78258c21ly8ft5x6jpwepj20d50d5wec.jpg" alt="" class="icon">
-        <div class="title">珂珂珂珂</div>
-        <button class="btn">去学习</button>
-      </div>
+    <div class="course_list" v-if="list.length > 0">
+      <template v-for="(item, index) in list">
+        <div class="course_list_item" :key="index">
+          <div class="title">{{item.Title}}</div>
+          <button class="btn" @click="toDetail(item.CourseId)">去学习</button>
+        </div>
+      </template>
     </div>
+    <xxOccupiedBox v-else>
+      暂无课程
+    </xxOccupiedBox>
   </div>
 </template>
 
@@ -14,13 +18,24 @@
 export default {
   data () {
     return {
+      list: []
     }
   },
-  created () {
-  },
   mounted () {
+    this.getCourseList()
   },
   methods: {
+    async getCourseList () {
+      const res = await this.$http.get(`/Proxy-Course-List`)
+      if (res.data.Code === 100000) {
+        this.list = res.data.Data
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    toDetail (id) {
+      this.$route.push(`/servant/course/${id}?isPay=1`)
+    }
   }
 }
 </script>
