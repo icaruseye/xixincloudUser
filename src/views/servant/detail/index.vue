@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import packageInfo from '../components/package-info'
+import packageInfo from '../components/packageInfo'
 export default {
   components: {
     packageInfo

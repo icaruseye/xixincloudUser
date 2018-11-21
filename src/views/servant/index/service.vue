@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import servantItemist from '../components/package-list'
+import servantItemist from '../components/packageList'
 export default {
   components: {
     servantItemist

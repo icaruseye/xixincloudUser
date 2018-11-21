@@ -7,5 +7,12 @@ export default [
     meta: {
       title: '分享套餐'
     }
+  },
+  {
+    path: '/activity/detail/:id',
+    component: _import('/activity/detail'),
+    meta: {
+      title: '活动详情'
+    }
   }
 ]

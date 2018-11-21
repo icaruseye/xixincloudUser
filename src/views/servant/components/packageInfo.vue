@@ -21,7 +21,7 @@
       <!-- <div class="title">儿科 主治医师</div> -->
     </div>
     <!-- 服务包介绍 -->
-    <div class="package-info mgt10">
+    <div class="packageInfo mgt10">
       <div class="title">
         <span class="left">服务介绍</span>
         <span class="right" v-if="data.EffectiveDay">有效期：{{data.EffectiveDay}}天</span>
@@ -153,7 +153,7 @@ export default {
   }
 }
 
-.package-info {
+.packageInfo {
   padding: 16px 12px;
   background: #fff;
   .title {

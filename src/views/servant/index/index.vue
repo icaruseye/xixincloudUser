@@ -22,7 +22,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import servantInfo from '../components/service-info'
+import servantInfo from '../components/serviceInfo'
 export default {
   components: {
     servantInfo

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import packageInfo from '../components/package-info'
+import packageInfo from '../components/packageInfo'
 import { TransferDomDirective as TransferDom } from 'vux'
 import { mapGetters } from 'vuex'
 export default {

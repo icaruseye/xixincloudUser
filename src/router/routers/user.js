@@ -117,5 +117,12 @@ export default [
         title: '银行卡列表'
       }
     }
+  },
+  {
+    path: '/user/activity',
+    component: _import('/user/user-activity'),
+    meta: {
+      title: '我的活动'
+    }
   }
 ]

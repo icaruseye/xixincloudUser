@@ -8,7 +8,7 @@
       </div>
     </div>
     <!-- 服务包介绍 -->
-    <div class="package-info mgt10">
+    <div class="packageInfo mgt10">
       <div class="title">
         <span class="left">服务套餐介绍</span>
       </div>
@@ -17,7 +17,7 @@
       </div>
     </div>
     <!-- 服务包介绍 -->
-    <div class="package-info mgt10" v-if="Item.Attention">
+    <div class="packageInfo mgt10" v-if="Item.Attention">
       <div class="title">
         <span class="left">注意事项</span>
       </div>
@@ -112,7 +112,7 @@ export default {
     box-sizing: border-box;
   }
 }
-.package-info {
+.packageInfo {
   padding: 16px 12px;
   background: #fff;
   .title {
