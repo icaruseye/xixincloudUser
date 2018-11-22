@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="activityDetail_apply">
-        <button class="btn">报名</button>
+        <button class="btn" @click="toPay">报名</button>
       </div>
     </div>
   </div>
@@ -42,8 +42,6 @@ export default {
       return this.$route.params.id
     }
   },
-  created () {
-  },
   mounted () {
     this.getActivityDetail()
   },
@@ -54,6 +52,23 @@ export default {
         this.info = res.data.Data
       } else {
         this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    async toPay () {
+      // 生成预支付订单
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.activityId}&orderType=4&servantViewID=&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.RedirectState === 0) {
+          this.$router.push(`/servant/pay/${this.activityId}?OrderID=${res.data.Data.OrderID}`)
+        } else {
+          window.location.href = res.data.Data.RedirectUrl
+        }
+      } else {
+        this.$vux.toast.show({
+          type: 'cancel',
+          text: res.data.Msg,
+          time: 800
+        })
       }
     }
   }

@@ -1,27 +1,31 @@
 import axios from 'axios'
 import Vue from 'vue'
-// import http from '../api'
+import { ConfirmPlugin } from 'vux'
 // import router from '@/router'
 
+Vue.use(ConfirmPlugin)
 const _TIMEOUT_ = 15000
 
 axios.interceptors.response.use(response => {
   return response
 }, error => {
-  Vue.prototype.$popupTop('出错了，请重试')
-  // if (error.response.status === 401) {
-  //   token无效，重新登录
-  //   if (error.response.data.Code === 100010) {
-  //     sessionStorage.removeItem('userAccount')
-  //     http.get(`/ShopInfo?host=${window.location.host}`).then(res => {
-  //       if (res.data.Code === 100000) {
-  //         window.location.href = res.data.Data.LoginUrl
-  //       }
-  //     })
-  //   }
-  // } else {
-  //   Vue.$vux.toast.hide()
-  // }
+  if (error.response.status === 401) {
+    // token无效，重新登录
+    if (error.response.data.Code === 100010) {
+      Vue.$vux.confirm.show({
+        showCancelButton: false,
+        confirmText: '刷新',
+        content: '登录失效,请重试',
+        onConfirm () {
+          sessionStorage.removeItem('userAccount')
+          window.location.reload()
+        }
+      })
+    }
+  } else {
+    Vue.prototype.$popupTop('出错了，请重试')
+    Vue.$vux.toast.hide()
+  }
   return Promise.reject(error)
 })
 

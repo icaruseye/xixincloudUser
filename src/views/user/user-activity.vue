@@ -30,7 +30,11 @@ export default {
   },
   methods: {
     async getActivityMyList () {
-      const res = await this.$http.get(`/Activity-My-List`)
+      this.$vux.loading.show({
+        text: '加载中...'
+      })
+      const res = await this.$http.get(`/Activity-My-List-All`)
+      this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.list = res.data.Data
       } else {

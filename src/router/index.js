@@ -2,10 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routerList from './routerList'
 import store from '../store'
-import { ToastPlugin } from 'vux'
+import { LoadingPlugin } from 'vux'
 import http from '../api'
 
-Vue.use(ToastPlugin)
+Vue.use(LoadingPlugin)
 Vue.use(Router)
 
 // 新消息定时器
@@ -39,7 +39,7 @@ router.beforeEach((to, from, next) => {
     return false
   }
 
-  // 不需要登陆直接访问目标页
+  // 不需要登录直接访问目标页
   if (to.meta.noneedLogin) {
     next()
     return false
@@ -96,10 +96,10 @@ router.beforeEach((to, from, next) => {
       return false
     }
   }
-
   next()
 })
 router.afterEach((to, from, next) => {
+  Vue.$vux.loading.hide()
   store.commit('SET_ROUTER_LOADING', false)
 })
 
