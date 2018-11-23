@@ -27,22 +27,35 @@
         <button class="btn" @click="toPay">报名</button>
       </div>
     </div>
+    <!-- 验证手机号 -->
+    <verifyPhone v-model="dialogVisivble"></verifyPhone>
   </div>
 </template>
 
 <script>
+import verifyPhone from './components/verifyPhone'
 export default {
+  components: {
+    verifyPhone
+  },
   data () {
     return {
+      dialogVisivble: false,
       info: {}
     }
   },
   computed: {
     activityId () {
       return this.$route.params.id
+    },
+    verification () {
+      return this.$route.query.verification
     }
   },
   mounted () {
+    if (this.verification) {
+      this.dialogVisivble = true
+    }
     this.getActivityDetail()
   },
   methods: {
@@ -77,12 +90,9 @@ export default {
 
 <style lang="less" scoped>
 .wrapper {
-  padding-bottom: 140rpx;
+  padding-bottom: 70px;
   background: #fff;
   min-height: 100vh;
-}
-
-.container {
 }
 
 .activityDetail_info {

@@ -155,8 +155,8 @@ export default {
       .item {
         padding: 20px;
         display: flex;
-        align-items: center;
         .icon {
+          margin-top: 5px;
           width: 30px;
           height: 30px;
           border-radius: 4px;
