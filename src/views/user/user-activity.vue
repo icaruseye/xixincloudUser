@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="acMine_list" v-if="list.length > 0">
       <template v-for="(item, index) in list">
-        <div class="acMine_list_item" :key="index">
+        <div class="acMine_list_item" :key="index" @click="toDetail(item.ID)">
           <img class="acMine_list_item_icon" :src="item.CoverPhoto | transformImgUrl">
           <div class="acMine_list_item_content">
             <div class="acMine_list_item_content_name">{{item.ActivityName}}</div>
@@ -40,10 +40,58 @@ export default {
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
+    },
+    toDetail (id) {
+      this.$router.push(`/activity/detail/${id}?verification=false`)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.wrapper {
+  min-height: 100vh;
+}
+
+.acMine_list {
+  background: #fff;
+}
+
+.acMine_list_item {
+  padding: 25px 12px;
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.acMine_list_item:last-child {
+  border: 0;
+}
+
+.acMine_list_item_icon {
+  margin-right: 12px;
+  width: 75px;
+  height: 75px;
+  border-radius: 2px;
+}
+
+.acMine_list_item_content {
+  flex: 1;
+}
+
+.acMine_list_item_content_name {
+  margin-bottom: 5px;
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+}
+
+.acMine_list_item_content_desc {
+  font-size: 14px;
+  color: #999;
+}
+
+.acMine_list_item_content_price {
+  font-size: 12px;
+  color: #666;
+}
 </style>

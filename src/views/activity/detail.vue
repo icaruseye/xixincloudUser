@@ -23,8 +23,14 @@
           </div>
         </div>
       </div>
-      <div class="activityDetail_apply">
-        <button class="btn" @click="toPay">报名</button>
+      <div class="tips">
+        <p>报名成功后，活动详情页提示:</p>
+        <p>1.恭喜您，已成功报名该活动</p>
+        <p v-if="info.CommodityType === 1">2.课程活动：请从导航栏的“课程”栏目，查看已成功购买的课程进行学习</p>
+        <p v-if="info.CommodityType === 2">2.服务活动：请从导航栏的“服务”栏目，查看已成功购买的服务进行预约</p>
+      </div>
+      <div class="activityDetail_apply" v-if="verification === 'true'">
+        <button class="btn" @click="toPay">{{info.CommodityType === 1 ? '报名' : '购买'}}}</button>
       </div>
     </div>
     <!-- 验证手机号 -->
@@ -53,7 +59,7 @@ export default {
     }
   },
   mounted () {
-    if (this.verification) {
+    if (this.verification === 'true') {
       this.dialogVisivble = true
     }
     this.getActivityDetail()
@@ -219,5 +225,14 @@ export default {
   padding: 0 12px 40px;
   font-size: 12px;
   color: #666;
+}
+
+.tips {
+  padding: 12px;
+  p {
+    font-size: 12px;
+    color: #999;
+    line-height: 2;
+  }
 }
 </style>
