@@ -11,6 +11,7 @@
     <xxOccupiedBox v-else>
       暂无课程
     </xxOccupiedBox>
+    <xx-tabbar></xx-tabbar>
   </div>
 </template>
 

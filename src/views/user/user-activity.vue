@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-if="pageReady">
     <div class="acMine_list" v-if="list.length > 0">
       <template v-for="(item, index) in list">
         <div class="acMine_list_item" :key="index" @click="toDetail(item.ID)">
@@ -22,6 +22,7 @@
 export default {
   data () {
     return {
+      pageReady: false,
       list: []
     }
   },
@@ -35,6 +36,7 @@ export default {
       })
       const res = await this.$http.get(`/Activity-My-List-All`)
       this.$vux.loading.hide()
+      this.pageReady = true
       if (res.data.Code === 100000) {
         this.list = res.data.Data
       } else {

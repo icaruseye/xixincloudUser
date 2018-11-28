@@ -93,23 +93,26 @@
     </div>
     <!-- 机构介绍 -->
     <div v-transfer-dom>
-      <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': '#fff'}">
+      <popup v-model="showHideOnBlur" height="100%" :should-scroll-top-on-show="true">
         <div class="tips-content">
           <div class="title">{{Agreement.Title}}</div>
           <div v-html="Agreement.Content"></div>
         </div>
-        <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
-      </x-dialog>
+        <div class="weui-btn weui-btn-bottom" @click="closePopup">关闭</div>
+      </popup>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { TransferDomDirective as TransferDom } from 'vux'
+import { TransferDomDirective as TransferDom, Popup } from 'vux'
 export default {
   directives: {
     TransferDom
+  },
+  components: {
+    Popup
   },
   data () {
     return {
@@ -182,6 +185,10 @@ export default {
         return false
       }
       this.$router.push(url)
+    },
+    closePopup () {
+      window.scrollTo(0,0)
+      this.showHideOnBlur = false
     }
   }
 }
@@ -220,7 +227,7 @@ export default {
         margin: 0 5px 5px;
         padding: 0 5px;
         height: 13px;
-        line-height: 15px;
+        line-height: 13px;
         display: block;
         border-radius: 10px;
         font-size: 10px;
@@ -406,5 +413,20 @@ export default {
     text-align: center;
     background: #fff;
   }
+}
+
+.tips-content {
+  background: #fff;
+  padding: 0 20px 70px 20px;
+  .title {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    padding: 15px 0;
+  }
+}
+
+.weui-btn {
+  background: #3ecccc;
 }
 </style>

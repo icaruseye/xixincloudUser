@@ -161,7 +161,11 @@ export default {
         }
       }
       try {
+        this.$vux.loading.show({
+          text: '正在上传'
+        })
         const res = await axios(options)
+        this.$vux.loading.hide()
         _img.status = 1
         if (this.isAvatar) {
           this.guid = [res.data.data.objectId]

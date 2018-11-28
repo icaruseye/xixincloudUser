@@ -216,11 +216,12 @@ export default {
     }
     .tags {
       display: flex;
+      flex-wrap: wrap;
       span {
-        margin-right: 5px;
+        margin: 0 5px 5px 0;
         padding: 0 5px;
         height: 13px;
-        line-height: 15px;
+        line-height: 13px;
         display: block;
         border-radius: 10px;
         font-size: 10px;

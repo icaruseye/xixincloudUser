@@ -103,7 +103,7 @@ export default {
     },
     // 校验是否可以播放视频
     async getCouldWatchingVideo (lessonID) {
-      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}`)
+      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}`)
       if (res.data.Code === 100000) {
         this.initPlayer(res.data.Data)
       } else {
