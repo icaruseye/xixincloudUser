@@ -2,8 +2,8 @@
   <div class="wrapper">
     <div class="poster">
       <div id='aliyunPlayer'></div>
-      <img v-if="courseInfo.PreViewType !== 1 && courseInfo.Img" :src="courseInfo.Img" alt="">
-      <img v-if="courseInfo.PreViewType !== 1 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
+      <img v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="">
+      <img v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
     </div>
     <div class="title_info">
       <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
@@ -90,9 +90,11 @@ export default {
   methods: {
     // 获取课程详情
     async getShopProxyCourseDetails () {
+      this.$vux.loading.isVisible()
+      this.$vux.loading.show({text: '加载中'})
       const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.proxyCourseID}`)
+      this.$vux.loading.hide()
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
         this.courseInfo = res.data.Data
         if (this.courseInfo.PreViewType === 1) {
           this.initPlayer(this.courseInfo.PreViewContent)
@@ -130,12 +132,76 @@ export default {
     // 初始化视频插件
     initPlayer (source) {
       new Aliplayer({
-        id: 'aliyunPlayer',
-        source: source,
-        autoplay: false,
-        playsinline: true,
-        useH5Prism: true,
-        x5_type: 'h5'
+        'id': 'aliyunPlayer',
+        'height': '200px',
+        'source': source,
+        'autoplay': false,
+        'isLive': false,
+        'rePlay': false,
+        'playsinline': true,
+        'preload': true,
+        'controlBarVisibility': 'hover',
+        'useH5Prism': true,
+        'skinLayout': [
+          {
+            'name': 'bigPlayButton',
+            'align': 'cc'
+          },
+          {
+            'name': 'H5Loading',
+            'align': 'cc'
+          },
+          {
+            'name': 'infoDisplay'
+          },
+          {
+            'name': 'tooltip',
+            'align': 'blabs',
+            'x': 0,
+            'y': 56
+          },
+          {
+            'name': 'thumbnail'
+          },
+          {
+            'name': 'controlBar',
+            'align': 'blabs',
+            'x': 0,
+            'y': 0,
+            'children': [
+              {
+                'name': 'progress',
+                'align': 'blabs',
+                'x': 0,
+                'y': 44
+              },
+              {
+                'name': 'playButton',
+                'align': 'tl',
+                'x': 15,
+                'y': 12
+              },
+              {
+                'name': 'timeDisplay',
+                'align': 'tl',
+                'x': 10,
+                'y': 7
+              },
+              {
+                'name': 'fullScreenButton',
+                'align': 'tr',
+                'x': 10,
+                'y': 12
+              },
+              {
+                'name': 'setting',
+                'align': 'tr',
+                'x': 15,
+                'y': 12
+              }
+            ]
+          }
+        ]
       }, function (player) {
         console.log('播放器创建好了。')
       })
@@ -157,9 +223,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wrapper {
-  padding-bottom: 55px;
-}
 .servant-panel_title {
   padding: 0 6px;
   font-size: 16px;
@@ -180,6 +243,13 @@ export default {
   background-size: cover;
 }
 .wrapper {
+  padding-top: 200px;
+  padding-bottom: 55px;
+  #aliyunPlayer {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+  }
   .poster {
     font-size: 0;
     overflow: hidden;

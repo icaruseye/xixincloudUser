@@ -197,6 +197,27 @@
             </div>
           </template>
         </div>
+        <!-- 挂号 -->
+        <div class="weui-panel" v-if="registrationListDone.length > 0">
+          <div class="weui-panel_subtitle text-overflow-1">挂号</div>
+          <div class="weui-list_container schedule-list">
+            <template v-for="(item, index) in registrationListDone">
+                <router-link :to="`/organ/registration/order/${item.ScheduleID}?read=1`" :key="index" class="list-item">
+                  <div class="item">
+                    <div class="icon">
+                      <img src="../../assets/images/icon_picc_gh.png" alt="">
+                    </div>
+                    <div style="flex:1">
+                      <div class="text">{{item.DoctorName}}</div>
+                      <div class="time">预约时间：{{item.StartTime | timeFormat('YYYY-MM-DD')}} ({{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}})</div>
+                    </div>
+                    <img style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="">
+                    <!-- <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div> -->
+                  </div>
+                </router-link>
+            </template>
+          </div>
+        </div>
       </div>
       <!-- 空状态 -->
       <xxOccupiedBox v-if="flag3">
@@ -222,7 +243,8 @@ export default {
   data () {
     return {
       dataList: [],
-      dataListDone: [],
+      dataListDone: [], //已完成服务列表
+      registrationListDone: [], //已完成挂号列表
       tabIndex: this.$store.getters.serviceTabIndex,
       checkerIndex: this.$store.getters.serviceTabIndex2, // 0、全部；1、待确认；2、待服务；3、待评价
       UserOrderDetailsList: {
@@ -290,7 +312,7 @@ export default {
           break
         case 2:
           // 已完成列表
-          this.getDone()
+          this.getAllDone()
           break
         default:
           // 预约列表
@@ -397,14 +419,27 @@ export default {
         })
       }
     },
+    async getAllDone () {
+      await this.getDone()
+      await this.getRegistrationDone()
+      if (this.dataListDone.length === 0 && this.registrationListDone.length === 0) {
+        this.flag3 = true
+      }
+    },
     // 已完成
     async getDone () {
       const res = await this.$http.get('/MissionList/Complate')
       if (res.data.Code === 100000) {
         this.dataListDone = res.data.Data
-        if (this.dataListDone.length === 0) {
-          this.flag3 = true
-        }
+      } else {
+        this.$vux.toast.text('出错了')
+      }
+    },
+    // 已完成挂号
+    async getRegistrationDone () {
+      const res = await this.$http.get('/Registration/ComplateList')
+      if (res.data.Code === 100000) {
+        this.registrationListDone = res.data.Data
       } else {
         this.$vux.toast.text('出错了')
       }
