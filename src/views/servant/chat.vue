@@ -263,7 +263,6 @@ export default {
 
 .chat-item-right {
   display: flex;
-  align-items: center;
   flex-direction: row-reverse;
   .chat-item-content {
     margin: 0 15px 0 10px;

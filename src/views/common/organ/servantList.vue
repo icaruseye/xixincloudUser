@@ -101,7 +101,7 @@ export default {
     },
     toDetail (ViewId) {
       this.$store.commit('SET_SERVANT_TAB', 0)
-      this.$router.push(`/servant/${ViewId}/service`)
+      this.$router.push(`/servant/${ViewId}`)
     },
     async getTagList () {
       const res = await this.$http.get(`/UseType/ShopTag/List`)

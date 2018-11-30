@@ -150,7 +150,7 @@ export default {
   methods: {
     toDetail (ViewId) {
       this.$store.commit('SET_SERVANT_TAB', 0)
-      this.$router.push(`/servant/${ViewId}/service`)
+      this.$router.push(`/servant/${ViewId}`)
     },
     showDialog () {
       this.showHideOnBlur = true

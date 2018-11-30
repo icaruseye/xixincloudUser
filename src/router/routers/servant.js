@@ -59,7 +59,7 @@ export default [
   },
   {
     path: '/servant/service/:id',
-    redirect: '/servant/:id/service'
+    redirect: '/servant/:id'
   },
   {
     path: '/servant/:id',
