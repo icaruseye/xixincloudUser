@@ -43,6 +43,9 @@ export default {
     Checker,
     CheckerItem
   },
+  props: {
+    ViewID: String
+  },
   filters: {
     timeFormat (value, m) {
       return dateFormat(new Date(value), m)
@@ -60,11 +63,6 @@ export default {
       }
     }
   },
-  computed: {
-    viewId () {
-      return this.$route.params.id
-    }
-  },
   mounted () {
     const _deta = this.getAfterOneMonth(new Date())
     this.getServantSchedule(dateFormat(new Date(), 'YYYY-MM-DD'))
@@ -74,7 +72,7 @@ export default {
     // 获取某一天排班详情
     async getServantSchedule (dateTime) {
       this.calendarLoading = true
-      const res = await this.$http.get(`/Schedule/bespoke-registration?viewId=${this.viewId}&dateTime=${dateTime}`)
+      const res = await this.$http.get(`/Schedule/bespoke-registration?viewId=${this.ViewID}&dateTime=${dateTime}`)
       this.calendarLoading = false
       if (res.data.Code === 100000 && res.data.Data.RegistrationSchedules) {
         this.servantInfos = res.data.Data
@@ -86,7 +84,7 @@ export default {
       const res = await this.$http.get(`/Schedule/IsNoSchedule-Register`, {
         startTime: startTime,
         endTime: endTime,
-        viewId: this.viewId
+        viewId: this.ViewID
       })
       if (res.data.Code === 100000) {
         this.newCalendar = res.data.Data.length > 0

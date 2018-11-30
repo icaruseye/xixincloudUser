@@ -73,11 +73,9 @@ export default {
   created () {
     this.initData()
     this.getShopAgreement()
-    console.log(this.$route.query)
   },
   methods: {
     toShare () {
-      console.log(this.data)
       this.$router.push(`/activity/share?packageID=${this.itemID}&userID=${this.userAccount.ID}&servantID=${this.servantID}`)
     },
     showTips () {

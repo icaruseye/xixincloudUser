@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     previewImage (index) {
-      console.log(this.prewimgList)
       ImagePreview(this.prewimgList, index)
     }
   }

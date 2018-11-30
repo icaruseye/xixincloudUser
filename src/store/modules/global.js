@@ -7,7 +7,7 @@ const SET_MODULESWITCH = 'SET_MODULESWITCH'
 const state = {
   serviceTabIndex: 0, // 服务页Tab
   serviceTabIndex2: 0, // 服务中状态栏Tab
-  servantTabIndex: 0, // 服务者详情页Tab
+  servantTabIndex: 'service', // 服务者详情页Tab
   courseTabIndex: 0, // 课程详情页Tab
   routerLoading: false,
   isHaveNewMsg: false,

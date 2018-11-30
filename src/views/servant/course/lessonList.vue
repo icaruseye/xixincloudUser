@@ -56,9 +56,7 @@ export default {
     async getShopProxyCourseLessonList () {
       const res = await this.$http.get(`/ShopProxyCourseLessonList?page=${this.pageIndex}&proxyCourseID=${this.proxyCourseID}`)
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
         this.courseList = res.data.Data
-        console.log(this.courseList)
       } else {
         this.$vux.toast.text(res.data.Msg)
       }

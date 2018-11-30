@@ -345,7 +345,6 @@ export default {
     },
     // 取消评价
     cancelComments () {
-      console.log('cancelComments')
     },
     // 滚到底部
     scrollToBottom () {

@@ -62,7 +62,6 @@ router.beforeEach((to, from, next) => {
   if (to.meta.ModuleSwitch) {
     http.get('/ModuleSwitch').then(res => {
       router.app.$store.commit('SET_MODULESWITCH', res.data.Data)
-      console.log(res)
     })
   }
 

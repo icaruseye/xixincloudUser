@@ -19,7 +19,7 @@ const parentMixin = {
     }
   },
   props: {
-    value: Number
+    value: [Number, String]
   },
   watch: {
     currentIndex (val, oldVal) {

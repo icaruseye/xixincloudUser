@@ -243,8 +243,8 @@ export default {
   data () {
     return {
       dataList: [],
-      dataListDone: [], //已完成服务列表
-      registrationListDone: [], //已完成挂号列表
+      dataListDone: [], // 已完成服务列表
+      registrationListDone: [], // 已完成挂号列表
       tabIndex: this.$store.getters.serviceTabIndex,
       checkerIndex: this.$store.getters.serviceTabIndex2, // 0、全部；1、待确认；2、待服务；3、待评价
       UserOrderDetailsList: {
@@ -361,7 +361,6 @@ export default {
       this.flag2 = this.dataList.length === 0
     },
     async getBuyAll () {
-      console.log(123)
       await this.getUserOrderDetailsList()
       await this.getRegistrationList()
       if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0 && this.UserOrderDetailsList.RegistrationList.length === 0) {
@@ -411,7 +410,6 @@ export default {
         this.$nextTick(() => {
           const waitPaySuccess = document.querySelectorAll('.waitPaySuccess')
           if (waitPaySuccess.length > 0) {
-            console.log(waitPaySuccess.length)
             setTimeout(() => {
               this.getUserOrderDetailsList()
             }, 15 * 1000)

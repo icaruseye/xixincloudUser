@@ -63,7 +63,6 @@ export default {
   },
   watch: {
     courseWrongNums (val) {
-      console.log(111111111)
       this.wrongNums = val
     },
     courseRightNums (val) {

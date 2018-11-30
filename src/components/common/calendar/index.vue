@@ -269,8 +269,6 @@ export default {
       } else {
         return false
       }
-      // console.log(this.selectedMonth < new Date().getMonth() && this.selectedYear <= new Date().getFullYear())
-      // return this.selectedMonth > new Date().getMonth() || this.selectedYear === new Date().getFullYear()
     },
     beForeToday () {
       if (this.selectedMonth < new Date().getMonth() && this.selectedYear <= new Date().getFullYear()) {

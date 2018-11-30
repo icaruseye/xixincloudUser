@@ -287,7 +287,6 @@ export default {
       this.$router.push(`/servant/chat/${ViewID}`)
     },
     onNavbarClickLeft () {
-      console.log(this.serviceItemInfo.Type + '---' + this.serviceItemInfo.State)
       if (this.serviceItemInfo.Type === 0 && this.serviceItemInfo.State === 0) {
         this.$store.commit('setServiceTabIndex', 1)
         this.$store.commit('setServiceTabIndex2', 1)

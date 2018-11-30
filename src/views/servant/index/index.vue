@@ -10,12 +10,14 @@
         <servantInfo :data="servantInfos"></servantInfo>
       </div>
       <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px" style="border-bottom: 1px solid rgba(238, 238, 238, .3)">
-        <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick" @click.native="to('service')">服务</xx-tab-item>
-        <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick" @click.native="to('course')">课程</xx-tab-item>
-        <xx-tab-item v-if="moduleSwitch.RegisterSwitch" :selected="tabIndex === 2" @on-item-click="tabItemClick" @click.native="to('registration')">预约挂号</xx-tab-item>
+        <xx-tab-item :selected="selectName === 'service'" @click.native="changeTab('service')">服务</xx-tab-item>
+        <xx-tab-item v-if="moduleSwitch.CourseSwitch" :selected="selectName === 'course'" @click.native="changeTab('course')">课程</xx-tab-item>
+        <xx-tab-item v-if="moduleSwitch.RegisterSwitch" :selected="selectName === 'registration'" @click.native="changeTab('registration')">预约挂号</xx-tab-item>
       </xx-tab>
-      <router-view></router-view>
-      <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">购买咨询</button>
+      <service :ViewID="this.ViewID" v-show="selectName === 'service'"></service>
+      <course :ViewID="this.ViewID" v-show="selectName === 'course'"></course>
+      <registration :ViewID="this.ViewID" v-show="selectName === 'registration'"></registration>
+      <button type="button" v-show="isShowChatButton" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">购买咨询</button>
     </div>
   </div>
 </template>
@@ -23,12 +25,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import servantInfo from '../components/serviceInfo'
+import service from './service'
+import course from './course'
+import registration from './registration'
 export default {
   components: {
-    servantInfo
+    servantInfo,
+    service,
+    course,
+    registration
   },
   data () {
     return {
+      isShowChatButton: true,
+      selectName: this.$store.getters.servantTabIndex,
       servantInfos: {},
       tabIndex: this.$store.getters.servantTabIndex
     }
@@ -37,17 +47,20 @@ export default {
     isShare () {
       return this.$route.query.isShare === '1'
     },
+    ViewID () {
+      return this.$route.params.id
+    },
     ...mapGetters([
       'moduleSwitch'
     ])
   },
   watch: {
     servantTabIndex (val) {
-      this.tabIndex = val
+      this.selectName = val
     }
   },
   mounted () {
-    console.log(this.tabIndex)
+    this.setButtonStatus(this.selectName)
     this.getServantInfo()
   },
   methods: {
@@ -66,15 +79,20 @@ export default {
     gochat () {
       this.$router.push(`/servant/chat/${this.$route.params.id}`)
     },
-    to (url) {
-      this.$router.replace(`/servant/${this.$route.params.id}/${url}`)
-    },
     onNavbarClickLeft () {
       this.$router.push(`/servant`)
     },
-    tabItemClick (val) {
-      this.tabIndex = val
-      this.$store.commit('servantTabIndex', val)
+    changeTab (name) {
+      this.selectName = name
+      this.$store.commit('servantTabIndex', name)
+      this.setButtonStatus(name)
+    },
+    setButtonStatus (name) {
+      if (name === 'registration') {
+        this.isShowChatButton = false
+      } else {
+        this.isShowChatButton = true
+      }
     }
   }
 }

@@ -57,15 +57,13 @@ export default {
       }
     }
   },
+  props: {
+    ViewID: String
+  },
   data () {
     return {
       pageIndex: 1,
       CourseList: []
-    }
-  },
-  computed: {
-    servantViewID () {
-      return this.$route.params.id
     }
   },
   mounted () {
@@ -73,9 +71,8 @@ export default {
   },
   methods: {
     async getServantCourseList () {
-      const res = await this.$http.get(`/ServantCourseList?servantViewID=b9f71c5e482246ab98fe7803235eb670&page=${this.pageIndex}`)
+      const res = await this.$http.get(`/ServantCourseList?servantViewID=${this.ViewID}&page=${this.pageIndex}`)
       if (res.data.Code === 100000) {
-        console.log(res.data.Data)
         this.CourseList = res.data.Data.CourseInfoResponseList
       }
     },

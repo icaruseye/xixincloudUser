@@ -20,25 +20,22 @@ export default {
   components: {
     servantItemist
   },
+  props: {
+    ViewID: String
+  },
   data () {
     return {
       itemList: [],
       packageList: []
     }
   },
-  computed: {
-    ViewID () {
-      return this.$route.params.id
-    }
-  },
   mounted () {
     this.getItemList()
-    console.log(this.$route.params.id)
   },
   methods: {
     // 服务列表
     async getItemList () {
-      const res = await this.$http.get(`/PackageList/${this.$route.params.id}`)
+      const res = await this.$http.get(`/PackageList/${this.ViewID}`)
       if (res.data.Code === 100000) {
         this.splitList(res.data.Data)
       } else {

@@ -203,7 +203,6 @@ export default {
           }
         ]
       }, function (player) {
-        console.log('播放器创建好了。')
       })
     },
     // 播放课程视频

@@ -156,7 +156,6 @@ export default {
         timeout: 15000,
         onUploadProgress: function (progressEvent) {
           var complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
-          console.log(complete)
           _img.progress = complete
         }
       }
@@ -193,7 +192,6 @@ export default {
       if (this.isAvatar) {
         return true
       }
-      console.log(this.count)
       if (this.count > this.limit) {
         AlertModule.show({
           title: '提示',
