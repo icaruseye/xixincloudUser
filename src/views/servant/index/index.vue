@@ -39,8 +39,8 @@ export default {
     return {
       isShowChatButton: true,
       selectName: this.$store.getters.servantTabIndex,
-      servantInfos: {},
-      tabIndex: this.$store.getters.servantTabIndex
+      tabIndex: this.$store.getters.servantTabIndex,
+      servantInfos: {}
     }
   },
   computed: {
@@ -55,7 +55,7 @@ export default {
     ])
   },
   watch: {
-    servantTabIndex (val) {
+    SET_SERVANT_TAB (val) {
       this.selectName = val
     }
   },
@@ -84,7 +84,7 @@ export default {
     },
     changeTab (name) {
       this.selectName = name
-      this.$store.commit('servantTabIndex', name)
+      this.$store.commit('SET_SERVANT_TAB', name)
       this.setButtonStatus(name)
     },
     setButtonStatus (name) {

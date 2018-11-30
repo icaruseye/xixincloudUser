@@ -149,7 +149,7 @@ export default {
   },
   methods: {
     toDetail (ViewId) {
-      this.$store.commit('servantTabIndex', 0)
+      this.$store.commit('SET_SERVANT_TAB', 0)
       this.$router.push(`/servant/${ViewId}/service`)
     },
     showDialog () {
@@ -187,7 +187,7 @@ export default {
       this.$router.push(url)
     },
     closePopup () {
-      window.scrollTo(0,0)
+      window.scrollTo(0, 0)
       this.showHideOnBlur = false
     }
   }

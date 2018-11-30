@@ -12,7 +12,7 @@ export default {
   methods: {
     to (path) {
       if (path !== '/') {
-        this.$store.commit('setServiceTabIndex', 0)
+        this.$store.commit('SET_SERVICE_TAB', 0)
       }
       this.$router.replace(path)
     }

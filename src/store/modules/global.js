@@ -1,31 +1,35 @@
 import api from '@/api'
 
-const SET_ROUTER_LOADING = 'SET_ROUTER_LOADING'
-const HAVE_NEW_MSG = 'HAVE_NEW_MSG'
-const SET_MODULESWITCH = 'SET_MODULESWITCH'
+const HAVE_NEW_MSG = 'HAVE_NEW_MSG' // 是否有新聊天消息
+const SET_ROUTER_LOADING = 'SET_ROUTER_LOADING' // 路转路由loading
+const SET_SERVICE_TAB = 'SET_SERVICE_TAB' // 服务页tab
+const SET_SERVICE_IN_TAB = 'SET_SERVICE_IN_TAB' // 服务中状态栏Tab
+const SET_SERVANT_TAB = 'SET_SERVANT_TAB' // 服务者详情页tab
+const SET_COURSE_TAB = 'SET_COURSE_TAB' // 课程页tab
+const SET_MODULESWITCH = 'SET_MODULESWITCH' // 功能开关：课程、挂号
 
 const state = {
-  serviceTabIndex: 0, // 服务页Tab
-  serviceTabIndex2: 0, // 服务中状态栏Tab
-  servantTabIndex: 'service', // 服务者详情页Tab
-  courseTabIndex: 0, // 课程详情页Tab
-  routerLoading: false,
   isHaveNewMsg: false,
+  routerLoading: false,
+  serviceTabIndex: 0,
+  serviceInTabIndex: 0,
+  servantTabIndex: 'service',
+  courseTabIndex: 0,
   unreadNum: 0,
   moduleSwitch: {}
 }
 
 const mutations = {
-  setServiceTabIndex (state, id) {
+  [SET_SERVICE_TAB] (state, id) {
     state.serviceTabIndex = id
   },
-  setServiceTabIndex2 (state, id) {
-    state.serviceTabIndex2 = id
+  [SET_SERVICE_IN_TAB] (state, id) {
+    state.serviceInTabIndex = id
   },
-  servantTabIndex (state, id) {
+  [SET_SERVANT_TAB] (state, id) {
     state.servantTabIndex = id
   },
-  courseTabIndex (state, id) {
+  [SET_COURSE_TAB] (state, id) {
     state.courseTabIndex = id
   },
   [SET_ROUTER_LOADING] (state, flag) {
@@ -50,7 +54,7 @@ const actions = {
 
 const getters = {
   serviceTabIndex: state => state.serviceTabIndex,
-  serviceTabIndex2: state => state.serviceTabIndex2,
+  serviceInTabIndex: state => state.serviceInTabIndex,
   servantTabIndex: state => state.servantTabIndex,
   courseTabIndex: state => state.courseTabIndex,
   routerLoading: state => state.routerLoading,

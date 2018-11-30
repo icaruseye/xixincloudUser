@@ -362,17 +362,17 @@ export default {
     onNavbarClickLeft () {
       // 待确认
       if (this.detail.Type === 0 && this.detail.State === 0) {
-        this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', 1)
+        this.$store.commit('SET_SERVICE_TAB', 1)
+        this.$store.commit('SET_SERVICE_IN_TAB', 1)
       }
       // 服务中
       if (this.detail.Type === 1 && this.detail.State <= 4) {
-        this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', 0)
+        this.$store.commit('SET_SERVICE_TAB', 1)
+        this.$store.commit('SET_SERVICE_IN_TAB', 0)
       }
       // 已完成
       if (this.detail.Type === 1 && (this.detail.State >= 5 || this.detail.State < 0)) {
-        this.$store.commit('setServiceTabIndex', 2)
+        this.$store.commit('SET_SERVICE_TAB', 2)
       }
       this.$router.push('/service')
     }

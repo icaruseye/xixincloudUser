@@ -7,15 +7,15 @@
     <div class="form-panel">
       <div class="weui-form-cell">
         <div class="weui-cell-top">
-            <label class="label" for="">手机号</label>
-            <input v-model="mobile" name="phone" type="text" placeholder="请输入手机号">
+          <label class="label" for="">手机号</label>
+          <input v-model="mobile" name="phone" type="text" placeholder="请输入手机号">
         </div>
       </div>
       <div class="weui-form-cell weui-cell_vcode">
         <div class="weui-cell-top">
-            <label class="label" for="">验证码</label>
-            <input v-model="code" name="code" type="number" placeholder="请输入验证码" style="width:80px">
-            <button type="button" class="weui-vcode-btn" :disabled="disabled_code" @click="getCode">{{codeText}}</button>
+          <label class="label" for="">验证码</label>
+          <input v-model="code" name="code" type="number" placeholder="请输入验证码" style="width:80px">
+          <button type="button" class="weui-vcode-btn" :disabled="disabled_code" @click="getCode">{{codeText}}</button>
         </div>
       </div>
       <div class="weui-form-cell userAgreement">

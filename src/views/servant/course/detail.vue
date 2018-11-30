@@ -212,7 +212,7 @@ export default {
     // 切换tab页
     tabItemClick (val) {
       this.tabIndex = val
-      this.$store.commit('courseTabIndex', val)
+      this.$store.commit('SET_COURSE_TAB', val)
     },
     to (url) {
       this.$router.replace(url)

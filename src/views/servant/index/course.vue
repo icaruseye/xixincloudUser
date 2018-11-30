@@ -77,7 +77,7 @@ export default {
       }
     },
     to (url) {
-      this.$store.commit('courseTabIndex', 0)
+      this.$store.commit('SET_COURSE_TAB', 0)
       this.$router.push(url)
     }
   }

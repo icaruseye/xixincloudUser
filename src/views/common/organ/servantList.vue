@@ -100,7 +100,7 @@ export default {
       }
     },
     toDetail (ViewId) {
-      this.$store.commit('servantTabIndex', 0)
+      this.$store.commit('SET_SERVANT_TAB', 0)
       this.$router.push(`/servant/${ViewId}/service`)
     },
     async getTagList () {

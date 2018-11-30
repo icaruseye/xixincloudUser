@@ -186,14 +186,10 @@
                 <div class="describe">完成时间：{{item.FinishTime | timeFormat('YYYY-MM-DD HH:mm:ss')}}</div>
               </div>
               <img v-if="item.State === 0 && item.Type === 0" style="width:50px;height:50px;" src="@/assets/images/ic_dqr.png" alt="">
-              <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="">
-              <img v-if="item.State === 4" style="width:50px;height:50px;" src="@/assets/images/ic_dpj.png" alt="">
-              <img v-if="item.State === 5" style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="">
-              <div class="cancel-icon">
-                <svg aria-hidden="true" class="icon" v-if="item.State === -1">
-                  <use xlink:href="#icon-yiquxiao"></use>
-                </svg>
-              </div>
+              <img v-if="item.Type === 1 && [0,1,2,3].indexOf(item.State) !== -1" style="width:50px;height:50px;" src="@/assets/images/ic_dff.png" alt="待服务">
+              <img v-if="item.State === 4" style="width:50px;height:50px;" src="@/assets/images/ic_dpj.png" alt="待评价">
+              <img v-if="item.State === 5" style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="已完结">
+              <img v-if="item.State === -1" style="width:50px;height:50px;" src="@/assets/images/ic_yqx.png" alt="已取消">
             </div>
           </template>
         </div>
@@ -211,8 +207,7 @@
                       <div class="text">{{item.DoctorName}}</div>
                       <div class="time">预约时间：{{item.StartTime | timeFormat('YYYY-MM-DD')}} ({{item.StartTime | timeFormat('HH:mm')}} - {{item.EndTime | timeFormat('HH:mm')}})</div>
                     </div>
-                    <img style="width:50px;height:50px;" src="@/assets/images/ic_ywj.png" alt="">
-                    <!-- <div class="price">{{(item.RegistrationFee / 100).toFixed(2)}}元</div> -->
+                    <img style="width:50px;height:50px;" src="@/assets/images/ic_ywc.png" alt="">
                   </div>
                 </router-link>
             </template>
@@ -246,7 +241,7 @@ export default {
       dataListDone: [], // 已完成服务列表
       registrationListDone: [], // 已完成挂号列表
       tabIndex: this.$store.getters.serviceTabIndex,
-      checkerIndex: this.$store.getters.serviceTabIndex2, // 0、全部；1、待确认；2、待服务；3、待评价
+      checkerIndex: this.$store.getters.serviceInTabIndex, // 0、全部；1、待确认；2、待服务；3、待评价
       UserOrderDetailsList: {
         ItemsByDoc: [],
         PackByDoc: [],
@@ -452,11 +447,12 @@ export default {
     },
     changeChecker (index) {
       this.checkerIndex = index
-      this.$store.commit('setServiceTabIndex2', index)
+      this.$store.commit('SET_SERVICE_IN_TAB', index)
     },
     onItemClick (id) {
+      console.log(id)
       this.fromTabIndexGetData(id)
-      this.$store.commit('setServiceTabIndex', id)
+      this.$store.commit('SET_SERVICE_TAB', id)
     },
     toDetail (id) {
       this.$router.push(`/service/in/${id}`)

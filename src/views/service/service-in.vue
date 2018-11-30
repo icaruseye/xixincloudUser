@@ -288,15 +288,15 @@ export default {
     },
     onNavbarClickLeft () {
       if (this.serviceItemInfo.Type === 0 && this.serviceItemInfo.State === 0) {
-        this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', 1)
+        this.$store.commit('SET_SERVICE_TAB', 1)
+        this.$store.commit('SET_SERVICE_IN_TAB', 1)
       }
       if (this.serviceItemInfo.Type === 1 && this.serviceItemInfo.State <= 4) {
-        this.$store.commit('setServiceTabIndex', 1)
-        this.$store.commit('setServiceTabIndex2', 0)
+        this.$store.commit('SET_SERVICE_TAB', 1)
+        this.$store.commit('SET_SERVICE_IN_TAB', 0)
       }
       if (this.serviceItemInfo.Type === 1 && (this.serviceItemInfo.State >= 5 || this.serviceItemInfo.State < 0)) {
-        this.$store.commit('setServiceTabIndex', 2)
+        this.$store.commit('SET_SERVICE_TAB', 2)
       }
       this.$router.push('/service')
     }
