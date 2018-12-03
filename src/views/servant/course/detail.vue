@@ -1,15 +1,17 @@
 <template>
   <div class="wrapper">
-    <div class="poster">
-      <div id='aliyunPlayer'></div>
-      <img v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="">
-      <img v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
-    </div>
-    <div class="title_info">
-      <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
-      <div>
-        <span class="price">￥{{courseInfo.Price}}</span>
-        <!-- <span class="count">123报名</span> -->
+    <div class="topbar">
+      <div class="poster">
+        <div id='aliyunPlayer'></div>
+        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="">
+        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
+      </div>
+      <div class="title_info">
+        <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
+        <div>
+          <span class="price">￥{{courseInfo.Price}}</span>
+          <!-- <span class="count">123报名</span> -->
+        </div>
       </div>
     </div>
     <!-- <div class="servant_info">
@@ -242,20 +244,22 @@ export default {
   background-size: cover;
 }
 .wrapper {
-  padding-top: 200px;
   padding-bottom: 55px;
-  #aliyunPlayer {
+  padding-top: 270px;
+  .topbar {
     z-index: 999;
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+  }
+  .poster_img {
+    width: 100%;
+    height: 200px;
   }
   .poster {
     font-size: 0;
     overflow: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
   .title_info {
     padding: 10px 17px;

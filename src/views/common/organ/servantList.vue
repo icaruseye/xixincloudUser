@@ -7,7 +7,7 @@
       <!-- 标签 -->
       <div class="tags-panel" v-if="tagList.length > 0">
         <div class="title">服务者标签</div>
-        <checker v-model="searchData.tagId" :radio-required="true" @on-change="getServantList" default-item-class="tags-item" selected-item-class="tags-item-selected">
+        <checker v-model="searchData.tagId" :radio-required="true" @on-change="changeTag" default-item-class="tags-item" selected-item-class="tags-item-selected">
           <checker-item :value="0">全部</checker-item>
           <checker-item v-for="(item, index) in tagList" :key="index" :value="item.TagID">{{item.TagName}}</checker-item>
         </checker>
@@ -100,8 +100,14 @@ export default {
       }
     },
     toDetail (ViewId) {
-      this.$store.commit('SET_SERVANT_TAB', 0)
+      this.$store.commit('SET_SERVANT_TAB', 'service')
       this.$router.push(`/servant/${ViewId}`)
+    },
+    changeTag () {
+      this.searchData.index = 1
+      this.lastPage = false
+      this.tips = ''
+      this.getServantList()
     },
     async getTagList () {
       const res = await this.$http.get(`/UseType/ShopTag/List`)

@@ -149,7 +149,7 @@ export default {
   },
   methods: {
     toDetail (ViewId) {
-      this.$store.commit('SET_SERVANT_TAB', 0)
+      this.$store.commit('SET_SERVANT_TAB', 'service')
       this.$router.push(`/servant/${ViewId}`)
     },
     showDialog () {
