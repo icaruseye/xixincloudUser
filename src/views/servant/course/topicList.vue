@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div>
     <div class="topic_list">
       <template v-for="(item, index) in topicList">
         <div class="item" :key="index">
@@ -33,8 +33,8 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
-    async getCouldExam () {
-      const res = await this.$http.get(`/CouldExam?testPaperID=${this.$route.params.id}`)
+    async getCouldExam (id) {
+      const res = await this.$http.get(`/CouldExam?testPaperID=${id}`)
       if (res.data.Code === 100000) {
         return res.data.Data
       } else {
@@ -42,7 +42,7 @@ export default {
       }
     },
     async toTopic (id) {
-      const recordID = await this.getCouldExam()
+      const recordID = await this.getCouldExam(id)
       this.$router.push(`/servant/course/topic/${id}?recordID=${recordID}`)
     }
   }
