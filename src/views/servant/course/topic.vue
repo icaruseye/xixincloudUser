@@ -4,7 +4,7 @@
       <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick">习题练习</xx-tab-item>
     </xx-tab>
     <div class="topic_wrap" v-if="questionList.length > 0">
-      <!-- 简答题 -->
+      <!-- 单选题 -->
       <topic-type1
         v-if="questionList[answerIndex].QuestionType === 1"
         :index="answerIndex"
@@ -40,7 +40,7 @@
         @setCourseWrongNums="wrongNums++"
         @setCourseRightNums="rightNums++">
       </topic-type4>
-      <!-- 简单题 -->
+      <!-- 简答题 -->
       <topic-type5
         v-if="questionList[answerIndex].QuestionType === 5"
         :index="answerIndex"
@@ -174,6 +174,7 @@ export default {
       let answerList = JSON.parse(sessionStorage.getItem('userAnswerList'))
       for (let item of answerList) {
         item.Answer = item.Answer + ''
+        item.TestPaperSubtitleQuestionID = item.UserTestPaperAnswerParam
       }
       const res = await this.$http.post(`/SubmitTestPaper?recordID=${this.recordID}`, answerList)
       if (res.data.Code === 100000) {

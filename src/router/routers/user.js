@@ -131,5 +131,19 @@ export default [
     meta: {
       title: '我的学习'
     }
+  },
+  {
+    path: '/user/myTestHistory/wrongQuestionTestPaper',
+    component: _import('/user/myTestHistory/wrongQuestionTestPaper'),
+    meta: {
+      title: '包含错题的试卷'
+    }
+  },
+  {
+    path: '/user/myTestHistory/wrongQuestionTestPaper/:testPaperID/book',
+    component: _import('/user/myTestHistory/wrongQuestionBook'),
+    meta: {
+      title: '错题本'
+    }
   }
 ]

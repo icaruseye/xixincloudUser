@@ -109,7 +109,7 @@ export default {
       this.$router.push(url)
     },
     async getWalletLogList () {
-      const res = await this.$http.get(`/WalletLogList?page=${this.pageIndex}`)
+      const res = await this.$http.get(`/WalletLogList/Recommend?page=${this.pageIndex}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.length === 0) {
           this.pageTotal = this.pageIndex
