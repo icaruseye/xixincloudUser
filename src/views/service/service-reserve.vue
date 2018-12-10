@@ -51,11 +51,11 @@
       </xx-cell-items>
       <xx-cell-items direction="vertical" class="noraml_cell" style="padding: 20px 0 15px 0;">
         <xx-uploader
-          :title="AgreementList[0].Content"
+          :title="`${AgreementList[0].Content} （最多可传九张）`"
           class="upload"
           :maxSize="1024 * 1024 * 20"
           :imgList="imgList1"
-          :limit="3"
+          :limit="9"
           @onUpdate="onUpdate"
         ></xx-uploader>
       </xx-cell-items>

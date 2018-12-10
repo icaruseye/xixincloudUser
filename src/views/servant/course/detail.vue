@@ -60,7 +60,8 @@ export default {
     return {
       tabIndex: this.$store.getters.courseTabIndex,
       pageIndex: 1,
-      courseInfo: {}
+      courseInfo: {},
+      player: null
     }
   },
   filters: {
@@ -109,7 +110,7 @@ export default {
     async getCouldWatchingVideo (lessonID) {
       const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}`)
       if (res.data.Code === 100000) {
-        this.initPlayer(res.data.Data)
+        this.player.loadByUrl(res.data.Data)
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -133,7 +134,7 @@ export default {
     },
     // 初始化视频插件
     initPlayer (source) {
-      new Aliplayer({
+      this.player = new Aliplayer({
         'id': 'aliyunPlayer',
         'height': '200px',
         'source': source,
@@ -204,7 +205,6 @@ export default {
             ]
           }
         ]
-      }, function (player) {
       })
     },
     // 播放课程视频
