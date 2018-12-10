@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="wrong_question_enter_btn">
+    <div class="wrong_question_enter_btn" @click="$PushUrl('/user/myTestHistory/wrongQuestionTestPaper')">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-cuotilianxi"></use>
       </svg>
@@ -9,9 +9,17 @@
     </div>
     <h3 class="title">全部已完成试卷</h3>
     <div class="list_container">
-      <div class="list_items" v-for="(testPaperRecord, index) in testPaperRecordList" :key="index">
-        {{testPaperRecord.TestPaperName}}
-      </div>
+      <template v-if="testPaperRecordList.length > 0">
+        <div class="list_items" v-for="(testPaperRecord, index) in testPaperRecordList" :key="index">
+          <i class="iconfont icon-wancheng"></i>
+          <h4 class="list_items_title">{{testPaperRecord.TestPaperName}}</h4>
+          <p class="list_items_desc">
+            {{testPaperRecord.EndTime | timeFormat}}</p>
+        </div>
+      </template>
+      <xxOccupiedBox v-else>
+        暂无已完成的试卷
+      </xxOccupiedBox>
     </div>
   </div>
 </template>
@@ -88,8 +96,31 @@ export default {
   padding: 0 5px;
   .list_items
   {
+    position: relative;
     height: 60px;
+    padding-left: 40px;
     border-bottom: 1px solid #f6f6f6;
+    .iconfont
+    {
+      position: absolute;
+      left: 10px;
+      height: 60px;
+      line-height: 60px;
+    }
+    .list_items_title
+    {
+      padding-top: 10px;
+      height: 25px;
+      line-height: 25px;
+      font-size: 14px;
+      color: #333;
+      font-weight: normal;
+    }
+    .list_items_desc
+    {
+      font-size: 12px;
+      color: #999;
+    }
   }
 }
 </style>
