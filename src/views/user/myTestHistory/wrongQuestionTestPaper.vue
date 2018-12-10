@@ -4,7 +4,7 @@
       <template v-if="testPaperList.length > 0">
         <div class="list_items" v-for="(testPaper, index) in testPaperList" :key="index">
           <i class="iconfont icon-wancheng"></i>
-          <h4 class="list_items_title">{{testPaper.Name}}</h4>
+          <h4 class="list_items_title">{{testPaper.Name | xxTextTruncateFilter(18)}}</h4>
           <p class="list_items_desc">
             {{testPaper.Description || '没有描述'}}
           </p>
@@ -38,7 +38,6 @@ export default {
       if (result.data.Code === 100000) {
         this.testPaperList = result.data.Data.testPaperResponseList
       } else {
-        this.$message.error(result.Msg)
       }
     }
   },
