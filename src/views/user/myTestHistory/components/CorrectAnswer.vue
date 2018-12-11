@@ -7,7 +7,6 @@
 <script>
 import { Checker, CheckerItem } from 'vux'
 import util from '@/plugins/util'
-const decollator = '><'
 export default {
   name: 'CompletionAnswer',
   components: {

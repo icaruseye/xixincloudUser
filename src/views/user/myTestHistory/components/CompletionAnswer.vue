@@ -64,7 +64,6 @@ export default {
       } else {
         return []
       }
-      
     }
   },
   methods: {
@@ -78,15 +77,15 @@ export default {
     },
     theAnswerIsRight () {
       for (let i = 0; i < this.AnswerList.length; i++) {
-        if (this.answerIsRight(this.AnswerList[i].myAnswer, this.AnswerList[i].rightAnswer)){
+        if (this.answerIsRight(this.AnswerList[i].myAnswer, this.AnswerList[i].rightAnswer)) {
           return true
         }
       }
       return false
     },
     answerIsRight (myAnswer, rightAnswer) {
-        let rightAnswerList = rightAnswer.split('#')
-        return rightAnswerList.includes(myAnswer)
+      let rightAnswerList = rightAnswer.split('#')
+      return rightAnswerList.includes(myAnswer)
     }
   },
   mounted () {
