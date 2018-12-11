@@ -35,7 +35,7 @@ export default {
       }
     },
     toDetail (id) {
-      this.$router.push(`/servant/course/${id}?isPay=1`)
+      this.$router.push(`/servant/course/${id}`)
     }
   }
 }
