@@ -44,7 +44,7 @@
     <div v-if="tabIndex === 1">
       <topic-list></topic-list>
     </div>
-    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder" v-if="!courseInfo.IsPurchased">购买课程</button>
+    <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder" v-if="!IsPurchased">购买课程</button>
   </div>
 </template>
 
@@ -60,9 +60,8 @@ export default {
     return {
       tabIndex: this.$store.getters.courseTabIndex,
       pageIndex: 1,
-      courseInfo: {
-        IsPurchased: true
-      },
+      courseInfo: {},
+      IsPurchased: true,
       player: null
     }
   },
@@ -88,6 +87,7 @@ export default {
   },
   mounted () {
     this.getShopProxyCourseDetails()
+    this.getLicenceCheck()
   },
   methods: {
     // 获取课程详情
@@ -101,6 +101,15 @@ export default {
         if (this.courseInfo.PreViewType === 1) {
           this.initPlayer(this.courseInfo.PreViewContent)
         }
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 是否已购买过该课程
+    async getLicenceCheck () {
+      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}`)
+      if (res.data.Code === 100000) {
+        this.IsPurchased = res.data.Data
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
