@@ -21,7 +21,7 @@
                 <span class="teacher">主讲：123</span>
               </div> -->
               <div>
-                <span class="price">￥{{item.Price}}</span>
+                <span class="price">￥{{item.Price | price}}</span>
                 <!-- <span class="count">123人报名</span> -->
               </div>
             </div>
@@ -55,6 +55,9 @@ export default {
         default:
           return '网授课'
       }
+    },
+    price (val = 0) {
+      return (val / 100).toFixed(2)
     }
   },
   props: {

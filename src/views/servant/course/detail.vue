@@ -9,7 +9,7 @@
       <div class="title_info">
         <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
         <div>
-          <span class="price">￥{{courseInfo.Price}}</span>
+          <span class="price">￥{{courseInfo.Price | price}}</span>
           <!-- <span class="count">123报名</span> -->
         </div>
       </div>
@@ -70,6 +70,9 @@ export default {
       if (!val) {
         return require('@/assets/images/course-default.png')
       }
+    },
+    price (val = 0) {
+      return (val / 100).toFixed(2)
     }
   },
   watch: {
@@ -92,7 +95,6 @@ export default {
   methods: {
     // 获取课程详情
     async getShopProxyCourseDetails () {
-      this.$vux.loading.isVisible()
       this.$vux.loading.show({text: '加载中'})
       const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.proxyCourseID}`)
       this.$vux.loading.hide()
