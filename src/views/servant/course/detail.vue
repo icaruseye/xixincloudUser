@@ -109,7 +109,7 @@ export default {
     },
     // 是否已购买过该课程
     async getLicenceCheck () {
-      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}&activityID=${this.$route.query.activityID}`)
       if (res.data.Code === 100000) {
         this.IsPurchased = res.data.Data
       } else {

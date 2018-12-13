@@ -19,7 +19,7 @@
           <img class="icon" :src="info.PackageType | ItemImageByUseType">
           <div class="content">
             <div class="name">{{info.CommodityName}}</div>
-            <div class="price">￥{{info.PresentPrice}}元</div>
+            <div class="price">￥{{info.PresentPrice | price}}元</div>
           </div>
         </div>
       </div>
@@ -43,6 +43,11 @@ import verifyPhone from './components/verifyPhone'
 export default {
   components: {
     verifyPhone
+  },
+  filters: {
+    price (val = 0) {
+      return (val / 100).toFixed(2)
+    }
   },
   data () {
     return {

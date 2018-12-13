@@ -2,7 +2,7 @@
   <div class="wrapper" v-if="pageReady">
     <div class="acMine_list" v-if="list.length > 0">
       <template v-for="(item, index) in list">
-        <div class="acMine_list_item" :key="index" @click="toDetail(item.ID)">
+        <div class="acMine_list_item" :key="index" @click="toDetail(index)">
           <img class="acMine_list_item_icon" :src="item.CoverPhoto | transformImgUrl">
           <div class="acMine_list_item_content">
             <div class="acMine_list_item_content_name">{{item.ActivityName}}</div>
@@ -43,8 +43,16 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
-    toDetail (id) {
-      this.$router.push(`/activity/detail/${id}?verification=false`)
+    toDetail (index) {
+      const item = this.list[index]
+      if (item.CommodityType === 1 ) {
+        // 服务
+        this.$router.push(`/service/reserve/${item.CommodityID}`)
+      }
+      if (item.CommodityType === 2 ) {
+        // 课程
+        this.$router.push(`/servant/course/${item.CommodityID}?activityID=${item.ID}`)
+      }
     }
   }
 }
