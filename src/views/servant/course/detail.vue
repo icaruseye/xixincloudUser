@@ -118,8 +118,12 @@ export default {
     },
     // 校验是否可以播放视频
     async getCouldWatchingVideo (lessonID) {
-      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}?activityID=${this.$route.query.activityID}`)
       if (res.data.Code === 100000) {
+        if (this.courseInfo.PreViewType !== 1) {
+          this.courseInfo.PreViewType = 1
+          this.initPlayer(res.data.Data)
+        }
         this.player.loadByUrl(res.data.Data)
       } else {
         this.$vux.toast.text(res.data.Msg)

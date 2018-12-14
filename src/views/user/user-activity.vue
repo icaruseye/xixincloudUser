@@ -45,11 +45,11 @@ export default {
     },
     toDetail (index) {
       const item = this.list[index]
-      if (item.CommodityType === 1 ) {
+      if (item.CommodityType === 1) {
         // 服务
         this.$router.push(`/service/reserve/${item.CommodityID}`)
       }
-      if (item.CommodityType === 2 ) {
+      if (item.CommodityType === 2) {
         // 课程
         this.$router.push(`/servant/course/${item.CommodityID}?activityID=${item.ID}`)
       }
