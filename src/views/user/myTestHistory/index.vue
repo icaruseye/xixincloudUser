@@ -7,7 +7,7 @@
       <span class="text">错题练习</span>
       <i class="iconfont icon-jiantouyou"></i>
     </div>
-    <h3 class="title">全部已完成试卷</h3>
+    <h3 class="title" v-if="testPaperRecordList.length > 0">全部已完成试卷</h3>
     <div class="list_container">
       <template v-if="testPaperRecordList.length > 0">
         <div class="list_items" v-for="(testPaperRecord, index) in testPaperRecordList" :key="index">

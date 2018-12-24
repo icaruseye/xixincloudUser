@@ -16,7 +16,8 @@
     "build:dev": "cross-env NODE_ENV=development env_config=dev node build/build.js",
     "build:testc": "cross-env NODE_ENV=test env_config=test node build/build.js --debug",
     "build:test": "cross-env NODE_ENV=test env_config=test node build/build.js",
-    "build:beta": "cross-env NODE_ENV=beta env_config=beta node build/build.js"
+    "build:beta": "cross-env NODE_ENV=beta env_config=beta node build/build.js",
+    "build:yun": "cross-env NODE_ENV=beta env_config=yun node build/build.js"
   },
   "dependencies": {
     "animate.css": "^3.7.0",
