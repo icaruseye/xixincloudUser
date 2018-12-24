@@ -37,18 +37,22 @@
         </div>
       </div>
     </div>
-    <div class="img-wrap"></div>
+    <div class="img-wrap">
+      <img class="screenshot" :src="screenshot" alt="">
+    </div>
   </div>
 </template>
 
 <script>
-import domtoimage from 'dom-to-image'
+// import domtoimage from 'dom-to-image'
+import html2canvas from 'html2canvas'
 export default {
   data () {
     return {
       ItemTemplate: {},
       Package: {},
-      servantInfo: {}
+      servantInfo: {},
+      screenshot: null
     }
   },
   computed: {
@@ -102,13 +106,27 @@ export default {
     // HTML页面转为图片
     htmlToCanvas () {
       const node = document.getElementById('html-wrap')
-      domtoimage.toPng(node).then(function (dataUrl) {
-        var img = new Image()
-        img.src = dataUrl
-        document.querySelector('.img-wrap').appendChild(img)
-      })
-      .catch(function (error) {
-        console.error('oops, something went wrong!', error)
+      const scale = 2
+      const canvas = document.createElement('canvas')
+      canvas.width = node.offsetWidth * scale
+      canvas.height = node.offsetHeight * scale
+      canvas.getContext("2d").scale(scale, scale)
+      var opts = {
+          scale: scale, // 添加的scale 参数
+          canvas: canvas, //自定义 canvas
+          // logging: true, //日志开关，便于查看html2canvas的内部执行流程
+          width: node.offsetWidth, //dom 原始宽度
+          height: node.offsetHeight,
+          useCORS: true // 【重要】开启跨域配置
+      };
+      html2canvas(node, opts).then((canvas) => {
+        var context = canvas.getContext('2d')
+        // 【重要】关闭抗锯齿
+        context.mozImageSmoothingEnabled = false
+        context.webkitImageSmoothingEnabled = false
+        context.msImageSmoothingEnabled = false
+        context.imageSmoothingEnabled = false
+        this.screenshot = canvas.toDataURL('image/png')
       })
     }
   }
@@ -123,7 +141,7 @@ export default {
   background: #fff;
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 6px 8px RGBA(204, 204, 204, 0.5);
+  // box-shadow: 0 6px 8px RGBA(204, 204, 204, 0.5);
   .poster {
     font-size: 0;
   }
@@ -244,6 +262,7 @@ export default {
   }
 }
 .img-wrap {
+  padding: 9px 12px;
   z-index: 999;
   position: absolute;
   top: 0;

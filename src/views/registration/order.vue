@@ -2,10 +2,10 @@
   <div class="wrapper order_wrap">
     <div class="title">预诊信息</div>
     <div class="content" v-if="servantInfos.DoctorName">
-      <!-- <div class="row">
-        <span class="label">就诊科室：</span>
-        <span>123</span>
-      </div> -->
+      <div class="row">
+        <span class="label">当前排号：</span>
+        <span>第{{servantInfos.CodeSort}}号</span>
+      </div>
       <div class="row">
         <span class="label">医生姓名：</span>
         <span>{{servantInfos.DoctorName}}</span>
@@ -14,10 +14,6 @@
         <span class="label">就诊时间：</span>
         <span>{{servantInfos.StartTime | dateFormat('YYYY年MM月DD日')}} {{servantInfos.StartTime | dateFormat('HH:mm')}} ~ {{servantInfos.EndTime | dateFormat('HH:mm')}}</span>
       </div>
-      <!-- <div class="row">
-        <span class="label">就诊时段：</span>
-        <span>123</span>
-      </div> -->
       <div class="row">
         <span class="label">就诊地点：</span>
         <span>{{servantInfos.Address}}</span>

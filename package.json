@@ -25,6 +25,7 @@
     "exif-js": "^2.3.0",
     "fastclick": "^1.0.6",
     "fundebug-javascript": "^1.1.2",
+    "html2canvas": "^1.0.0-alpha.12",
     "qs": "^6.5.1",
     "vant": "^1.1.15",
     "vconsole": "^3.2.0",

@@ -31,6 +31,9 @@
     <div class="course_info">
       <div class="servant-panel_title"><i class="icon icon-2"></i>课程详情</div>
       <div class="content">{{courseInfo.Desctiption}}</div>
+      <div class="imgs" v-if="courseInfo.Img">
+        <img v-for="(item, index) in courseInfo.Img.split(',')" :key="index" :src="item | transformImgUrl" alt="">
+      </div>
     </div>
     <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="30px" style="border-bottom: 1px solid #E9E9E9;margin-top:10px;">
       <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick">课程目录</xx-tab-item>
@@ -109,7 +112,7 @@ export default {
     },
     // 是否已购买过该课程
     async getLicenceCheck () {
-      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}&activityID=${this.$route.query.activityID}`)
+      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}`)
       if (res.data.Code === 100000) {
         this.IsPurchased = res.data.Data
       } else {
@@ -118,7 +121,7 @@ export default {
     },
     // 校验是否可以播放视频
     async getCouldWatchingVideo (lessonID) {
-      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}?activityID=${this.$route.query.activityID}`)
+      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}`)
       if (res.data.Code === 100000) {
         if (this.courseInfo.PreViewType !== 1) {
           this.courseInfo.PreViewType = 1
@@ -333,6 +336,14 @@ export default {
       padding: 15px;
       font-size: 12px;
       color: #4A4A4A;
+    }
+    .imgs {
+      padding: 12px;
+      text-align: center;
+      img {
+        margin-bottom: 10px;
+        width: 90%;
+      }
     }
   }
 }
