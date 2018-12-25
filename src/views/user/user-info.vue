@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="userInfo.IsMobileChecked !== 1">
     <xx-nav-bar
       left-text="返回"
       @click-left="onNavbarClickLeft">
@@ -75,7 +75,7 @@
 <script>
 import util from '@/plugins/util'
 import { mapGetters } from 'vuex'
-
+import { AlertModule } from 'vux'
 export default {
   data () {
     return {
@@ -113,6 +113,7 @@ export default {
     ])
   },
   created () {
+    const that = this
     this.imgList1[0].url = this.userAccount.Avatar
     this.UserInfo.NickName = this.userAccount.NickName
     this.UserInfo.RealName = this.userInfo.RealName
@@ -120,6 +121,16 @@ export default {
     this.getAge()
     if (this.userAccount.State === 1) {
       this.disabled = true
+    }
+    if (this.userInfo.IsMobileChecked == 1) {
+      AlertModule.show({
+        title: '提示',
+        content: '请先绑定手机号',
+        buttonText: '去绑定',
+        onHide () {
+          that.$router.push('/user/phone')
+        }
+      })
     }
   },
   methods: {
@@ -139,10 +150,11 @@ export default {
             time: 500,
             onHide () {
               that.$store.dispatch('getAccount').then(() => {
-                // 从user页进入
                 if (that.$route.query.edit === '1') {
-                  that.$router.back()
+                  // 从user页进入
+                  that.$router.push('/user')
                 } else {
+                  // 从预约页进入
                   const path = sessionStorage.getItem('reserve_path') || '/' // 从预约页进入
                   that.$router.replace(path)
                 }

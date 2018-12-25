@@ -110,15 +110,15 @@ export default {
       const canvas = document.createElement('canvas')
       canvas.width = node.offsetWidth * scale
       canvas.height = node.offsetHeight * scale
-      canvas.getContext("2d").scale(scale, scale)
+      canvas.getContext('2d').scale(scale, scale)
       var opts = {
-          scale: scale, // 添加的scale 参数
-          canvas: canvas, //自定义 canvas
-          // logging: true, //日志开关，便于查看html2canvas的内部执行流程
-          width: node.offsetWidth, //dom 原始宽度
-          height: node.offsetHeight,
-          useCORS: true // 【重要】开启跨域配置
-      };
+        scale: scale, // 添加的scale 参数
+        canvas: canvas, // 自定义 canvas
+        // logging: true, // 日志开关，便于查看html2canvas的内部执行流程
+        width: node.offsetWidth, // dom 原始宽度
+        height: node.offsetHeight,
+        useCORS: true // 【重要】开启跨域配置
+      }
       html2canvas(node, opts).then((canvas) => {
         var context = canvas.getContext('2d')
         // 【重要】关闭抗锯齿

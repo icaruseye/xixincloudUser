@@ -255,7 +255,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userAccount'
+      'userAccount',
+      'userInfo'
     ])
   },
   watch: {
@@ -460,14 +461,14 @@ export default {
     toReserve (id, ItemID, useType, viewId) {
       const that = this
       const url = this.reserveUrl(id, ItemID, useType, viewId)
-      if (this.userAccount.State === 0) {
+      if (this.userInfo.IsMobileChecked === 1) {
         this.$vux.confirm.show({
           title: '提示',
-          content: '您尚未完善个人资料',
-          confirmText: '去完善',
+          content: '您尚未绑定手机号',
+          confirmText: '去绑定',
           onConfirm () {
             sessionStorage.setItem('reserve_path', url)
-            that.$router.push(`/user/info`)
+            that.$router.push(`/user/phone`)
           }
         })
       } else {

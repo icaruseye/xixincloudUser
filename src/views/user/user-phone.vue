@@ -62,12 +62,13 @@ export default {
     }
   },
   created () {
+    const that = this
     if (this.userInfo.IsMobileChecked) {
       AlertModule.show({
         title: '提示',
         content: '已绑定过手机号',
         onHide () {
-          history.back()
+          that.$router.push('/user')
         }
       })
     }
@@ -140,9 +141,9 @@ export default {
           time: 500,
           onHide () {
             that.$store.dispatch('getAccount').then(() => {
-              // 从user页进入
               if (that.$route.query.edit === '1') {
-                that.$router.back()
+                // 从user页进入
+                that.$router.push('/user')
               } else {
                 // 从预约页进入
                 const path = sessionStorage.getItem('reserve_path') || '/'

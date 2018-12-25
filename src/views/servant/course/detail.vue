@@ -2,7 +2,15 @@
   <div class="wrapper">
     <div class="topbar">
       <div class="poster">
-        <div id='aliyunPlayer'></div>
+        <video
+          class="poster_video"
+          v-if="courseInfo.PreViewType == 1"
+          :src="courseInfo.PreViewContent"
+          controls="controls"
+          playsinline
+          webkit-playsinline
+          x5-playsinline>
+        </video>
         <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="">
         <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
       </div>
@@ -10,24 +18,9 @@
         <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
         <div>
           <span class="price">￥{{courseInfo.Price | price}}</span>
-          <!-- <span class="count">123报名</span> -->
         </div>
       </div>
     </div>
-    <!-- <div class="servant_info">
-      <div class="servant-panel_title"><i class="icon icon-2"></i>老师介绍</div>
-      <div class="info">
-        <img class="avatar" src="https://tva1.sinaimg.cn/crop.0.0.179.179.180/771d5a55gw1emwpljaw12j2050050t8o.jpg" alt="">
-        <div class="range">
-          <div class="name">层张仲景 - </div>
-          <div class="text">好评度：98%</div>
-          <div class="text">已上课：30节</div>
-        </div>
-      </div>
-      <div class="desc">
-         听力教研组组长，10年教学经验，先后在多家企业任职。是 真刀实练出的真功夫，有非常丰富的教学经验。听力教研组组长， 10年教学经验，先后在多家企业任职。是真刀实练出的真功夫， 有非常丰富的教学经验。
-      </div>
-    </div> -->
     <div class="course_info">
       <div class="servant-panel_title"><i class="icon icon-2"></i>课程详情</div>
       <div class="content">{{courseInfo.Desctiption}}</div>
@@ -103,9 +96,9 @@ export default {
       this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.courseInfo = res.data.Data
-        if (this.courseInfo.PreViewType === 1) {
-          this.initPlayer(this.courseInfo.PreViewContent)
-        }
+        // if (this.courseInfo.PreViewType === 1) {
+        //   this.initPlayer(this.courseInfo.PreViewContent)
+        // }
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -123,11 +116,13 @@ export default {
     async getCouldWatchingVideo (lessonID) {
       const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}`)
       if (res.data.Code === 100000) {
-        if (this.courseInfo.PreViewType !== 1) {
-          this.courseInfo.PreViewType = 1
-          this.initPlayer(res.data.Data)
-        }
-        this.player.loadByUrl(res.data.Data)
+        this.courseInfo.PreViewContent = res.data.Data
+        this.courseInfo.PreViewType = 1
+        // if (this.courseInfo.PreViewType !== 1) {
+        //   this.courseInfo.PreViewType = 1
+        //   this.initPlayer(res.data.Data)
+        // }
+        // this.player.loadByUrl(res.data.Data)
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -161,67 +156,7 @@ export default {
         'playsinline': true,
         'preload': true,
         'controlBarVisibility': 'hover',
-        'useH5Prism': true,
-        'skinLayout': [
-          {
-            'name': 'bigPlayButton',
-            'align': 'cc'
-          },
-          {
-            'name': 'H5Loading',
-            'align': 'cc'
-          },
-          {
-            'name': 'infoDisplay'
-          },
-          {
-            'name': 'tooltip',
-            'align': 'blabs',
-            'x': 0,
-            'y': 56
-          },
-          {
-            'name': 'thumbnail'
-          },
-          {
-            'name': 'controlBar',
-            'align': 'blabs',
-            'x': 0,
-            'y': 0,
-            'children': [
-              {
-                'name': 'progress',
-                'align': 'blabs',
-                'x': 0,
-                'y': 44
-              },
-              {
-                'name': 'playButton',
-                'align': 'tl',
-                'x': 15,
-                'y': 12
-              },
-              {
-                'name': 'timeDisplay',
-                'align': 'tl',
-                'x': 10,
-                'y': 7
-              },
-              {
-                'name': 'fullScreenButton',
-                'align': 'tr',
-                'x': 10,
-                'y': 12
-              },
-              {
-                'name': 'setting',
-                'align': 'tr',
-                'x': 15,
-                'y': 12
-              }
-            ]
-          }
-        ]
+        'useH5Prism': true
       })
     },
     // 播放课程视频
@@ -273,6 +208,11 @@ export default {
   .poster_img {
     width: 100%;
     height: 200px;
+  }
+  .poster_video {
+    width: 100%;
+    height: 200px;
+    background: #000;
   }
   .poster {
     font-size: 0;
