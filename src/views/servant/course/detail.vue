@@ -77,7 +77,7 @@ export default {
     }
   },
   computed: {
-    proxyCourseID () {
+    ServantShopProxyCourseID () {
       return this.$route.params.id
     },
     servantViewID () {
@@ -92,7 +92,7 @@ export default {
     // 获取课程详情
     async getShopProxyCourseDetails () {
       this.$vux.loading.show({text: '加载中'})
-      const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.ServantShopProxyCourseID}&Type=1`)
       this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.courseInfo = res.data.Data

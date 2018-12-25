@@ -14,9 +14,9 @@
         <xx-tab-item v-if="moduleSwitch.CourseSwitch" :selected="selectName === 'course'" @click.native="changeTab('course')">课程</xx-tab-item>
         <xx-tab-item v-if="moduleSwitch.RegisterSwitch" :selected="selectName === 'registration'" @click.native="changeTab('registration')">预约挂号</xx-tab-item>
       </xx-tab>
-      <service :ViewID="this.ViewID" v-show="selectName === 'service'"></service>
-      <course :ViewID="this.ViewID" v-show="selectName === 'course'"></course>
-      <registration :ViewID="this.ViewID" v-show="selectName === 'registration'"></registration>
+      <service :ViewID="this.ViewID" v-if="selectName === 'service'"></service>
+      <course :ViewID="this.ViewID" v-if="selectName === 'course'"></course>
+      <registration :ViewID="this.ViewID" v-if="selectName === 'registration'"></registration>
       <button type="button" v-show="isShowChatButton" class="weui-btn weui-btn-bottom weui-btn_primary" @click="gochat">购买咨询</button>
     </div>
   </div>

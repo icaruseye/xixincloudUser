@@ -5,7 +5,7 @@
       <div class="servant-panel_subtitle">单项课程</div>
       <div class="servant-panel_list">
         <template v-for="(item, index) in CourseList">
-          <div class="item" :key="index" @click="to(`/servant/course/${item.ShopProxyCourseID}?servantViewID=${$route.params.id}`)">
+          <div class="item" :key="index" @click="to(`/servant/course/${item.ServantShopProxyCourseID}?servantViewID=${$route.params.id}`)">
             <div class="poster">
               <img v-if="item.Img" :src="item.Img | transformImgUrl" alt="">
               <img v-else src="../../../assets/images/course-default.png" alt="">
@@ -13,27 +13,14 @@
             </div>
             <div class="right">
               <div class="name text-overflow-1">{{item.ShopProxyCourseName}}</div>
-              <!-- <div class="tags">
-                <span>内分泌科 | 明天 20：00</span>
-              </div>
-              <div>
-                <rater v-model="rater" active-color="#32C0F3" :font-size="14" disabled></rater>
-                <span class="teacher">主讲：123</span>
-              </div> -->
               <div>
                 <span class="price">￥{{item.Price | price}}</span>
-                <!-- <span class="count">123人报名</span> -->
               </div>
             </div>
           </div>
         </template>
       </div>
     </div>
-    <!-- <div class="servant-panel" style="margin-top:10px;">
-      <div class="servant-panel_subtitle">套餐课程</div>
-      <div class="servant-panel_list">
-      </div>
-    </div> -->
   </div>
 </template>
 
