@@ -5,7 +5,7 @@
         <img class="avatar" :src="info.Avatar | transformImgUrl" alt="">
       </div>
       <h3 class="nickName">
-        {{info.NickName}}
+        {{info.ViewName}}
       </h3>
       <p class="desc">{{info.Description | stringSub(85)}}</p>
     </div>

@@ -2,13 +2,19 @@
   <div class="wrap">
     <xxResultView title="支付成功">
       <button class="btn" @click="to('/')">返回首页</button>
-      <button class="btn" @click="to('/service')">服务列表</button>
+      <button v-if="orderType !== 6" class="btn" @click="to('/service')">服务列表</button>
+      <button v-else class="btn" @click="to('/course')">我的课程</button>
     </xxResultView>
   </div>
 </template>
 
 <script>
 export default {
+  computed: {
+    orderType () {
+      return +this.$route.query.orderType
+    }
+  },
   methods: {
     to (path) {
       if (path !== '/') {

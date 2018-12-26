@@ -29,6 +29,11 @@ export default {
   mounted () {
     this.getPackageInfo()
   },
+  computed: {
+    orderType () {
+      return +this.$route.query.orderType
+    }
+  },
   methods: {
     async getPackageInfo () {
       const res = await this.$http.get(`/PayShopInfo?orderID=${this.$route.query.OrderID}`)
@@ -48,7 +53,7 @@ export default {
       const payres = await this.$http.post(`/UserOrder/CreateOrder?orderID=${orderID}&openID=${openID}&shopID=${shopID}`)
       if (payres.data.Code === 100000) {
         if (payres.data.Data.Price === 0) {
-          this.$router.replace('/result/paySuccess')
+          this.toResultPage()
         } else {
           this.onBridgeReady(payres.data.Data)
         }
@@ -74,13 +79,16 @@ export default {
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
             const res = await that.$http.post(`/PagePaySuccess?orderID=${data.orderID}`)
             if (res.data.Code === 100000) {
-              that.$router.replace('/result/paySuccess')
+              that.toResultPage()
             } else {
               that.$vux.toast.text('出错了，如支付失败请联系客服')
             }
           }
         }
       )
+    },
+    toResultPage () {
+      this.$router.replace(`/result/paySuccess?orderType=${this.orderType}`)
     }
   }
 }

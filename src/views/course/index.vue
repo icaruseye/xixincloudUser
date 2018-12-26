@@ -1,16 +1,17 @@
 <template>
   <div class="wrapper">
-    <div class="course_list" v-if="list.length > 0">
-      <template v-for="(item, index) in list">
-        <div class="course_list_item" :key="index">
-          <div class="title">{{item.Title}}</div>
-          <button class="btn" @click="toDetail(item.CourseId)">去学习</button>
-        </div>
-      </template>
+    <div class="setting-panel vux-1px-t vux-1px-b">
+      <router-link to="/course/courseList" class="setting-panel_item vux-1px-b">
+        <img src="@/assets/images/icon-my-comp.png" alt="">
+        <span class="title">我的课程</span>
+        <i class="iconfont icon-jiantouyou"></i>
+      </router-link>
+      <router-link to="/user/myTestHistory" class="setting-panel_item vux-1px-b">
+        <img src="@/assets/images/icon-my-info.png" alt="">
+        <span class="title">错题本</span>
+        <i class="iconfont icon-jiantouyou"></i>
+      </router-link>
     </div>
-    <xxOccupiedBox v-else>
-      暂无课程
-    </xxOccupiedBox>
     <xx-tabbar></xx-tabbar>
   </div>
 </template>
@@ -19,57 +20,51 @@
 export default {
   data () {
     return {
-      list: []
     }
+  },
+  created () {
   },
   mounted () {
-    this.getCourseList()
   },
   methods: {
-    async getCourseList () {
-      const res = await this.$http.get(`/Proxy-Course-List`)
-      if (res.data.Code === 100000) {
-        this.list = res.data.Data
-      } else {
-        this.$vux.toast.text(res.data.Msg)
-      }
-    },
-    toDetail (id) {
-      this.$router.push(`/servant/course/${id}`)
-    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.course_list {
-  margin-top: 15px;
+.setting-panel {
   background: #fff;
-  padding: 0 12px;
-}
+  &.vux-1px-t:before {
+    border-color: #e5e5e5;
+  }
 
-.course_list_item {
-  padding: 15px 0;
-  display: flex;
-  align-items: center;
-  .icon {
-    margin-right: 10px;
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
+  &.vux-1px-b:after {
+    border-color: #e5e5e5;
   }
-  .title {
-    flex: 1;
-    font-size: 16px;
-    color: #666
-  }
-  .btn {
-    font-size: 12px;
-    background: #3ecccc;
-    color: #fff;
-    border: 0;
-    border-radius: 15px;
-    padding: 2px 8px;
+  .setting-panel_item {
+    width: 90%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 15px;
+    &.vux-1px-b:after {
+      border-color: #daf6f5;
+    }
+    img {
+      width: 15px;
+      height: auto;
+      padding-right: 10px;
+    }
+    .title {
+      flex: 1;
+    }
+    .iconfont {
+      color: #ccc;
+      font-size: 15px;
+    }
   }
 }
 </style>

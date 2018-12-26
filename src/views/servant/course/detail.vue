@@ -77,7 +77,7 @@ export default {
     }
   },
   computed: {
-    ServantShopProxyCourseID () {
+    proxyCourseID () {
       return this.$route.params.id
     },
     servantViewID () {
@@ -92,7 +92,7 @@ export default {
     // 获取课程详情
     async getShopProxyCourseDetails () {
       this.$vux.loading.show({text: '加载中'})
-      const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.ServantShopProxyCourseID}&Type=1`)
+      const res = await this.$http.get(`/ShopProxyCourseDetails?proxyCourseID=${this.proxyCourseID}&Type=1`)
       this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.courseInfo = res.data.Data
@@ -132,7 +132,7 @@ export default {
       const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.proxyCourseID}&orderType=6&servantViewID=${this.servantViewID}&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
-          this.$router.push(`/servant/pay/${this.proxyCourseID}?OrderID=${res.data.Data.OrderID}`)
+          this.$router.push(`/servant/pay/${this.proxyCourseID}?OrderID=${res.data.Data.OrderID}&orderType=6`)
         } else {
           window.location.href = res.data.Data.RedirectUrl
         }

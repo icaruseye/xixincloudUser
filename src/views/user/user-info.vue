@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userInfo.IsMobileChecked !== 1">
+  <div v-if="userInfo.IsMobileChecked === 1">
     <xx-nav-bar
       left-text="返回"
       @click-left="onNavbarClickLeft">
@@ -122,7 +122,7 @@ export default {
     if (this.userAccount.State === 1) {
       this.disabled = true
     }
-    if (this.userInfo.IsMobileChecked == 1) {
+    if (this.userInfo.IsMobileChecked !== 1) {
       AlertModule.show({
         title: '提示',
         content: '请先绑定手机号',
