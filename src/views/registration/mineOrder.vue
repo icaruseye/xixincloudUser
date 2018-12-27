@@ -1,7 +1,15 @@
 <template>
   <div class="wrapper order_wrap">
-    <div class="title">预诊信息</div>
+    <div class="title">挂号信息</div>
     <div class="content" v-if="servantInfos.DoctorName">
+      <div class="row">
+        <span class="label">排号状态：</span>
+        <span>{{servantInfos.State | _State}}</span>
+      </div>
+      <div class="row">
+        <span class="label">挂号排号：</span>
+        <span>第{{servantInfos.Code}}号</span>
+      </div>
       <div class="row">
         <span class="label">医生姓名：</span>
         <span>{{servantInfos.DoctorName}}</span>
@@ -19,69 +27,54 @@
         <span class="price">{{(servantInfos.RegistrationFee / 100).toFixed(2)}}元</span>
       </div>
     </div>
-    <div class="tips">注意事项：请在30分钟之内支付，逾期作废，一个自然月 内只能退三次号</div>
-    <div class="btns">
-      <button @click="back">取消预约</button>
-      <button class="order" @click="getUserPreOrder">立即支付</button>
-    </div>
   </div>
 </template>
 
 <script>
 import { dateFormat } from 'vux'
 export default {
-  filters: {
-    dateFormat (val, format = 'YYYY-MM-DD HH:mm:ss') {
-      return dateFormat(new Date(val), format)
-    }
-  },
   data () {
     return {
       servantInfos: {}
     }
   },
+  filters: {
+    dateFormat (val, format = 'YYYY-MM-DD HH:mm:ss') {
+      return dateFormat(new Date(val), format)
+    },
+    _State (val) {
+      switch (val) {
+        case -1:
+          return '已删除'
+        case 0:
+          return '正常'
+        case 1:
+          return '已使用'
+        case 2:
+          return '已失效'
+        case 4:
+          return '已取消'
+        default:
+          break
+      }
+    }
+  },
   computed: {
     id () {
       return this.$route.params.id
-    },
-    refereeType () {
-      return this.$route.query.refereeType || ''
-    },
-    refereeViewID () {
-      return this.$route.query.refereeViewID || ''
     }
   },
   mounted () {
-    this.getServantSchedule()
+    this.getRegistration()
   },
   methods: {
-    async getServantSchedule () {
+    async getRegistration () {
       this.$vux.loading.show()
-      const res = await this.$http.get(`/Schedule/bespoke-registration-detail?scheduleId=${this.id}`)
+      const res = await this.$http.get(`/Registration/Details?registrationID=${this.id}`)
       this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.servantInfos = res.data.Data
       }
-    },
-    async getUserPreOrder (id) {
-      // 生成预支付订单
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.servantInfos.ScheduleID}&orderType=3&servantViewID=&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
-      if (res.data.Code === 100000) {
-        if (res.data.Data.RedirectState === 0) {
-          this.$router.push(`/servant/pay/${this.servantInfos.ScheduleID}?OrderID=${res.data.Data.OrderID}`)
-        } else {
-          window.location.href = res.data.Data.RedirectUrl
-        }
-      } else {
-        this.$vux.toast.show({
-          type: 'cancel',
-          text: res.data.Msg,
-          time: 800
-        })
-      }
-    },
-    back () {
-      this.$router.back()
     }
   }
 }
@@ -96,6 +89,7 @@ export default {
     height: 44px;
     line-height: 44px;
     background: #fff;
+    border-bottom: 1px solid #e1e1e1;
   }
   .content {
     background: #fff;

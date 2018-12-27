@@ -1,9 +1,5 @@
 <template>
   <div class="wrapper">
-    <xx-nav-bar
-      left-text="返回"
-      @click-left="$router.back()">
-    </xx-nav-bar>
     <div v-if="userStudyRecordList.length > 0">
       <section class="items_section" v-for="(userStudyRecord, index) in userStudyRecordList" :key="index">
         <p class="item_name">{{userStudyRecord.LessonName}}</p>

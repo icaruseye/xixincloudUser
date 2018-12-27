@@ -1,9 +1,5 @@
 <template>
   <div class="wrapper">
-    <xx-nav-bar
-      left-text="返回"
-      @click-left="$router.back()">
-    </xx-nav-bar>
     <div class="course_list" v-if="list.length > 0">
       <template v-for="(item, index) in list">
         <div class="course_list_item" :key="index">
@@ -32,7 +28,7 @@ export default {
   },
   methods: {
     async getCourseList () {
-      const res = await this.$http.get(`/Proxy-Course-List`)
+      const res = await this.$http.get(`/MyCourseList`)
       if (res.data.Code === 100000) {
         this.list = res.data.Data
       } else {

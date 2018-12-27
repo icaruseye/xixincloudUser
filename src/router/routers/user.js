@@ -125,13 +125,13 @@ export default [
       title: '我的活动'
     }
   },
-  {
-    path: '/user/myTestHistory',
-    component: _import('/user/myTestHistory/index'),
-    meta: {
-      title: '我的学习'
-    }
-  },
+  // {
+  //   path: '/user/myTestHistory',
+  //   component: _import('/user/myTestHistory/index'),
+  //   meta: {
+  //     title: '我的学习'
+  //   }
+  // },
   {
     path: '/user/myTestHistory/wrongQuestionTestPaper',
     component: _import('/user/myTestHistory/wrongQuestionTestPaper'),

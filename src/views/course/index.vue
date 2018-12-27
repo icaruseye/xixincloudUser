@@ -1,25 +1,35 @@
 <template>
   <div class="wrapper">
-    <div class="setting-panel vux-1px-t vux-1px-b">
-      <router-link to="/course/courseList" class="setting-panel_item vux-1px-b">
-        <img src="@/assets/images/icon-my-comp.png" alt="">
-        <span class="title">我的课程</span>
-        <i class="iconfont icon-jiantouyou"></i>
-      </router-link>
-      <router-link to="/user/myTestHistory" class="setting-panel_item vux-1px-b">
-        <img src="@/assets/images/icon-my-info.png" alt="">
-        <span class="title">错题本</span>
-        <i class="iconfont icon-jiantouyou"></i>
-      </router-link>
+    <div class="has-tabbar">
+      <sticky
+        ref="sticky"
+        :offset="0"
+        :check-sticky-support="true">
+        <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="25px">
+          <xx-tab-item :selected="tabIndex === 0" @on-item-click="onItemClick">我的课程</xx-tab-item>
+          <xx-tab-item :selected="tabIndex === 1" @on-item-click="onItemClick">错题本</xx-tab-item>
+        </xx-tab>
+      </sticky>
+      <courseList v-show="tabIndex === 0"></courseList>
+      <myTestHistory v-show="tabIndex === 1"></myTestHistory>
     </div>
     <xx-tabbar></xx-tabbar>
   </div>
 </template>
 
 <script>
+import { Sticky } from 'vux'
+import courseList from './courseList'
+import myTestHistory from '../user/myTestHistory'
 export default {
+  components: {
+    Sticky,
+    courseList,
+    myTestHistory
+  },
   data () {
     return {
+      tabIndex: 0
     }
   },
   created () {
@@ -27,6 +37,8 @@ export default {
   mounted () {
   },
   methods: {
+    onItemClick (index) {
+    }
   }
 }
 </script>

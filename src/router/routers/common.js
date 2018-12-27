@@ -91,6 +91,13 @@ export default [
     }
   },
   {
+    path: '/organ/registration/mineOrder/:id',
+    component: _import('/registration/mineOrder'),
+    meta: {
+      title: '预约挂号'
+    }
+  },
+  {
     path: '/organ/registration/pay',
     component: _import('/registration/pay'),
     meta: {

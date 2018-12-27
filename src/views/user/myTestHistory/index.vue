@@ -1,9 +1,5 @@
 <template>
   <div>
-    <xx-nav-bar
-      left-text="返回"
-      @click-left="$router.back()">
-    </xx-nav-bar>
     <div class="wrong_question_enter_btn" @click="$PushUrl('/user/myTestHistory/wrongQuestionTestPaper')">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-cuotilianxi"></use>

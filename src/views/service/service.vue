@@ -107,7 +107,7 @@
         <div class="weui-panel_subtitle text-overflow-1">挂号</div>
         <div class="weui-list_container schedule-list">
           <template v-for="(item, index) in UserOrderDetailsList.RegistrationList">
-              <router-link :to="`/organ/registration/order/${item.ScheduleID}?read=1`" :key="index" class="list-item">
+              <router-link :to="`/organ/registration/mineOrder/${item.Id}`" :key="index" class="list-item">
                 <div class="item">
                   <div class="icon">
                     <img src="../../assets/images/icon_picc_gh.png" alt="">
