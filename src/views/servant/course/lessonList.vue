@@ -54,7 +54,7 @@ export default {
   methods: {
     // 获取章节列表
     async getShopProxyCourseLessonList () {
-      const res = await this.$http.get(`/ShopProxyCourseLessonList?page=${this.pageIndex}&proxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/ShopProxyCourseLessonList?page=${this.pageIndex}&proxyCourseID=${this.proxyCourseID}&Type=1`)
       if (res.data.Code === 100000) {
         this.courseList = res.data.Data
       } else {

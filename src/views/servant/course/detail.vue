@@ -105,7 +105,7 @@ export default {
     },
     // 是否已购买过该课程
     async getLicenceCheck () {
-      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/Course/Licence/Check?shopProxyCourseID=${this.proxyCourseID}&Type=1`)
       if (res.data.Code === 100000) {
         this.IsPurchased = res.data.Data
       } else {
@@ -114,7 +114,7 @@ export default {
     },
     // 校验是否可以播放视频
     async getCouldWatchingVideo (lessonID) {
-      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}&Type=1`)
       if (res.data.Code === 100000) {
         this.courseInfo.PreViewContent = res.data.Data
         this.courseInfo.PreViewType = 1

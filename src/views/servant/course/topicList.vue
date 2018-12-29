@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     async getShopProxyCourseTestPaperList () {
-      const res = await this.$http.get(`/ShopProxyCourseTestPaperList?page=${this.pageIndex}&proxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/ShopProxyCourseTestPaperList?page=${this.pageIndex}&proxyCourseID=${this.proxyCourseID}&Type=1`)
       if (res.data.Code === 100000) {
         this.topicList = res.data.Data.shopProxyCourseTestPaper
       } else {
@@ -39,7 +39,7 @@ export default {
       }
     },
     async getCouldExam (id) {
-      const res = await this.$http.get(`/CouldExam?testPaperID=${id}&proxyCourseID=${this.proxyCourseID}`)
+      const res = await this.$http.get(`/CouldExam?testPaperID=${id}&proxyCourseID=${this.proxyCourseID}&Type=1`)
       if (res.data.Code === 100000) {
         return res.data.Data
       } else {
