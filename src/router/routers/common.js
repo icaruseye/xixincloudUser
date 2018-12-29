@@ -70,6 +70,20 @@ export default [
     }
   },
   {
+    path: '/departments',
+    component: _import('/departments'),
+    meta: {
+      title: '科室首页'
+    }
+  },
+  {
+    path: '/departments/list/:id',
+    component: _import('/departments/list'),
+    meta: {
+      title: '科室详情'
+    }
+  },
+  {
     path: '/organ/registration',
     component: _import('/registration'),
     meta: {

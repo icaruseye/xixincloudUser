@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="servant-panel servant-panel_service">
-      <div class="servant-panel_title"><i class="icon icon-2"></i>医生课程</div>
+      <div class="servant-panel_title"><i class="icon icon-2"></i>课程</div>
       <div class="servant-panel_subtitle">单项课程</div>
       <div class="servant-panel_list">
         <template v-for="(item, index) in CourseList">
