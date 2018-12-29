@@ -47,11 +47,6 @@
           <span class="title">我的活动</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
-        <router-link to="/user/myTestHistory" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-info.png" alt="">
-          <span class="title">我的学习</span>
-          <i class="iconfont icon-jiantouyou"></i>
-        </router-link>
         <router-link to="/user/complaint" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-comp.png" alt="">
           <span class="title">我的投诉</span>
@@ -75,11 +70,6 @@
         <router-link to="/article/list" class="setting-panel_item vux-1px-b">
           <img src="@/assets/images/icon-my-info.png" alt="">
           <span class="title">文章资讯</span>
-          <i class="iconfont icon-jiantouyou"></i>
-        </router-link>
-        <router-link to="/departments" class="setting-panel_item vux-1px-b">
-          <img src="@/assets/images/icon-my-info.png" alt="">
-          <span class="title">科室</span>
           <i class="iconfont icon-jiantouyou"></i>
         </router-link>
       </div>

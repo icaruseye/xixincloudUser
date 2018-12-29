@@ -4,8 +4,8 @@
       <template v-for="(item, index) in list">
         <div class="course_list_item" :key="index">
           <div class="title">{{item.Title}}</div>
-          <button class="btn" @click="toDetail(item.CourseId)">去学习</button>
-          <button class="btn record" @click="toStudyRecordList(item.CourseId)">学习记录</button>
+          <button class="btn" @click="toDetail(item.ServantShopProxyCourseID)">去学习</button>
+          <button class="btn record" @click="toStudyRecordList(item.ServantShopProxyCourseID)">学习记录</button>
         </div>
       </template>
     </div>
