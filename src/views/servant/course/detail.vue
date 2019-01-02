@@ -25,8 +25,8 @@
     <div class="course_info">
       <div class="servant-panel_title"><i class="icon icon-2"></i>课程详情</div>
       <div class="content">{{courseInfo.Desctiption}}</div>
-      <div class="imgs" v-if="courseInfo.Img">
-        <img v-for="(item, index) in courseInfo.Img.split(',')" :key="index" :src="item | transformImgUrl" alt="">
+      <div class="imgs" v-if="courseInfo.DescriptionImg">
+        <img v-for="(item, index) in courseInfo.DescriptionImg.split(',')" :key="index" :src="item | transformImgUrl" alt="">
       </div>
     </div>
     <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="30px" style="border-bottom: 1px solid #E9E9E9;margin-top:10px;">
