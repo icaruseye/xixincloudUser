@@ -9,7 +9,7 @@
             <div class="step__line"></div>
             <div class="step_item_content">
               <template v-for="(subItem, subIndex) in item.lessonResponse">
-                <div class="sub_item" :class="index === selectIndex[0] && subIndex === selectIndex[1] ? 'active':''" :key="subIndex" @click="playLesson(subItem.LessonID, subIndex, index)" v-if="subItem.LessonID">
+                <div class="sub_item" :class="selectIndex === subItem.LessonID ? 'active':''" :key="subIndex" @click="playLesson(subItem.LessonID)" v-if="subItem.LessonID">
                   <div class="sub_item_title">
                     <span class="name">{{subItem.LessonName}}</span>
                     <span class="tag">录播</span>
@@ -61,8 +61,8 @@ export default {
         this.$vux.toast.text(res.data.Msg)
       }
     },
-    playLesson (LessonID, subIndex, index) {
-      this.selectIndex = [index, subIndex]
+    playLesson (LessonID) {
+      this.selectIndex = LessonID
       this.$emit('on-lesson-click', LessonID)
     }
   }

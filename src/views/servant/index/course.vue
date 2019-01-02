@@ -3,11 +3,11 @@
     <div class="servant-panel servant-panel_service">
       <div class="servant-panel_title"><i class="icon icon-2"></i>课程</div>
       <div class="servant-panel_subtitle">单项课程</div>
-      <div class="servant-panel_list">
+      <div class="servant-panel_list" v-if="CourseList.length > 0">
         <template v-for="(item, index) in CourseList">
           <div class="item" :key="index" @click="to(`/servant/course/${item.ServantShopProxyCourseID}?servantViewID=${$route.params.id}`)">
             <div class="poster">
-              <img v-if="item.Img" :src="item.Img | transformImgUrl" alt="">
+              <img v-if="item.Img" :src="item.Img | transformImgUrl" alt="" @error="loadDefaultImage(index)">
               <img v-else src="../../../assets/images/course-default.png" alt="">
               <span class="status">{{item.StudyType | CourseType}}</span>
             </div>
@@ -20,6 +20,7 @@
           </div>
         </template>
       </div>
+      <div v-else class="empty-box">暂无课程</div>
     </div>
   </div>
 </template>
@@ -69,6 +70,9 @@ export default {
     to (url) {
       this.$store.commit('SET_COURSE_TAB', 0)
       this.$router.push(url)
+    },
+    loadDefaultImage (index) {
+      this.CourseList[index].Img = ''
     }
   }
 }

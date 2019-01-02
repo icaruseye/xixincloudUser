@@ -9,9 +9,10 @@
           controls="controls"
           playsinline
           webkit-playsinline
+          controlslist="nodownload"
           x5-playsinline>
         </video>
-        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="">
+        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="" @error="loadDefaultImage">
         <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
       </div>
       <div class="title_info">
@@ -82,13 +83,22 @@ export default {
     },
     servantViewID () {
       return this.$route.query.servantViewID
+    },
+    lessonID () {
+      return this.$route.query.lessonID
     }
   },
   mounted () {
-    this.getShopProxyCourseDetails()
-    this.getLicenceCheck()
+    this.init()
   },
   methods: {
+    init () {
+      this.getShopProxyCourseDetails()
+      this.getLicenceCheck()
+      if (this.lessonID) {
+        this.playLesson(this.lessonID)
+      }
+    },
     // 获取课程详情
     async getShopProxyCourseDetails () {
       this.$vux.loading.show({text: '加载中'})
@@ -170,6 +180,9 @@ export default {
     },
     to (url) {
       this.$router.replace(url)
+    },
+    loadDefaultImage () {
+      this.courseInfo.Img = ''
     }
   }
 }
