@@ -46,9 +46,15 @@ export default {
   computed: {
     proxyCourseID () {
       return this.$route.params.id
+    },
+    lessonID () {
+      return +this.$route.query.lessonID
     }
   },
   mounted () {
+    if (this.lessonID) {
+      this.selectIndex = this.lessonID
+    }
     this.getShopProxyCourseLessonList()
   },
   methods: {

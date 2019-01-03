@@ -106,9 +106,11 @@ export default {
   created () {
     if (this.isWeekType) {
       this.week = util.getWeek(this.selectedYear, this.selectedMonth, this.selectDay)
-      this.displayDaysWeek()
+      this.calendarDays = util.displayDaysWeek(this.selectedYear, this.selectedMonth, this.week)
+      this.getRange(this.tagsArr)
     } else {
-      this.displayDaysMonth()
+      this.calendarDays = util.displayDaysMonth(this.selectedYear, this.selectedMonth)
+      this.getRange(this.tagsArr)
     }
   },
   methods: {

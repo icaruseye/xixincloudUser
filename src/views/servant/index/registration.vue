@@ -64,9 +64,9 @@ export default {
     }
   },
   mounted () {
-    const _deta = this.getAfterOneMonth(new Date())
+    const _date = this.getAfterOneMonth(dateFormat(new Date(), 'YYYY-MM-DD'))
     this.getServantSchedule(dateFormat(new Date(), 'YYYY-MM-DD'))
-    this.getScheduleList(_deta.startTime, _deta.endTime)
+    this.getScheduleList(_date.startTime, _date.endTime)
   },
   methods: {
     // 获取某一天排班详情
@@ -97,9 +97,10 @@ export default {
     },
     // 切换月份
     async changeMonth (item) {
-      const dateTime = `${item.year}-${item.month}-01`
-      const _deta = this.getAfterOneMonth(dateTime)
-      this.getScheduleList(_deta.startTime, _deta.endTime)
+      const dateTime = `${item.year}/${item.month}/1 00:00:00`
+      console.log(dateTime)
+      const _date = this.getAfterOneMonth(dateTime)
+      this.getScheduleList(_date.startTime, _date.endTime)
     },
     // 选择某一天
     async calendarItemClick (dateTime) {
@@ -108,6 +109,7 @@ export default {
     },
     getAfterOneMonth (dateTime) {
       let date = new Date(dateTime)
+      console.log(new Date(dateTime))
       let newdate = new Date(dateTime)
       newdate.setDate(date.getDate() + 30)
       return {
