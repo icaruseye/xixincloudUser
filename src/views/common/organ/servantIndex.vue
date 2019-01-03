@@ -51,12 +51,14 @@
         <img src="@/assets/images/organ-4.png" alt="">
         <div class="text">机构介绍</div>
       </div>
-      <template v-for="(item, index) in aliasList">
-        <div class="item" @click="toList(item.UseType)" :key="index">
-          <img :src="item.UseType | aliasImgByUsetype" alt="">
-          <div class="text">{{item.Name}}</div>
-        </div>
-      </template>
+      <div class="item" @click="go('/departments')">
+        <img :src="3 | aliasImgByUsetype" alt="">
+        <div class="text">科室</div>
+      </div>
+      <div class="item" @click="go('/organ/registration')">
+        <img :src="2 | aliasImgByUsetype" alt="">
+        <div class="text">挂号</div>
+      </div>
     </div>
     <!-- 推荐医师 -->
     <div class="servant-panel servant-panel_service">
@@ -143,7 +145,6 @@ export default {
     ])
   },
   created () {
-    this.getAlias()
     this.getServantList()
     this.getShopAgreement()
   },
@@ -345,7 +346,7 @@ export default {
     margin-bottom: 10px;
     line-height: 1;
     border-radius: 4px;
-    width: 48%;
+    width: 31%;
     background: #fff;
     .text {
       font-size: 13px;

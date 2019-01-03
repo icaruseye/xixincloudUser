@@ -63,7 +63,7 @@ export default {
   },
   created () {
     const that = this
-    if (this.userInfo.IsMobileChecked) {
+    if (this.userInfo.IsMobileChecked === 1) {
       AlertModule.show({
         title: '提示',
         content: '已绑定过手机号',

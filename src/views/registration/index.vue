@@ -1,9 +1,11 @@
 <template>
   <div class="wrapper">
-    <xx-calendar
-      :loading="calendarLoading"
-      @onClick="calendarItemClick">
-    </xx-calendar>
+    <div class="calendar_wrap">
+      <xx-calendar
+        :loading="calendarLoading"
+        @onClick="calendarItemClick">
+      </xx-calendar>
+    </div>
     <template v-for="(item, index) in list">
       <div class="registration_wrap" :key="index">
         <div class="title">
@@ -71,6 +73,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.wrapper {
+  background: rgba(255, 255, 255, .5);
+  min-height: 100vh;
+  overflow: hidden;
+}
+.calendar_wrap {
+  background: #fff;
+  margin: 15px;
+  padding: 5px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid rgba(241, 241, 241, .4);
+}
 .registration_wrap {
   padding-top: 11px;
   .title {

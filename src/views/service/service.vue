@@ -461,7 +461,7 @@ export default {
     toReserve (id, ItemID, useType, viewId) {
       const that = this
       const url = this.reserveUrl(id, ItemID, useType, viewId)
-      if (this.userInfo.IsMobileChecked === 1) {
+      if (this.userInfo.IsMobileChecked === 0) {
         this.$vux.confirm.show({
           title: '提示',
           content: '您尚未绑定手机号',
