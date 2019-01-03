@@ -7,7 +7,8 @@
     <div class="departments_wrap">
       <template v-for="(item, index) in OrganizationList">
         <div class="item" :key="index" @click="toList(item.ID)">
-          <img class="icon" src="@/assets/images/departments_1.png" alt="">
+          <img class="icon" v-if="item.Img" :src="item.Img | transformImgUrl" alt="">
+          <img v-else class="icon" src="@/assets/images/departments_1.png" alt="">
           <div class="name">{{item.Name}}</div>
         </div>
       </template>
@@ -18,7 +19,7 @@
     </div>
     <!-- 推荐服务者 -->
     <div class="servant-panel servant-panel_service">
-      <div class="servant-panel_title">推荐专家</div>
+      <div class="servant-panel_title">推荐服务者</div>
       <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
         <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
           <div class="avatar">
@@ -128,6 +129,8 @@ export default {
       margin: 0 auto 5px;
       width: 40px;
       height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
     }
     .name {
       font-size: 15px;
