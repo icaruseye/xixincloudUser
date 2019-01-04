@@ -84,7 +84,14 @@ export default [
     }
   },
   {
-    path: '/organ/registration',
+    path: '/departments/choose',
+    component: _import('/registration/departmentsList'),
+    meta: {
+      title: '选择科室'
+    }
+  },
+  {
+    path: '/organ/registration/:id',
     component: _import('/registration'),
     meta: {
       title: '预约挂号'

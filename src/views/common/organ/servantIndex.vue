@@ -55,7 +55,7 @@
         <img :src="3 | aliasImgByUsetype" alt="">
         <div class="text">科室</div>
       </div>
-      <div class="item" @click="go('/organ/registration')">
+      <div class="item" @click="go('/departments/choose')">
         <img :src="2 | aliasImgByUsetype" alt="">
         <div class="text">挂号</div>
       </div>
@@ -63,7 +63,8 @@
     <!-- 推荐医师 -->
     <div class="servant-panel servant-panel_service">
     <div class="servant-panel_title">推荐专家</div>
-      <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
+    <div v-if="servantList.length > 0">
+      <template v-for="(item, index) in servantList">
         <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
           <div class="avatar">
             <img :src="item.Avatar | transformImgUrl" alt="">
@@ -78,6 +79,7 @@
           </div>
         </div>
       </template>
+    </div>
       <div v-if="servantList.length === 0" class="empty-box">
         没找到相关服务者
       </div>

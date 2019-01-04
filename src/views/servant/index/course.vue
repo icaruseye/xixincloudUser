@@ -19,6 +19,13 @@
             </div>
           </div>
         </template>
+        <xx-loadmore
+          v-if="totalPage > 1"
+          :pageindex="pageIndex"
+          :pageTotal="totalPage"
+          :loadText="loadText"
+          @onClick="loadmore">
+        </xx-loadmore>
       </div>
       <div v-else class="empty-box">暂无课程</div>
     </div>
@@ -53,7 +60,10 @@ export default {
   },
   data () {
     return {
+      pageSize: 8,
+      totalPage: 1,
       pageIndex: 1,
+      loadText: '加载更多',
       CourseList: []
     }
   },
@@ -63,8 +73,10 @@ export default {
   methods: {
     async getServantCourseList () {
       const res = await this.$http.get(`/ServantCourseList?servantViewID=${this.ViewID}&page=${this.pageIndex}`)
+      this.loadText = '加载更多'
       if (res.data.Code === 100000) {
-        this.CourseList = res.data.Data.CourseInfoResponseList
+        this.CourseList.push(...res.data.Data.CourseInfoResponseList)
+        this.totalPage = Math.ceil(res.data.Data.CourseInfoResponseList / this.pageSize)
       }
     },
     to (url) {
@@ -73,6 +85,11 @@ export default {
     },
     loadDefaultImage (index) {
       this.CourseList[index].Img = ''
+    },
+    loadmore () {
+      this.pageIndex++
+      this.loadText = '加载中...'
+      this.getServantCourseList()
     }
   }
 }

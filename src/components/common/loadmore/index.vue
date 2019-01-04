@@ -51,8 +51,8 @@ export default {
   text-align: center;
   height: 40px;
   line-height: 40px;
-  color: #fff;
-  background: #3ecccc;
+  color: #3ecccc;
+  background: transparent;
   border-radius: 2px;
   font-size: 14px;
   &.nomore {

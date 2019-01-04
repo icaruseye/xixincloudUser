@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="toggle-bar" @click="isWeekType = !isWeekType">
+    <div class="toggle-bar" @click="isWeekType = !isWeekType" v-if="!onlyWeek">
       <i class="iconfont" :class="`${isWeekType ? 'icon-jiantouxia' : 'icon-jiantoushang'}`"></i>
     </div>
   </div>
@@ -60,6 +60,10 @@ export default {
     currentDate: {
       type: Date,
       default: () => new Date()
+    },
+    onlyWeek: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

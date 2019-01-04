@@ -2,6 +2,7 @@
   <div class="wrapper">
     <div class="calendar_wrap">
       <xx-calendar
+        :onlyWeek="true"
         :loading="calendarLoading"
         @onClick="calendarItemClick">
       </xx-calendar>
@@ -47,10 +48,15 @@ export default {
       list: []
     }
   },
+  computed: {
+    OrganizationID () {
+      return this.$router.params.id
+    }
+  },
   created () {
   },
   mounted () {
-    this.getScheduleDetail(dateFormat(new Date(), 'YYYY-MM-DD'))
+    // this.getScheduleDetail(dateFormat(new Date(), 'YYYY-MM-DD'))
   },
   methods: {
     // 选择某一天
