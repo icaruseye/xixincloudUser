@@ -2,6 +2,10 @@
   <div>
     <div class="container">
       <!-- 标签 -->
+      <xx-nav-bar
+        left-text="返回"
+        @click-left="$router.back()">
+      </xx-nav-bar>
       <div class="tags-panel" v-if="isAll">
         <div class="title">所有科室</div>
         <checker v-model="OrganizationID" :radio-required="true" @on-change="changeTag" default-item-class="tags-item" selected-item-class="tags-item-selected">

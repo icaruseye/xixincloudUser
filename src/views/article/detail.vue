@@ -31,21 +31,23 @@
           <div class="left">精选留言</div>
           <div class="right" @click="toComment">写留言</div>
         </div>
-        <template v-if="comments.length > 0" v-for="(item, index) in comments">
-          <div class="item" :key="index">
-            <div class="avatar">
-              <img :src="item.Avatar | transformImgUrl" alt="">
-            </div>
-            <div class="content">
-              <div class="name">{{item.CommentName}}</div>
-              <div class="text">{{item.CommentContent}}</div>
-              <div class="author-text" v-if="item.Reply">
-                <div class="name">作者回复</div>
-                <div class="text">{{item.Reply}}</div>
+        <div v-if="comments.length > 0">
+          <template v-for="(item, index) in comments">
+            <div class="item" :key="index">
+              <div class="avatar">
+                <img :src="item.Avatar | transformImgUrl" alt="">
+              </div>
+              <div class="content">
+                <div class="name">{{item.CommentName}}</div>
+                <div class="text">{{item.CommentContent}}</div>
+                <div class="author-text" v-if="item.Reply">
+                  <div class="name">作者回复</div>
+                  <div class="text">{{item.Reply}}</div>
+                </div>
               </div>
             </div>
-          </div>
-        </template>
+          </template>
+        </div>
         <xx-loadmore
           v-if="comments.length > 0"
           :pageindex="pageIndex"

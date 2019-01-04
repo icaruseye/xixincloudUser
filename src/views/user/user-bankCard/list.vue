@@ -2,13 +2,15 @@
   <div>
     <xx-go-back></xx-go-back>
     <div class="warp_container">
-      <bank-card-item v-if="list.length > 0" v-for="(item, index) in list" class="mb10px"
-        :key="index"
-        :BankAbbreviation="item.BankAbbreviation"
-        :bankName="item.BankName"
-        :cardNo="item.BankCard"
-      >
-      </bank-card-item>
+      <template v-if="list.length > 0">
+        <bank-card-item v-for="(item, index) in list" class="mb10px"
+          :key="index"
+          :BankAbbreviation="item.BankAbbreviation"
+          :bankName="item.BankName"
+          :cardNo="item.BankCard"
+        >
+        </bank-card-item>
+      </template>
       <router-link class="add_bankCard_btn mb10px" to="/user/bankCard/add">添加银行卡</router-link>
     </div>
   </div>

@@ -15,20 +15,22 @@
       <!-- 推荐医师 -->
       <div class="servant-panel servant-panel_service">
         <div class="servant-panel_title">推荐服务者</div>
-        <template v-if="servantList.length > 0" v-for="(item, index) in servantList">
-          <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
-            <div class="avatar">
-              <img :src="item.Avatar | transformImgUrl" alt="">
-            </div>
-            <div class="mid">
-              <div class="title">{{item.Name}}</div>
-              <!-- <div class="describe text-overflow-1">专业老中医</div> -->
-              <div style="margin-bottom: 8px;display: flex;align-items: center;">
-                <i class="iconfont icon-star1"></i><span class="range">{{item.Score}}</span><span class="times">{{item.ServiceNum}}次服务</span>
+        <template v-if="servantList.length > 0">
+          <template v-for="(item, index) in servantList">
+            <div class="weui-list_item" :key="index" @click="toDetail(item.ViewId)">
+              <div class="avatar">
+                <img :src="item.Avatar | transformImgUrl" alt="">
               </div>
-              <div class="tags"><span v-for="(item, index) in item.Tags" :key="index">{{item}}</span></div>
+              <div class="mid">
+                <div class="title">{{item.Name}}</div>
+                <!-- <div class="describe text-overflow-1">专业老中医</div> -->
+                <div style="margin-bottom: 8px;display: flex;align-items: center;">
+                  <i class="iconfont icon-star1"></i><span class="range">{{item.Score}}</span><span class="times">{{item.ServiceNum}}次服务</span>
+                </div>
+                <div class="tags"><span v-for="(item, index) in item.Tags" :key="index">{{item}}</span></div>
+              </div>
             </div>
-          </div>
+          </template>
         </template>
         <div v-if="servantList.length === 0" class="empty-box">
           没找到相关服务者
