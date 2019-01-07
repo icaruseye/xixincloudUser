@@ -99,6 +99,7 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from, next) => {
   Vue.$vux.loading.hide()
+  Vue.$vux.alert.hide()
   store.commit('SET_ROUTER_LOADING', false)
 })
 
