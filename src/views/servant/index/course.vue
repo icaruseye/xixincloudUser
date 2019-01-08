@@ -76,7 +76,7 @@ export default {
       this.loadText = '加载更多'
       if (res.data.Code === 100000) {
         this.CourseList.push(...res.data.Data.CourseInfoResponseList)
-        this.totalPage = Math.ceil(res.data.Data.CourseInfoResponseList / this.pageSize)
+        this.totalPage = Math.ceil(res.data.Data.Total / this.pageSize)
       }
     },
     to (url) {
