@@ -50,13 +50,13 @@ export default {
   },
   computed: {
     OrganizationID () {
-      return this.$router.params.id
+      return this.$route.params.id
     }
   },
   created () {
   },
   mounted () {
-    // this.getScheduleDetail(dateFormat(new Date(), 'YYYY-MM-DD'))
+    this.getScheduleDetail(dateFormat(new Date(), 'YYYY-MM-DD'))
   },
   methods: {
     // 选择某一天
@@ -68,7 +68,10 @@ export default {
     async getScheduleDetail (dateTime) {
       this.currentDate = dateTime
       this.$vux.loading.show()
-      const res = await this.$http.get(`/Schedule/doctor-schedule?dateTime=${dateTime}`)
+      const res = await this.$http.get(`/Registration/ServantOrganization`, {
+        dateTime: dateTime,
+        orgID: this.OrganizationID
+      })
       if (res.data.Code === 100000) {
         this.list = res.data.Data
       }
@@ -141,14 +144,16 @@ export default {
       }
       .tags {
         display: flex;
+        flex-flow: wrap;
         span {
           margin-right: 5px;
+          margin-top: 5px;
           padding: 0 5px;
-          height: 13px;
-          line-height: 15px;
+          height: 20px;
+          line-height: 20px;
           display: block;
           border-radius: 10px;
-          font-size: 10px;
+          font-size: 12px;
           border: 1px solid #3ecccc;
           color: #3ecccc;
         }
