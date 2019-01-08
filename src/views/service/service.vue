@@ -34,9 +34,14 @@
                     <div class="mid">
                       <div style="display: flex;justify-content: space-between;align-items: baseline;">
                         <div class="title text-overflow-1 text-overflow-1">{{mItem.SingleItem.Name}}</div>
-                          <div class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
+                        <div v-if="cItem.Order.State !== 1" class="balance">剩余：{{mItem.OrderDetail.LeftNum}}次</div>
                       </div>
-                      <div class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
+                      <div v-if="cItem.Order.State !== 1" class="describe">到期时间：{{cItem.Order.EffectTime | timeFormat('YYYY-MM-DD')}}</div>
+                      <div v-else class="describe">
+                        <span v-if="(new Date().getTime() - new Date(cItem.Order.ConfirmTime).getTime()) > 60 * 1000">
+                          请与客服联系，客服唯一电话号码：{{ServiceHotline}}。
+                        </span>
+                      </div>
                     </div>
                     <div class="btn">
                       <div v-if="cItem.Order.State !== 1">
@@ -45,7 +50,12 @@
                         <button v-if="mItem.OrderDetail.UseType === 2" @click="toReserve(mItem.OrderDetail.ID, mItem.OrderDetail.ItemID, mItem.OrderDetail.UseType)">咨询</button>
                       </div>
                       <div v-else>
-                        <span class="waitPaySuccess" style="font-size:14px;color:#f8a519">付款确认中</span>
+                        <span v-if="(new Date().getTime() - new Date(cItem.Order.ConfirmTime).getTime()) > 60 * 1000"
+                           style="font-size:14px;color:#ff0000"
+                        >
+                          支付异常
+                        </span>
+                        <span v-else class="waitPaySuccess" style="font-size:14px;color:#f8a519">付款确认中</span>
                       </div>
                     </div>
                   </div>
@@ -257,7 +267,12 @@ export default {
     ...mapGetters([
       'userAccount',
       'userInfo'
-    ])
+    ]),
+    ServiceHotline () {
+      const shopInfo = JSON.parse(sessionStorage.getItem('ShopInfo'))
+
+      return  shopInfo.ServiceHotline || ''
+    }
   },
   watch: {
     serviceTabIndex (val) {
