@@ -15,6 +15,7 @@ import xxTimeCountDown from './timeCountDown'
 import xxNavBar from './navbar'
 import xxLoadmore from './loadmore'
 import xxCalendar from './calendar'
+import xxLoading from './loading'
 
 const components = {
   install: function (Vue) {
@@ -35,6 +36,7 @@ const components = {
     Vue.component('xxNavBar', xxNavBar)
     Vue.component('xxLoadmore', xxLoadmore)
     Vue.component('xxCalendar', xxCalendar)
+    Vue.component('xxLoading', xxLoading)
   }
 }
 

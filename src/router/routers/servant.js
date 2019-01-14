@@ -84,6 +84,13 @@ export default [
     }
   },
   {
+    path: '/servant/course/courseware/:courseID/:id',
+    component: _import('/servant/course/coursewareDetail'),
+    meta: {
+      title: '课件'
+    }
+  },
+  {
     path: '/servant/chat/:id',
     component: _import('/servant/chat'),
     meta: {

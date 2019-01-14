@@ -270,8 +270,7 @@ export default {
     ]),
     ServiceHotline () {
       const shopInfo = JSON.parse(sessionStorage.getItem('ShopInfo'))
-
-      return  shopInfo.ServiceHotline || ''
+      return shopInfo.ServiceHotline || ''
     }
   },
   watch: {

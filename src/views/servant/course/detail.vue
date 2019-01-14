@@ -32,6 +32,7 @@
     <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="30px" style="border-bottom: 1px solid #E9E9E9;margin-top:10px;">
       <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick">课程目录</xx-tab-item>
       <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick">习题练习</xx-tab-item>
+      <xx-tab-item :selected="tabIndex === 2" @on-item-click="tabItemClick">课件</xx-tab-item>
     </xx-tab>
     <!-- 课程列表 -->
     <div v-if="tabIndex === 0">
@@ -41,6 +42,10 @@
     <div v-if="tabIndex === 1">
       <topic-list></topic-list>
     </div>
+    <!-- 课件列表 -->
+    <div v-if="tabIndex === 2">
+      <coursewareList></coursewareList>
+    </div>
     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder" v-if="!IsPurchased">购买课程</button>
   </div>
 </template>
@@ -48,10 +53,12 @@
 <script>
 import lessonList from './lessonList.vue'
 import topicList from './topicList.vue'
+import coursewareList from './coursewareList.vue'
 export default {
   components: {
     lessonList,
-    topicList
+    topicList,
+    coursewareList
   },
   data () {
     return {
