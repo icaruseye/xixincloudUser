@@ -2,9 +2,13 @@
   <div class="has-tabbar">
     <!-- 服务包头部信息 -->
     <div class="package-header-info">
+      <div class="icon"><img :src="Item.UseType | ItemImageByUseType" alt=""></div>
       <div class="mid">
-        <div class="icon"><img :src="Item.UseType | ItemImageByUseType" alt=""></div>
         <div class="name">{{Item.Name}}</div>
+        <div class="sales">
+          <div class="price">{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
+          <div class="volume" v-if="Item.SoldAmount">已售：{{Item.SoldAmount}}份</div>
+        </div>
       </div>
     </div>
     <!-- 服务包介绍 -->
@@ -16,7 +20,7 @@
         {{Item.Content}}
       </div>
     </div>
-    <!-- 服务包介绍 -->
+    <!-- 注意事项 -->
     <div class="packageInfo mgt10" v-if="Item.Attention">
       <div class="title">
         <span class="left">注意事项</span>
@@ -25,6 +29,7 @@
         {{Item.Attention}}
       </div>
     </div>
+     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">预约服务</button>
   </div>
 </template>
 
@@ -52,6 +57,23 @@ export default {
       } else {
         this.$vux.toast.text('出错了')
       }
+    },
+    async getUserPreOrder (id) {
+      // 生成预支付订单
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.itemID}&orderType=1&servantViewID=&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
+      if (res.data.Code === 100000) {
+        if (res.data.Data.RedirectState === 0) {
+          this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)
+        } else {
+          window.location.href = res.data.Data.RedirectUrl
+        }
+      } else {
+        this.$vux.toast.show({
+          type: 'cancel',
+          text: res.data.Msg,
+          time: 800
+        })
+      }
     }
   }
 }
@@ -65,24 +87,20 @@ export default {
 .package-header-info {
   background: #fff;
   padding: 20px 12px 12px;
-  height: 120px;
   display: flex;
-  align-items: center;
-  background: linear-gradient(to right, #3CC7F5, #42C7F6, #9EC2FB);
   .icon {
-    margin: 0 auto;
+    margin-top: 5px;
     width: 29px;
     height: 29px;
   }
   .mid {
+    margin: 0 15px;
     flex: 1;
     .name {
-      margin-top: 5px;
       font-weight: bold;
       font-size: 18px;
-      color: #fff;
+      color: #666;
       font-weight: bold;
-      text-align: center;
     }
     .describe {
       font-size: 13px;
@@ -104,12 +122,6 @@ export default {
         color: #999;
       }
     }
-  }
-  .qrcode {
-    width: 50px;
-    height: 50px;
-    border: 1px solid RGBA(62, 204, 204, .3);
-    box-sizing: border-box;
   }
 }
 .packageInfo {

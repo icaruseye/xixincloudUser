@@ -20,7 +20,7 @@
       </div>
       <div class="weui-form-cell userAgreement">
         <input type="checkbox" id="userAgreement" value="" v-model="userAgreement">
-        <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《患者用户服务协议》</a></label>
+        <label for="userAgreement">我知晓并同意<a href="JavaScript:;" @click="showDialog">《用户服务协议》</a></label>
       </div>
     </div>
     <button type="button" class="weui-btn weui-btn-all weui-btn_primary" @click="submit" :disabled="disabledSubmit">提交</button>

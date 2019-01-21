@@ -93,6 +93,9 @@ export default {
     },
     lessonID () {
       return this.$route.query.lessonID
+    },
+    ContentType () {
+      return this.$route.query.ContentType
     }
   },
   mounted () {
@@ -103,7 +106,10 @@ export default {
       this.getShopProxyCourseDetails()
       this.getLicenceCheck()
       if (this.lessonID) {
-        this.playLesson(this.lessonID)
+        this.playLesson({
+          LessonID: this.lessonID,
+          ContentType: this.ContentType
+        })
       }
     },
     // 获取课程详情
@@ -176,9 +182,22 @@ export default {
         'useH5Prism': true
       })
     },
-    // 播放课程视频
-    playLesson (lessonID) {
-      this.getCouldWatchingVideo(lessonID)
+    // 选择当前章节内容
+    playLesson (data) {
+      debugger
+      let { LessonID, ContentType } = data
+      // 视频
+      if (+ContentType === 1) {
+        this.getCouldWatchingVideo(LessonID)
+      }
+      // 课件
+      if (+ContentType === 2) {
+        this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${LessonID}`)
+      }
+      //习题
+      if (+ContentType === 4) {
+        this.$router.push(`/servant/course/topic/${this.proxyCourseID}?recordID=${LessonID}`)
+      }
     },
     // 切换tab页
     tabItemClick (val) {
