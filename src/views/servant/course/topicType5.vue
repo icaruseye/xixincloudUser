@@ -67,9 +67,9 @@ export default {
       sessionStorage.setItem('userAnswerList', JSON.stringify(this.answerList))
 
       if (this.answerInner !== this.data.IntRightKey) {
-        this.$emit('setCourseWrongNums', true)
+        this.$emit('setCourseWrongNums', this.data.QuestionID)
       } else {
-        this.$emit('setCourseRightNums', true)
+        this.$emit('setCourseRightNums', this.data.QuestionID)
       }
     },
     initData () {

@@ -10,7 +10,7 @@
         :index="answerIndex"
         :paperType="IsNeedAnswer"
         :data="questionList[answerIndex]"
-        @setCourseWrongNums="wrongNums++"
+        @setCourseWrongNums="setCourseWrongNums"
         @setCourseRightNums="rightNums++">
       </topic-type1>
       <!-- 填空题 -->
@@ -19,7 +19,7 @@
         :index="answerIndex"
         :paperType="IsNeedAnswer"
         :data="questionList[answerIndex]"
-        @setCourseWrongNums="wrongNums++"
+        @setCourseWrongNums="setCourseWrongNums"
         @setCourseRightNums="rightNums++">
       </topic-type2>
       <!-- 判断题 -->
@@ -28,7 +28,7 @@
         :index="answerIndex"
         :paperType="IsNeedAnswer"
         :data="questionList[answerIndex]"
-        @setCourseWrongNums="wrongNums++"
+        @setCourseWrongNums="setCourseWrongNums"
         @setCourseRightNums="rightNums++">
       </topic-type1>
       <!-- 多选题 -->
@@ -37,7 +37,7 @@
         :index="answerIndex"
         :paperType="IsNeedAnswer"
         :data="questionList[answerIndex]"
-        @setCourseWrongNums="wrongNums++"
+        @setCourseWrongNums="setCourseWrongNums"
         @setCourseRightNums="rightNums++">
       </topic-type4>
       <!-- 简答题 -->
@@ -46,7 +46,7 @@
         :index="answerIndex"
         :paperType="IsNeedAnswer"
         :data="questionList[answerIndex]"
-        @setCourseWrongNums="wrongNums++"
+        @setCourseWrongNums="setCourseWrongNums"
         @setCourseRightNums="rightNums++">
       </topic-type5>
     </div>
@@ -159,6 +159,21 @@ export default {
     this.getTestPaperQuestionList()
   },
   methods: {
+    setCourseWrongNums (QuestionID) {
+      this.wrongNums++
+      this.AddWrongCollection(QuestionID)
+    },
+    async AddWrongCollection (QuestionID) {
+      const result = await this.$http.post(`/AddWrongCollection`, {
+        TestPaperID: this.$route.params.id,
+        QuestionID: QuestionID
+      })
+      if (result.Code === 100000) {
+        
+      } else {
+        this.$message.error(result.Msg)
+      }
+    },
     async getTestPaperQuestionList () {
       const res = await this.$http.get(`/TestPaperQuestionList?testPaperID=${this.$route.params.id}`)
       if (res.data.Code === 100000) {

@@ -12,7 +12,7 @@
           controlslist="nodownload"
           x5-playsinline>
         </video>
-        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="courseInfo.Img" alt="" @error="loadDefaultImage">
+        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="transformImgUrl(courseInfo.Img)" alt="" @error="loadDefaultImage">
         <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
       </div>
       <div class="title_info">
@@ -54,6 +54,7 @@
 import lessonList from './lessonList.vue'
 import topicList from './topicList.vue'
 import coursewareList from './coursewareList.vue'
+import util from '@/plugins/util'
 export default {
   components: {
     lessonList,
@@ -99,6 +100,7 @@ export default {
     this.init()
   },
   methods: {
+    transformImgUrl: util.transformImgUrl,
     init () {
       this.getShopProxyCourseDetails()
       this.getLicenceCheck()

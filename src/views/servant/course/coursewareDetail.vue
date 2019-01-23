@@ -1,29 +1,41 @@
 <template>
-  <div class="">
-    <div class="imgs_box" :style="{backgroundImage: `url(${imgList[currentIndex]})`}">
-      <div class="imgs_box_bg_blur" :style="{backgroundImage: `url(${imgList[currentIndex]})`}"></div>
-      <div class="imgs_box_bg_color"></div>
-      <swiper :options="swiperOption" @slideChange="change" ref="swiperRef">
+  <div class="courseware_detail_contianer">
+    <xxLoading v-if="loading" text="正在获取课件资源"></xxLoading>
+    <template v-else>
+      <div class="show_menu_btn" @click="menusDialog.visible = true">
+        <i class="iconfont icon-mulu"></i>
+        <div class="img_pagination">
+          {{currentIndex +1}}/{{imgList.length}}
+        </div>
+      </div>
+      <x-dialog
+        v-model="menusDialog.visible"
+        hide-on-blur
+      >
+        <div class="menu_main_container">
+          <div v-for="(img, index) in imgList" :key="index" class="menu_index_btn_box">
+            <span class="menu_index_btn" @click="clickImgIndex(index)">
+              {{index + 1}}
+            </span>
+          </div>
+        </div>
+      </x-dialog>
+      <swiper :options="swiperOption" @slideChange="swiperRefChange" ref="swiperRef">
         <swiperSlide v-for="(demo, index) in imgList" :key="index">
-          <div class="imgCard" :style="{backgroundImage: `url(${demo})`}" @click="showDialog = true"></div>
-        </swiperSlide>
-      </swiper>
-    </div>
-    <div v-if="showDialog" class="dialog_contianer" @click="showDialog = false">
-      <swiper :options="dialogSwiperOption" @slideChange="change" ref="dialogSwiperRef">
-        <swiperSlide v-for="(demo, index) in imgList" :key="index">
-          <div class="dialog_swiper_items">
-            <img :src="demo" alt="">
+          <div class="swiper_items_container">
+            <img class="swiper-lazy course_img" :data-src="transformImgUrl(demo.RemotePath)" alt="">
+            <div class="swiper-lazy-preloader"></div>
           </div>
         </swiperSlide>
       </swiper>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import util from '@/plugins/util'
 export default {
   components: {
     swiper,
@@ -32,25 +44,18 @@ export default {
   props: {},
   data () {
     return {
-      showDialog: false,
-      imgList: [
-        'http://192.168.2.100/pngs/slide1.png',
-        'http://192.168.2.100/pngs/slide2.png',
-        'http://192.168.2.100/pngs/slide3.png',
-        'http://192.168.2.100/pngs/slide4.png',
-        'http://192.168.2.100/pngs/slide5.png',
-        'http://192.168.2.100/pngs/slide6.png',
-        'http://192.168.2.100/pngs/slide7.png',
-        'http://192.168.2.100/pngs/slide8.png'
-      ],
+      loading: false,
+      menusDialog: {
+        visible: false
+      },
+      imgList: [],
       currentIndex: 0,
       swiperOption: {
-        slidesPerView: 4,
-        spaceBetween: 30,
         centeredSlides: true,
-        lazyLoading: true
-      },
-      dialogSwiperOption: {}
+        lazy: {
+          loadPrevNext: true
+        }
+      }
     }
   },
   watch: {},
@@ -63,16 +68,24 @@ export default {
     }
   },
   methods: {
-    change () {
+    transformImgUrl: util.transformImgUrl,
+    clickImgIndex (index) {
+      this.$refs['swiperRef'].swiper.slideTo(index)
+      this.menusDialog.visible = false
+    },
+    swiperRefChange () {
       let index = this.$refs['swiperRef'].swiper.activeIndex
       this.currentIndex = index
     },
     async getCoursewareDetail () {
+      this.loading = true
       const result = await this.$http.get(`/CourseEnclosure/CouldWatchEnclosure`, {
         courseEnclosureID: this.id,
         proxyCourseID: this.courseID
       })
+      this.loading = false
       if (result.data.Code === 100000) {
+        this.imgList = JSON.parse(result.data.Data)
       } else {
         this.$vux.toast.text(result.data.Msg)
       }
@@ -85,69 +98,67 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.imgs_box{
+.courseware_detail_contianer
+{
   position: relative;
-  padding: 20px 0;
-  background-position: top;
-  background-size: 100% 100%;
-  overflow: hidden;
-  .imgs_box_bg_color,
-  .imgs_box_bg_blur
+  .show_menu_btn
   {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-  }
-  .imgs_box_bg_blur
-  {
-    filter: blur(20px);
-    opacity: .9;
-    background-position: top;
-    background-size: 100% 100%;
-  }
-  &::after
-  {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    content: '';
-    display: block;
-    border-width: 0 10px 10px 10px;
-    border-style: solid;
-    border-color: transparent transparent #f6f6f6 transparent
-  }
-  .imgCard
-  {
-    height: 130px;
-    width: 80px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    right: 10px;
+    top: 10px;
+    z-index: 2;
+    .icon-mulu
+    {
+      display: block;
+      font-size: 36px;
+      color: rgba(62, 204, 204, .7);
+    }
+    .img_pagination
+    {
+      position: absolute;
+      top: 100%;
+      font-size: 12px;
+      text-align: center;
+      width: 100%;
+      color: #999;
+    }
   }
 }
-.dialog_contianer
+.swiper_items_container
 {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  top: 0;
-  left: 0;
-  z-index: 10000;
-  background-color: rgba(0,0,0,.5);
-  .dialog_swiper_items
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  .course_img
   {
-    position: relative;
-    height: 100%;
     width: 100%;
-    text-align: center;
-    padding-top: 20px;
-    img
+  }
+}
+.menu_main_container
+{
+  display: flex;
+  flex-flow: wrap;
+  padding: 20px;
+  .menu_index_btn_box
+  {
+    padding: 10px;
+    .menu_index_btn
     {
-      width: 90%;
-      border-radius: 10px;
+      display: block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      border: 1px solid #999;
+      color: #999;
+      border-radius: 50%;
+      &.active
+      {
+        border-color: rgb(62, 204, 204);
+        color: rgb(62, 204, 204);
+      }
     }
   }
 }

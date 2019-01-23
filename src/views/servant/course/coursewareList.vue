@@ -3,8 +3,9 @@
     <xxLoading v-if="loading" text="正在加载课件"></xxLoading>
     <div v-else>
       <CoursewareItems
-        coursewareName="xxxxxxxxxxxxx"
-        @click.native="redirectTo(`/servant/course/courseware/${proxyCourseID}/1`)"
+        v-for="(shopProxyCourseEnclosure, index) in shopProxyCourseEnclosureList" :key="index"
+        :coursewareName="shopProxyCourseEnclosure.Name"
+        @click.native="redirectTo(`/servant/course/courseware/${proxyCourseID}/${shopProxyCourseEnclosure.CourseEnclosureID}`)"
       ></CoursewareItems>
     </div>
   </div>
@@ -44,7 +45,10 @@ export default {
       })
       this.loading = false
       if (result.data.Code === 100000) {
-        this.shopProxyCourseEnclosureList = result.data.Data.shopProxyCourseEnclosureList
+        this.shopProxyCourseEnclosureList = [
+          ...this.shopProxyCourseEnclosureList,
+          ...result.data.Data.shopProxyCourseEnclosureList
+        ]
       } else {
         this.$vux.toast.text(result.data.Msg)
       }
