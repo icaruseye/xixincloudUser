@@ -9,25 +9,31 @@
           class="address-picker"
           placeholder="请选择地址"
           value-text-align="center"
+          @on-hide="addressOnHide"
           :popup-style="{'z-index': 503}">
         </x-address>
         <input v-model="data.citys" name="citys" type="hidden">
       </div>
       <div class="weui-form-cell">
         <div class="weui-cell-top">
-            <label class="label" for="">具体地址</label>
-            <input v-model="data.SpecificAddress" name="address" type="text" placeholder="请输入具体地址">
+          <label class="label" for="">具体地址</label>
+          <!-- <input id="tipinput" v-model="data.SpecificAddress" name="address" type="text" placeholder="请输入具体地址"> -->
+          <custom-search
+            @select="select"
+            :city="searchCitys"
+            :SpecificAddress="data.SpecificAddress"
+          ></custom-search>
         </div>
       </div>
       <div class="weui-form-cell">
         <div class="weui-cell-top">
-            <label class="label" for="" style="width:95px">标签</label>
-            <input v-model="data.Remark" name="tag" type="text" placeholder="请输入标签" style="width:60px;margin-right:10px">
-            <checker v-model="data.Remark" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
-              <checker-item value="家">家</checker-item>
-              <checker-item value="公司">公司</checker-item>
-              <checker-item value="其他">其他</checker-item>
-            </checker>
+          <label class="label" for="" style="width:95px">标签</label>
+          <input v-model="data.Remark" name="tag" type="text" placeholder="请输入标签" style="width:60px;margin-right:10px">
+          <checker v-model="data.Remark" :radio-required="true" default-item-class="tags-item" selected-item-class="tags-item-selected">
+            <checker-item value="家">家</checker-item>
+            <checker-item value="公司">公司</checker-item>
+            <checker-item value="其他">其他</checker-item>
+          </checker>
         </div>
       </div>
       <div class="weui-form-cell">
@@ -59,6 +65,7 @@
 import ChinaAddressV4Data from '@/plugins/datas/ChinaAddressV4Data.json'
 import { Group, XAddress, Checker, CheckerItem, InlineXSwitch, Confirm, TransferDom } from 'vux'
 import util from '@/plugins/util'
+import customSearch from '@/components/customSearch'
 export default {
   directives: {
     TransferDom
@@ -69,7 +76,8 @@ export default {
     Checker,
     CheckerItem,
     InlineXSwitch,
-    Confirm
+    Confirm,
+    customSearch
   },
   props: {
     id: {
@@ -88,13 +96,7 @@ export default {
   watch: {
     UserAddress () {
       this.data = this.UserAddress
-    }
-  },
-  mounted () {
-    if (this.UserAddress.Province) {
-      this.UserAddress.citys = [this.UserAddress.Province, this.UserAddress.City, this.UserAddress.Area]
-    } else {
-      this.UserAddress.citys = []
+      this.searchCitys = this.UserAddress.City
     }
   },
   data () {
@@ -105,6 +107,7 @@ export default {
       removeBtn: false,
       addressData: ChinaAddressV4Data,
       address: '',
+      searchCitys: '',
       authText: {
         IsDefault: {
           required: false
@@ -124,7 +127,23 @@ export default {
       }
     }
   },
+  mounted () {
+    if (this.UserAddress.Province) {
+      this.UserAddress.citys = [this.UserAddress.Province, this.UserAddress.City, this.UserAddress.Area]
+      this.searchCitys = this.UserAddress.City
+    } else {
+      this.UserAddress.citys = []
+    }
+  },
   methods: {
+    addressOnHide () {
+      this.searchCitys = this.data.citys[1]
+    },
+    select (poi) {
+      this.UserAddress.SpecificAddress = poi.name
+      this.UserAddress.location = poi.location
+      console.log(this.UserAddress)
+    },
     cancel () {
       this.$emit('cancel')
     },
@@ -153,6 +172,11 @@ export default {
     },
     async save () {
       const that = this
+      console.log(this.UserAddress)
+      if (!this.UserAddress.location) {
+        this.$vux.toast.text('请选择一个具体地址')
+        return false
+      }
       const isValidate = util.validateForm(this.UserAddress, this.authText)
       if (isValidate) {
         this.submitBtn = true
@@ -230,5 +254,14 @@ export default {
 .vux-checker-box {
   width: 130px;
   flex-shrink: 0;
+}
+.search_bar {
+  flex: 1;
+  color: #333;
+  display: inline-block;
+  overflow: hidden;
+  height: 35px;
+  line-height: 35px;
+  z-index: 99;
 }
 </style>

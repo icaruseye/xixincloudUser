@@ -13,6 +13,7 @@ import http from '@/api'
 import util from '@/plugins/util'
 import Vant from 'vant'
 import 'vant/lib/vant-css/index.css'
+import VueAMap from 'vue-amap'
 // import 'animate.css/animate.min.css'
 
 Vue.use(Vant)
@@ -25,6 +26,13 @@ Vue.use(LoadingPlugin)
 Vue.use(BusPlugin)
 Vue.use(AlertPlugin)
 Vue.component('x-dialog', XDialog)
+Vue.use(VueAMap)
+VueAMap.initAMapApiLoader({
+  key: '6c1e7dd17520cbff5d12dbc63018f3b0',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+  // 默认高德 sdk 版本为 1.4.4
+  v: '1.4.4'
+})
 
 // 错误监控
 var fundebug = require('fundebug-javascript')
