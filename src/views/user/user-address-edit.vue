@@ -260,8 +260,7 @@ export default {
   color: #333;
   display: inline-block;
   overflow: hidden;
-  height: 35px;
-  line-height: 35px;
+  line-height: 20px;
   z-index: 99;
 }
 </style>

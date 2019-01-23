@@ -2,7 +2,7 @@
 import { createCustomComponent } from 'vue-amap'
 const customSearch = createCustomComponent({
   template: `<div class="search_bar">
-    <input :value="SpecificAddress" style="width:100%" class="custom-componet-input" :id="id" placeholder="请输入详细地址" />
+    <textarea :value="SpecificAddress" style="width:100%" class="custom-componet-input" :id="id" placeholder="请输入详细地址"></textarea>
   </div>`,
   props: {
     city: {
