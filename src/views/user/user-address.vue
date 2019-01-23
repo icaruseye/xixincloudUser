@@ -81,7 +81,7 @@ export default {
     toEdit (id, index) {
       this.defaultOnly = (id !== -1 && this.addressList.length === 1) || (id === -1 && this.addressList.length === 0)
       // id：-1 新增地址
-      this.UserAddress = id !== -1 ? this.addressList[index] : {IsDefault: 1}
+      this.UserAddress = id !== -1 ? this.addressList[index] : {IsDefault: 1, Remark: '家'}
       this.showAddress = true
       this.addressID = id
     }

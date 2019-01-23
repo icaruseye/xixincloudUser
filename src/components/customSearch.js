@@ -22,16 +22,7 @@ const customSearch = createCustomComponent({
     }
   },
   contextReady () {
-    AMap.plugin(['AMap.Autocomplete', 'AMap.PlaceSearch'], () => {
-      const autocomplete = new AMap.Autocomplete({
-        city: this.city,
-        input: this.id
-      })
-      AMap.event.addListener(autocomplete, 'select', (e) => {
-        this.$emit('select', e.poi)
-      })
-      this.$amapComponent = autocomplete
-    })
+    this.init()
   },
   methods: {
     init () {
@@ -41,9 +32,11 @@ const customSearch = createCustomComponent({
           input: this.id
         })
         AMap.event.addListener(autocomplete, 'select', (e) => {
+          console.log(e)
           this.$emit('select', e.poi)
         })
         this.$amapComponent = autocomplete
+        console.log(autocomplete)
       })
     }
   }

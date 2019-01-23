@@ -186,7 +186,6 @@ export default {
     },
     // 选择当前章节内容
     playLesson (data) {
-      debugger
       let { LessonID, ContentType } = data
       // 视频
       if (+ContentType === 1) {
@@ -198,7 +197,7 @@ export default {
       }
       //习题
       if (+ContentType === 4) {
-        this.$router.push(`/servant/course/topic/${this.proxyCourseID}?recordID=${LessonID}`)
+        this.$router.push(`/servant/course/topic/${LessonID}?recordID=${LessonID}`)
       }
     },
     // 切换tab页
@@ -249,6 +248,7 @@ export default {
   .poster_img {
     width: 100%;
     height: 200px;
+    background: #fff;
   }
   .poster_video {
     width: 100%;

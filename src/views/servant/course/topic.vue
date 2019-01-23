@@ -169,7 +169,6 @@ export default {
         QuestionID: QuestionID
       })
       if (result.Code === 100000) {
-        
       } else {
         this.$message.error(result.Msg)
       }

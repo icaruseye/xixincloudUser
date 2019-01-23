@@ -142,7 +142,6 @@ export default {
     select (poi) {
       this.UserAddress.SpecificAddress = poi.name
       this.UserAddress.location = poi.location
-      console.log(this.UserAddress)
     },
     cancel () {
       this.$emit('cancel')
