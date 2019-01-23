@@ -12,13 +12,8 @@
           controlslist="nodownload"
           x5-playsinline>
         </video>
-<<<<<<< HEAD
         <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.PreViewContent" :src="courseInfo.PreViewContent | transformImgUrl" alt="" @error="loadDefaultImage">
         <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.PreViewContent" src="../../../assets/images/course-default.png" alt="">
-=======
-        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.Img" :src="transformImgUrl(courseInfo.Img)" alt="" @error="loadDefaultImage">
-        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.Img" src="../../../assets/images/course-default.png" alt="">
->>>>>>> f8d92f2b5d5f310661d82b47dc10348f76dc63cf
       </div>
       <div class="title_info">
         <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
