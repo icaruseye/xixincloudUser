@@ -48,6 +48,13 @@ export default [
     }
   },
   {
+    path: '/organ/item/:id/onsiteFrom',
+    component: _import('/common/organ/onsiteFrom'),
+    meta: {
+      title: '医护上门'
+    }
+  },
+  {
     path: '/organ/servant',
     component: _import('/common/organ/servantIndex'),
     meta: {

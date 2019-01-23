@@ -6,7 +6,7 @@
           <p class="item_name">{{userStudyRecord.LessonName}}</p>
           <p class="item_desc">上次学习：{{userStudyRecord.LastStudyTime | timeFormat}}</p>
         </div>
-        <div class="learn_btn" @click="toLearn(userStudyRecord.LessonID, userStudyRecord.ServantProxyCourseID, userStudyRecord.ServantViewID)">再学一次</div>
+        <div class="learn_btn" @click="toLearn(userStudyRecord.LessonID, userStudyRecord.ContentType,userStudyRecord.ServantProxyCourseID, userStudyRecord.ServantViewID)">再学一次</div>
       </section>
       <xx-loadmore
         style="margin: 10px"
@@ -74,8 +74,8 @@ export default {
         this.$vux.toast(result.Msg)
       }
     },
-    toLearn (LessonID, ServantProxyCourseID, ServantViewID) {
-      this.$router.push(`/servant/course/${ServantProxyCourseID}?servantViewID=${ServantViewID}&lessonID=${LessonID}`)
+    toLearn (LessonID, ContentType, ServantProxyCourseID, ServantViewID) {
+      this.$router.push(`/servant/course/${ServantProxyCourseID}?servantViewID=${ServantViewID}&lessonID=${LessonID}&ContentType=${ContentType}`)
     }
   }
 }

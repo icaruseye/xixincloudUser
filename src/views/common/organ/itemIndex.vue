@@ -33,9 +33,9 @@
               <i class="iconfont icon-neirong"></i>
               <div class="text">服务内容</div>
             </div>
-            <div class="item" @click="go('comesoon')">
+            <div class="item" @click="go('/user')">
               <i class="iconfont icon-shijian"></i>
-              <div class="text">日程</div>
+              <div class="text">我的</div>
             </div>
           </div>
         </div>
@@ -53,12 +53,20 @@
       </div>
       <div class="item" @click="close">
         <img src="@/assets/images/organ-2.png" alt="">
-        <div class="text">客服服务</div>
+        <div class="text">在线咨询</div>
+      </div>
+      <div class="item">
+        <img src="@/assets/images/organ-2.png" alt="">
+        <div class="text">医护上门</div>
+      </div>
+      <div class="item">
+        <img src="@/assets/images/organ-2.png" alt="">
+        <div class="text">院内服务</div>
       </div>
     </div>
     <!-- 服务介绍 -->
     <div class="servant-panel servant-panel_service" v-if="itemList.length > 0">
-      <div class="servant-panel_title"><i class="icon icon-2"></i>服务介绍</div>
+      <div class="servant-panel_title"><i class="icon icon-2"></i>热门服务</div>
       <template v-for="(item, index) in itemList">
         <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
           <div class="icon">
@@ -67,6 +75,7 @@
           <div class="mid">
             <div class="title">{{item.Name}}</div>
             <div class="describe text-overflow-1">{{item.Content}}</div>
+            <div class="price">{{item.Price ? (item.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
           </div>
         </div>
       </template>
@@ -145,9 +154,18 @@ export default {
 
 <style scoped lang="less">
 @import url(../../servant/components/index.less);
-.weui-list_item .mid .title {
-  font-weight: normal;
-  color: #333;
+.weui-list_item .mid {
+  .title {
+    font-weight: normal;
+    color: #333;
+  }
+  .price {
+    font-size: 14px;
+    color: #FF5F5F;
+    span {
+      font-size: 11px;
+    }
+  }
 }
 .userinfo-panel {
   background: #A7E2F5;
@@ -234,9 +252,11 @@ export default {
 .organ-info {
   display: flex;
   text-align: center;
-  margin: 12px;
+  margin: 12px 12px 0 12px;
+  flex-wrap: wrap;
   justify-content: space-between;
   .item {
+    margin-bottom: 12px;
     padding: 10px 0;
     line-height: 1;
     border-radius: 4px;
@@ -254,13 +274,13 @@ export default {
   }
 }
 .servant-panel {
-  margin-top: 10px;
   background: #fff;
   padding: 15px;
 }
 .servant-panel_title {
   position: relative;
   padding: 0 0 10px;
+  font-weight: normal;
   &::after {
     content: " ";
     position: absolute;
@@ -298,5 +318,10 @@ export default {
     text-align: center;
     background: #fff;
   }
+}
+.tips-content {
+  padding: 10px;
+  height: 100%;
+  overflow: scroll;
 }
 </style>
