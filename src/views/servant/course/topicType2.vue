@@ -91,9 +91,9 @@ export default {
 
       this.$nextTick(() => {
         if (document.querySelectorAll('.icon-cha').length > 0) {
-          this.$emit('setCourseWrongNums', true)
+          this.$emit('setCourseWrongNums', this.data.QuestionID)
         } else {
-          this.$emit('setCourseRightNums', true)
+          this.$emit('setCourseRightNums', this.data.QuestionID)
         }
       })
     },

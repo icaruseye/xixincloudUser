@@ -91,9 +91,9 @@ export default {
         return false
       }
       if (this.answerInner !== this.data.IntRightKey) {
-        this.$emit('setCourseWrongNums', true)
+        this.$emit('setCourseWrongNums', this.data.QuestionID)
       } else {
-        this.$emit('setCourseRightNums', true)
+        this.$emit('setCourseRightNums', this.data.QuestionID)
       }
 
       this.correctInner = this.data.IntRightKey
