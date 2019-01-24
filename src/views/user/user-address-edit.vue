@@ -19,10 +19,16 @@
           <label class="label" for="">具体地址</label>
           <!-- <input id="tipinput" v-model="data.SpecificAddress" name="address" type="text" placeholder="请输入具体地址"> -->
           <custom-search
-            @select="select"
+            @select="selectAddress"
             :city="searchCitys"
             :SpecificAddress="data.SpecificAddress"
           ></custom-search>
+        </div>
+      </div>
+      <div class="weui-form-cell">
+        <div class="weui-cell-top">
+          <label class="label" for="">门牌号</label>
+          <input id="tipinput" v-model="data.HouseAddress" name="HouseAddress" type="text" placeholder="例：一栋二单元1024">
         </div>
       </div>
       <div class="weui-form-cell">
@@ -120,6 +126,10 @@ export default {
           text: '详细地址',
           required: true
         },
+        HouseAddress: {
+          text: '门牌号',
+          required: false
+        },
         Remark: {
           text: '标签',
           required: true
@@ -139,9 +149,10 @@ export default {
     addressOnHide () {
       this.searchCitys = this.data.citys[1]
     },
-    select (poi) {
+    selectAddress (poi) {
       this.UserAddress.SpecificAddress = poi.name
-      this.UserAddress.location = poi.location
+      this.UserAddress.Latitude = poi.location.lat
+      this.UserAddress.Longitude = poi.location.lng
     },
     cancel () {
       this.$emit('cancel')
@@ -172,7 +183,7 @@ export default {
     async save () {
       const that = this
       console.log(this.UserAddress)
-      if (!this.UserAddress.location) {
+      if (!this.UserAddress.SpecificAddress) {
         this.$vux.toast.text('请选择一个具体地址')
         return false
       }
@@ -185,7 +196,10 @@ export default {
           City: this.UserAddress.citys[1],
           Area: this.UserAddress.citys[2],
           SpecificAddress: this.UserAddress.SpecificAddress,
-          Remark: this.UserAddress.Remark
+          Remark: this.UserAddress.Remark,
+          Latitude: this.UserAddress.Latitude,
+          Longitude: this.UserAddress.Longitude,
+          HouseAddress: this.UserAddress.HouseAddress
         }
         const method = this.id === -1 ? 'post' : 'put'
         const url = this.id === -1 ? '/UserAddress' : `/UserAddress/${this.id}`
