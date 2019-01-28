@@ -20,6 +20,10 @@
                       <span class="tag">课件</span>
                       <i class="iconfont icon--kejian"></i>
                     </template>
+                    <template v-if="subItem.ContentType === 3">
+                      <span class="tag">音频</span>
+                      <i class="iconfont icon-xiaji1"></i>
+                    </template>
                     <template v-if="subItem.ContentType === 4">
                       <span class="tag">习题</span>
                       <i class="iconfont icon-shijuan-copy"></i>

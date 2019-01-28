@@ -2,6 +2,7 @@
   <div class="wrapper">
     <div class="topbar">
       <div class="poster">
+        <!-- 视频 -->
         <video
           class="poster_video"
           v-if="courseInfo.PreViewType == 1"
@@ -10,10 +11,21 @@
           playsinline
           webkit-playsinline
           controlslist="nodownload"
+          autoplay
           x5-playsinline>
         </video>
-        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && courseInfo.PreViewContent" :src="courseInfo.PreViewContent | transformImgUrl" alt="" @error="loadDefaultImage">
-        <img class="poster_img" v-if="courseInfo.PreViewType == 2 && !courseInfo.PreViewContent" src="../../../assets/images/course-default.png" alt="">
+        <!-- 封面图 -->
+        <div class="preview_img_wrap" v-if="courseInfo.PreViewType == 2">
+          <img v-if="courseInfo.PreViewContent" class="poster_img" :src="courseInfo.PreViewContent | transformImgUrl" alt="" @error="loadDefaultImage">
+          <img v-if="!courseInfo.PreViewContent" class="poster_img" src="@/assets/images/course-default.png" alt="">
+          <img class='coverimg' src='@/assets/images/play-video.png' @click="playFirstLesson">
+        </div>
+        <!-- 音频 -->
+        <div class="preview_img_wrap" v-if="courseInfo.PreViewType == 3">
+          <audio class="poster_audio" :src="audioUrl" controls autoplay="autoplay"></audio>
+          <img v-if="courseInfo.PreViewContent" class="poster_img" :src="courseInfo.PreViewContent | transformImgUrl" alt="" @error="loadDefaultImage">
+          <img v-if="!courseInfo.PreViewContent" class="poster_img" src="@/assets/images/course-default.png" alt="">
+        </div>
       </div>
       <div class="title_info">
         <div class="title">{{courseInfo.ShopProxyCourseName}}</div>
@@ -21,29 +33,28 @@
           <span class="price">￥{{courseInfo.Price | price}}</span>
         </div>
       </div>
+      <div style="height:10px;background:#f6f6f6;"></div>
+      <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="30px" style="border-bottom: 1px solid #E9E9E9;">
+        <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick">详情</xx-tab-item>
+        <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick">课程目录</xx-tab-item>
+        <xx-tab-item :selected="tabIndex === 2" @on-item-click="tabItemClick">习题练习</xx-tab-item>
+        <xx-tab-item :selected="tabIndex === 3" @on-item-click="tabItemClick">课件</xx-tab-item>
+      </xx-tab>
     </div>
-    <div class="course_info">
-      <div class="servant-panel_title"><i class="icon icon-2"></i>课程详情</div>
-      <div class="content">{{courseInfo.Desctiption}}</div>
-      <div class="imgs" v-if="courseInfo.DescriptionImg">
-        <img v-for="(item, index) in courseInfo.DescriptionImg.split(',')" :key="index" :src="item | transformImgUrl" alt="">
-      </div>
-    </div>
-    <xx-tab v-model="tabIndex" active-color="#3ecccc" custom-bar-width="30px" style="border-bottom: 1px solid #E9E9E9;margin-top:10px;">
-      <xx-tab-item :selected="tabIndex === 0" @on-item-click="tabItemClick">课程目录</xx-tab-item>
-      <xx-tab-item :selected="tabIndex === 1" @on-item-click="tabItemClick">习题练习</xx-tab-item>
-      <xx-tab-item :selected="tabIndex === 2" @on-item-click="tabItemClick">课件</xx-tab-item>
-    </xx-tab>
-    <!-- 课程列表 -->
+    <!--课程详情 -->
     <div v-if="tabIndex === 0">
+      <courseIntro :courseInfo="courseInfo"></courseIntro>
+    </div>
+    <!-- 课程列表 -->
+    <div v-if="tabIndex === 1">
       <lesson-list @on-lesson-click="playLesson"></lesson-list>
     </div>
     <!-- 习题列表 -->
-    <div v-if="tabIndex === 1">
+    <div v-if="tabIndex === 2">
       <topic-list></topic-list>
     </div>
     <!-- 课件列表 -->
-    <div v-if="tabIndex === 2">
+    <div v-if="tabIndex === 3">
       <coursewareList></coursewareList>
     </div>
     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder" v-if="!IsPurchased">购买课程</button>
@@ -54,20 +65,24 @@
 import lessonList from './lessonList.vue'
 import topicList from './topicList.vue'
 import coursewareList from './coursewareList.vue'
+import courseIntro from './courseIntro.vue'
 import util from '@/plugins/util'
 export default {
   components: {
     lessonList,
     topicList,
-    coursewareList
+    coursewareList,
+    courseIntro
   },
   data () {
     return {
       tabIndex: this.$store.getters.courseTabIndex,
       pageIndex: 1,
       courseInfo: {},
+      lessonList: [],
       IsPurchased: true,
-      player: null
+      player: null,
+      audioUrl: null
     }
   },
   filters: {
@@ -107,11 +122,21 @@ export default {
     init () {
       this.getShopProxyCourseDetails()
       this.getLicenceCheck()
+      this.getShopProxyCourseLessonList()
       if (this.lessonID) {
         this.playLesson({
           LessonID: this.lessonID,
           ContentType: this.ContentType
         })
+      }
+    },
+    // 获取章节列表
+    async getShopProxyCourseLessonList () {
+      const res = await this.$http.get(`/ShopProxyCourseLessonList?page=0&proxyCourseID=${this.proxyCourseID}&Type=1`)
+      if (res.data.Code === 100000) {
+        this.lessonList = res.data.Data
+      } else {
+        this.$vux.toast.text(res.data.Msg)
       }
     },
     // 获取课程详情
@@ -121,9 +146,6 @@ export default {
       this.$vux.loading.hide()
       if (res.data.Code === 100000) {
         this.courseInfo = res.data.Data
-        // if (this.courseInfo.PreViewType === 1) {
-        //   this.initPlayer(this.courseInfo.PreViewContent)
-        // }
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -139,15 +161,21 @@ export default {
     },
     // 校验是否可以播放视频
     async getCouldWatchingVideo (lessonID) {
+      this.courseInfo.PreViewContent = ''
       const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}&Type=1`)
       if (res.data.Code === 100000) {
         this.courseInfo.PreViewContent = res.data.Data
         this.courseInfo.PreViewType = 1
-        // if (this.courseInfo.PreViewType !== 1) {
-        //   this.courseInfo.PreViewType = 1
-        //   this.initPlayer(res.data.Data)
-        // }
-        // this.player.loadByUrl(res.data.Data)
+      } else {
+        this.$vux.toast.text(res.data.Msg)
+      }
+    },
+    // 校验是否可以播放音频
+    async getCouldWatchingAudio (lessonID) {
+      const res = await this.$http.get(`/CouldWatchingVideo?lessonID=${lessonID}&proxyCourseID=${this.proxyCourseID}&Type=1`)
+      if (res.data.Code === 100000) {
+        this.audioUrl = res.data.Data
+        this.courseInfo.PreViewType = 3
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -167,6 +195,35 @@ export default {
           text: res.data.Msg,
           time: 800
         })
+      }
+    },
+    // 播放第一个章节
+    playFirstLesson () {
+      if (this.lessonList.length > 0) {
+        if (this.lessonList[0].lessonResponse.length >0) {
+          const detail = this.lessonList[0].lessonResponse[0]
+          if (detail.ContentType === 1) {
+            this.playLesson({
+              LessonID: detail.LessonID,
+              ContentType: 1,
+            })
+          }
+          if (detail.ContentType === 2) {
+            this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${detail.Content}`)
+          }
+          if (detail.ContentType === 3) {
+            this.playLesson({
+              LessonID: detail.LessonID,
+              ContentType: 3,
+            })
+          }
+          if (detail.ContentType === 4) {
+            this.$router.push(`/servant/course/topic/${detail.Content}?recordID=${detail.Content}`)
+          }
+          this.tabItemClick(1)
+        }
+      } else {
+        this.$vux.toast.text('章节暂无内容')
       }
     },
     // 初始化视频插件
@@ -194,6 +251,10 @@ export default {
       // 课件
       if (+ContentType === 2) {
         this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${LessonID}`)
+      }
+      // 音频
+      if (+ContentType === 3) {
+        this.getCouldWatchingAudio(LessonID)
       }
       //习题
       if (+ContentType === 4) {
@@ -237,13 +298,36 @@ export default {
 }
 .wrapper {
   padding-bottom: 55px;
-  padding-top: 270px;
+  padding-top: 340px;
   .topbar {
     z-index: 999;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    background: #f6f6f6;
+  }
+  .preview_img_wrap {
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 200px;
+    .coverimg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 75px;
+      height: 75px;
+    }
+    .poster_audio {
+      z-index: 99;
+      position: absolute;
+      bottom: 10px;
+      width: 90%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
   .poster_img {
     width: 100%;
@@ -260,9 +344,11 @@ export default {
     overflow: hidden;
   }
   .title_info {
+    margin-top: 10px;
     padding: 10px 17px;
     background: #fff;
     border-bottom: 1px solid #F2F4F5;
+    border-top: 1px solid #F2F4F5;
     .title {
       font-size: 15px;
       color: #4A4A4A;
@@ -303,28 +389,6 @@ export default {
     .desc {
       font-size: 12px;
       color: #4A4A4A;
-    }
-  }
-  .course_info {
-    padding: 10px 0;
-    margin-top: 10px;
-    background: #fff;
-    .servant-panel_title {
-      padding-bottom: 10px;
-      border-bottom: 1px solid #F2F4F5;
-    }
-    .content {
-      padding: 15px;
-      font-size: 12px;
-      color: #4A4A4A;
-    }
-    .imgs {
-      padding: 12px;
-      text-align: center;
-      img {
-        margin-bottom: 10px;
-        width: 90%;
-      }
     }
   }
 }
