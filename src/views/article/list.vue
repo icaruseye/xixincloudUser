@@ -8,42 +8,44 @@
         <xx-tab-item v-for="(item, index) in typeList" :key="index" :selected="tabIndex === index">{{item.Name}}</xx-tab-item>
       </xx-tab>
     </sticky>
-    <template v-for="(item, index) in typeList" v-if="tabIndex === index">
-      <div class="container" :key="index" v-show="index === tabIndex" v-if="articleList[index]">
-        <template v-for="(articleItem, articleIndex) in articleList[index].ArticleResponses">
-          <div class="item" :key="articleIndex" @click="toDetail(articleItem.ArticleId)">
-            <div class="poster">
-              <img :src="articleItem.Cover | transformImgUrl" alt="">
-            </div>
-            <div class="right">
-              <div class="title text-overflow-1">{{articleItem.Title}}</div>
-              <div class="tags">
-                <span v-for="(item, index) in articleItem.Attributes.split(',')" :key="index">{{item}}</span>
+    <template v-if="tabIndex === index">
+      <template v-for="(item, index) in typeList">
+        <div class="container" :key="index" v-show="index === tabIndex" v-if="articleList[index]">
+          <template v-for="(articleItem, articleIndex) in articleList[index].ArticleResponses">
+            <div class="item" :key="articleIndex" @click="toDetail(articleItem.ArticleId)">
+              <div class="poster">
+                <img :src="articleItem.Cover | transformImgUrl" alt="">
               </div>
-              <div class="info">
-                <div class="text">{{articleItem.CreateTime | timeFormat('HH:mm')}}</div>
-                <div class="text">阅读{{articleItem.ViewCount}}</div>
-                <div class="text">点赞{{articleItem.GiveCount}}</div>
+              <div class="right">
+                <div class="title text-overflow-1">{{articleItem.Title}}</div>
+                <div class="tags">
+                  <span v-for="(item, index) in articleItem.Attributes.split(',')" :key="index">{{item}}</span>
+                </div>
+                <div class="info">
+                  <div class="text">{{articleItem.CreateTime | timeFormat('HH:mm')}}</div>
+                  <div class="text">阅读{{articleItem.ViewCount}}</div>
+                  <div class="text">点赞{{articleItem.GiveCount}}</div>
+                </div>
               </div>
             </div>
+          </template>
+          <xx-loadmore
+            v-if="articleList[index].ArticleResponses.length > 0"
+            :pageindex="articleList[index].index"
+            :pageTotal="articleList[index].TotalPage"
+            :loadText="loadText"
+            @onClick="loadmore(index)">
+          </xx-loadmore>
+          <div v-if="articleList[index].ArticleResponses.length === 0" style="font-size: 120px;text-align:center;margin-bottom:40px;">
+            <i style="font-size:66px;display:block">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-kong1"></use>
+              </svg>
+            </i>
+            <p style="font-size:12px;color:#999;text-align:center;">文章列表为空</p>
           </div>
-        </template>
-        <xx-loadmore
-          v-if="articleList[index].ArticleResponses.length > 0"
-          :pageindex="articleList[index].index"
-          :pageTotal="articleList[index].TotalPage"
-          :loadText="loadText"
-          @onClick="loadmore(index)">
-        </xx-loadmore>
-        <div v-if="articleList[index].ArticleResponses.length === 0" style="font-size: 120px;text-align:center;margin-bottom:40px;">
-          <i style="font-size:66px;display:block">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-kong1"></use>
-            </svg>
-          </i>
-          <p style="font-size:12px;color:#999;text-align:center;">文章列表为空</p>
         </div>
-      </div>
+      </template>
     </template>
     <div v-if="typeList.length === 0" style="font-size: 120px;text-align:center;margin-bottom:40px;">
       <i style="font-size:66px;display:block">

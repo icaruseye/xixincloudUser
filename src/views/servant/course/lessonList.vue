@@ -50,9 +50,17 @@
 
 <script>
 export default {
+  props: {
+    currentIndex: Number
+  },
+  watch: {
+    currentIndex (val) {
+      this.selectIndex = val
+    }
+  },
   data () {
     return {
-      selectIndex: [null, null],
+      selectIndex: null,
       pageIndex: 0,
       courseList: []
     }

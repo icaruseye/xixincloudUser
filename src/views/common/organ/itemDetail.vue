@@ -2,12 +2,12 @@
   <div class="has-tabbar">
     <!-- 服务包头部信息 -->
     <div class="package-header-info">
-      <div class="icon"><img :src="Item.UseType | ItemImageByUseType" alt=""></div>
+      <div class="icon"><img :src="Item.Package.PackageType | ItemImageByUseType" alt=""></div>
       <div class="mid">
-        <div class="name">{{Item.Name}}</div>
+        <div class="name">{{Item.Package.Name}}</div>
         <div class="sales">
-          <div class="price">{{Item.Price ? (Item.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
-          <div class="volume" v-if="Item.SoldAmount">已售：{{Item.SoldAmount}}份</div>
+          <div class="price">{{Item.DispatchService.Price ? (Item.DispatchService.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
+          <div class="volume" v-if="Item.Package.SoldAmount">已售：{{Item.Package.SoldAmount}}份</div>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
         <span class="left">服务套餐介绍</span>
       </div>
       <div class="content">
-        {{Item.Content}}
+        {{Item.Package.Description}}
       </div>
     </div>
     <!-- 注意事项 -->
@@ -26,10 +26,10 @@
         <span class="left">注意事项</span>
       </div>
       <div class="content">
-        {{Item.Attention}}
+        {{Item.ItemTemplate.Attention}}
       </div>
     </div>
-     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.ID)">预约服务</button>
+     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.DispatchService.ID)">预约服务</button>
   </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     async getItemTemplate () {
-      const res = await this.$http.get(`/ItemTemplate/${this.itemID}`)
+      const res = await this.$http.get(`/DispatchService?id=${this.itemID}`)
       if (res.data.Code === 100000) {
         this.Item = res.data.Data
       } else {
@@ -60,7 +60,7 @@ export default {
     },
     async getUserPreOrder (id) {
       // 生成预支付订单
-      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.itemID}&orderType=1&servantViewID=&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
+      const res = await this.$http.post(`/UserOrder/PreOrder?packageID=${this.itemID}&orderType=7&servantViewID=&refereeType=${this.refereeType}&refereeViewID=${this.refereeViewID}`)
       if (res.data.Code === 100000) {
         if (res.data.Data.RedirectState === 0) {
           this.$router.push(`/servant/pay/${id}?OrderID=${res.data.Data.OrderID}`)

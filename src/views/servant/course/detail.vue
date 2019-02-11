@@ -47,7 +47,7 @@
     </div>
     <!-- 课程列表 -->
     <div v-if="tabIndex === 1">
-      <lesson-list @on-lesson-click="playLesson"></lesson-list>
+      <lesson-list @on-lesson-click="playLesson" :currentIndex="currentIndex"></lesson-list>
     </div>
     <!-- 习题列表 -->
     <div v-if="tabIndex === 2">
@@ -82,7 +82,8 @@ export default {
       lessonList: [],
       IsPurchased: true,
       player: null,
-      audioUrl: null
+      audioUrl: null,
+      currentIndex: null
     }
   },
   filters: {
@@ -221,6 +222,7 @@ export default {
             this.$router.push(`/servant/course/topic/${detail.Content}?recordID=${detail.Content}`)
           }
           this.tabItemClick(1)
+          this.currentIndex = detail.LessonID
         }
       } else {
         this.$vux.toast.text('章节暂无内容')

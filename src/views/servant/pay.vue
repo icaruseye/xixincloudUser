@@ -4,7 +4,7 @@
     <div class="text">支付中...</div>
     <div class="weui-cell">
       <div class="left" style="font-size:14px;">{{packageInfo.ShopName}}</div>
-      <div class="right" style="font-size:10px;color:#999">服务者: {{packageInfo.ServantName}}</div>
+      <div class="right" v-if="packageInfo.ServantName" style="font-size:10px;color:#999">服务者: {{packageInfo.ServantName}}</div>
     </div>
     <div class="weui-cell" style="padding: 20px 15px">
       <div class="left" style="font-size:0;"><img class="package_icon" src="@/assets/images/icon_picc.png" alt=""></div>

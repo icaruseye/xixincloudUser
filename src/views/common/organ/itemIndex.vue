@@ -65,20 +65,30 @@
       </div>
     </div>
     <!-- 服务介绍 -->
-    <div class="servant-panel servant-panel_service" v-if="itemList.length > 0">
+    <div class="servant-panel servant-panel_service">
       <div class="servant-panel_title"><i class="icon icon-2"></i>热门服务</div>
       <template v-for="(item, index) in itemList">
-        <div class="weui-list_item" :key="index" @click="toItem(item.ID)">
+        <div class="weui-list_item" :key="index" @click="toItem(item.DispatchService.ID)">
           <div class="icon">
             <img :src="item.UseType | ItemImageByUseType" alt="">
           </div>
           <div class="mid">
-            <div class="title">{{item.Name}}</div>
-            <div class="describe text-overflow-1">{{item.Content}}</div>
-            <div class="price">{{item.Price ? (item.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
+            <div class="title">{{item.Package.Name}}</div>
+            <div class="describe text-overflow-1">{{item.Package.Description}}</div>
+            <div class="price">{{item.DispatchService.Price ? (item.DispatchService.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
           </div>
         </div>
       </template>
+      <xxOccupiedBox v-if="itemList.length === 0">
+        暂无服务
+      </xxOccupiedBox>
+      <xx-loadmore
+        v-if="itemList.length > 0"
+        :pageindex="pageIndex"
+        :pageTotal="totalPage"
+        :loadText="loadText"
+        @onClick="loadmore(index)">
+      </xx-loadmore>
     </div>
     <!-- 机构介绍 -->
     <div v-transfer-dom>
@@ -102,9 +112,14 @@ export default {
   },
   data () {
     return {
+      totalPage: 1,
+      pageIndex: 1,
+      pageSize: 8,
+      addressCode: '120101',
+      showHideOnBlur: false,
       itemList: [],
       Agreement: {},
-      showHideOnBlur: false
+      loadText: '查看更多'
     }
   },
   computed: {
@@ -114,14 +129,52 @@ export default {
     ])
   },
   created () {
-    this.getItemTemplate()
     this.getShopAgreement()
   },
+  mounted () {
+    this.getGeolocation()
+  },
   methods: {
+    getGeolocation () {
+      const that = this
+      AMap.plugin('AMap.Geolocation', function () {
+        var geolocation = new AMap.Geolocation({
+          // 是否使用高精度定位，默认：true
+          enableHighAccuracy: true,
+          // 设置定位超时时间，默认：无穷大
+          timeout: 10000
+        })
+
+        geolocation.getCurrentPosition()
+        AMap.event.addListener(geolocation, 'complete', onComplete)
+        AMap.event.addListener(geolocation, 'error', onError)
+
+        function onComplete (data) {
+          // data是具体的定位信息
+          console.log(data)
+          that.addressCode = data.addressComponent.adcode
+          that.getItemTemplate()
+        }
+
+        function onError (data) {
+          // 定位出错
+          that.$vux.toast.text('未获取到您的定位信息')
+          that.getItemTemplate()
+        }
+      })
+    },
     async getItemTemplate () {
-      const res = await this.$http.get('/ItemTemplate')
+      const res = await this.$http.get('/DispatchService/List', {
+        index: this.pageIndex,
+        size: this.pageSize,
+        addressCode: this.addressCode
+      })
       if (res.data.Code === 100000) {
-        this.itemList = res.data.Data
+        this.itemList.push(...res.data.Data.List)
+        this.totalPage = Math.ceil(res.data.Data.Count / res.data.Data.PageSize)
+        if (this.totalPage === this.pageIndex) {
+          this.loadText = '没有更多'
+        }
       } else {
         this.$vux.toast.text(res.data.Msg)
       }
@@ -131,6 +184,11 @@ export default {
       if (res.data.Code === 100000 && res.data.Data) {
         this.Agreement = res.data.Data
       }
+    },
+    loadmore (index) {
+      this.pageIndex++
+      this.loadText = '加载中...'
+      this.getItemTemplate()
     },
     showDialog () {
       this.showHideOnBlur = true
@@ -274,6 +332,8 @@ export default {
   }
 }
 .servant-panel {
+  min-height: 300px;
+  position: relative;
   background: #fff;
   padding: 15px;
 }

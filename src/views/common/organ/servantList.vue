@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search-bar">
-      <input type="text" placeholder="输入服务者名字搜索" v-model="searchData.search" @keyup.enter="getServantList" @keyup="inputKeywords">
+      <input type="text" placeholder="输入服务者名字搜索" v-model="searchData.search" @keyup.enter="getServantList" @keyup.exact="inputKeywords">
     </div>
     <div class="container">
       <!-- 标签 -->
