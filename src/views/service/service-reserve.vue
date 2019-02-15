@@ -204,7 +204,9 @@ export default {
         NeedTools: false,
         Imgs: '',
         ScheduleID: null,
-        PrepareGoodsTags: null
+        PrepareGoodsTags: null,
+        Latitude: '',
+        Longitude: ''
       },
       authText: {
         Address: {
@@ -239,7 +241,7 @@ export default {
       return +this.$route.query.ItemID
     },
     viewId () {
-      return this.$route.query.viewId
+      return this.$route.query.viewId || ''
     },
     id () {
       return this.$route.params.id
@@ -300,6 +302,8 @@ export default {
         this.addressList = data
         if (data.length > 0) {
           this.reqParams.Address = this.transformAddress(data[0].Province) + this.transformAddress(data[0].City) + this.transformAddress(data[0].Area) + data[0].SpecificAddress
+          this.reqParams.Latitude = data[0].Latitude
+          this.reqParams.Longitude = data[0].Longitude
         } else {
           this.isEmptyList = false
         }
@@ -401,6 +405,8 @@ export default {
       this.addressIndex = index
       this.isShowAddressList = false
       this.reqParams.Address = this.concatAdress(this.addressList[index])
+      this.reqParams.Longitude = this.addressList[index].Longitude
+      this.reqParams.Latitude = this.addressList[index].Latitude
     },
     // 转换地址
     concatAdress (address) {

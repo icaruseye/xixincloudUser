@@ -12,6 +12,31 @@
     </sticky>
     <!-- 已购买 -->
     <div class="tabbox" v-show="tabIndex === 0" style="padding-bottom:50px">
+      <!-- 派单服务 -->
+      <div class="weui-panel" v-if="dispatchList.length !== 0">
+        <div class="weui-panel_subtitle">派单服务</div>
+        <div class="weui-list_container">
+          <template v-for="(item, index) in dispatchList">
+            <div class="weui-list_item" :key="index">
+              <div class="icon">
+                <img :src="item._ItemsDetails[0].OrderDetail.UseType | ItemImageByUseType" alt="">
+              </div>
+              <div class="mid">
+                <div style="display: flex;justify-content: space-between;align-items: baseline;">
+                  <div class="title text-overflow-1 text-overflow-1">{{item._ItemsDetails[0].SingleItem.Name}}</div>
+                  <div class="balance">剩余：{{item._ItemsDetails[0].OrderDetail.LeftNum}}次</div>
+                </div>
+                <div class="describe">到期时间：{{item.ExpireTime | timeFormat('YYYY-MM-DD')}}</div>
+              </div>
+              <div class="btn">
+                <button v-if="item._ItemsDetails[0].OrderDetail.UseType === 1" @click="toReserve(item._ItemsDetails[0].OrderDetail.ID, item._ItemsDetails[0].OrderDetail.ItemID, item._ItemsDetails[0].OrderDetail.UseType)">预约</button>
+                <button v-if="item._ItemsDetails[0].OrderDetail.UseType === 3" @click="toReserve(item._ItemsDetails[0].OrderDetail.ID, item._ItemsDetails[0].OrderDetail.ItemID, item._ItemsDetails[0].OrderDetail.UseType)">预约</button>
+                <button v-if="item._ItemsDetails[0].OrderDetail.UseType === 2" @click="toReserve(item._ItemsDetails[0].OrderDetail.ID, item._ItemsDetails[0].OrderDetail.ItemID, item._ItemsDetails[0].OrderDetail.UseType)">咨询</button>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
       <!-- 单项服务 -->
       <div class="weui-panel" v-if="UserOrderDetailsList.ItemsByDoc.length !== 0">
         <div class="weui-panel_subtitle">单项服务</div>
@@ -247,6 +272,7 @@ export default {
   },
   data () {
     return {
+      dispatchList: [], // 派单服务列表
       dataList: [],
       dataListDone: [], // 已完成服务列表
       registrationListDone: [], // 已完成挂号列表
@@ -372,9 +398,18 @@ export default {
     },
     async getBuyAll () {
       await this.getUserOrderDetailsList()
+      await this.getUserDispatchServiceList()
       await this.getRegistrationList()
       if (this.UserOrderDetailsList.ItemsByDoc.length === 0 && this.UserOrderDetailsList.PackByDoc.length === 0 && this.UserOrderDetailsList.RegistrationList.length === 0) {
         this.flag1 = true
+      }
+    },
+    async getUserDispatchServiceList () {
+      const res = await this.$http.get(`/UserDispatchServiceList`)
+      if (res.data.Code === 100000) {
+        this.dispatchList = res.data.Data
+      } else {
+        this.$vux.toast.text(res.data.Msg)
       }
     },
     // 获取图文待确认
