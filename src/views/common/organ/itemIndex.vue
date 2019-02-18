@@ -66,7 +66,26 @@
     </div>
     <!-- 服务介绍 -->
     <div class="servant-panel servant-panel_service">
-      <div class="servant-panel_title"><i class="icon icon-2"></i>热门服务</div>
+      <div class="servant-panel_title">
+        <i class="icon icon-2"></i><div style="flex:1">热门服务</div>
+        <div class="localtion_tool">
+          <template>
+            <i class="iconfont icon-dingwei"></i>
+            <x-address
+              title=""
+              v-model="citysCode"
+              :list="addressData"
+              class="address-picker-dispatch"
+              :placeholder="addressText"
+              value-text-align="center"
+              :popup-style="{'z-index': 503}">
+            </x-address>
+          </template>
+          <!-- <template v-else>
+            当前定位：{{addressText}}
+          </template> -->
+        </div>
+      </div>
       <template v-for="(item, index) in itemList">
         <div class="weui-list_item" :key="index" @click="toItem(item.DispatchService.ID)">
           <div class="icon">
@@ -80,7 +99,7 @@
         </div>
       </template>
       <xxOccupiedBox v-if="itemList.length === 0">
-        暂无服务
+        {{addressCode ? '暂无服务' : '为获取到定位信息，请手动选择'}}
       </xxOccupiedBox>
       <xx-loadmore
         v-if="itemList.length > 0"
@@ -104,18 +123,25 @@
 </template>
 
 <script>
+import ChinaAddressV4Data from '@/plugins/datas/ChinaAddressV4Data.json'
 import { mapGetters } from 'vuex'
-import { TransferDomDirective as TransferDom } from 'vux'
+import { TransferDomDirective as TransferDom, XAddress } from 'vux'
 export default {
   directives: {
     TransferDom
+  },
+  components: {
+    XAddress
   },
   data () {
     return {
       totalPage: 1,
       pageIndex: 1,
       pageSize: 8,
-      addressCode: '120101',
+      addressCode: '',
+      addressText: '选择地区',
+      addressData: ChinaAddressV4Data,
+      citysCode: [],
       showHideOnBlur: false,
       itemList: [],
       Agreement: {},
@@ -128,6 +154,13 @@ export default {
       'userAccount'
     ])
   },
+  watch: {
+    citysCode (val) {
+      this.addressCode = val[2]
+      this.itemList = []
+      this.getItemTemplate()
+    }
+  },
   created () {
     this.getShopAgreement()
   },
@@ -136,6 +169,9 @@ export default {
   },
   methods: {
     getGeolocation () {
+      this.$vux.loading.show({
+        text: '正在获取地址'
+      })
       const that = this
       AMap.plugin('AMap.Geolocation', function () {
         var geolocation = new AMap.Geolocation({
@@ -150,18 +186,29 @@ export default {
         AMap.event.addListener(geolocation, 'error', onError)
 
         function onComplete (data) {
-          // data是具体的定位信息
+          that.$vux.loading.hide()
           console.log(data)
           that.addressCode = data.addressComponent.adcode
+          that.addressText = `${data.addressComponent.province} ${data.addressComponent.city} ${data.addressComponent.district}`
           that.getItemTemplate()
         }
 
         function onError (data) {
-          // 定位出错
+          that.$vux.loading.hide()
+          console.log(data)
           that.$vux.toast.text('未获取到您的定位信息')
-          that.getItemTemplate()
+          // that.getItemTemplate()
         }
       })
+    },
+    transformAddress (val) {
+      let name = ''
+      ChinaAddressV4Data.map((item) => {
+        if (item.value === val) {
+          name = item.name
+        }
+      })
+      return name
     },
     async getItemTemplate () {
       const res = await this.$http.get('/DispatchService/List', {
@@ -383,5 +430,26 @@ export default {
   padding: 10px;
   height: 100%;
   overflow: scroll;
+}
+.localtion_tool {
+  display: flex;
+  background: #fff;
+  color: #999;
+  font-size: 14px;
+  .iconfont {
+    margin-right: 5px;
+    font-size: 14px;
+    color: #3ecccc;
+  }
+}
+</style>
+<style lang="less">
+.address-picker-dispatch {
+  &.vux-cell-box:not(:first-child):before{
+    border: 0;
+  }
+  .weui-cell_access {
+    padding: 0;
+  }
 }
 </style>

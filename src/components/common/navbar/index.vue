@@ -7,7 +7,7 @@
     <div class="xx-ellipsis xx-nav-bar__title">{{title}}</div>
     <div class="xx-nav-bar__right" @click="onClickRight">
       <img class="xx-nav-bar__avatar" :src="userAccount.Avatar | transformImgUrl" alt="">
-      <span class="xx-nav-bar__text">{{userAccount.NickName}}</span>
+      <span class="xx-nav-bar__text">{{userAccount.RealName}}</span>
     </div>
   </div>
 </template>

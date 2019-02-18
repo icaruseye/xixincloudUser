@@ -2,12 +2,12 @@
   <div class="has-tabbar">
     <!-- 服务包头部信息 -->
     <div class="package-header-info">
-      <div class="icon"><img :src="Item.Package.PackageType | ItemImageByUseType" alt=""></div>
+      <div class="icon"><img :src="Package.PackageType | ItemImageByUseType" alt=""></div>
       <div class="mid">
-        <div class="name">{{Item.Package.Name}}</div>
+        <div class="name">{{Package.Name}}</div>
         <div class="sales">
-          <div class="price">{{Item.DispatchService.Price ? (Item.DispatchService.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
-          <div class="volume" v-if="Item.Package.SoldAmount">已售：{{Item.Package.SoldAmount}}份</div>
+          <div class="price">{{DispatchService.Price ? (DispatchService.Price/100).toFixed(2) : '0.00'}}<span>元</span></div>
+          <div class="volume" v-if="Package.SoldAmount">已售：{{Package.SoldAmount}}份</div>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
         <span class="left">服务套餐介绍</span>
       </div>
       <div class="content">
-        {{Item.Package.Description}}
+        {{Package.Description}}
       </div>
     </div>
     <!-- 注意事项 -->
@@ -26,10 +26,10 @@
         <span class="left">注意事项</span>
       </div>
       <div class="content">
-        {{Item.ItemTemplate.Attention}}
+        {{Item.Attention}}
       </div>
     </div>
-     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(Item.DispatchService.ID)">预约服务</button>
+     <button type="button" class="weui-btn weui-btn-bottom weui-btn_primary" @click="getUserPreOrder(DispatchService.ID)">预约服务</button>
   </div>
 </template>
 
@@ -38,7 +38,8 @@ export default {
   data () {
     return {
       Item: {},
-      Package: {}
+      Package: {},
+      DispatchService: {}
     }
   },
   computed: {
@@ -53,7 +54,9 @@ export default {
     async getItemTemplate () {
       const res = await this.$http.get(`/DispatchService?id=${this.itemID}`)
       if (res.data.Code === 100000) {
-        this.Item = res.data.Data
+        this.Item = res.data.Data.ItemTemplate
+        this.Package = res.data.Data.Package
+        this.DispatchService = res.data.Data.DispatchService
       } else {
         this.$vux.toast.text('出错了')
       }

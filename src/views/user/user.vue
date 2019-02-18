@@ -4,7 +4,7 @@
       <div class="user-info">
         <img class="avatar" :src="userAccount.Avatar | transformImgUrl" alt="">
         <div class="mid-info">
-          <div class="name">{{userAccount.NickName}}</div>
+          <div class="name">{{userAccount.RealName}}</div>
           <!-- <div class="times">已被服务：1次</div> -->
           <span class="auth" v-if="userInfo.IDCard">实名认证</span>
         </div>

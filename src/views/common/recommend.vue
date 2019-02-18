@@ -5,8 +5,8 @@
       <div class="avatar">
         <img :src="userAccount.Avatar | transformImgUrl" alt="">
       </div>
-      <div class="name">{{userAccount.NickName}}</div>
-      <div class="text" v-show="isUser === 0">{{userAccount.NickName}}邀请您成为他的服务者</div>
+      <div class="name">{{userAccount.RealName}}</div>
+      <div class="text" v-show="isUser === 0">{{userAccount.RealName}}邀请您成为他的服务者</div>
       <div class="text isuser" v-show="isUser === 1">需要优质的上门服务 我推荐您找{{ShopInfo.ShopName}}</div>
     </div>
     <div class="qrcode" v-if="userAccount.ID">
