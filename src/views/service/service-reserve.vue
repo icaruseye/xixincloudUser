@@ -253,8 +253,10 @@ export default {
   methods: {
     init () {
       const _deta = this.getAfterOneMonth(new Date())
-      this.getScheduleList(_deta.startTime, _deta.endTime)
-      this.getScheduleDetail(_deta.startTime)
+      if (this.viewId) {
+        this.getScheduleList(_deta.startTime, _deta.endTime)
+        this.getScheduleDetail(_deta.startTime)
+      }
       this.getOrderDetail().then(() => {
         this.getAddressList()
         this.getAgreementList()
