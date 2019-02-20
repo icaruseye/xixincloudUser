@@ -22,7 +22,7 @@
       <xx-cell-items label="服务项" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="padding-right:15px">{{orderDetail.ItemName}}</div>
       </xx-cell-items>
-      <xx-cell-items label="服务人员" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
+      <xx-cell-items v-if="orderDetail.ServantName" label="服务人员" class="noraml_cell noraml_cell-right" style="padding: 20px 0 15px 0;">
         <div style="padding-right:15px">{{orderDetail.ServantName}}</div>
       </xx-cell-items>
     </xx-cell>
@@ -253,13 +253,14 @@ export default {
   methods: {
     init () {
       const _deta = this.getAfterOneMonth(new Date())
-      if (this.viewId) {
-        this.getScheduleList(_deta.startTime, _deta.endTime)
-        this.getScheduleDetail(_deta.startTime)
-      }
       this.getOrderDetail().then(() => {
         this.getAddressList()
         this.getAgreementList()
+        if (this.orderDetail.ServantViewID) {
+          console.log(this.orderDetail)
+          this.getScheduleList(_deta.startTime, _deta.endTime)
+          this.getScheduleDetail(_deta.startTime)
+        }
       })
     },
     async getOrderDetail () {

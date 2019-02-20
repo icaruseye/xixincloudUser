@@ -47,7 +47,7 @@
     </div>
     <!-- 机构介绍 -->
     <div class="organ-info">
-      <div class="item" @click="showDialog">
+      <div class="item" @click="showHideOnBlur = true">
         <img src="@/assets/images/organ-4.png" alt="">
         <div class="text">机构介绍</div>
       </div>
@@ -55,14 +55,14 @@
         <img src="@/assets/images/organ-2.png" alt="">
         <div class="text">在线咨询</div>
       </div>
-      <div class="item">
+      <!-- <div class="item">
         <img src="@/assets/images/organ-2.png" alt="">
         <div class="text">医护上门</div>
       </div>
       <div class="item">
         <img src="@/assets/images/organ-2.png" alt="">
         <div class="text">院内服务</div>
-      </div>
+      </div> -->
     </div>
     <!-- 服务介绍 -->
     <div class="servant-panel servant-panel_service">
@@ -111,13 +111,13 @@
     </div>
     <!-- 机构介绍 -->
     <div v-transfer-dom>
-      <x-dialog v-model="showHideOnBlur" hide-on-blur :dialog-style="{height: '75%', 'background-color': '#fff'}">
+      <popup v-model="showHideOnBlur" height="100%" :should-scroll-top-on-show="true">
         <div class="tips-content">
           <div class="title">{{Agreement.Title}}</div>
           <div v-html="Agreement.Content"></div>
         </div>
-          <div class="read-btn" @click="showHideOnBlur = false">我已阅读完毕</div>
-      </x-dialog>
+        <div class="weui-btn weui-btn-bottom" @click="closePopup">关闭</div>
+      </popup>
     </div>
   </div>
 </template>
@@ -125,13 +125,14 @@
 <script>
 import ChinaAddressV4Data from '@/plugins/datas/ChinaAddressV4Data.json'
 import { mapGetters } from 'vuex'
-import { TransferDomDirective as TransferDom, XAddress } from 'vux'
+import { TransferDomDirective as TransferDom, XAddress, Popup } from 'vux'
 export default {
   directives: {
     TransferDom
   },
   components: {
-    XAddress
+    XAddress,
+    Popup
   },
   data () {
     return {
@@ -237,8 +238,9 @@ export default {
       this.loadText = '加载中...'
       this.getItemTemplate()
     },
-    showDialog () {
-      this.showHideOnBlur = true
+    closePopup () {
+      window.scrollTo(0, 0)
+      this.showHideOnBlur = false
     },
     toItem (id) {
       this.$router.push(`/organ/item/${id}`)
@@ -441,6 +443,19 @@ export default {
     font-size: 14px;
     color: #3ecccc;
   }
+}
+.tips-content {
+  background: #fff;
+  padding: 0 20px 70px 20px;
+  .title {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    padding: 15px 0;
+  }
+}
+.weui-btn {
+  background: #3ecccc;
 }
 </style>
 <style lang="less">
