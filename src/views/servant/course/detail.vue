@@ -210,7 +210,7 @@ export default {
             })
           }
           if (detail.ContentType === 2) {
-            this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${detail.Content}`)
+            this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${detail.Content}?type=2`)
           }
           if (detail.ContentType === 3) {
             this.playLesson({
@@ -252,7 +252,7 @@ export default {
       }
       // 课件
       if (+ContentType === 2) {
-        this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${LessonID}`)
+        this.$router.push(`/servant/course/courseware/${this.proxyCourseID}/${LessonID}?type=2`)
       }
       // 音频
       if (+ContentType === 3) {

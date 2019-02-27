@@ -5,7 +5,7 @@
       <CoursewareItems
         v-for="(shopProxyCourseEnclosure, index) in shopProxyCourseEnclosureList" :key="index"
         :coursewareName="shopProxyCourseEnclosure.Name"
-        @click.native="redirectTo(`/servant/course/courseware/${proxyCourseID}/${shopProxyCourseEnclosure.CourseEnclosureID}`)"
+        @click.native="redirectTo(`/servant/course/courseware/${proxyCourseID}/${shopProxyCourseEnclosure.CourseEnclosureID}?type=1`)"
       ></CoursewareItems>
     </div>
   </div>

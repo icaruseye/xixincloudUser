@@ -81,7 +81,8 @@ export default {
       this.loading = true
       const result = await this.$http.get(`/CourseEnclosure/CouldWatchEnclosure`, {
         courseEnclosureID: this.id,
-        proxyCourseID: this.courseID
+        proxyCourseID: this.courseID,
+        type: this.$route.query.type
       })
       this.loading = false
       if (result.data.Code === 100000) {
